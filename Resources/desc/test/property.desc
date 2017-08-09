@@ -1,0 +1,78 @@
+class RedBall
+{
+	property clr = Color(1,0,0)
+
+	component Position 
+	{ 
+		position = Vector3(0,0,0)
+		hpb = Vector3(0,0,0)
+	}
+
+	component SphereDrawer { color = clr }
+}
+
+class Base
+{
+	property pos
+
+	property clr = Color(0,0,1)
+
+	component Position 
+	{ 
+		position = pos 
+		hpb = Vector3(0,0,0) 
+	}
+
+	component LinearMover { velocity = Vector3(10,0,0) }	
+	component SphereDrawer { color = clr }
+
+	component Spawner spawner
+	{
+		prototype = RedBall { clr = Color(1, 0, 0) }
+	}
+
+	component SpawnTimer
+	{
+		timeInterval = 1.0
+	}
+}
+
+class SpawnObject : Base
+{
+	pos = Vector3(0,0, -10)
+}
+
+class SpawnObject1 : SpawnObject
+{
+	pos = Vector3(0,0, 10)
+	clr = Color(1,1,0)
+}
+
+class Main
+{
+	SpawnObject obj0	{ pos = Vector3(0,0,0) clr = Color(1,0,1)	}
+ 	SpawnObject obj1	{ clr = Color(0,1,1)	}
+ 	SpawnObject1 obj2	{ clr = Color(0,1,0)	}
+}	
+
+
+
+/*
+class PropertyBase
+{
+property Vector3 pos = Vector3(1,1,1);
+property Color clr = Color(1,1,1);
+
+// 	component Spawner spawner
+// 	{
+// 		prototype = SpawnObject{};
+// 	}
+
+component Position { position = pos; hpb = Vector3(0,0,0); }
+component SphereDrawer { color = clr; }
+}
+
+class PropertyChild: PropertyBase
+{
+color = Color(1,2,3);
+}*/

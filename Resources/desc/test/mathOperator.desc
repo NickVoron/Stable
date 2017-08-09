@@ -1,0 +1,9 @@
+class Main 
+{ 
+	var plus	= 5+5
+	var minus 	= 15 - 5
+	var mul 	= 5 * 2 
+	var div 	= 25/5
+	var mod 	= 25.5 % 5
+	var operationPriority = (1 + 4.5*2)*100/50/2
+}

@@ -1,0 +1,55 @@
+class SpawnObject
+{
+	
+}
+
+class PropertyBase
+{
+	property Vector3 pos = Vector3(1,1,1);
+	
+	property Color color;
+	color = Color(1,1,1);
+	
+	property object spawnObj;
+	
+	component Spawner spawner
+	{
+		spawner = spawnObj;
+	}
+}
+
+class PropertyChild: PropertyBase
+{
+	color = Color(1,2,3);
+}
+
+class Main
+{
+	var one = 1;
+	
+	var propObj = <PropertyChild>
+		{
+			pos = Vector3(1,1,1);
+			color = Color(1,1,1);
+			spwanObj = SpawnBase{};
+		};
+		
+	PropertyChild
+	{
+		spwanObj = SpawnBase{};
+	}
+	
+	component Spawner spawner
+	{
+		limit = 1;
+		
+		prototype1 = PropertyChild 
+		{ 
+			velocity = Vector3(1,0,0);
+		};
+		
+		prototype2 = propObj;
+	}
+
+
+}

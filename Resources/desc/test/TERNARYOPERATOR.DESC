@@ -1,0 +1,22 @@
+class Base
+{
+	property selector
+		
+	component Position		
+	{ 
+		position = (selector > 0) ? Vector3(-5,0,0) + Vector3(-2,0,0) : Vector3(10,0,0)
+		hpb = Vector3(0,0,0)
+	} 
+
+	//component SphereDrawer	{ color = (selector > 0) ? Color(1,0,0) : Color(0,1,0); };
+	component SphereDrawer	
+	{ 
+		color = selector > 0 ? Color(1,0,0) : Color(0,1,0)
+	}
+}
+
+class Main 
+{ 
+	Base test1{ selector = -1 }
+	Base test2{ selector = 1 }
+}

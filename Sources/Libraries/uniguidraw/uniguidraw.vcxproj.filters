@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="drawers.cpp" />
+    <ClCompile Include="dx11.cpp" />
+    <ClCompile Include="dx9.cpp" />
+    <ClCompile Include="shaders.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="uniguidraw.cpp" />
+    <ClCompile Include="extractors.cpp" />
+    <ClCompile Include="renderers\textureSetter.cpp" />
+    <ClCompile Include="renderers\renderers.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="drawers.h" />
+    <ClInclude Include="dx11.h" />
+    <ClInclude Include="dx9.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="shaders.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="uniguidraw.h" />
+    <ClInclude Include="types.h" />
+    <ClInclude Include="extractors.h" />
+    <ClInclude Include="internalState.h" />
+    <ClInclude Include="renderers\baseRenderer.h" />
+    <ClInclude Include="renderers\baseRendererAPI.h" />
+    <ClInclude Include="renderers\textureSetter.h" />
+    <ClInclude Include="renderers\statesBucket.h" />
+    <ClInclude Include="renderers\renderers.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="dx11">
+      <UniqueIdentifier>{2a37a2f5-43bd-4c8a-ba89-cb32361c53cb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Resources\shaders\gui\font11.fx">
+      <Filter>dx11</Filter>
+    </None>
+    <None Include="..\..\..\Resources\shaders\gui\line11.fx">
+      <Filter>dx11</Filter>
+    </None>
+    <None Include="..\..\..\Resources\shaders\gui\rect11.fx">
+      <Filter>dx11</Filter>
+    </None>
+    <None Include="..\..\..\Resources\shaders\postFX\dx11\copy.fx">
+      <Filter>dx11</Filter>
+    </None>
+    <None Include="..\..\..\Resources\shaders\postFX\dx11\common.fx">
+      <Filter>dx11</Filter>
+    </None>
+    <None Include="..\..\..\Resources\shaders\gui\texrect11.fx">
+      <Filter>dx11</Filter>
+    </None>
+    <None Include="..\..\..\Resources\shaders\gui\font11DistanceProcessing.fx">
+      <Filter>dx11</Filter>
+    </None>
+  </ItemGroup>
+</Project>

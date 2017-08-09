@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="componentModelNet.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="client.cpp" />
+    <ClCompile Include="server.cpp" />
+    <ClCompile Include="support.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="componentModelNet.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="client.h" />
+    <ClInclude Include="server.h" />
+    <ClInclude Include="support.h" />
+  </ItemGroup>
+</Project>

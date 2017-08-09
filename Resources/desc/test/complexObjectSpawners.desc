@@ -1,0 +1,27 @@
+#include "complexObjects.desc"
+
+class SpawnerB : Drawable
+{ 
+	clr = Color(1, 1, 0)
+	txt = "Spawner"
+
+	property lim = 1
+
+ 	component SpawnTimer 
+	{ 				 
+		timeInterval = 1.0
+	}
+
+ 	component Spawner 
+	{ 
+		prototype = B {  }
+		limit = lim
+	}
+}
+
+
+class Main 
+{ 
+	SpawnerB obj{ pos = Vector3(10, 5, 0) }
+	//B obj{}
+}

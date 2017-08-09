@@ -1,0 +1,3 @@
+cmake_minimum_required(VERSION 3.6)
+
+SUBDIRLIST(SUBDIRS ${CMAKE_CURRENT_SOURCE_DIR})

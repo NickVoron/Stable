@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C3B65815-2853-4A4C-A84C-D6FB7763E66D}</ProjectGuid>
+    <RootNamespace>scriptLibrary</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\VS_Props\common_params.props" />
+    <Import Project="..\..\..\..\VS_Props\arty_release.props" />
+    <Import Project="..\..\..\..\VS_Props\libs_paths.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\VS_Props\common_params.props" />
+    <Import Project="..\..\..\..\VS_Props\arty_release.props" />
+    <Import Project="..\..\..\..\VS_Props\libs_paths.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\VS_Props\common_params.props" />
+    <Import Project="..\..\..\..\VS_Props\arty_debug.props" />
+    <Import Project="..\..\..\..\VS_Props\libs_paths.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\VS_Props\common_params.props" />
+    <Import Project="..\..\..\..\VS_Props\arty_debug.props" />
+    <Import Project="..\..\..\..\VS_Props\libs_paths.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Command>generate.bat</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PreBuildEvent>
+      <Command>generate.bat</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Command>generate.bat</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PreBuildEvent>
+      <Command>generate.bat</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="classDescEtc\componentModelConfigurator.cpp" />
+    <ClCompile Include="classDescEtc\debugConfigurator.cpp" />
+    <ClCompile Include="classDescEtc\expressions\objectConverter.cpp" />
+    <ClCompile Include="classDescEtc\inheritance\aggregate.cpp" />
+    <ClCompile Include="classDescEtc\classDesc.cpp" />
+    <ClCompile Include="classDescEtc\component.cpp" />
+    <ClCompile Include="classDescEtc\expressions\componentRefConverter.cpp" />
+    <ClCompile Include="classDescEtc\grammarComposition.cpp" />
+    <ClCompile Include="classDescEtc\inheritance\mix.cpp" />
+    <ClCompile Include="classDescEtc\expressions\instanceExpression.cpp" />
+    <ClCompile Include="classDescEtc\utils\nameSource.cpp" />
+    <ClCompile Include="classDescEtc\expressions\collectionExpr.cpp" />
+    <ClCompile Include="compiler\compiler.cpp" />
+    <ClCompile Include="classDescEtc\expressions\noValueExpression.cpp" />
+    <ClCompile Include="classDescEtc\expressions\componentPath.cpp" />
+    <ClCompile Include="parser\lexer.cpp" />
+    <ClCompile Include="parser\lexerExtension.cpp" />
+    <ClCompile Include="parser\parser.cpp" />
+    <ClCompile Include="classDescEtc\propertyAccumulator.cpp" />
+    <ClCompile Include="classDescEtc\propertyAssignment.cpp" />
+    <ClCompile Include="classDescEtc\expressions\constantProperty.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="classDescEtc\unroller.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="classDescEtc\componentModelConfigurator.h" />
+    <ClInclude Include="classDescEtc\debugConfigurator.h" />
+    <ClInclude Include="classDescEtc\expressions\objectConverter.h" />
+    <ClInclude Include="classDescEtc\inheritance\aggregate.h" />
+    <ClInclude Include="classDescEtc\classDesc.h" />
+    <ClInclude Include="classDescEtc\component.h" />
+    <ClInclude Include="classDescEtc\expressions\componentRefConverter.h" />
+    <ClInclude Include="classDescEtc\grammarComposition.h" />
+    <ClInclude Include="classDescEtc\inheritance\mix.h" />
+    <ClInclude Include="classDescEtc\expressions\instanceExpression.h" />
+    <ClInclude Include="classDescEtc\utils\nameSource.h" />
+    <ClInclude Include="classDescEtc\expressions\collectionExpr.h" />
+    <ClInclude Include="compiler\compiler.h" />
+    <ClInclude Include="classDescEtc\expressions\noValueExpression.h" />
+    <ClInclude Include="classDescEtc\expressions\componentPath.h" />
+    <ClInclude Include="parser\lexer.h" />
+    <ClInclude Include="parser\parser.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="classDescEtc\propertyAccumulator.h" />
+    <ClInclude Include="classDescEtc\propertyAssignment.h" />
+    <ClInclude Include="classDescEtc\expressions\constantProperty.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="classDescEtc\unroller.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="parser\flex.skl" />
+    <None Include="parser\lexer.lex" />
+    <None Include="parser\location.hh">
+      <FileType>CppHeader</FileType>
+    </None>
+    <None Include="parser\parser.yacc" />
+    <None Include="parser\position.hh">
+      <FileType>CppHeader</FileType>
+    </None>
+    <None Include="parser\stack.hh">
+      <FileType>CppHeader</FileType>
+    </None>
+    <None Include="generate.bat" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{6219D07B-5EAD-4859-8708-A1173D1D8183}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>StaticLibrary</RootNamespace>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_3_6</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_6</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_6</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <Import Project="..\..\..\..\Stable\VS_Props\android_common.props" />
+    <Import Project="..\..\..\..\Stable\VS_Props\android_user.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <OutDir>$(SharedTec_SDK_libraries)\</OutDir>
+    <IntDir>$(SharedTec_SDK_intermediate)\$(ProjectName)\$(Configuration)\$(PlatformName)\</IntDir>
+    <TargetName>lib$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <CppLanguageStandard>gnu++11</CppLanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="base\all.include.h" />
+    <ClInclude Include="base\io\all.include.h" />
+    <ClInclude Include="base\io\matrix.io.h" />
+    <ClInclude Include="base\io\vector3.io.h" />
+    <ClInclude Include="base\Matrix2.h" />
+    <ClInclude Include="base\Matrix3.h" />
+    <ClInclude Include="base\Matrix4.h" />
+    <ClInclude Include="base\Quaternion.h" />
+    <ClInclude Include="base\StdFloat.h" />
+    <ClInclude Include="base\StdLimits.h" />
+    <ClInclude Include="base\Vector2.h" />
+    <ClInclude Include="base\Vector3.h" />
+    <ClInclude Include="base\Vector4.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="math.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="utils\all.include.h" />
+    <ClInclude Include="utils\byteAverage.h" />
+    <ClInclude Include="utils\interval.h" />
+    <ClInclude Include="utils\NDCube.h" />
+    <ClInclude Include="utils\NDTree.h" />
+    <ClInclude Include="utils\NDVector.h" />
+    <ClInclude Include="utils\PWPath.h" />
+    <ClInclude Include="utils\randomVar.h" />
+    <ClInclude Include="utils\Range.h" />
+    <ClInclude Include="utils\RangedValue.h" />
+    <ClInclude Include="utils\State.h" />
+    <ClInclude Include="utils\triangulate.h" />
+    <ClInclude Include="utils\unsorted.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="base\base.pri" />
+    <None Include="utils\utils.pri" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="base\io\matrix.io.cpp" />
+    <ClCompile Include="base\io\vector3.io.cpp" />
+    <ClCompile Include="base\Matrix4.cpp" />
+    <ClCompile Include="base\Quaternion.cpp" />
+    <ClCompile Include="base\Vector2.cpp" />
+    <ClCompile Include="base\vector3.cpp" />
+    <ClCompile Include="base\vector4.cpp" />
+    <ClCompile Include="utils\randomVar.cpp" />
+    <ClCompile Include="utils\State.cpp" />
+    <ClCompile Include="utils\triangulate.cpp" />
+    <ClCompile Include="utils\unsorted.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

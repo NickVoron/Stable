@@ -1,0 +1,11 @@
+class Main 
+{ 
+	var greater 		= 1>0;
+	var less 			= 0<1;
+	var greaterEqual 	= 12>=12;
+	var lessEqual 		= 12<=12;
+	var notEqual 		= 1!=0;
+	var and 			= true & true;
+	var or 				= true | false;
+	var not 			= !false;
+};

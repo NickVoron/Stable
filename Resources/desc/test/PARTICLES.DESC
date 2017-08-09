@@ -1,0 +1,17 @@
+class Particle
+{
+	constructor(Vector3 pos, Color color);	
+	
+	component Position { position = pos; hpb = Vector3(0,0,0); }; 
+	component SphereDrawer { color = color; };
+	component ParticleAttachment {};
+	
+};
+
+class Main 
+{ 
+	constructor() 
+	{ 
+		Particle particle(Vector3(0,0,-10), Color(0, 1, 0));
+	};	
+};

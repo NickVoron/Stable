@@ -1,0 +1,70 @@
+interface Movable
+{
+	property pos
+	property vel
+	property clr
+	property txt = "Default"
+
+	component[category = client]  SphereDrawer {	color = clr	text = txt	}
+	//component[category = server]  PositionLogger {}
+	component[category = server]  Position{ position = pos hpb = Vector3(0,0,0) }
+	component[category = server]  LinearMover{ velocity = vel }
+	component[category = server]  SpawnTimer{ timeInterval = 0.3 }
+	//component[category = server]  DestructTimer{ timeInterval = 0.3 }
+	component[category = server]  Destructor{}
+}
+
+class C : Movable
+{
+	vel = Vector3(10, 0, 0)
+	clr = Color(1, 0, 0)
+
+	component[category = server] Spawner
+	{
+		prototype = B{ pos = Vector3(0,0,0) }
+		limit = 1
+	}
+}
+
+class B : Movable
+{
+	vel = Vector3(0, 0, 10)
+	clr = Color(0, 0, 1)
+
+	component[category = server] Spawner
+	{
+		prototype = A{ pos = Vector3(0,0,0) }
+		limit = 1
+	}
+}
+
+class A : Movable
+{
+	vel = Vector3(0, 10, 0)
+	clr = Color(0, 1, 0)
+
+	component[category = server] Spawner
+	{
+		prototype = C{ pos = Vector3(0,0,0) }
+		limit = 1
+	}
+}
+
+class Categorized
+{ 		
+	property pos
+
+	//component[category = client] LinearMoverBreaker{}
+ 	component[category = server] LinearMover { velocity = Vector3(10, 0, 0) }
+	component[category = client] Position { position = pos }
+	component[category = client] SphereDrawer{}
+	//component[category = client] PositionLogger{}
+}
+
+
+class Main 
+{ 
+//	Categorized obj{ pos = Vector3(10, 0, 10) }
+//	Categorized obj1{ pos = Vector3(-10, 0, -10) }
+	A a{}
+}

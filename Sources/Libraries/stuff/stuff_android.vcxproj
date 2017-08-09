@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="atof.h" />
+    <ClInclude Include="callDispatcher.h" />
+    <ClInclude Include="dateTime.h" />
+    <ClInclude Include="dependencyGraph.h" />
+    <ClInclude Include="enforce.h" />
+    <ClInclude Include="EnumStrTable.h" />
+    <ClInclude Include="fileModifyObserver.h" />
+    <ClInclude Include="fileUtils.h" />
+    <ClInclude Include="fixed.h" />
+    <ClInclude Include="FSM.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="meyersSingleton.h" />
+    <ClInclude Include="namesGenerator.h" />
+    <ClInclude Include="nonCopyable.h" />
+    <ClInclude Include="osprocess.h" />
+    <ClInclude Include="pool.h" />
+    <ClInclude Include="profiler.h" />
+    <ClInclude Include="pstring.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="stringUtils.h" />
+    <ClInclude Include="stuff.h" />
+    <ClInclude Include="syncObjects.h" />
+    <ClInclude Include="timer.h" />
+    <ClInclude Include="userStruct.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dateTime.cpp" />
+    <ClCompile Include="fileModifyObserver.cpp" />
+    <ClCompile Include="fileUtils.cpp" />
+    <ClCompile Include="namesGenerator.cpp" />
+    <ClCompile Include="osprocess.cpp" />
+    <ClCompile Include="pool.cpp" />
+    <ClCompile Include="pstring.cpp" />
+    <ClCompile Include="stringUtils.cpp" />
+    <ClCompile Include="syncObjects.cpp" />
+    <ClCompile Include="timer.cpp" />
+    <ClCompile Include="userStruct.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{6FB5C95E-CFE8-48B1-8FB0-0EF48D5A6C3A}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>StaticLibrary</RootNamespace>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_3_6</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_6</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_6</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <Import Project="..\..\..\..\Stable\VS_Props\android_common.props" />
+    <Import Project="..\..\..\..\Stable\VS_Props\android_user.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <OutDir>$(SharedTec_SDK_libraries)\</OutDir>
+    <IntDir>$(SharedTec_SDK_intermediate)\$(ProjectName)\$(Configuration)\$(PlatformName)\</IntDir>
+    <TargetName>lib$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

@@ -1,0 +1,114 @@
+//в зависимости от того какая строка активна в TimerConfigurator попадает компонент соответствующего класса
+
+/*
+class Foo
+{
+//	constructor(Vector3 p)   {};
+
+ 	component Red red0
+ 	{
+ 		color = Vector3(3, 2, 1);
+ 		data = 256;
+ 	};
+// 
+// 	component Red red1
+// 	{
+// 		color = Vector3(1, 2, 3);
+// 		data = 128;
+// 	};
+};*/
+
+/*
+class E
+{
+	constructor(Vector3 clr);
+	component Red red0 	{ color = clr; };
+};
+*/
+// class J
+// {
+// //	constructor(Vector3 clr);
+// //	component Blue blue0 { color = clr; };
+// 	component Blue blue0 { color = Vector3(3, 2, 1); };
+// };
+// 
+// 
+// class K
+// {
+// 	component Blue blue0 { color = Vector3(1,2,3); };
+// };
+
+
+// class B	{ component Spawner spawner { prototype = A(); }; };
+// class A { component Spawner spawner { /*prototype = B();*/ }; };
+
+
+class C { constructor(){ B obj; }; };
+class B { constructor(){ /*A obj;*/ }; };
+class A { constructor(){ /*C obj;*/ }; };
+
+
+// class B
+// {
+// 	constructor(){ /*A obj;*/ };
+// };
+// 
+// 
+// class A
+// {
+// 	constructor(){ B obj; };
+// };
+
+
+
+// 
+// class D
+// {
+// 	component Red red0
+//  	{
+//  		color = Vector3(3, 2, 1);
+//  		data = 256;
+//  	};
+// };
+
+
+
+
+/*
+class C
+{
+	constructor(object obj)
+	{
+		//D d;
+	};
+
+	component Spawner spawner { prototype = obj; };	
+	component SpawnTimer spawnTimer { timeInterval = 0.5; };
+};
+*/
+
+
+/*
+
+class InheritanceTest
+{			  
+// 	component Destructor d;
+// 	component TimerConfigurator(timer1 = red, timer2 = blue);
+// 	component RedTimer	red { timeInterval = 1.8; };
+// 	component BlueTimer blue { timeInterval = 0.7; };
+//  	component Spawner spawner { prototype = Foo(); };
+// 	component SpawnTimer spawnTimer { timeInterval = 3.0; };
+};
+*/
+
+
+class Main
+{
+	constructor()
+	{
+		A obj;
+		//InheritanceTest tester;
+		//Foo foo;
+		//C c( J(Vector3(5, 5, 5)) );
+	};
+};

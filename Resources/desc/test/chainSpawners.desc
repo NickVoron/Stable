@@ -1,0 +1,58 @@
+interface Movable
+{
+	property pos
+	property vel
+	property clr
+	property txt = "Default"
+
+	component SphereDrawer	{	color = clr	text = txt	}
+	component Position		{ position = pos hpb = Vector3(0,0,0) }
+	component LinearMover	{ velocity = vel }
+	component SpawnTimer	{ timeInterval = 0.3 }
+	
+}
+
+class C : Movable
+{ 
+	vel = Vector3(10, 0, 0)
+	clr = Color(1, 0, 0)
+
+	component Spawner 
+	{ 
+		prototype = B { pos = Vector3(0,0,0) }
+		limit = 1
+	}
+}
+
+class B : Movable
+{ 
+	vel = Vector3(0, 0, 10)
+	clr = Color(0, 0, 1)
+
+	component Spawner 
+	{ 
+		prototype = A { pos = Vector3(0,0,0) }
+		limit = 1
+	}
+}
+
+class A : Movable
+{ 
+	vel = Vector3(0, 10, 0)
+	clr = Color(0, 1, 0)
+
+	component Spawner 
+	{ 
+		prototype = C { pos = Vector3(0,0,0) }
+		limit = 1
+	}
+}
+
+class Main 
+{ 
+	C obj 
+	{
+		pos = Vector3(25,0,0)
+		txt = "InitialObject"
+	}
+}

@@ -1,0 +1,42 @@
+class Base
+{
+	property pos
+	property color
+		
+	component[category = client] Position { position = pos hpb = Vector3(0,0,0) } 
+	component[category = client] SphereDrawer { color = color }
+}
+
+
+class Red: Base
+{
+	color = Color(1,0,0)
+	
+	component[category = client] LinearMover { velocity = Vector3(1,0,0) }
+}
+
+class Blue: Base
+{
+	color = Color(0,0,1)
+	
+	component[category = client] LinearMover { velocity = Vector3(0,1,0) }
+}
+
+class Green : Base
+{
+	component[category = client] LinearMover { velocity = Vector3(0,0,-1) }
+}
+
+class Yellow : Green
+{
+	component[category = client] PositionDrawer
+}
+
+class Main 
+{ 
+	Red c {pos = Vector3(10,0,0)} 
+	Blue blue{ pos = Vector3(0,0,10)}
+	Blue bluee{ pos = Vector3(0,10,0)}
+	Green green{ pos = Vector3(0,0,-10) color = Color(0, 1, 0)}
+	Yellow green { pos = Vector3(-10,0,0) color = Color(1, 1, 0)}
+}

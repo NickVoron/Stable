@@ -1,0 +1,19 @@
+class Foo
+{
+	property color = Color(1,1,1)
+
+	component Red red{
+		color = color
+	}
+
+}
+
+class Main
+{
+	Foo foo1{}
+	
+	Foo foo2{
+		color = Color(1,0, 0) 
+	}
+}
+

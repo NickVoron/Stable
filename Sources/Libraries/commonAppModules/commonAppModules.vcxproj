@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D0E3A50B-F72A-4A32-BB7C-0C8603D2158F}</ProjectGuid>
+    <RootNamespace>commonAppModulesrary</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\VS_Props\common_params.props" />
+    <Import Project="..\..\..\..\VS_Props\arty_release.props" />
+    <Import Project="..\..\..\..\VS_Props\libs_paths.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\VS_Props\common_params.props" />
+    <Import Project="..\..\..\..\VS_Props\arty_release.props" />
+    <Import Project="..\..\..\..\VS_Props\libs_paths.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\VS_Props\common_params.props" />
+    <Import Project="..\..\..\..\VS_Props\arty_debug.props" />
+    <Import Project="..\..\..\..\VS_Props\libs_paths.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\VS_Props\common_params.props" />
+    <Import Project="..\..\..\..\VS_Props\arty_debug.props" />
+    <Import Project="..\..\..\..\VS_Props\libs_paths.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="autorun.cpp" />
+    <ClCompile Include="cameraCreator.cpp" />
+    <ClCompile Include="componentModel.cpp" />
+    <ClCompile Include="componentModelHelpers.cpp" />
+    <ClCompile Include="console.cpp" />
+    <ClCompile Include="d3d9\direct3d9.cpp" />
+    <ClCompile Include="d3d11\direct3d11.cpp" />
+    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="crtMemDebugger.cpp" />
+    <ClCompile Include="debugDrawing.cpp" />
+    <ClCompile Include="debugDrawingFlusher.cpp" />
+    <ClCompile Include="dragNDrop.cpp" />
+    <ClCompile Include="imgui.cpp" />
+    <ClCompile Include="imguiApp.cpp" />
+    <ClCompile Include="jni.cpp" />
+    <ClCompile Include="lightSources.cpp" />
+    <ClCompile Include="manipulators3d.cpp" />
+    <ClCompile Include="openal.cpp" />
+    <ClCompile Include="opengles\opengles.cpp" />
+    <ClCompile Include="opengl\opengl.cpp" />
+    <ClCompile Include="postEffects.cpp" />
+    <ClCompile Include="processTerminator.cpp" />
+    <ClCompile Include="profiler.cpp" />
+    <ClCompile Include="resourceManager.cpp" />
+    <ClCompile Include="scheme.cpp" />
+    <ClCompile Include="screenLog.cpp" />
+    <ClCompile Include="screenMouseHelper.cpp" />
+    <ClCompile Include="screenshots.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="timer.cpp" />
+    <ClCompile Include="udtnet.cpp" />
+    <ClCompile Include="uniguiFlusher.cpp" />
+    <ClCompile Include="utpnet.cpp" />
+    <ClCompile Include="window.cpp" />
+    <ClCompile Include="windowParams.cpp" />
+    <ClCompile Include="winInput.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="autorun.h" />
+    <ClInclude Include="cameraCreator.h" />
+    <ClInclude Include="componentModel.h" />
+    <ClInclude Include="componentModelHelpers.h" />
+    <ClInclude Include="d3d9\direct3d9.h" />
+    <ClInclude Include="d3d11\direct3d11.h" />
+    <ClInclude Include="backgroundRender.h" />
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="commandProcessor.h" />
+    <ClInclude Include="console.h" />
+    <ClInclude Include="crtMemDebugger.h" />
+    <ClInclude Include="debugDrawing.h" />
+    <ClInclude Include="debugDrawingFlusher.h" />
+    <ClInclude Include="dragNDrop.h" />
+    <ClInclude Include="fbx.h" />
+    <ClInclude Include="freeimage.h" />
+    <ClInclude Include="imgui.h" />
+    <ClInclude Include="imguiApp.h" />
+    <ClInclude Include="jni.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="lightSources.h" />
+    <ClInclude Include="locale.h" />
+    <ClInclude Include="logs.h" />
+    <ClInclude Include="logsUpdater.h" />
+    <ClInclude Include="manipulators3d.h" />
+    <ClInclude Include="openal.h" />
+    <ClInclude Include="opengles\opengles.h" />
+    <ClInclude Include="opengl\opengl.h" />
+    <ClInclude Include="postEffects.h" />
+    <ClInclude Include="processTerminator.h" />
+    <ClInclude Include="profiler.h" />
+    <ClInclude Include="resourceManager.h" />
+    <ClInclude Include="scheme.h" />
+    <ClInclude Include="screenLog.h" />
+    <ClInclude Include="screenMouseHelper.h" />
+    <ClInclude Include="screenshots.h" />
+    <ClInclude Include="settings.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="streamer.h" />
+    <ClInclude Include="timer.h" />
+    <ClInclude Include="udtnet.h" />
+    <ClInclude Include="uniguiFlusher.h" />
+    <ClInclude Include="utpnet.h" />
+    <ClInclude Include="window.h" />
+    <ClInclude Include="windowParams.h" />
+    <ClInclude Include="winInput.h" />
+    <ClInclude Include="workDir.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

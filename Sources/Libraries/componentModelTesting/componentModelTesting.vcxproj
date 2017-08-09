@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{bba1ec9b-0fb9-41f5-b02c-ea120b245290}</ProjectGuid>
+    <RootNamespace>componentModelTestingrary</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\VS_Props\common_params.props" />
+    <Import Project="..\..\..\..\VS_Props\arty_release.props" />
+    <Import Project="..\..\..\..\VS_Props\libs_paths.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\VS_Props\common_params.props" />
+    <Import Project="..\..\..\..\VS_Props\arty_release.props" />
+    <Import Project="..\..\..\..\VS_Props\libs_paths.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\VS_Props\common_params.props" />
+    <Import Project="..\..\..\..\VS_Props\arty_debug.props" />
+    <Import Project="..\..\..\..\VS_Props\libs_paths.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\VS_Props\common_params.props" />
+    <Import Project="..\..\..\..\VS_Props\arty_debug.props" />
+    <Import Project="..\..\..\..\VS_Props\libs_paths.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="tests\024.noNamedInstance.cpp" />
+    <ClCompile Include="tests\023.noNamedComponents.cpp" />
+    <ClCompile Include="tests\021.staticTypization.cpp" />
+    <ClCompile Include="tests\011.spawner.cpp" />
+    <ClCompile Include="tests\020.circlePoints.cpp" />
+    <ClCompile Include="tests\019.crossReference.cpp" />
+    <ClCompile Include="tests\018.subTreeObjects\018.subTreeObjects.cpp" />
+    <ClCompile Include="tests\018.subTreeObjects\types.cpp" />
+    <ClCompile Include="tests\014.componentByType.cpp" />
+    <ClCompile Include="tests\022.componentsReordering.cpp" />
+    <ClCompile Include="tests\025.nestedSpawners.cpp" />
+    <ClCompile Include="tests\026.cyclicSpawners.cpp" />
+    <ClCompile Include="tests\027.configurableSpawners.cpp" />
+    <ClCompile Include="tests\componentLinkModelConfigurator.cpp" />
+    <ClCompile Include="tests\015.nestedObject.cpp" />
+    <ClCompile Include="tests\008.objectArray.cpp" />
+    <ClCompile Include="tests\007.complexData.cpp" />
+    <ClCompile Include="tests\006.dataStruct.cpp" />
+    <ClCompile Include="tests\005.dataArray.cpp" />
+    <ClCompile Include="tests\004.functionCall.cpp" />
+    <ClCompile Include="tests\quietConfigurator.cpp" />
+    <ClCompile Include="tests\003.componentAsParameter.cpp" />
+    <ClCompile Include="tests\001.componentAndProperties.cpp" />
+    <ClCompile Include="tests\002.componentLink.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="tests\013.references.cpp" />
+    <ClCompile Include="tests\utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="tests\024.noNamedInstance.h" />
+    <ClInclude Include="tests\023.noNamedComponents.h" />
+    <ClInclude Include="tests\021.staticTypization.h" />
+    <ClInclude Include="tests\011.spawner.h" />
+    <ClInclude Include="tests\022.componentsReordering.h" />
+    <ClInclude Include="tests\025.nestedSpawners.h" />
+    <ClInclude Include="tests\026.cyclicSpawners.h" />
+    <ClInclude Include="tests\027.configurableSpawners.h" />
+    <ClInclude Include="unit_test.h" />
+    <ClInclude Include="tests\020.circlePoints.h" />
+    <ClInclude Include="tests\019.crossReference.h" />
+    <ClInclude Include="tests\018.subTreeObjects\018.subTreeObjects.h" />
+    <ClInclude Include="tests\018.subTreeObjects\types.h" />
+    <ClInclude Include="tests\014.componentByType.h" />
+    <ClInclude Include="tests\componentLinkModelConfigurator.h" />
+    <ClInclude Include="tests\015.nestedObject.h" />
+    <ClInclude Include="tests\008.objectArray.h" />
+    <ClInclude Include="tests\007.complexData.h" />
+    <ClInclude Include="tests\006.dataStruct.h" />
+    <ClInclude Include="tests\005.dataArray.h" />
+    <ClInclude Include="tests\004.functionCall.h" />
+    <ClInclude Include="tests\quietConfigurator.h" />
+    <ClInclude Include="tests\003.componentAsParameter.h" />
+    <ClInclude Include="tests\001.componentAndProperties.h" />
+    <ClInclude Include="tests\002.componentLink.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="tests\013.references.h" />
+    <ClInclude Include="tests\utils.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

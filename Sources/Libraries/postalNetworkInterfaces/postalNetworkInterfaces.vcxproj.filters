@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="address.cpp" />
+    <ClCompile Include="postalNetworkInterfaces.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="simulator.cpp">
+      <Filter>impl</Filter>
+    </ClCompile>
+    <ClCompile Include="utp_impl.cpp">
+      <Filter>impl</Filter>
+    </ClCompile>
+    <ClCompile Include="udt_impl.cpp">
+      <Filter>impl</Filter>
+    </ClCompile>
+    <ClCompile Include="udp_impl.cpp">
+      <Filter>impl</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="address.h" />
+    <ClInclude Include="postalNetworkInterfaces.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="simulator.h">
+      <Filter>impl</Filter>
+    </ClInclude>
+    <ClInclude Include="utp_impl.h">
+      <Filter>impl</Filter>
+    </ClInclude>
+    <ClInclude Include="udt_impl.h">
+      <Filter>impl</Filter>
+    </ClInclude>
+    <ClInclude Include="udp_impl.h">
+      <Filter>impl</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="impl">
+      <UniqueIdentifier>{15738143-37c3-419d-9763-3ab66f8bb2b2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="affectors\animator.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="affectors\around.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="affectors\boxConstraint.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="affectors\distanceConstraint.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="affectors\forward.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="affectors\freeRotator.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="affectors\heightMapConstraint.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="affectors\horizVert.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="affectors\null.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="affectors\thirdPerson.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="affectors\toTargetConstraint.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="affector.cpp" />
+    <ClCompile Include="constraint.cpp" />
+    <ClCompile Include="inputCollector.cpp" />
+    <ClCompile Include="manager.cpp" />
+    <ClCompile Include="params.cpp" />
+    <ClCompile Include="target.cpp" />
+    <ClCompile Include="utils.cpp" />
+    <ClCompile Include="affectors\plane.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="affectors\oneAxis.cpp" />
+    <ClCompile Include="affectors\vehicleView.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="affectors\animator.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\around.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\boxConstraint.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\distanceConstraint.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\forward.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\freeRotator.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\heightMapConstraint.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\horizVert.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\null.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\thirdPerson.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\toTargetConstraint.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affector.h" />
+    <ClInclude Include="constraint.h" />
+    <ClInclude Include="inputCollector.h" />
+    <ClInclude Include="manager.h" />
+    <ClInclude Include="params.h" />
+    <ClInclude Include="target.h" />
+    <ClInclude Include="utils.h" />
+    <ClInclude Include="affectors\plane.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\oneAxis.h" />
+    <ClInclude Include="affectors\vehicleView.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="affectors">
+      <UniqueIdentifier>{3d32d49b-4104-430c-9be7-89967796aecd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

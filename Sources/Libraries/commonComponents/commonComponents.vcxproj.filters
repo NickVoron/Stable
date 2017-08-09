@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="commonComponents.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="destructor.h" />
+    <ClInclude Include="destructTimer.h" />
+    <ClInclude Include="linearMover.h" />
+    <ClInclude Include="position.h" />
+    <ClInclude Include="spawner.h" />
+    <ClInclude Include="spawnTimer.h" />
+    <ClInclude Include="swaper.h" />
+    <ClInclude Include="swapTimer.h" />
+    <ClInclude Include="timer.h" />
+    <ClInclude Include="timerConfigurator.h" />
+    <ClInclude Include="pointConstraint.h" />
+    <ClInclude Include="coloredComponents.h" />
+    <ClInclude Include="logCommonComponents.h" />
+    <ClInclude Include="referencedComponents.h" />
+    <ClInclude Include="stearingComponents.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="destructor.cpp" />
+    <ClCompile Include="destructTimer.cpp" />
+    <ClCompile Include="linearMover.cpp" />
+    <ClCompile Include="position.cpp" />
+    <ClCompile Include="spawner.cpp" />
+    <ClCompile Include="spawnTimer.cpp" />
+    <ClCompile Include="swaper.cpp" />
+    <ClCompile Include="swapTimer.cpp" />
+    <ClCompile Include="timer.cpp" />
+    <ClCompile Include="timerConfigurator.cpp" />
+    <ClCompile Include="pointConstraint.cpp" />
+    <ClCompile Include="coloredComponents.cpp" />
+    <ClCompile Include="logCommonComponents.cpp" />
+    <ClCompile Include="referencedComponents.cpp" />
+    <ClCompile Include="stearingComponents.cpp" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="widgets">
+      <UniqueIdentifier>{6b4019c2-2225-4586-a2e3-2ec22c1d527d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{bb0c5677-38b9-41d2-a49f-b37675132a22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="drawing">
+      <UniqueIdentifier>{a631f3c7-5c2d-4484-863d-b38e982a4ade}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="widgets\button.cpp">
+      <Filter>widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\checkBox.cpp">
+      <Filter>widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\color.cpp">
+      <Filter>widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\color_ext.cpp">
+      <Filter>widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\comboBox.cpp">
+      <Filter>widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\image.cpp">
+      <Filter>widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\label.cpp">
+      <Filter>widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\list.cpp">
+      <Filter>widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\panel.cpp">
+      <Filter>widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\separator.cpp">
+      <Filter>widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\slider.cpp">
+      <Filter>widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\area.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\layout.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\shift.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\transform.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="drawing\drawing.cpp">
+      <Filter>drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="control.cpp" />
+    <ClCompile Include="focus.cpp" />
+    <ClCompile Include="globals.cpp" />
+    <ClCompile Include="imgui.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="types.cpp" />
+    <ClCompile Include="renderTarget.cpp" />
+    <ClCompile Include="widgets\progressBar.cpp">
+      <Filter>widgets</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="widgets\button.h">
+      <Filter>widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\checkBox.h">
+      <Filter>widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\color.h">
+      <Filter>widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\color_ext.h">
+      <Filter>widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\comboBox.h">
+      <Filter>widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\image.h">
+      <Filter>widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\label.h">
+      <Filter>widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\list.h">
+      <Filter>widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\panel.h">
+      <Filter>widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\separator.h">
+      <Filter>widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\slider.h">
+      <Filter>widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\area.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\layout.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\shift.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\transform.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="drawing\drawing.h">
+      <Filter>drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="control.h" />
+    <ClInclude Include="controlTypes.h" />
+    <ClInclude Include="focus.h" />
+    <ClInclude Include="globals.h" />
+    <ClInclude Include="imgui.h" />
+    <ClInclude Include="internalState.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="types.h" />
+    <ClInclude Include="renderTarget.h" />
+    <ClInclude Include="widgets\progressBar.h">
+      <Filter>widgets</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

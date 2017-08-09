@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="d3d9">
+      <UniqueIdentifier>{81b7ef87-5a44-49c1-89ee-39805677395d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d11">
+      <UniqueIdentifier>{f7d6d24c-2162-4500-822a-82084d423672}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="opengl">
+      <UniqueIdentifier>{2368a1f1-43ed-4e88-8c52-d7a0f586293f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="opengles">
+      <UniqueIdentifier>{bdc2ef54-80b1-4200-866a-62e02c859298}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="d3d9\direct3d9.cpp">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="d3d11\direct3d11.cpp">
+      <Filter>d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="crtMemDebugger.cpp" />
+    <ClCompile Include="debugDrawing.cpp" />
+    <ClCompile Include="imgui.cpp" />
+    <ClCompile Include="lightSources.cpp" />
+    <ClCompile Include="manipulators3d.cpp" />
+    <ClCompile Include="postEffects.cpp" />
+    <ClCompile Include="processTerminator.cpp" />
+    <ClCompile Include="profiler.cpp" />
+    <ClCompile Include="resourceManager.cpp" />
+    <ClCompile Include="screenLog.cpp" />
+    <ClCompile Include="screenMouseHelper.cpp" />
+    <ClCompile Include="screenshots.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="timer.cpp" />
+    <ClCompile Include="uniguiFlusher.cpp" />
+    <ClCompile Include="window.cpp" />
+    <ClCompile Include="winInput.cpp" />
+    <ClCompile Include="opengl\opengl.cpp">
+      <Filter>opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="openal.cpp" />
+    <ClCompile Include="componentModel.cpp" />
+    <ClCompile Include="imguiApp.cpp" />
+    <ClCompile Include="cameraCreator.cpp" />
+    <ClCompile Include="dragNDrop.cpp" />
+    <ClCompile Include="windowParams.cpp" />
+    <ClCompile Include="debugDrawingFlusher.cpp" />
+    <ClCompile Include="udtnet.cpp" />
+    <ClCompile Include="opengles\opengles.cpp">
+      <Filter>opengles</Filter>
+    </ClCompile>
+    <ClCompile Include="autorun.cpp" />
+    <ClCompile Include="scheme.cpp" />
+    <ClCompile Include="console.cpp" />
+    <ClCompile Include="utpnet.cpp" />
+    <ClCompile Include="componentModelHelpers.cpp" />
+    <ClCompile Include="jni.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="d3d9\direct3d9.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d11\direct3d11.h">
+      <Filter>d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="backgroundRender.h" />
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="commandProcessor.h" />
+    <ClInclude Include="console.h" />
+    <ClInclude Include="crtMemDebugger.h" />
+    <ClInclude Include="debugDrawing.h" />
+    <ClInclude Include="imgui.h" />
+    <ClInclude Include="imguiApp.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="lightSources.h" />
+    <ClInclude Include="locale.h" />
+    <ClInclude Include="logs.h" />
+    <ClInclude Include="logsUpdater.h" />
+    <ClInclude Include="manipulators3d.h" />
+    <ClInclude Include="postEffects.h" />
+    <ClInclude Include="processTerminator.h" />
+    <ClInclude Include="profiler.h" />
+    <ClInclude Include="resourceManager.h" />
+    <ClInclude Include="screenLog.h" />
+    <ClInclude Include="screenMouseHelper.h" />
+    <ClInclude Include="screenshots.h" />
+    <ClInclude Include="settings.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="streamer.h" />
+    <ClInclude Include="timer.h" />
+    <ClInclude Include="uniguiFlusher.h" />
+    <ClInclude Include="window.h" />
+    <ClInclude Include="winInput.h" />
+    <ClInclude Include="workDir.h" />
+    <ClInclude Include="opengl\opengl.h">
+      <Filter>opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="openal.h" />
+    <ClInclude Include="componentModel.h" />
+    <ClInclude Include="freeimage.h" />
+    <ClInclude Include="cameraCreator.h" />
+    <ClInclude Include="dragNDrop.h" />
+    <ClInclude Include="windowParams.h" />
+    <ClInclude Include="debugDrawingFlusher.h" />
+    <ClInclude Include="udtnet.h" />
+    <ClInclude Include="fbx.h" />
+    <ClInclude Include="opengles\opengles.h">
+      <Filter>opengles</Filter>
+    </ClInclude>
+    <ClInclude Include="autorun.h" />
+    <ClInclude Include="scheme.h" />
+    <ClInclude Include="utpnet.h" />
+    <ClInclude Include="componentModelHelpers.h" />
+    <ClInclude Include="jni.h" />
+  </ItemGroup>
+</Project>

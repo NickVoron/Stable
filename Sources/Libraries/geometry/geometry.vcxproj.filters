@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="mesh">
+      <UniqueIdentifier>{fb128922-7400-4765-9a95-3ad24586112e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mesh\vertexElements">
+      <UniqueIdentifier>{a75279fb-4918-4e9f-b10a-f23ba9d9f6e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{d5b77919-1c31-4c8c-a13d-ceb2a5b4b9e4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="mesh\debug.io.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\indexStream.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\io.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\mesh.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\vertex.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\vertexStream.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\vertexElements\blend.h">
+      <Filter>mesh\vertexElements</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\vertexElements\color.h">
+      <Filter>mesh\vertexElements</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\vertexElements\position.h">
+      <Filter>mesh\vertexElements</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\vertexElements\tangentSpace.h">
+      <Filter>mesh\vertexElements</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\vertexElements\textureCoords.h">
+      <Filter>mesh\vertexElements</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\vertexElements\vector.h">
+      <Filter>mesh\vertexElements</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\bodies.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\boundings.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\meshOperations.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\transformations.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\vertexCache.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="helpers.h" />
+    <ClInclude Include="minimumBounding\minimumBounding.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="mesh\debug.io.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\bodies.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\box.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\cylinder.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\grid.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\sphere.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\transformations.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="minimumBounding\minimumBounding.cpp" />
+  </ItemGroup>
+</Project>

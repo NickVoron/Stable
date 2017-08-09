@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="debug.cpp" />
+    <ClCompile Include="io.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="shapes\obb.cpp" />
+    <ClCompile Include="algorithm\ray2shapes.cpp" />
+    <ClCompile Include="algorithm\sphere2oobb.cpp" />
+    <ClCompile Include="utils\utils.cpp" />
+    <ClCompile Include="algorithm\poin2plane.cpp" />
+    <ClCompile Include="shapes\aabb.cpp" />
+    <ClCompile Include="algorithm\sphere2obbMk2.cpp" />
+    <ClCompile Include="2d\board.cpp" />
+    <ClCompile Include="shapes\quad.cpp" />
+    <ClCompile Include="shapes\shapes.cpp" />
+    <ClCompile Include="algorithm\threePlanes.cpp" />
+    <ClCompile Include="shapes\triangle.cpp" />
+    <ClCompile Include="frustum.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="debug.h" />
+    <ClInclude Include="io.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="shapes\obb.h" />
+    <ClInclude Include="algorithm\ray2shapes.h" />
+    <ClInclude Include="algorithm\sphere2oobb.h" />
+    <ClInclude Include="utils\utils.h" />
+    <ClInclude Include="algorithm\poin2plane.h" />
+    <ClInclude Include="shapes\aabb.h" />
+    <ClInclude Include="algorithm\sphere2obbMk2.h" />
+    <ClInclude Include="2d\board.h" />
+    <ClInclude Include="shapes\quad.h" />
+    <ClInclude Include="shapes\shapes.h" />
+    <ClInclude Include="algorithm\threePlanes.h" />
+    <ClInclude Include="shapes\triangle.h" />
+    <ClInclude Include="frustum.h" />
+  </ItemGroup>
+</Project>

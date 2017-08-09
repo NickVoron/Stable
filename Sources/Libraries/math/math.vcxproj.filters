@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="base">
+      <UniqueIdentifier>{336d9dbc-8b4a-445f-8568-8fbd5a0fc657}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\io">
+      <UniqueIdentifier>{6958cc40-1535-4cff-ad82-43610cf7cbc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{3e7ee38f-1e6e-4048-956b-4d38b1d60581}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="base\all.include.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Matrix2.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Matrix3.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Matrix4.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Quaternion.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Vector2.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Vector3.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Vector4.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\io\all.include.h">
+      <Filter>base\io</Filter>
+    </ClInclude>
+    <ClInclude Include="base\io\matrix.io.h">
+      <Filter>base\io</Filter>
+    </ClInclude>
+    <ClInclude Include="base\io\vector3.io.h">
+      <Filter>base\io</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\all.include.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\byteAverage.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\interval.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\NDCube.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\NDTree.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\NDVector.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\PWPath.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\randomVar.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\Range.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\RangedValue.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\State.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\triangulate.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\unsorted.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="math.h" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="base\Matrix4.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\Quaternion.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\Vector2.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\vector3.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\vector4.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\io\matrix.io.cpp">
+      <Filter>base\io</Filter>
+    </ClCompile>
+    <ClCompile Include="base\io\vector3.io.cpp">
+      <Filter>base\io</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\randomVar.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\State.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\triangulate.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\unsorted.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="math.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+</Project>

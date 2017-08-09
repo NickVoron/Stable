@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="paramsHolder">
+      <UniqueIdentifier>{c8eaaaad-5b95-4017-8f51-41dbc6924b6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="affectors">
+      <UniqueIdentifier>{d12a8cbf-d72e-4098-ac82-7718c2dc9dec}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="paramsHolder\holder.cpp">
+      <Filter>paramsHolder</Filter>
+    </ClCompile>
+    <ClCompile Include="affectors\affector.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="affectors\around.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="affectors\boxConstraint.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="affectors\distanceConstraint.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="cameraComponents.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="cameraSetter.cpp" />
+    <ClCompile Include="affectors\thirdPersonConstraint.cpp">
+      <Filter>affectors</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="paramsHolder\holder.h">
+      <Filter>paramsHolder</Filter>
+    </ClInclude>
+    <ClInclude Include="paramsHolder\include.h">
+      <Filter>paramsHolder</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\affector.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\around.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\boxConstraint.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\distanceConstraint.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\forward.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\freeRotator.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\horizVert.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\include.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\thirdPersonConstraint.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="affectors\toTargetConstraint.h">
+      <Filter>affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="cameraComponents.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="cameraSetter.h" />
+  </ItemGroup>
+</Project>

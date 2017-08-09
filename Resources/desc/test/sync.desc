@@ -1,0 +1,24 @@
+interface Movable
+{
+	property pos
+	property vel
+
+	component Position		{ position = pos hpb = Vector3(0,0,0) }
+	component LinearMover	{ velocity = vel }
+	component PositionLogger{ }
+
+}
+
+class C : Movable
+{ 
+	vel = Vector3(10, 0, 0)
+}
+
+
+class Main 
+{ 
+	C obj 
+	{
+		pos = Vector3(25,0,0)
+	}
+}

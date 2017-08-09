@@ -1,0 +1,27 @@
+class Source
+{
+	property pos
+	property snd
+
+	component[category = client] Position		{ position = pos hpb = Vector3(0,0,0)		}
+	component[category = client] SphereDrawer	{ color = Color(1,1,0) radius = 1	}
+
+	component[category = client] AudioSource
+	{
+		file = snd	
+	}
+
+	component[category = client] Manipulator{}
+	component[category = client] SimpleBounding{}
+}
+
+class Main 
+{ 
+
+
+	Source src
+	{
+		pos = Vector3(0, 0, 0)
+		snd = "footsteps.wav"
+	}
+}

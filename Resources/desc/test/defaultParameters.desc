@@ -1,0 +1,41 @@
+
+
+// class A { component Green	{ parameter = "green";		}; };
+// class B { component Blue	{ color = Vector3(2,2,2);	}; };
+class C 
+{ 
+	component Red{ 
+		color = Color(1,1,1)	
+		} 
+}
+
+class D 
+{ 
+	property  dParam
+	component Red{ color = dParam } 
+}
+
+class E 
+{ 
+	property eParam
+	component Spawner	{ prototype = D{	dParam = eParam	} 
+	} 
+}
+
+class J 
+{ 
+	D e{ 
+		eParam = Color(1,1,1) 
+	}
+}
+
+class Main 
+{ 
+	A{}
+	
+	E e{ 
+		eParam = Color(1,1,1)
+	}
+	
+	J j{}
+}

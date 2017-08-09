@@ -1,0 +1,53 @@
+class Tree
+{
+	property pos
+	property clr
+	property txt
+	property vel
+	
+	component[category = client] Position pos	{position = pos}
+	//component[category = client] PositionLogger  {}
+	component[category = client] LinearMover  { velocity = vel }
+
+	//component SphereDrawer	{ radius = 1 color = clr  /*text = txt*/}
+	
+	//component TreeLogic b {}
+	//component TreeLogic a {}
+}
+
+class Garden
+{
+	component ReferencedUtilizer{}
+}
+
+class Main
+{
+	property data =	
+ 	{ 
+ 		{pos = Vector3(1,0,1)  	color = ((2 % 2) > 0) ? Color(1,0,0) : Color(0,1,1)	mesh = "applebaum.dae"	}, 
+ 		{pos = Vector3(2,0,2) 	color = Color(0,1,0)	mesh = "oak.dae"		}, 
+ 		{pos = Vector3(3,0,3) 	color = Color(0,0,1)	mesh = "coconut.dae"	}, 
+ 		{pos = Vector3(4,0,4)	color = Color(1,0,1)	mesh = "test.dae"		}, 
+		{pos = Vector3(5,0,5)	color = Color(1,1,0)	mesh = "test.dae"		}
+ 	}
+
+	//component GardenManager { trees = t.a }
+	//component GardenManager { trees = {t.a, t.b} }
+	//component GardenManager { trees = t.<TreeLogic> }
+	Tree t[data]
+	{
+		pos = (iterator.pos * magnitude(iterator.pos)) + Vector3(1, 0, 1)
+		//pos = Vector3(1, 0, 1) * magnitude(iterator.pos)
+
+		clr = iterator.color
+		txt = iterator.mesh
+	}
+					 
+	Tree tree[1000]{ vel = Vector3(3, 2, 1) }
+
+				 /*
+	Garden garden
+	{
+		trees = t.<TreeLogic>
+	}		   */
+}

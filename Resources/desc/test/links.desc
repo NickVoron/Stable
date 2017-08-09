@@ -1,0 +1,99 @@
+class Tree
+{
+	property pos
+	property clr
+	property txt
+	property custom
+	property rad = 1
+
+	
+	component Position pos	{position = pos}
+	//component SphereDrawer	{ radius = rad color = clr  text = txt}
+
+	component ReferencedRed{}
+	component ReferencedBlue{}
+
+		
+	//component Manipulator{}
+	//component SimpleBounding{}
+	//component CameraParamHolder{}
+}
+
+
+class ReferUtilizer
+{
+	property refs
+
+	component ReferencedUtilizer
+	{
+		references = refs
+	}
+}
+
+
+class Garden
+{
+ 	property data =	
+  	{ 
+ 		{pos = Vector3(1,0,1)  	color = Color(1,0,0)	mesh = "applebaum.dae"	}, 
+  		{pos = Vector3(2,0,2) 	color = Color(0,1,0)	mesh = "oak.dae"		}, 
+  		{pos = Vector3(3,0,3) 	color = Color(0,0,1)	mesh = "coconut.dae"	}, 
+  		{pos = Vector3(4,0,4)	color = Color(1,0,1)	mesh = "test.dae"		}, 
+ 		{pos = Vector3(5,0,5)	color = Color(1,1,0)	mesh = "test.dae"		}
+  	}
+
+	component Position pos{ }
+
+
+// 	ReferUtilizer utilizer 	{	refs = {t.<ReferencedBase>} 	}
+
+//	component ReferencedUtilizer
+	//	{
+		//	references = { t.<ReferencedRed>, t.<ReferencedBlue> }
+		//}
+
+	Tree t[data]
+	{
+		//вот так работает
+		//pos = (iterator.pos * magnitude(iterator.pos)) + Vector3(1,0,1)
+		//pos = iterator.pos 
+
+		//а вот так не работает
+		pos = iterator.pos * magnitude(iterator.pos) + Vector3(1,0,1)
+		
+		clr = iterator.color
+		txt = iterator.color
+	}
+
+
+
+
+/*
+
+  	Tree t[6]
+  	{
+  		pos = data[ 0 ].pos
+  		clr = data[ 0 ].color
+		rad = iterator
+  		txt = data[ 0 ].pos
+  	}*/
+
+// 	Tree t[20]
+//   	{
+//   		pos = data[0].pos
+//    		clr = data[0].color
+//  		//txt = data[0].pos
+// 		rad = iterator
+//   	}
+// 
+// 	Tree t1
+//   	{
+//   		pos = Vector3(3,0,3)
+//   	}
+
+}
+
+class Main
+{
+	Garden garden {}
+}

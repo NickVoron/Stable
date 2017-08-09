@@ -1,0 +1,87 @@
+class Tree
+{
+	property pos
+	property clr
+	property txt
+	
+	component[category = client] Position pos	{position = pos}
+	//component SphereDrawer	{ radius = 1 color = clr  /*text = txt*/}
+
+	component[category = client] ReferencedRed{}
+	component[category = client] ReferencedBlue{}
+}
+
+class ReferUtilizer
+{
+	property refs
+
+	component[category = client] ReferencedUtilizer
+	{
+		references = refs
+	}
+}
+
+class Garden
+{
+	property data =	
+ 	{ 
+ 		{pos = Vector3(1,0,1)  	color = ((2 % 2) > 0) ? Color(1,0,0) : Color(0,1,1)	mesh = "applebaum.dae"	}, 
+ 		{pos = Vector3(2,0,2) 	color = Color(0,1,0)	mesh = "oak.dae"		}, 
+ 		{pos = Vector3(3,0,3) 	color = Color(0,0,1)	mesh = "coconut.dae"	}, 
+ 		{pos = Vector3(4,0,4)	color = Color(1,0,1)	mesh = "test.dae"		}, 
+		{pos = Vector3(5,0,5)	color = Color(1,1,0)	mesh = "test.dae"		}
+ 	}
+
+	//component ReferencedUtilizer
+	//{
+	//	references = {t.<ReferencedBase>, t1.<ReferencedBlue>}
+	//}
+
+	Tree t[data]
+	{
+		//вот так работает
+		pos = (iterator.pos * magnitude(iterator.pos)) + Vector3(1,0,1)
+
+		//а вот так не работает
+		//pos = iterator.pos * magnitude(iterator.pos) + Vector3(1,0,1)
+
+		clr = iterator.color
+		txt = iterator.mesh
+	}
+
+	ReferUtilizer rUtilizer
+	{
+		refs = { t.<ReferencedRed>, t.<ReferencedBlue> }
+	}
+
+
+
+	Tree t1[data]
+	{
+		//вот так работает
+		pos = (iterator.pos * magnitude(iterator.pos)) + Vector3(1,0,1)
+
+		//а вот так не работает
+		//pos = iterator.pos * magnitude(iterator.pos) + Vector3(1,0,1)
+
+		clr = iterator.color
+   		txt = iterator.mesh
+	}
+
+}
+
+class System
+{
+
+
+	//component GardenManager { trees = t.a }
+	//component GardenManager { trees = {t.a, t.b} }
+	//component GardenManager { trees = t.<TreeLogic> }
+	
+	Garden garden {}
+}
+
+class Main
+{
+	System system {}
+}

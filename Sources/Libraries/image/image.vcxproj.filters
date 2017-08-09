@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="filter">
+      <UniqueIdentifier>{7a83ad98-0f1c-49de-93a8-c2e9f42e15dc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="filter\kernel1.h">
+      <Filter>filter</Filter>
+    </ClInclude>
+    <ClInclude Include="filter\kernel2.h">
+      <Filter>filter</Filter>
+    </ClInclude>
+    <ClInclude Include="filter\resize.h">
+      <Filter>filter</Filter>
+    </ClInclude>
+    <ClInclude Include="filter\sobel.h">
+      <Filter>filter</Filter>
+    </ClInclude>
+    <ClInclude Include="channelsMapping.h" />
+    <ClInclude Include="color.h" />
+    <ClInclude Include="cubemap.h" />
+    <ClInclude Include="formats.h" />
+    <ClInclude Include="image.h" />
+    <ClInclude Include="intcolor.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="line.h" />
+    <ClInclude Include="plane.h" />
+    <ClInclude Include="planeMips.h" />
+    <ClInclude Include="runtime_plane.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="swizzles.h" />
+    <ClInclude Include="type_utils.h" />
+    <ClInclude Include="volume.h" />
+    <ClInclude Include="io.h" />
+    <ClInclude Include="filter\kernelsHelpers.h">
+      <Filter>filter</Filter>
+    </ClInclude>
+    <ClInclude Include="filter\mipmapGenerator.h" />
+    <ClInclude Include="filter\colorMapping.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="formats.cpp" />
+    <ClCompile Include="image.cpp" />
+    <ClCompile Include="runtime_plane.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+</Project>

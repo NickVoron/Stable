@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="detail">
+      <UniqueIdentifier>{44fc7968-3024-4dcf-8a70-92c1305390b6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="detail\cache_simulator.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\connectivity_graph.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\graph_array.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\heap_array.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\policy.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\types.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="public_types.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="tri_stripper.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="connectivity_graph.cpp" />
+    <ClCompile Include="policy.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="tri_stripper.cpp" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,11 @@
+class Main 
+{ 
+	var integer = 10
+	var string = "string"
+	var float1 = 12.1
+	var float2 = 12.1f
+	var boolean = true
+	var array = {integer, string, float1, float2, boolean}
+	
+	var arrayElement = array[1]
+};

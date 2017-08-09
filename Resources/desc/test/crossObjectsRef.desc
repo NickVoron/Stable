@@ -1,0 +1,48 @@
+interface Movable
+{
+	property pos
+	property vel
+
+	component[category = client]  Position
+	{ 
+		position = pos
+		hpb = Vector3(0,0,0)
+	}
+
+	//component[category = client]  PositionLogger{}
+
+	component[category = client]  LinearMover
+	{
+		velocity = vel 
+	}
+}
+
+ class Target : Movable
+ { 
+	vel = Vector3(-16, 0, 0)
+
+	component[category = client]  StearingTarget{}
+	component[category = client]  PositionDrawer{} 
+ } 
+ 
+ class HomingMissle : Movable
+ { 
+	pos = Vector3(0, 0, 2)
+	vel = Vector3(0, 0, 2)
+ 	
+// 	component[category = client]  SeekStearing
+// 	component[category = client]  NearestTargetSearcher
+
+	component[category = client]  SphereDrawer
+	{
+		radius = 0.2
+		color = Color(1, 1, 0)
+	}
+ }
+					   
+
+class Main 
+{ 
+	//Target trg { pos = Vector3(10,0,10)}
+	HomingMissle missle { pos = Vector3(0,0,0) }
+}

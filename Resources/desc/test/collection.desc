@@ -1,0 +1,6 @@
+collection Integers<int>{ One(1), Two(2), Tree(3) }
+
+Main
+{
+	var one = Integers.One;
+}

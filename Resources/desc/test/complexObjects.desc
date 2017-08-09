@@ -1,0 +1,58 @@
+interface Drawable
+{
+	property pos
+	property clr
+	property txt = "Default"
+
+	component Position { position = pos hpb = Vector3(0, 0, 0) }
+	//component SphereDrawer 	{	color = clr	text = txt		radius = 0.1	}
+}
+
+interface Movable : Drawable
+{
+	property vel = Vector3(0,0,0)
+	
+	component LinearMover	{ velocity = vel }
+
+}
+
+
+class C : Movable
+{ 
+	pos = Vector3(10, 0, 0)
+	vel = Vector3(10, 0, 0)
+	clr = Color(1, 0, 0)
+	txt = "C"
+
+	A a{}
+}
+
+class B : Movable
+{ 
+	pos = Vector3(0, 0, 10)
+	vel = Vector3(0, 0, 10)
+	clr = Color(0, 0, 1)
+	txt = "B"
+
+	C c{}
+}
+
+
+class A : Movable
+{ 
+	pos = Vector3(0, 10, 0)
+	vel = Vector3(0, 0.5, 0)
+	clr = Color(0, 1, 0)
+	txt = "A"
+}
+
+		  /*
+class Main 
+{ 
+	B obj 
+	{
+		pos = Vector3(25,0,0)
+	//	txt = "InitialObject"
+	}
+}
+		*/

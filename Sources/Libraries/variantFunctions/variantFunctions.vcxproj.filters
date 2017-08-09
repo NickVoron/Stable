@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="variantFunctions.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="common\func.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="functions.h" />
+    <ClInclude Include="typePromotion.h" />
+    <ClInclude Include="variantFunctions.h" />
+    <ClInclude Include="library.include.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="common\func.h">
+      <Filter>common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="common">
+      <UniqueIdentifier>{e698851d-4074-4841-a9ba-666ed0542aff}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,5 @@
+class C { constructor(){ B obj; }; };
+class B { constructor(){ A obj; }; };
+class A { constructor(){ C obj; }; };
+
+class Main { constructor() { A obj; }; };
