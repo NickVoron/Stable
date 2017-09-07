@@ -94,7 +94,7 @@ namespace DebugDrawing
 
 	void ToolDX11::begin(Viewports::Viewport& viewport, ShaderMode mode)
 	{
-		shader[mode]->resource([&viewport, this](auto shaders)
+		shader[mode]->resource([&viewport, this](auto& shaders)
 		{				
 			dx11::execute(viewport, drawables);
 			dx11::DrawableObjectsList shd;

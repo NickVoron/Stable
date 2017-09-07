@@ -70,7 +70,7 @@ struct StreamerThreads
 		}
 	}
 
-	std::mutex mtxs[16];
+	std::mutex mtxs[32];
 	FilesQueue queries;
 };
 
@@ -78,7 +78,7 @@ std::unique_ptr<StreamerThreads> threads;
 
 void Streamer::init()
 {
-	threads = std::make_unique<StreamerThreads>(12);
+	threads = std::make_unique<StreamerThreads>(4);
 }
 
 void Streamer::release()

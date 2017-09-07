@@ -50,7 +50,7 @@ namespace Resources
 	template<int shaders>
 	void Shader<shaders>::Compile(stream::ostream& os)
 	{
-		resource([&os](auto shader) {shader.save(os); });
+		resource([&os](auto& shader) {shader.save(os); });
 	}
 
 	template<int shaders>
@@ -76,7 +76,7 @@ namespace Resources
 	template<int shaders>
 	bool Shader<shaders>::set(Viewports::Viewport& viewport)
 	{
-		return resource([&viewport](auto shader) { dx11::execute(viewport, shader); });
+		return resource([&viewport](auto& shader) { dx11::execute(viewport, shader); });
 	}
 
 	typedef Shader<gapi::VERTEX_SHADER | gapi::PIXEL_SHADER> VertexPixelShader;

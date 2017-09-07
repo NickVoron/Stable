@@ -60,13 +60,7 @@ namespace Resources
 
 	void setupManager()
 	{
-		str::string256 sdkPath;
-		if (const char* res = getenv("SharedTec_SDK_path"))
-			sdkPath += res;
-
-		sdkPath += "/Resources";
-
-		Resources::Store::setPath(sdkPath.c_str(), "../../Resources", "compiled");
+		Resources::Store::setPath("../../../Stable/Resources", "../../Resources", "compiled");
 	}
 
 

@@ -60,7 +60,7 @@ namespace imgui
 			static const char* select[] = { "Select_L", "Select_Scale", "Select_R" };
 			static const char* push[]	= { "Push_L", "Push_Scale", "Push_R" };
 
-			detail::guiAtlas->resource([this](auto a)
+			detail::guiAtlas->resource([this](auto& a)
 			{
 				const RectAtlas& atl = a.atlas;
 				for (int i = NORMAL; i < BUTTON_STATES_COUNT; ++i)
