@@ -92,7 +92,7 @@ namespace ObjectParser {
     }
 
     inline
-    unsigned int
+    auto
     height () const
     {
       return seq_.size ();
