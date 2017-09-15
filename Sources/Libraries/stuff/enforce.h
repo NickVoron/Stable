@@ -51,7 +51,13 @@ namespace Base
 
 #define ENFORCE(exp)			*Base::MakeEnforcer<Base::DefaultPredicate, Base::DefaultRaiser>( (exp), SOURCE_LOCATION_STR(exp));
 #define ENFORCE_MSG(exp, msg)	*Base::MakeEnforcer<Base::DefaultPredicate, Base::DefaultRaiser>( (exp), str::stringize(SOURCE_LOCATION_STR(exp)" : ", msg).c_str());
-#define ENFORCE_EQUAL(exp0, exp1) ENFORCE_MSG(exp0 == exp1, STPP_STRINGIZE_N2(exp0, exp1));
+#define ENFORCE_EQUAL(exp0, exp1)		ENFORCE_MSG(exp0 == exp1, STPP_STRINGIZE_N2(exp0, exp1));
+#define ENFORCE_NOT_EQUAL(exp0, exp1)	ENFORCE_MSG(exp0 != exp1, STPP_STRINGIZE_N2(exp0, exp1));
+#define ENFORCE_LESS(exp0, exp1)		ENFORCE_MSG(exp0 <	exp1, STPP_STRINGIZE_N2(exp0, exp1));
+#define ENFORCE_GREATER(exp0, exp1)		ENFORCE_MSG(exp0 >	exp1, STPP_STRINGIZE_N2(exp0, exp1));
+#define ENFORCE_GEQUAL(exp0, exp1)		ENFORCE_MSG(exp0 >= exp1, STPP_STRINGIZE_N2(exp0, exp1));
+#define ENFORCE_LEQUAL(exp0, exp1)		ENFORCE_MSG(exp0 <= exp1, STPP_STRINGIZE_N2(exp0, exp1));
+#define ENFORCE_POINTER(exp)			ENFORCE_MSG(exp, str::stringize(STPP_STRINGIZE_N1(exp), " is null").c_str());
 
 #define VERIFY(x, y) { if (! (x) )	throw Base::Errors::Simple(str::stringize(__FUNCTION__, " verification failed: ", y) ); }
 #define THROW(y)	 {				throw Base::Errors::Simple(str::stringize(__FUNCTION__, " assertion: ", y)); }

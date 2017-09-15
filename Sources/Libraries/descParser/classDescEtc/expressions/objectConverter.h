@@ -16,7 +16,7 @@ namespace ObjectParser
 		void convert(const Expressions::Expression& expr, EntitiesStream& client);
 
 		static ClassesLib* classes;
-		static Unroller* unroller;
+		static const ClassTable* classTable;
 	};
 }
 

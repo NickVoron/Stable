@@ -8,7 +8,7 @@
 
 #include "componentModel.h"
 
-namespace ComponentsCore
+namespace ComponentModel
 {
 }
 

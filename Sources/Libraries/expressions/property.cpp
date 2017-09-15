@@ -1,4 +1,4 @@
-// Copyright (C) 2014-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -7,7 +7,9 @@
 //
 
 #include "property.h"
-#include "proxy.h"
+#include "reference.h"
+#include "holder.h"
+#include "scopeNames.h"
 
 namespace Expressions
 {
@@ -37,12 +39,20 @@ std::string Properties::string() const
 }
 
 
-
-
-
 PropertiesStruct::PropertiesStruct(const std::string& typeName) : StructBase(typeName)
 {
 	
+}
+
+EvaluationUnit* PropertiesStruct::evaluated(const EvaluatedScope& environment, boost::any* userData) const
+{
+	EvalPropertiesStruct* evalStruct = Expressions::add<EvalPropertiesStruct>(structType);
+	for (auto& iter: *this)
+	{
+		evalStruct->unEvaluatedPropertyies.add(iter.first, iter.second);
+	}
+
+	return evalStruct;
 }
 
 std::string PropertiesStruct::string() const
@@ -67,9 +77,79 @@ References PropertiesStruct::references() const
 	return refs;
 }
 
-const Expression* PropertiesStruct::child(const PropertyPath* path) const
+
+void EvalProperties::add(const std::string& name, Expressions::EvaluationUnit* value)
 {
-	const Expression* expr = get(path->name);
+	this->emplace(name, value);
+}
+
+const EvaluationUnit* EvalProperties::get(const std::string& name) const
+{
+	auto it = find(name);
+	return it != end() ? it->second : 0;
+}
+
+std::string EvalProperties::string() const
+{
+	return "";
+}
+
+
+EvalPropertiesStruct::EvalPropertiesStruct(const std::string& typeName): 
+	StructBase(typeName)
+{
+
+}
+
+std::string EvalPropertiesStruct::string() const
+{
+	return typeName();
+}
+
+EvaluateState EvalPropertiesStruct::evaluateStep(const Expressions::EvaluatedScope& parentScopename, boost::any* userData)
+{
+	EvaluateState evalState = Complete;
+
+	if (unEvaluatedPropertyies.size())
+	{
+		evalState = Expressions::Impossible;  
+
+		for (auto& iter = unEvaluatedPropertyies.cbegin(); iter != unEvaluatedPropertyies.cend();)
+		{
+			const std::string& name = iter->first;
+			const Expression* expr = iter->second;
+
+			References refs = expr->references();
+			if (refs.canResolveReverence(parentScopename))
+			{
+				EvaluationUnit* evalUnit = expr->evaluated(parentScopename, userData);
+				add(name, evalUnit);
+				evalState = Reject;	
+
+				unEvaluatedPropertyies.erase(iter++);
+			}
+			else
+			{
+				++iter;
+			}
+		}
+	}
+
+	for (auto& iter : *this)
+	{
+		EvaluationUnit* unit = iter.second;
+
+		EvaluateState unitState = const_cast<EvaluationUnit*>(unit)->evaluateStep(parentScopename, userData);
+		evalState = merge(evalState, unitState);
+	}
+
+
+	return evalState;
+} 
+
+const EvaluationUnit* EvalPropertiesStruct::child(const PropertyPath* path) const
+{
+	const EvaluationUnit* expr = get(path->name);
 	return expr;
 }
 
@@ -77,7 +157,7 @@ const Expression* PropertiesStruct::child(const PropertyPath* path) const
 
 
 
-// Copyright (C) 2014-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

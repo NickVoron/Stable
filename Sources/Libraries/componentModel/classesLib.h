@@ -28,8 +28,6 @@ public:
 	mutable PrototypeHolder prototypes;
 	ExecutionListFilter filter;
 	std::vector<std::unique_ptr<Class>> classes;
-
-	
 };
 
 

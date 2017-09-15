@@ -142,6 +142,7 @@ namespace logs
 #define LOG_EXPRESSION(exp) do { LOG_MSG(STPP_STRINGIZE(exp)); (exp); } while (false);
 #define LOG_EXPRESSION_VALUE(exp) do { LOG_MSG(STPP_STRINGIZE_N1(exp)); } while (false);
 #define LOG_EXPRESSION_VALUE2(exp0, exp1) do { LOG_MSG(STPP_STRINGIZE_N2(exp0, exp1)); } while (false);
+#define LOG_EXPRESSION_VALUE3(exp0, exp1, exp2) do { LOG_MSG(STPP_STRINGIZE_N3(exp0, exp1, exp2)); } while (false);
 
 }
 

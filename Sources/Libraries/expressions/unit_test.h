@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "expressions/library.include.h"
 #include "unitTest/library.include.h"
 
 template<class T0, class T1>
@@ -17,7 +18,7 @@ auto checkExpressionTypeToType(const T1 value)
 	T0 testvalue;
 	Expressions::convertVar(*expr, testvalue);
 
-	LOG_MSG("test: " << Variant::TypeTraits<T1>::name() << " input: " << value << " " << Variant::TypeTraits<T0>::name() << " result: " << testvalue);
+
 	TEST_CHECK(testvalue == value);
 	return expr;
 }

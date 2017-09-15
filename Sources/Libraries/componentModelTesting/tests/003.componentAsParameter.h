@@ -10,6 +10,7 @@
 
 #include "002.componentLink.h"
 
+#ifdef ENABLE_TEST
 
 namespace ComponentModelTesting
 {
@@ -18,7 +19,9 @@ namespace ComponentModelTesting
 		ComponentAsParameter();
 	};
 
-}//
+}
+
+#endif
 
 
 

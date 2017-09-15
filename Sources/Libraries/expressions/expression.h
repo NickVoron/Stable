@@ -1,4 +1,4 @@
-// Copyright (C) 2014-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -16,45 +16,96 @@
 
 namespace Expressions
 {
+	template<typename ExpressionType>
+	class ScopeNames;
+
 	struct PropertyPath;
 	struct ArrayPath;
-	struct ScopeNames;
+	class Reference;
+	class Expression;
+	class EvaluationUnit;
+
+	typedef ScopeNames<const Expression> ExpressionScope;
+	typedef ScopeNames<EvaluationUnit> EvaluatedScope;
+
 	
-	class Proxy;
-	typedef std::vector<const Proxy*> References;
+	struct References: public std::vector<const Reference*>
+	{
+		bool canResolveReverence(const EvaluatedScope& scopename);
+	};
+
+	
+	enum EvaluateState
+	{
+		Impossible = 0,		
+		Reject,			
+		Complete		
+
+	};
+	Expressions::EvaluateState merge(Expressions::EvaluateState first, Expressions::EvaluateState second);
 
 	class Expression
 	{
 	public:
 		Expression() {}
+
 		Expression(const Expression&) = delete;
 		const Expression& operator=(const Expression&) = delete;
 
 		virtual ~Expression() {}
-	
-		template <class T> const T* cast() const	{ return dynamic_cast<const T*>(this); }
+
+		template <class T> const T* cast() const { return dynamic_cast<const T*>(this); }
 		template <class T> T* cast() { return dynamic_cast<T*>(this); }
+
 		
-		virtual const Expression* evaluated(const ScopeNames& environment, boost::any* userData = 0) const	{ return this; }
-		virtual std::string string() const											{ return "unknown Expression"; }
-		virtual bool elementary() const												{ return false; }
-		virtual bool boolean() const												{ return false; }
-		virtual std::string typeName() const										{ return "unknown operand type"; }
-		virtual References references() const										{ return References(); }
 		
-		virtual const Expression* child(const PropertyPath* path) const { ENFORCE(false); return 0; }
-		virtual const Expression* child(const ArrayPath* path) const { ENFORCE(false); return 0; }
+		virtual bool elementary() const { return false; }
+
+		
+		virtual std::string string() const { return "unknown Expression"; }
+
+		
+		virtual bool boolean() const { return false; }
+
+		
+		virtual std::string typeName() const { return "unknown operand type"; }
+
+		
+
+		
+		
+		virtual EvaluationUnit* evaluated(const EvaluatedScope& parentScopename, boost::any* userData = 0) const = 0;
+		virtual References references() const { return References(); }
 	};
+
 	
-	template<class ValueType> std::string stringize(ValueType value);
-	template<> inline std::string stringize<std::string>(std::string value) { return value; };
-	template<> inline std::string stringize<const Expressions::Expression*>(const Expressions::Expression* value) { return value ? value->string() : "#nullptr"; };
+	class EvaluationUnit : public Expression
+	{
+	public: 
+		virtual References references() const override;
+		virtual EvaluationUnit* evaluated(const EvaluatedScope& parentScopename, boost::any* userData = 0) const override;
+
+		
+		virtual EvaluateState evaluateStep(const EvaluatedScope& parentScopename, boost::any* userData = 0);
+
+		
+		virtual const EvaluationUnit* child(const PropertyPath* path) const { return 0; }
+		virtual const EvaluationUnit* child(const ArrayPath* path) const	{ ENFORCE(false); return 0; }
+	};
+
+	
+	template<class ValueType> static std::string stringize(ValueType value);
+	template<> static std::string stringize<std::string>(std::string value) { return value; };
+	template<> static std::string stringize<const Expressions::Expression*>(const Expressions::Expression* value) { return value ? value->string() : "#nullptr"; };
+
 }
 
 
 
 
-// Copyright (C) 2014-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+
+
+// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

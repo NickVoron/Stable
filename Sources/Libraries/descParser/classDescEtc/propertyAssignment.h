@@ -37,6 +37,8 @@ namespace ObjectParser
 		std::string propertyName;
 		const Expressions::Expression* value = 0;
 
+		bool canResolveReverence(const Expressions::EvaluatedScope& parentScopename) const;
+
 	};
 
 	struct PropertyAssignmentList : public std::vector<std::unique_ptr<const PropertyAssignment>>
@@ -55,6 +57,7 @@ namespace ObjectParser
 		}
 
 		Expressions::References references() const;
+		bool exist(const std::string& name) const;
 	};
 
 	struct PropertyAssignmentController : private std::vector<PropertyAssignmentList>

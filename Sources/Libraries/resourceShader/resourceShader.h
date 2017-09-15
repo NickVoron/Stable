@@ -50,7 +50,7 @@ namespace Resources
 	template<int shaders>
 	void Shader<shaders>::Compile(stream::ostream& os)
 	{
-		resource([&os](auto& shader) {shader.save(os); });
+		nativeResource.save(os);
 	}
 
 	template<int shaders>

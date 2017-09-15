@@ -19,12 +19,18 @@
 
 namespace Expressions
 {
-	struct ExpressionCreator	{	template<class T>	static Expression* create(const T& value)	{	return convertType(value);	}	};
+	struct ExpressionCreator	
+	{	
+		template<class T>	static Expression* create(const T& value)	
+		{	
+			return convertType(value);	
+		}
+	};
 	struct ExpressionConverter	
 	{	
 		template<class T> static T convert(const Expression& expr)	
 		{	
-			T value;
+			T value;			
 			convertVar(expr, value);
 			return value;
 		}	

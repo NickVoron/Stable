@@ -41,10 +41,10 @@ namespace ObjectParser
 	
 		
 		Expressions::Function* newFunction(const std::string& name, const Expressions::ConstExprList& params);
-		Expressions::TernaryOperator* newTernaryOperator(Expressions::Expression* op0, Expressions::Expression* op1, Expressions::Expression* op2);
+		
 		Expressions::Array* newArray(const std::unique_ptr<Expressions::ConstExprList>& params);
 		Expressions::Struct* newStruct(const std::string& type, const Expressions::ConstExprList& params);
-		Expressions::Lambda* newLambda(const std::string& lambdaName, const Expressions::ConstExprList& params);
+		
 		Expressions::PropertiesStruct* newPropertiesStruct(const std::string& name, const std::unique_ptr<PropertyAssignmentList>&  propertyAssignment);
 		Expressions::Expression* newFunctionOrStruct(const std::string& name, const std::unique_ptr<Expressions::ConstExprList>& params);
 		Expressions::ExternalExtension* addExternalExtension(const std::string& extensionName, const std::string& text);
@@ -65,12 +65,12 @@ namespace ObjectParser
 		void endComponentRuntimeParams(const std::unique_ptr<ComponentParams>& params);
 
 		
-		Expressions::Proxy* newProxy();
-		Expressions::Proxy* newProxy(const std::string& targetName);
+		Expressions::Reference* newProxy();
+		Expressions::Reference* newProxy(const std::string& targetName);
 
-		Expressions::Proxy::PathElement* newProxyArrayPath(int index);
-		Expressions::Proxy::PathElement* newProxyPropertyPath(const std::string& name);
-		Expressions::Proxy::PathElement* newProxyComponentPath(const std::string& name);
+		Expressions::Reference::PathElement* newProxyArrayPath(int index);
+		Expressions::Reference::PathElement* newProxyPropertyPath(const std::string& name);
+		Expressions::Reference::PathElement* newProxyComponentPath(const std::string& name);
 
 		
 		
@@ -86,7 +86,7 @@ namespace ObjectParser
 		PropertyAssignmentList*		addPropertyAssignments(PropertyAssignmentList* propertyAssignList, PropertyAssignment* assignment);
 
 		
-		void bindRuntimeProperty(const std::string& paramName, Expressions::Proxy* path, RuntimeDirection direction);
+		void bindRuntimeProperty(const std::string& paramName, Expressions::Reference* path, RuntimeDirection direction);
 
 		
 		void setClassName(const std::string& type, bool iface);
@@ -94,11 +94,11 @@ namespace ObjectParser
 
 		
 		
-		void addMixInheriatance(const std::string& type, const std::unique_ptr<PropertyAssignmentList>&  propertyAssignmentList);
+		void addMixInheriatance(const std::string& type, const std::unique_ptr<PropertyAssignmentList>& propertyAssignmentList);
 
 		
 		void addAggregateInheritance(const std::string& type);
-		void setInheritanceAssigment(const std::string& type, const std::unique_ptr<PropertyAssignmentList>&  propertyAssignmentList); 
+		void setInheritanceAssigment(const std::string& type, const std::unique_ptr<PropertyAssignmentList>& propertyAssignmentList); 
 		
 		
 		
@@ -115,7 +115,7 @@ namespace ObjectParser
 	private:
 		ClassDesc& currentClass();
 		
-		CollectionExpression* createCollection(const std::string& collectionName, const std::string& typeName);
+		
 
 		ClassTable classTable;
 		std::unique_ptr<ClassDesc> _currentClass;

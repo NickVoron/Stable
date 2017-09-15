@@ -11,20 +11,20 @@
 
 namespace ObjectParser{	 
 
-CollectionExpression::CollectionExpression(const GrammarComposition& classesTable_, const std::string& type_, const std::string& name_) :
-	type(type_),
-	name(name_),
-	classesTable(classesTable_),
-	elementHolder(name)
-{
 
-}
 
-void CollectionExpression::addElement(const std::string& name, const Expressions::ConstExprList& params)
-{
-	
-	
-}
+
+
+
+
+
+
+
+
+
+
+
+
 
 }//ObjectParser
 

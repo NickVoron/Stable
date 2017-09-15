@@ -8,6 +8,8 @@
 
 #include "005.dataArray.h"
 
+#ifdef ENABLE_TEST
+
 namespace ComponentModelTesting
 {
 	using namespace Expressions;
@@ -22,7 +24,7 @@ namespace ComponentModelTesting
 
 		testClassesCount(comp.result, 1);
 		
-		Expressions::ScopeNames worldScopename = unroll(comp.result.classes(), "Main", "main");
+		Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), "Main", "main");
 		testInstance(worldScopename, "main");		
 
 		for (int i = 0; i < 5; ++i)
@@ -31,7 +33,9 @@ namespace ComponentModelTesting
 		}
 	}
 
-}//
+}
+
+#endif
 
 
 

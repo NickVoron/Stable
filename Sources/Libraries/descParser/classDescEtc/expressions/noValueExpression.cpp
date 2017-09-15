@@ -17,6 +17,18 @@ std::string NoValueExpression::string() const
 	return "NoValueExpression";
 }
 
+Expressions::References NoValueExpression::references() const
+{
+	return Expressions::References();
+}
+
+Expressions::EvaluationUnit* NoValueExpression::evaluated(const Expressions::EvaluatedScope& environment, boost::any* userData) const
+{
+	return Expressions::add<NoValueExpression>();
+}
+
+
+
 }//
 
 

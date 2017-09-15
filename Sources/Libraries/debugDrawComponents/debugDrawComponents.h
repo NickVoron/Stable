@@ -52,7 +52,7 @@ public:
 	std::string text;
 };
 
-typedef ComponentsCore::Module<BaseDebugDrawer, PositionDrawer, SphereDrawer> Module;
+typedef ComponentModel::Module<BaseDebugDrawer, PositionDrawer, SphereDrawer> Module;
 }
 
 namespace properties_inheritance

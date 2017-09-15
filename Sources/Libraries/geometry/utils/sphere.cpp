@@ -118,11 +118,9 @@ namespace
 
 	int SphereGenerator::search_midpoint (BaseVertexStream& vs, BaseIndexStream& is, float radius, int index_start, int index_end) 
 	{ 
-		int i;
-		for (i=0; i<edge_walk; i++) 
+		for (int i=0; i < edge_walk; ++i)
 		{
-			if ((start[i] == index_start && end[i] == index_end) || 
-				(start[i] == index_end && end[i] == index_start)) 
+			if ((start[i] == index_start && end[i] == index_end) || (start[i] == index_end && end[i] == index_start)) 
 			{
 				int res = midpoint[i];
 

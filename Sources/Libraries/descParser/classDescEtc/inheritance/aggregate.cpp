@@ -8,7 +8,6 @@
 
 #include "aggregate.h"
 #include "../classDesc.h"
-#include "../unroller.h"
 
 
 namespace ObjectParser													

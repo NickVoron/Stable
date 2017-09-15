@@ -116,7 +116,7 @@ namespace DebugDrawing
 					delete obj;
 				}
 
-				return 0;
+				return nullptr;
 			}
 			else
 			{

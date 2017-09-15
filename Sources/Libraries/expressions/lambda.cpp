@@ -10,12 +10,12 @@
 
 namespace Expressions{
 
-Lambda::Lambda(const std::string& lambdaName_, const ConstExprList& params_):
-	lambdaName(lambdaName_),
-	params(params_)	
-{
 
-}
+
+
+
+
+
 	
 }//
 

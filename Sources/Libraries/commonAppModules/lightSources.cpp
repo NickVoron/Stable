@@ -35,9 +35,9 @@ namespace AppModules
 
 	DefaultLightSources::Params::Params()
 	{
-		directionalDir = Vector3(1, 1, 1);
-		directionalColor = Vector3(1, 1, 1);
-		ambientColor = Vector3(1, 1, 1)*0.4f;
+		directionalDir = nm::Vector3(1, 1, 1);
+		directionalColor = nm::Vector3(1, 1, 1);
+		ambientColor = nm::Vector3(1, 1, 1)*0.4f;
 		drawLightSources = false;
 		lightFromCamera = false;
 	}

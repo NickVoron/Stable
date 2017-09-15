@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -60,7 +60,7 @@ namespace nm
 	}
 
 
-	inline Vector3 convertPolar3ToVector3(const Polar3& polar)
+	Vector3 convertPolar3ToVector3(const Polar3& polar)
 	{
 		float sp, cp, st, ct;
 		sp = sinf(polar.phi);
@@ -70,7 +70,7 @@ namespace nm
 		return Vector3(cp * polar.radius * ct, cp * polar.radius * st, polar.radius * sp);
 	}
 
-	inline Polar3 convertVector3ToPolar3(const Vector3& vector)
+	Polar3 convertVector3ToPolar3(const Vector3& vector)
 	{
 		float forward;
 		float yaw;
@@ -83,25 +83,28 @@ namespace nm
 		if ((x == 0.0f) && (y == 0.0f))
 		{
 			yaw = 0.0f;
-			if (z > 0.0f) {
-				pitch = 90.0f;
+			if (z > 0.0f) 
+			{
+				pitch = nm::PI_2;
 			}
-			else {
-				pitch = 270.0f;
+			else 
+			{
+				pitch = nm::PI_2 * 3.0f;
 			}
 		}
 		else
 		{
-			yaw = nm::degrees(atan2(y, x));
+			yaw = atan2(y, x);
 			if (yaw < 0.0f)
 			{
-				yaw += 360.0f;
+				yaw += nm::TwoPI;
 			}
 
 			forward = sqrtf(x * x + y * y);
-			pitch = nm::degrees(atan2(z, forward));
-			if (pitch < 0.0f) {
-				pitch += 360.0f;
+			pitch = atan2(z, forward);
+			if (pitch < 0.0f) 
+			{
+				pitch += nm::TwoPI;
 			}
 		}
 		return Polar3(sqrtf(x * x + y * y + z * z), yaw, -pitch);
@@ -116,7 +119,7 @@ namespace nm
 
 
 
-// Copyright (C) 2012-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

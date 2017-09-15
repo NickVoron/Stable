@@ -7,72 +7,54 @@
 //
 
 #include "componentRefConverter.h"
+#include "../../unroll/componentHandle.h"
 #include "instanceExpression.h"
 #include "../component.h"
-
-#include "componentModelConfigurator/library.include.h"
 
 
 namespace ObjectParser 
 {
- 	void linearize(const Expressions::Expression& expr, Expressions::ConstExprList& result)
+	std::vector<const ObjectParser::ComponentHandle*> linearize(const Expressions::Expression& expr)
  	{
+		std::vector<const ObjectParser::ComponentHandle*> components;
+
 		if (auto componentExpr = expr.cast<ObjectParser::ComponentHandle>())
 		{
-			result.push_back(componentExpr);
+			components.push_back(componentExpr);
 		}
 		else if(auto arrayExpr = expr.cast<Expressions::Array>())
 		{
 			for (std::size_t i = 0; i < arrayExpr->count(); ++i)
 			{
-				linearize(*arrayExpr->element(i), result);
+				auto componentsArray = linearize(*arrayExpr->element(i));
+				components.insert(components.end(), componentsArray.begin(), componentsArray.end());
 			}
 		}
 		else
 		{
 			
 		}
-	}
 
-	auto extractComponentsDesc(const Expressions::ConstExprList& references)
-	{
-		std::vector<const ComponentModel::ComponentModelConfigurator::ComponentHandle*> result;
-		result.reserve(references.size());
-
-		for (auto& refexpr : references)
-		{
-			auto component = refexpr->cast<ObjectParser::ComponentHandle>();
-			ENFORCE(component);
-
-			auto handle = dynamic_cast<const ComponentModel::ComponentModelConfigurator::ComponentHandle*>(component);
-			ENFORCE(handle);
-			ENFORCE(handle->component);
-
-			result.push_back(handle);
-		}
-		return result;
+		return components;
 	}
 
 	void ComponentsRefConverter::convert(const Expressions::Expression& expr, LinksDescList& client)
 	{
 
-		Expressions::ConstExprList references;
-		linearize(expr, references);
-		auto descriptions = extractComponentsDesc(references);
-		
-		auto count = descriptions.size();
-		if (count > 0)
-		{
-			client.resize(count);
-			for (std::size_t i = 0; i < count; ++i)
-			{
-				auto componentHandle = descriptions[i];
-				auto& address = client[i].address;
-
-				address.objectIndex = componentHandle->parent->indexInEntityList;
-				address.componentIndices.push_back(componentHandle->index());
-			}
-		}
+ 		auto descriptions = linearize(expr);
+ 		auto count = descriptions.size();
+ 		if (count > 0)
+ 		{
+ 			client.resize(count);
+ 			for (std::size_t i = 0; i < count; ++i)
+ 			{
+ 				auto componentHandle = descriptions[i];
+ 				auto& address = client[i].address; 
+  				address.objectIndex = componentHandle->objectIndex;
+  				address.componentIndices.push_back(componentHandle->componentIndex);
+				LOG_EXPRESSION_VALUE3(componentHandle->objectIndex, componentHandle->type, componentHandle->name);
+ 			}
+ 		}
 	}
 
 	

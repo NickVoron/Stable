@@ -195,7 +195,7 @@ void ClassDesc::spliceLinks(const ComponentDesc* srcComponent, ComponentDesc* ds
 
 void ClassDesc::debug() const
 {
-	LOG_MSG(className);
+	LOG_EXPRESSION_VALUE(className);
 	for (auto& desc : components)
 	{
 		desc->debug();

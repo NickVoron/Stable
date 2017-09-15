@@ -12,8 +12,9 @@
 #include "math/library.include.h"
 #include "resourceUtils/library.include.h"
 #include "expressions/library.include.h"
+#include "../config.h"
 
-
+#ifdef ENABLE_UTILS
 namespace ComponentModelTesting
 {
 	template<class Function, class T>
@@ -38,10 +39,8 @@ namespace ComponentModelTesting
 	
 	bool testType(const ObjectParser::ComponentHandle* cm, const std::string& type);
 
-	const ObjectParser::InstanceHandle* testInstance(Expressions::ScopeNames& scopeName, const std::string& instanceName);
+	const ObjectParser::InstanceHandle* testInstance(Expressions::EvaluatedScope& scopeName, const std::string& instanceName);
 	bool testClassesCount(const ObjectParser::GrammarComposition& result, std::size_t count);
-	Expressions::ScopeNames unroll(const ObjectParser::ClassTable& classTable, const std::string& mainInstanceClassName, const std::string& mainInstanceName);
-	Expressions::ScopeNames unroll(const ObjectParser::ClassTable& classTable, ObjectParser::ComponentModelConfigurator& configurator, const std::string& mainInstanceClassName, const std::string& mainInstanceName);
 
 	template<typename Value>
 	bool test(const Expressions::Expression* expr, const Value& value)
@@ -53,21 +52,21 @@ namespace ComponentModelTesting
 		return true;
 	}
 
-	Expressions::Proxy* parse(const std::string& path);
+	Expressions::Reference* parse(const std::string& path);
 
 	template<typename Value>
-	bool test(const Expressions::ScopeNames& scopename, const std::string& path, const Value& value)
+	bool test(const Expressions::EvaluatedScope& scopename, const std::string& path, const Value& value)
 	{
-		Expressions::Proxy* proxy = parse(path);
+		Expressions::Reference* proxy = parse(path);
 		const Expressions::Expression* element = proxy->evaluated(scopename);
 		test(element, value);
 		return true;
 	}
 
-	const Expressions::Expression* get(const Expressions::ScopeNames& scopename, const std::string& path);
+	const Expressions::EvaluationUnit* get(const Expressions::EvaluatedScope& scopename, const std::string& path);
 
-
-}//
+}
+#endif
 
 
 

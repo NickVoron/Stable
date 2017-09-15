@@ -40,7 +40,7 @@ namespace
 		Logs,
 		LogsUpdater,
 		ProcessTerminator,
-		ComponentModel,
+		AppModules::ComponentModel,
 		ResourcesManager,
 		ResourceWatcher,
 		Application
@@ -64,7 +64,7 @@ namespace common
 {
 	int main(int argc, char* argv [])
 	{
-		return appmain<Prologue, 0, true>(&setup, argc, argv);
+		return appmain<Prologue, 1, true>(&setup, argc, argv);
 	}	
 }
 

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -7,9 +7,30 @@
 //
 
 #pragma once
-#include "unit_test.h"
+#include "tests/001.componentAndProperties.h"
+#include "tests/002.componentLink.h"
+#include "tests/003.componentAsParameter.h"
+#include "tests/004.functionCall.h"
+#include "tests/005.dataArray.h"
+#include "tests/006.dataStruct.h"
+#include "tests/007.complexData.h"
+#include "tests/008.objectArray.h"
+#include "tests/013.references.h"
+#include "tests/014.componentByType.h"
+#include "tests/015.nestedObject.h"
+#include "tests/018.subTreeObjects/018.subTreeObjects.h"
+#include "tests/019.crossReference.h"
+#include "tests/020.circlePoints.h"
+#include "tests/011.spawner.h"
+#include "tests/021.staticTypization.h"
+#include "tests/022.componentsReordering.h"
+#include "tests/023.noNamedComponents.h"
+#include "tests/024.noNamedInstance.h"
+#include "tests/025.nestedSpawners.h"
+#include "tests/026.cyclicSpawners.h"
+#include "tests/027.configurableSpawners.h"
+#include "tests/008.1.objectArrayEmbeddedScopename.h"
 #include "tests/utils.h"
-#include "tests/quietConfigurator.h"
 
 #ifdef DEFINE_SDK_LIB
 #pragma DEFINE_SDK_LIB(componentModelTesting)
@@ -17,7 +38,7 @@
 
 
 
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

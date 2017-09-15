@@ -8,12 +8,12 @@
 
 #include "027.configurableSpawners.h"
 #include "utils.h"
-#include "quietConfigurator.h"
 #include "componentLinkModelConfigurator.h"
 
 #include "componentModel/library.include.h"
 #include "commonComponents/library.include.h"
 
+#ifdef ENABLE_TEST
 namespace ComponentModelTesting
 {
 
@@ -34,11 +34,16 @@ public:
 															 
 ConfigurableSpawners::ConfigurableSpawners()
 {
+	ComponentModel::components<ComponentCS1>();
+
+	std::string path = Resources::resourceRelativePath("desc/cm2Testing/1.basic/027.configurableSpawners.desc");
+	ObjectParser::Compiler comp(path.c_str());
+	ComponentLinkModelConfigurator debugConfigurator;
+
+	Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), debugConfigurator, "Main", "main");
+
 	try
 	{
-		ComponentsCore::components<ComponentCS1>();
-
-		std::string path = Resources::resourceRelativePath("desc/cm2Testing/1.basic/027.configurableSpawners.desc");
 		ComponentModel::descriptionTest(path.c_str());
 	}
 	catch (const std::exception& e)
@@ -47,7 +52,8 @@ ConfigurableSpawners::ConfigurableSpawners()
 	}
 }
 
-}//
+}
+#endif
 
 
 

@@ -9,6 +9,7 @@
 #include "008.objectArray.h"
 #include "componentLinkModelConfigurator.h"
 
+#ifdef ENABLE_TEST
 
 namespace ComponentModelTesting
 {
@@ -26,7 +27,7 @@ namespace ComponentModelTesting
 		testClassesCount(comp.result, 2);
 		ComponentLinkModelConfigurator cmConfigurator;
 
-		Expressions::ScopeNames worldScopename = unroll(comp.result.classes(), cmConfigurator, "Main", "main");
+		Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), cmConfigurator, "Main", "main");
 		
 		for (int i = 0; i < 10; ++i)
 		{
@@ -40,6 +41,8 @@ namespace ComponentModelTesting
 		test(worldScopename, "main.objectComplexArray[2].text", std::string("third"));
 	}
 }
+
+#endif
 
 
 

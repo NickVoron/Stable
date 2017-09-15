@@ -39,9 +39,9 @@ struct StdAppParams
 	intersections::Frustum& mouseFrustum;
 	bool& mouseFrustumCalc;
 	bool& mouseFrustumDraw;
- 	Vector3& directionalDir;
- 	Vector3& directionalColor;
- 	Vector3& ambientColor;
+ 	nm::Vector3& directionalDir;
+	nm::Vector3& directionalColor;
+	nm::Vector3& ambientColor;
 	bool& drawCoordinatesGrid;
 	bool& drawLightSources;
 	WindowsGUI::WindowsRegistry& windowsParams;

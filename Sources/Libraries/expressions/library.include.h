@@ -14,7 +14,7 @@
 
 #include "expression.h"
 #include "scopeNames.h"
-#include "proxy.h"
+#include "reference.h"
 #include "function.h"
 #include "const.h"
 #include "struct.h"
@@ -27,7 +27,7 @@
 #include "extension/extension.h"
 
 #include "const.h"
-#include "proxy.h"
+#include "reference.h"
 #include "function.h"
 #include "lambda.h"
 #include "ternaryOperator.h"
@@ -35,6 +35,8 @@
 #include "holder.h"
 #include "externalExtension.h"
 #include "property.h"
+#include "binder.h"
+
 
 
 

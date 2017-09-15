@@ -1,4 +1,4 @@
-// Copyright (C) 2014-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -8,27 +8,73 @@
 
 #include "expression.h"
 #include "holder.h"
-
+#include "reference.h"
 
 namespace Expressions
 {
 
+	EvaluateState merge(EvaluateState first, EvaluateState second)
+	{
+		if (first == Complete && second == Complete)			return Complete;
+		if (first == Complete && second == Reject)			return Reject;
+		if (first == Complete && second == Impossible)		return Impossible;
+
+		if (first == Reject && second == Complete)			return Reject;
+		if (first == Reject && second == Reject)			return Reject;
+		if (first == Reject && second == Impossible)		return Reject;
+
+		if (first == Impossible && second == Complete)		return Impossible;
+		if (first == Impossible && second == Reject)		return Reject;
+		if (first == Impossible && second == Impossible)	return Impossible;
+
+		ENFORCE(false);
+		return Impossible;
+	}
+
 	
-	
-	
-	std::ostream& operator<<(std::ostream& os, const ScopeNames& ctx)
+	std::ostream& operator<<(std::ostream& os, const EvaluatedScope& ctx)
 	{
 		return os;
 	}
 
 	
+	bool References::canResolveReverence(const EvaluatedScope& scopename)
+	{
+		for (const Reference* ref : *this)
+		{
+			if (!ref->canResolveReverence(scopename))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	
+	References EvaluationUnit::references() const
+	{ 
+		ENFORCE_MSG(false, "No one references cant be in EvaluationUtin based class;")
+		return References();
+	}
+
+	EvaluationUnit* EvaluationUnit::evaluated(const EvaluatedScope& parentScopename, boost::any* userData) const
+	{
+		ENFORCE_MSG(false, "Already evaluated;")
+		return 0;
+	}
+	
+	EvaluateState EvaluationUnit::evaluateStep(const EvaluatedScope& parentScopename, boost::any* userData)
+	{
+		return Complete;
+	}
 
 }
 
 
 
 
-// Copyright (C) 2014-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

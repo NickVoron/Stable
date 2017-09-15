@@ -23,9 +23,9 @@ namespace AppModules
 		struct Params
 		{
 			Params();
-			Vector3 directionalDir;
-			Vector3 directionalColor;
-			Vector3 ambientColor;
+			nm::Vector3 directionalDir;
+			nm::Vector3 directionalColor;
+			nm::Vector3 ambientColor;
 			bool drawLightSources;
 			bool lightFromCamera;
 		};

@@ -7,29 +7,8 @@
 //
 
 #pragma once
-#include "tests/001.componentAndProperties.h"
-#include "tests/002.componentLink.h"
-#include "tests/003.componentAsParameter.h"
-#include "tests/004.functionCall.h"
-#include "tests/005.dataArray.h"
-#include "tests/006.dataStruct.h"
-#include "tests/007.complexData.h"
-#include "tests/008.objectArray.h"
-#include "tests/013.references.h"
-#include "tests/014.componentByType.h"
-#include "tests/015.nestedObject.h"
-#include "tests/018.subTreeObjects/018.subTreeObjects.h"
-#include "tests/019.crossReference.h"
-#include "tests/020.circlePoints.h"
-#include "tests/011.spawner.h"
-#include "tests/021.staticTypization.h"
-#include "tests/022.componentsReordering.h"
-#include "tests/023.noNamedComponents.h"
-#include "tests/024.noNamedInstance.h"
-#include "tests/025.nestedSpawners.h"
-#include "tests/026.cyclicSpawners.h"
-#include "tests/027.configurableSpawners.h"
 
+#include "library.include.h"
 #include "unitTest/library.include.h"
 
 TEST_SUITE(ComponentModelUnitTest)
@@ -39,6 +18,7 @@ TEST_CASE(ComponentAndProperties) { ComponentModelTesting::ComponentAndPropertie
 TEST_CASE(ComponentLink) { ComponentModelTesting::ComponentLink(); }
 TEST_CASE(ComponentAsParameter) { ComponentModelTesting::ComponentAsParameter(); }
 TEST_CASE(FunctionCall) { ComponentModelTesting::FunctionCall(); }
+TEST_CASE(CrossReference) { ComponentModelTesting::CrossReference(); }
 TEST_CASE(DataArray) { ComponentModelTesting::DataArray(); }
 TEST_CASE(DataStruct) { ComponentModelTesting::DataStruct(); }
 TEST_CASE(ComplexData) { ComponentModelTesting::ComplexData(); }
@@ -53,6 +33,7 @@ TEST_CASE(NoNamedComponents) { ComponentModelTesting::NoNamedComponents(); }
 TEST_CASE(NestedSpawners) { ComponentModelTesting::NestedSpawners(); }
 TEST_CASE(CyclicSpawners) { ComponentModelTesting::CyclicSpawners(); }
 TEST_CASE(ConfigurableSpawners) { ComponentModelTesting::ConfigurableSpawners(); }
+TEST_CASE(ObjectArrayEmbeddedScopename) { ComponentModelTesting::ObjectArrayEmbeddedScopename(); }
 
 TEST_SUITE_END();
 

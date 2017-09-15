@@ -11,6 +11,9 @@
 #include <vector>
 #include <memory>
 
+#ifdef ENABLE_TEST
+
+
 namespace ComponentModelTesting
 {
 using namespace Expressions;
@@ -49,7 +52,7 @@ ComponentLink::ComponentLink()
 		ENFORCE_MSG(logic->linkParams.size() == 2, "");
 	}
 
-	Expressions::ScopeNames mainScopename = unroll(comp.result.classes(), "Main", "main");
+	Expressions::EvaluatedScope mainScopename = unroll(comp.result.classes(), "Main", "main");
 	
 	const ComponentHandle* unitSpawner = get(mainScopename, "main.object.unitSpawner")->cast<ComponentHandle>();
 	const ComponentHandle* buildingSpawner = get(mainScopename, "main.object.buildingSpawner")->cast<ComponentHandle>();
@@ -59,10 +62,9 @@ ComponentLink::ComponentLink()
 	ENFORCE_MSG(logic->links.at("secondSpawner") == buildingSpawner, "Link to 'secondSpawner' failed");
 }
 
+}
 
-
-
-}//
+#endif
 
 
 

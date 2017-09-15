@@ -8,35 +8,48 @@
 
 #include "componentPath.h"
 #include "instanceExpression.h"
-#include "../componentModelConfigurator.h"
+#include "../../unroll/componentModelConfigurator.h"
 #include "stuff/enforce.h"
 
 namespace ObjectParser 
 {
+	using namespace Expressions;
 
 	
 	
-	const Expressions::Expression* ComponentPath::evaluate(const Expressions::Expression* input, const Expressions::ScopeNames& context) const
+	Expressions::EvaluationUnit* ComponentPath:: evaluate(const Expressions::EvaluationUnit* input, const Expressions::EvaluatedScope& context) const
 	{
-		Expressions::ConstExprList componentsList;
+		Expressions::EvaluationUnit* result = 0;
 
 		if (input)
 		{
 			if (const InstanceHandle* instace = input->cast<InstanceHandle>() )
 			{
 				
-				componentsList.push_back(getComponent(instace, componentType));
+				 result = const_cast<Expressions::EvaluationUnit*>(getComponent(instace, componentType));
 			}
 			else
 			{
 				
-				const Expressions::Array* array = input->cast<const Expressions::Array>();
+				const Expressions::EvaluatedArray* array = input->cast<const Expressions::EvaluatedArray>();
+
+				ENFORCE_MSG(array, "");
+				Expressions::EvaluatedArray* resultArr = Expressions::add<Expressions::EvaluatedArray>(array->count(), nullptr);
+				result = resultArr;
 
 				for (std::size_t i = 0; i < array->count(); ++i)
 				{
 					const InstanceHandle* instanceHandle = array->element(i)->cast<const InstanceHandle>();
 					ENFORCE_MSG(instanceHandle, "");
-					componentsList.push_back(getComponent(instanceHandle, componentType));
+
+					const Expressions::EvaluationUnit* foundComponent = getComponent(instanceHandle, componentType);
+					if (!foundComponent)
+					{
+						
+						result = 0;
+						break;
+					}
+					resultArr->add(foundComponent);
 				}
 			}
 		}
@@ -45,14 +58,17 @@ namespace ObjectParser
 			LOG_ERROR("context: input is nullptr");
 		}
 
-		return Expressions::add<Expressions::Array>(componentsList);
+		return result;
 	}
 
-	const Expressions::Expression* ComponentPath::getComponent(const InstanceHandle* instanceHandle, std::string componentType)
+	std::unique_ptr<Expressions::Reference::PathElement> ComponentPath::copy() const
 	{
-		const Expressions::Expression* component = instanceHandle->getByType(componentType);
-		ENFORCE_MSG(component, str::stringize ("instance: ", instanceHandle->name, " hasn't component with name: " , componentType).c_str());
+		return std::unique_ptr<Expressions::Reference::PathElement>(new ComponentPath(componentType));
+	}
 
+	const Expressions::EvaluationUnit* ComponentPath::getComponent(const InstanceHandle* instanceHandle, std::string componentType)
+	{
+		const Expressions::EvaluationUnit* component = instanceHandle->getByType(componentType);
 		return component;
 	}
 }//

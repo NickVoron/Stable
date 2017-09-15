@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -38,14 +38,6 @@ Expressions::Function* GrammarComposition::newFunction(const std::string& name, 
 	return Expressions::add<Expressions::Function>(name, params);
 }			   
 
-Expressions::TernaryOperator* GrammarComposition::newTernaryOperator(Expressions::Expression* op0, Expressions::Expression* op1, Expressions::Expression* op2)
-{
-	if (debugGC) LOG_MSG(__FUNCTION__);
-
-	ENFORCE(op0 && op1 && op2);
-	return Expressions::add<Expressions::TernaryOperator>(op0, op1, op2);
-}
-
 Expressions::Array* GrammarComposition::newArray(const std::unique_ptr<Expressions::ConstExprList>& params)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__);
@@ -60,12 +52,12 @@ Expressions::Struct* GrammarComposition::newStruct(const std::string& type, cons
 	return Expressions::add<Expressions::Struct>(type, params);
 }
 
-Expressions::Lambda* GrammarComposition::newLambda(const std::string& lambdaName, const ConstExprList& params)
-{
-	if (debugGC) LOG_MSG(__FUNCTION__);
 
-	return Expressions::add<Expressions::Lambda>(lambdaName, params);
-}
+
+
+
+
+
 
 PropertiesStruct* GrammarComposition::newPropertiesStruct(const std::string& name, const std::unique_ptr<PropertyAssignmentList>& propertyAssignment)
 {
@@ -160,7 +152,7 @@ PropertyAssignmentList*  GrammarComposition::addPropertyAssignments(PropertyAssi
 }
 
 
-void GrammarComposition::bindRuntimeProperty(const std::string& paramName, Expressions::Proxy* path, RuntimeDirection direction)
+void GrammarComposition::bindRuntimeProperty(const std::string& paramName, Expressions::Reference* path, RuntimeDirection direction)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", paramName: " << paramName << ", path: " << path->string() << ", direction: " << direction );
 
@@ -265,32 +257,32 @@ void GrammarComposition::setInheritanceAssigment(const std::string& type, const 
 }
 
 
-Expressions::Proxy* GrammarComposition::newProxy() 
+Expressions::Reference* GrammarComposition::newProxy()
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", this");
 	return newProxy("this");
 }
 
-Expressions::Proxy* GrammarComposition::newProxy(const std::string& targetName) 
+Expressions::Reference* GrammarComposition::newProxy(const std::string& targetName)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", targetName: " << targetName);
 
-	return Expressions::add<Proxy>(new PropertyPath(targetName));
+	return Expressions::add<Reference>(new PropertyPath(targetName));
 }
 
-Expressions::Proxy::PathElement* GrammarComposition::newProxyArrayPath(int index)
+Expressions::Reference::PathElement* GrammarComposition::newProxyArrayPath(int index)
 {		
 	return new ArrayPath(index);
 }
 
-Proxy::PathElement* GrammarComposition::newProxyPropertyPath(const std::string& name)
+Reference::PathElement* GrammarComposition::newProxyPropertyPath(const std::string& name)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", name: " << name);
 
 	return new PropertyPath(name);
 }
 
-Expressions::Proxy::PathElement* GrammarComposition::newProxyComponentPath(const std::string& componentType)
+Expressions::Reference::PathElement* GrammarComposition::newProxyComponentPath(const std::string& componentType)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", componentType: " << componentType);
 
@@ -322,22 +314,22 @@ ClassDesc& GrammarComposition::currentClass()
 	return *_currentClass; 
 }
 
-CollectionExpression* GrammarComposition::createCollection(const std::string& collectionName, const std::string& typeName)
-{
-	
-	
-	
 
-	
 
-	return 0;
-}
+
+
+
+
+
+
+
+
 
 }//
 
 
 
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

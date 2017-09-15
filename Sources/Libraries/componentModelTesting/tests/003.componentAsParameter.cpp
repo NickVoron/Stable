@@ -8,9 +8,10 @@
 
 #include "003.componentAsParameter.h"
 
+#ifdef ENABLE_TEST
+
 namespace ComponentModelTesting
 {
-
 
 using namespace ObjectParser;
 
@@ -24,7 +25,7 @@ ComponentAsParameter::ComponentAsParameter()
 	testClassesCount(comp.result, 2);
 
 	ComponentLinkModelConfigurator debugConfigurator;
-	Expressions::ScopeNames worldScopename = unroll(comp.result.classes(), debugConfigurator, "Main", "main");
+	Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), debugConfigurator, "Main", "main");
 
 	const ComponentHandle* spawner = get(worldScopename, "main.spawner")->cast<ComponentHandle>();
 	const ComponentHandle* buildingSpawner = get(worldScopename, "main.object.buildingSpawner")->cast<ComponentHandle>();
@@ -35,7 +36,9 @@ ComponentAsParameter::ComponentAsParameter()
 
 
 
-}//
+}
+
+#endif
 
 
 

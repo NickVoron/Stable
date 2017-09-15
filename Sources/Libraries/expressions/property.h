@@ -30,11 +30,36 @@ namespace Expressions
 	public:
 		PropertiesStruct(const std::string& typeName);
 
+		virtual EvaluationUnit* evaluated(const EvaluatedScope& environment, boost::any* userData = 0) const override;
+
 		virtual std::string string() const override;
 		virtual References references() const override;
-
-		virtual const Expression* child(const PropertyPath* path) const override;
 	};
+
+
+	
+	
+	struct EvalProperties : public std::unordered_map<std::string, Expressions::EvaluationUnit*>, public Base::NonCopyable
+	{
+		void add(const std::string& name, Expressions::EvaluationUnit* value);
+		const EvaluationUnit* get(const std::string& name) const;
+		std::string string() const;
+
+		Properties unEvaluatedPropertyies;
+	};
+
+
+	
+	struct EvalPropertiesStruct : public EvalProperties, public StructBase
+	{
+	public:
+		EvalPropertiesStruct(const std::string& typeName);
+		virtual std::string string() const override;
+		virtual EvaluateState evaluateStep(const Expressions::EvaluatedScope& parentScopename, boost::any* userData = 0) override;
+
+		virtual const EvaluationUnit* child(const PropertyPath* path) const override;
+	};
+
 
 }
 

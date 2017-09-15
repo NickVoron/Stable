@@ -119,8 +119,8 @@ public:
 	inline Vector3& operator -= ( const Vector3& vector );
 	inline Vector3& operator *= ( const Vector3& vector );
 
-	template<class VectorClass>
-	inline Vector3&	operator = ( const VectorClass& vector );
+
+
 
 	inline Vector3	operator + ( const Vector3& vector ) const;
 	inline Vector3	operator - ( const Vector3& vector ) const;
@@ -426,14 +426,14 @@ inline Vector3 operator + ( const Vector3& vector )
 }
 
 
-template<class VectorClass>
-inline Vector3&	Vector3::operator = ( const VectorClass& vector )
-{
-	x	= vector.x;
-	y	= vector.y;
-	z	= vector.z;
-	return *this;
-}
+
+
+
+
+
+
+
+
 
 Vector3& Vector3::operator += ( const Vector3& vector )
 {

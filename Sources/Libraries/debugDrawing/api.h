@@ -223,7 +223,7 @@ namespace DebugDrawing
 		template<bool triangles, class DrawData>
 		DrawableObject* object(const DrawData& dd, ShaderDataPerObject& shaderData, bool updateDataBuffer)
 		{
-			DrawableObjectAPI<DrawData, triangles, gapi::DX11>* obj = new DrawableObjectAPI<DrawData, triangles, gapi::DX11>();
+			auto obj = new DrawableObjectAPI<DrawData, triangles, gapi::DX11>();
 			obj->prepare(dd, updateDataBuffer);
 			obj->shaderData = shaderData;
 			obj->tool = this;

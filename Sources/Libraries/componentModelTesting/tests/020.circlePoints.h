@@ -10,7 +10,7 @@
 
 #include "utils.h"
 
-
+#ifdef ENABLE_TEST
 namespace ComponentModelTesting
 {
 	struct CirclePoints
@@ -19,6 +19,7 @@ namespace ComponentModelTesting
 	};
 
 }
+#endif
 
 
 

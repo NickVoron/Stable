@@ -51,11 +51,14 @@ namespace Resources
 	std::vector<std::string> Atlas::help() const
 	{
 		std::vector<std::string> result;
- 		for (int i = 0; i < nativeResource.atlas.count(); ++i)
- 		{
-			result.push_back(nativeResource.atlas.name(i).c_str());
- 		}
-		
+		resource([&result](auto& res)
+		{ 
+			for (int i = 0; i < res.atlas.count(); ++i)
+			{
+				result.push_back(res.atlas.name(i).c_str());
+			}
+		});
+
 		return result;
 	}
 }

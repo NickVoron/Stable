@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "../proxy.h"
+#include "../reference.h"
 #include <string>
 
 
@@ -21,12 +21,12 @@ namespace Expressions
 
 		virtual ~VariableRequster(){}
 
-		virtual Proxy* addProxy() = 0;
-		virtual Proxy* addProxy(const std::string& targetName)=0;
-		virtual Proxy* addProxy(const std::string& targetName, int index)=0;
-		virtual Proxy::PathElement* addProxyArrayPath(Expression* expr)=0;
-		virtual Proxy::PathElement* addProxyComponentsPath(const std::string& name)=0;
-		virtual Proxy::PathElement* addProxyPropertyPath(const std::string& name)=0;
+		virtual Reference* addProxy() = 0;
+		virtual Reference* addProxy(const std::string& targetName)=0;
+		virtual Reference* addProxy(const std::string& targetName, int index)=0;
+		virtual Reference::PathElement* addProxyArrayPath(Expression* expr)=0;
+		virtual Reference::PathElement* addProxyComponentsPath(const std::string& name)=0;
+		virtual Reference::PathElement* addProxyPropertyPath(const std::string& name)=0;
 
 	};
 

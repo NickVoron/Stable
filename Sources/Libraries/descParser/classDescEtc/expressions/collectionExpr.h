@@ -14,21 +14,21 @@ namespace ObjectParser{
 
 	class GrammarComposition;
 
-	class CollectionExpression : public Expressions::Expression
-	{
-	public:
-		CollectionExpression(const GrammarComposition& classesTable, const std::string& type, const std::string& name);
+	
+	
+	
+	
 
-		void addElement(const std::string& name, const Expressions::ConstExprList& params);
+	
 
-		const std::string name;
-		const std::string type;
+	
+	
 
-		Expressions::ScopeNames elementHolder;
+	
 
-	private:
-		const GrammarComposition& classesTable;
-	};
+	
+	
+	
 
 }//ObjectParser
 

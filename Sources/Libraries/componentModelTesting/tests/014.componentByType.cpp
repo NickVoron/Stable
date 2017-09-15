@@ -9,9 +9,9 @@
 #include "014.componentByType.h"
 #include "componentLinkModelConfigurator.h"
 
+#ifdef ENABLE_TEST
 namespace ComponentModelTesting
 {
-
 	using namespace Expressions;
 	using namespace ObjectParser;
 
@@ -25,15 +25,15 @@ namespace ComponentModelTesting
 		testClassesCount(comp.result, 3);
 
 		ComponentLinkModelConfigurator configurator;
-		Expressions::ScopeNames worldScopename = unroll(comp.result.classes(), configurator, "Main", "main");
+		Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), configurator, "Main", "main");
 
-		const Array* objects = get(worldScopename, "main.object")->cast<Array>();
-		const Array* childPositions = get(worldScopename, "main.manager.draw.childs")->cast<Array>();
+		const EvaluatedArray* objects = get(worldScopename, "main.object")->cast<EvaluatedArray>();
+		const EvaluatedArray* childPositions = get(worldScopename, "main.manager.draw.childs")->cast<EvaluatedArray>();
 
 		ENFORCE_MSG(objects->count() == childPositions->count(), "");
 		for (std::size_t i = 0; i < objects->count(); i++)
 		{
-			const Expression* object = objects->element(i);
+			const EvaluationUnit* object = objects->element(i);
 			Expressions::PropertyPath propertyPath("position");
 			const Expression* objectPosition = object->child(&propertyPath);
 			const Expression* childPosition = childPositions->element(i);
@@ -41,7 +41,9 @@ namespace ComponentModelTesting
 			ENFORCE_MSG(objectPosition == childPosition, "");
 		}
 	}
-}//
+}
+#endif
+
 
 
 

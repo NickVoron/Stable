@@ -12,7 +12,7 @@
 
 namespace Expressions
 {
-	class StructBase : public Expression
+	class StructBase : public EvaluationUnit
 	{
 	public:
 		StructBase(const std::string& structType) : structType(structType) {}
@@ -29,12 +29,12 @@ namespace Expressions
 	public:
 		Struct(const std::string& structType, const ConstExprList& params);
 
-		virtual const Expression* evaluated(const ScopeNames& environment, boost::any* userData = 0) const override;
+		virtual EvaluationUnit* evaluated(const EvaluatedScope& environment, boost::any* userData = 0) const override;
 		virtual std::string string() const override;
 		virtual References references() const override { return params.references(); }
 
 		virtual void assignType(const std::string& typeName);
-		
+
 		ConstExprList params;
 	};
 }

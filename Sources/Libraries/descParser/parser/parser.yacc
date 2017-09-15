@@ -44,8 +44,8 @@ namespace ObjectParser
 	char name[128];
 
 	Expressions::Expression* expr;
-	Expressions::Proxy* proxy;
-	Expressions::Proxy::PathElement* proxyPath;
+	Expressions::Reference* proxy;
+	Expressions::Reference::PathElement* proxyPath;
 
 	Expressions::ConstExprList* guidList;
 
@@ -304,7 +304,7 @@ external_language:
 	;
 
 if_operator:
-	exp QUERY exp ':' exp	{ $$ = yylex.gc.newTernaryOperator($1, $3, $5); }
+	exp QUERY exp ':' exp	{ /*$$ = yylex.gc.newTernaryOperator($1, $3, $5);*/ }
 	;
 
 operators:
@@ -325,7 +325,7 @@ operators:
 	;
 
 lambda:
-	'['']'literal call_operator		{ $$ = yylex.gc.newLambda($3, *$4);	}
+	'['']'literal call_operator		{ /*$$ = yylex.gc.newLambda($3, *$4);*/	}
 	;
 
 call_operator:

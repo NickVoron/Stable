@@ -8,6 +8,8 @@
 
 #include "006.dataStruct.h"
 
+#ifdef ENABLE_TEST
+
 namespace ComponentModelTesting
 {
 
@@ -22,12 +24,14 @@ namespace ComponentModelTesting
 		ObjectParser::Compiler comp(path.c_str());
 		
 		testClassesCount(comp.result, 1);
-		Expressions::ScopeNames worldScopename = unroll(comp.result.classes(), "Main", "main");
+		Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), "Main", "main");
 		testInstance(worldScopename, "main");
 		test(worldScopename, "main.myStruct.index", 10);
 	}
 
-}//
+}
+
+#endif
 
 
 

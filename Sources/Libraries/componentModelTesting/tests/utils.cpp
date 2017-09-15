@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -11,8 +11,9 @@
 #include <boost/token_iterator.hpp>
 #include <iostream>
 
-#include "componentLinkModelConfigurator.h"
+#ifdef ENABLE_UTILS
 
+#include "componentLinkModelConfigurator.h"
 namespace ComponentModelTesting
 {
 	using namespace Expressions;
@@ -78,30 +79,11 @@ namespace ComponentModelTesting
 	bool testClassesCount(const ObjectParser::GrammarComposition& result, std::size_t count)
 	{
 		const ObjectParser::ClassTable& table = result.classes();
-		ENFORCE_MSG(table.size() == count, str::stringize("incorrect classes count in ClassTable: ", table.size(), " expected: ", count).str());
+		ENFORCE_EQUAL(table.size(), count);
 		return table.size() == count;
 	}
 
-	Expressions::ScopeNames unroll(const ObjectParser::ClassTable& classTable, ObjectParser::ComponentModelConfigurator& configurator, const std::string& mainInstanceClassName, const std::string& mainInstanceName)
-	{
-		ObjectParser::ClassDesc* mainClass = classTable.get(mainInstanceClassName);
-		ENFORCE(mainClass)
-
-		Expressions::ScopeNames worldScopename;
-		ObjectParser::InstanceDefinitionExpression mainInstace(mainInstanceClassName, mainInstanceName);
-		ObjectParser::Unroller unroller(classTable, configurator, true);
-		worldScopename.add("main", unroller.unrollInstance(&mainInstace, worldScopename), ScopeNames::INSERT);
-
-		return worldScopename;
-	}
-
-	Expressions::ScopeNames unroll(const ObjectParser::ClassTable& classTable, const std::string& mainInstanceClassName, const std::string& mainInstanceName)
-	{
-		ComponentLinkModelConfigurator debugConfigurator;
-		return unroll(classTable, debugConfigurator, mainInstanceClassName, mainInstanceName);
-	}
-
-	const ObjectParser::InstanceHandle* testInstance(Expressions::ScopeNames& scopeName, const std::string& instanceName)
+	const ObjectParser::InstanceHandle* testInstance(Expressions::EvaluatedScope& scopeName, const std::string& instanceName)
 	{
 		const Expressions::Expression* unrolledMainExpr = scopeName.get("main");
 		ENFORCE_MSG(unrolledMainExpr, "Main was not unroll");
@@ -120,9 +102,9 @@ namespace ComponentModelTesting
 		return end != val.c_str() && (errno != ERANGE);
 	}
 
-	Expressions::Proxy* parse(const std::string& path)
+	Expressions::Reference* parse(const std::string& path)
 	{
-		Expressions::Proxy* proxy = Expressions::add<Expressions::Proxy>();
+		Expressions::Reference* proxy = Expressions::add<Expressions::Reference>();
 		
 		typedef boost::tokenizer<boost::char_separator<char> > Tokenizer;
 		boost::char_separator<char> sep(".[]");
@@ -130,7 +112,7 @@ namespace ComponentModelTesting
 		for (auto& token : tokens)
 		{
 			size_t index;
-			Proxy::PathElement* pathElement = 0;
+			Reference::PathElement* pathElement = 0;
 			if (isIndex(token, index))
 			{
 				pathElement = new ArrayPath(index);
@@ -148,17 +130,20 @@ namespace ComponentModelTesting
 		return proxy;
 	}
 
-	const Expressions::Expression* get(const Expressions::ScopeNames& scopename, const std::string& path)
+	const Expressions::EvaluationUnit* get(const Expressions::EvaluatedScope& scopename, const std::string& path)
 	{
-		Proxy* proxy = parse(path);
+		Reference* proxy = parse(path);
 		return proxy->evaluated(scopename);
 	}
 
-}//
+}
+
+#endif 
 
 
 
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>
+
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

@@ -26,12 +26,15 @@
 
 #include "referencedComponents.h"
 
+#include "logCommonComponents.h"
+
 
 namespace CommonComponents
 {
-	typedef ComponentsCore::Module<
+	typedef ComponentModel::Module<
 			Position, 
 			LinearMover, 
+			AroundRotator,
 			Spawner, 
 			Destructor, 
 			TimerConfigurator, 
@@ -50,7 +53,7 @@ namespace CommonComponents
 
 namespace TestComponents
 {
-	typedef ComponentsCore::Module<Red, Blue, Green> Module;
+	typedef ComponentModel::Module<Red, Blue, Green> Module;
 }
 
 

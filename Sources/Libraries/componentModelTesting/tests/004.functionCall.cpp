@@ -8,6 +8,8 @@
 
 #include "004.functionCall.h"
 
+#ifdef ENABLE_TEST
+
 namespace ComponentModelTesting
 {
 
@@ -31,7 +33,7 @@ FunctionCall::FunctionCall()
 
 	testClassesCount(comp.result, 2);
 
-	Expressions::ScopeNames mainScopename = unroll(comp.result.classes(), "Main", "main");
+	Expressions::EvaluatedScope mainScopename = unroll(comp.result.classes(), "Main", "main");
 	auto unrolledMainInstace = testInstance(mainScopename, "main");
 
 	ObjectParser::ClassDesc* mainClass = comp.result.classes().get("Main");
@@ -60,6 +62,7 @@ FunctionCall::FunctionCall()
 
 }
 
+#endif
 
 
 

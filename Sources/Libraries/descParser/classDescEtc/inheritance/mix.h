@@ -32,6 +32,8 @@ namespace ObjectParser
 		MixInheritance(const std::string& t):type(t){}
 
 		virtual std::string string() const;
+		virtual Expressions::EvaluationUnit* evaluated(const Expressions::EvaluatedScope& environment, boost::any* userData = 0) const;
+
 
 		
 		std::string type;

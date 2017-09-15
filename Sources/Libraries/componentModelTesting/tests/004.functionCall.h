@@ -10,6 +10,7 @@
 
 #include "utils.h"
 
+#ifdef ENABLE_TEST
 
 namespace ComponentModelTesting
 {
@@ -19,6 +20,8 @@ namespace ComponentModelTesting
 	};
 
 }
+
+#endif
 
 
 

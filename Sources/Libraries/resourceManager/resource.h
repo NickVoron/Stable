@@ -15,7 +15,6 @@
 #include "containers/library.include.h"
 #include "strings/library.include.h"
 #include "common/exception_safety.h"
-#include "common/function_traits.h"
 
 #include "errors.h"
 
@@ -248,8 +247,6 @@ namespace Resources
 		template<class Function>
 		inline bool resource(Function&& function) const
 		{
-			//static_assert(std::is_reference_v<stl::function_traits<Function>::arg<0>::type>, "parameter must be a reference");
-
 			SystemLockGuard lock;
 			if (resourcePtr)
 			{

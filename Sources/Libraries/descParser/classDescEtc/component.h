@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -13,7 +13,7 @@
 
 namespace ObjectParser
 {
-	struct ComponentHandle;
+	class ComponentHandle;
 
 	
 	class ComponentParam
@@ -45,22 +45,18 @@ namespace ObjectParser
 	class Component : public Expressions::Expression
 	{
 	public:
-		~Component();
-
 		virtual std::string string() const override;
-		virtual const Expressions::Expression* evaluated(const Expressions::ScopeNames& parentScopenames, boost::any* userData = 0) const override;
+		virtual Expressions::EvaluationUnit* evaluated(const Expressions::EvaluatedScope& parentScopenames, boost::any* userData = 0) const override;
 		virtual std::string typeName() const override;
-		virtual Expressions::References references() const override;
 
 		std::string componentType;
 		std::string name;
 
 		RuntimePropeties runtimeProps;
-	
+		
+		PropertyAssignmentList linkParams;
 		PropertyAssignmentList propertyAssigments;
 
-		ComponentParams runtimeParams;
-		PropertyAssignmentList linkParams;
 		ComponentHandle* bindedComponent = nullptr; 
 	};
 
@@ -92,7 +88,7 @@ namespace ObjectParser
 
 
 
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

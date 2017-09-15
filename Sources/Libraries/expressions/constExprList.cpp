@@ -30,7 +30,7 @@ namespace Expressions
 		}
 	}	
 
-	void ConstExprList::evaluate(const ScopeNames& environment, ConstExprList& result, boost::any* userData) const
+	void ConstExprList::evaluate(const EvaluatedScope& environment, ConstExprList& result, boost::any* userData) const
 	{
 		result.resize(size());
 		for (unsigned int i = 0; i < size(); ++i)
@@ -56,12 +56,36 @@ namespace Expressions
 		References refs;
 		for (const Expression* expr : *this)
 		{
-			const References& exprRefs = expr->references();
+			References& exprRefs = expr->references();
 			refs.insert(refs.begin(), exprRefs.begin(), exprRefs.end());
 		}
 
 		return refs;
 	}
+
+	
+	EvalUtinList::EvalUtinList(const EvalUtinList& exprList)
+	{
+		reserve(exprList.size());
+		for (auto expr : exprList)
+		{
+			push_back(expr);
+		}
+	}
+
+	std::string EvalUtinList::string() const
+	{
+		str::stringize result("(", str::comma());
+		for (const Expression* expr : *this)
+		{
+			result(stringize(expr));
+		}
+		result(str::nodelim(), ")");
+
+		return result;
+	}
+
+
 }
 
 

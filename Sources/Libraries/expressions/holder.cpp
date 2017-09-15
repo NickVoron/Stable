@@ -21,8 +21,8 @@ namespace Expressions
 			std::lock_guard<std::mutex> lock(mtx);
 
 			ENFORCE(counter == 0);
-			
-			
+			ENFORCE(expressions.empty());
+			ENFORCE(expressions_dict.empty());
 		}
 
 		Expression* add(Expression* expr)
@@ -32,28 +32,28 @@ namespace Expressions
 			ENFORCE(expressions_dict.find(expr) == expressions_dict.end());
 
 			expressions.emplace_back(std::move(std::unique_ptr<Expression>(expr)));
-
-
-
-
+ 			expressions_dict.insert(expr);
+ 			++counter;
+ 			ENFORCE(expressions.size() == counter);
+ 			ENFORCE(expressions_dict.size() == counter);
 			return expr;
 		}
 
 		void clear()
 		{
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 			std::lock_guard<std::mutex> lock(mtx);
+ 
+ 			std::size_t reset_cursor = 0;
+ 			for (auto& ptr : expressions)
+ 			{
+ 				ptr = nullptr;
+ 				++reset_cursor;
+ 				--counter;
+ 			}
+ 
+ 			ENFORCE(counter == 0);
+ 			expressions_dict.clear();
+ 			expressions.clear();
 		}
 
 		std::mutex mtx;
@@ -73,7 +73,7 @@ namespace Expressions
 
 	void collect_garbage()
 	{
-		
+		holder.clear();
 	}
 }
 

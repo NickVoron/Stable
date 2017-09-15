@@ -42,10 +42,33 @@ public:
 	{
 		if (parent && parent->isInList())
 		{
-			return stl::apply(operation, std::tie(*std::get<ComponentType*>(components)...));
+			bool valid = true;
+			stl::for_each(std::tie(std::get<ComponentType*>(components)...), [&valid](auto* ptr) { valid &= (ptr != nullptr); });
+			if (valid)
+			{
+				
+				return stl::apply(operation, std::tie(*std::get<ComponentType*>(components)...));
+			}
 		}
 
 		return decltype(stl::apply(operation, std::tie(*std::get<ComponentType*>(components)...)))();
+	}
+
+	void debug() const
+	{
+		LOG_EXPRESSION_VALUE(parent && parent->isInList());
+
+		if (parent)
+		{
+			LOG_EXPRESSION_VALUE(parent->getClass().name());
+			stl::for_each(std::tie(std::get<ComponentType*>(components)...), [](auto* component)
+			{
+				if (component)
+				{
+					
+				}				
+			});
+		}
 	}
 
 	template<class Component>

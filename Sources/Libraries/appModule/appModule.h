@@ -15,7 +15,6 @@
 #endif
 
 #include "Loki/library.include.h"
-#include "profiler/library.include.h"
 #include "defaultLogs/library.include.h"
 
 namespace AppModules
@@ -461,9 +460,9 @@ namespace AppModules
 	template<class ModulesList, template <class> class Action, bool reverse>
 	struct ChainedActionCall
 	{
-		static const int activeCount = ChainedActionAccum<ModulesList, Action>::count;
-		typedef typename ChainedActionAccum<ModulesList, Action>::Result ActiveModules;
-		typedef typename OrderedModules<ActiveModules, reverse>::Result Ordered;
+		typedef ChainedActionAccum<ModulesList, Action> ActiveModules;
+		static const int activeCount = ActiveModules::count;
+		typedef typename OrderedModules<typename ActiveModules::Result, reverse>::Result Ordered;
 
 		template<class Params> 
 		void init(Loki::TypeTuple<ModulesList>& modules, Params& params) 

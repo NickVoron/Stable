@@ -1,4 +1,4 @@
-// Copyright (C) 2014-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -8,11 +8,13 @@
 
 #pragma once
 #include <string>
-#include <map>
+#include <unordered_map>
+#include "expression.h"
+
 
 namespace Expressions
 {
-	class Expression;
+	class EvaluationUnit;
 
 	
 	
@@ -21,36 +23,130 @@ namespace Expressions
 	
 	
 
-	struct ScopeNames : public std::map<std::string, const Expressions::Expression*>
+	enum class InsertMethod
 	{
-		enum Method
-		{
-			INSERT,
-			REPLACE,
-			REPLACE_OR_INSERT,
-			IGNORE_IF_EXIST			
-		};
+		INSERT,
+		REPLACE,
+		REPLACE_OR_INSERT,
+		IGNORE_IF_EXIST
+	};
 
-		ScopeNames():scopeName(unnamed) {};
+
+	template<typename ExpressionType>
+	class ScopeNames: public std::map<std::string, ExpressionType*>
+	{
+	public:
+		ScopeNames():scopeName("unnamed") {};
 		ScopeNames(const std::string& scopeName_) : scopeName(scopeName_){}
 		~ScopeNames() {}
 
-		void add(const std::string& name, const Expressions::Expression* expr, Method method);
+		void add(const std::string& name, ExpressionType* expr, InsertMethod method, bool classMember = false);
 		bool exists(const std::string& name) const;
-		const Expressions::Expression* get(const std::string& name) const;
-		const Expressions::Expression* getByType(const std::string& type) const;
+		ExpressionType* get(const std::string& name) const;
+		ExpressionType* getByType(const std::string& type) const;
 
 		void copyFrom(const ScopeNames& proto);
 
-		static const std::string unnamed;
+		void remove(const std::string& name);
+
 		std::string scopeName;		
+
+		void setParent(const ScopeNames<ExpressionType>* parent_) { parent = parent_; }
+		bool isClassMember(const ExpressionType* expr) const { return classMembers.count(expr); }
+
+	protected:
+		std::set<const ExpressionType*> classMembers;
+
+	private:
+		const ScopeNames<ExpressionType>* parent = 0;
 	};
+
+	template<typename ExpressionType>
+	void ScopeNames<ExpressionType>::add(const std::string& name, ExpressionType* expr, InsertMethod method, bool isClassMember)
+	{
+		auto& found = find(name);
+		ENFORCE_MSG(method != InsertMethod::INSERT || found == end(), __FUNCTION__ "INSERT: scopenames alredy have property by name: " + name);
+		ENFORCE_MSG(method != InsertMethod::REPLACE || found != end(), __FUNCTION__ "REPLACE: scopenames not have property by name: " + name);
+
+		if (method == InsertMethod::IGNORE_IF_EXIST && found != end())
+		{
+			return;
+		}
+
+		(*this)[name] = expr;
+		
+		if (isClassMember)
+		{
+			classMembers.emplace(expr);
+		}
+
+	}
+
+	template<typename ExpressionType>
+	ExpressionType* ScopeNames<ExpressionType>::get(const std::string& name) const
+	{
+		auto found = find(name);
+		ExpressionType* result = (found != end()) ? found->second : nullptr;
+		if (!result && parent)
+		{
+			result = parent->get(name);
+		}
+
+		return result;
+
+	}
+
+	template<typename ExpressionType>
+	bool ScopeNames<ExpressionType>::exists(const std::string& name) const
+	{
+		return get(name)!=nullptr;
+	}
+
+	template<typename ExpressionType>
+	ExpressionType* ScopeNames<ExpressionType>::getByType(const std::string& type) const
+	{
+		auto found = std::find_if(begin(), end(), [type](auto& iter)
+		{
+			return iter.second->typeName() == type;
+		});
+
+		ExpressionType* result = (found != end()) ? found->second : nullptr;
+
+		if (!result && parent)
+		{
+			result = parent->getByType(type);
+		}
+
+		return result;
+	}
+
+	template<typename ExpressionType>
+	void ScopeNames<ExpressionType>::copyFrom(const ScopeNames& proto)
+	{
+		(map&)(*this) = (map&)proto;
+	}
+
+	template<typename ExpressionType>
+	void ScopeNames<ExpressionType>::remove(const std::string& name)
+	{
+		auto iter = find(name);
+		ENFORCE(iter != end())
+
+			erase(iter);
+	}
+
+	
+	typedef ScopeNames<const Expression> ExpressionScope;
+	typedef ScopeNames<EvaluationUnit> EvaluatedScope;
+
+
+	
 }
 	
 
 
 
-// Copyright (C) 2014-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

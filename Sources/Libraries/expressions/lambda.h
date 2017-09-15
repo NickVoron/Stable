@@ -12,15 +12,15 @@
 
 namespace Expressions{
 
-	class Lambda: public Expression
-	{
-	public:
-		Lambda(const std::string& lambdaName, const ConstExprList& params_);
+	
+	
+	
+	
 
-	protected:
-		const ConstExprList params;
-		const std::string lambdaName;
-	};
+	
+	
+	
+	
 
 }
 

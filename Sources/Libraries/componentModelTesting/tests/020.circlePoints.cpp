@@ -8,6 +8,7 @@
 
 #include "020.circlePoints.h"
 
+#ifdef ENABLE_TEST
 namespace ComponentModelTesting
 {
 	
@@ -46,7 +47,7 @@ namespace ComponentModelTesting
 
 		testClassesCount(comp.result, 3);
 
-		Expressions::ScopeNames worldScopename = unroll(comp.result.classes(), "Main", "main");
+		Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), "Main", "main");
 
 		auto superCircle = transform_vec(formationCircleXZ(30, 50, 0), [](std::size_t index, auto flt) { return std::make_tuple(index, flt); });
 		auto circle = transform_vec(formationCircleXZ(6, 10, 0), [](std::size_t index, auto flt) { return std::make_tuple(index, flt); });
@@ -65,6 +66,7 @@ namespace ComponentModelTesting
 		}
 	}
 }
+#endif
 
 
 

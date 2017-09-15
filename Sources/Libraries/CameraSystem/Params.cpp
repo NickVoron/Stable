@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2015 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -16,13 +16,12 @@
 using namespace CameraSystem;
 using namespace Base;
 
-
 void Params::defaults()
 {
 	data.state.SetIdentity();
 
 	data.aspect = 4.0f / 3.0f;
-	setFovV(45 * nm::PI_180);
+	setFovV(45.0f * nm::PI_180);
 	
 	data.planes.minValue = 0.1f;
 	data.planes.maxValue = 1024.0f;
@@ -77,7 +76,7 @@ void Params::computeValues()
 
 
 
-// Copyright (C) 2012-2015 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

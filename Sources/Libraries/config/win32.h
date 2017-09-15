@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -27,6 +27,7 @@
 
 	#define _SECURE_SCL 0
 	#define _HAS_ITERATOR_DEBUGGING 0
+	#define DIRECTINPUT_VERSION 0x0800
 
 #endif
 
@@ -36,7 +37,7 @@
 
 
 
-// Copyright (C) 2012-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

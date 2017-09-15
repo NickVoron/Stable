@@ -11,7 +11,7 @@
 namespace ObjectParser
 {
 
-void PropertyAccumulator::bindRuntimeProperty(const std::string& paramName, Expressions::Proxy* path, RuntimeDirection direction)
+void PropertyAccumulator::bindRuntimeProperty(const std::string& paramName, Expressions::Reference* path, RuntimeDirection direction)
 {
 
 	runtimeProps.push_back(RuntimeProperty());

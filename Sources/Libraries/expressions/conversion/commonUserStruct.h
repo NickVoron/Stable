@@ -10,6 +10,8 @@
 
 #include "image/library.include.h"
 #include "unigui/library.include.h"
+#include "reflection/library.include.h"
+
 #include "stuff/userStruct.h"
 
 #include "../expression.h"
@@ -38,6 +40,40 @@ namespace Expressions
 
 		struct Point2Converter : public UserStructConverter_NameCheck<unigui::Point2> { virtual const char* structName() const { return "Point2"; } void convert(const Expression& expr, unigui::Point2& client); };
 		struct RectConverter : public UserStructConverter_NameCheck<unigui::Rect> { virtual const char* structName() const { return "Rect"; } void convert(const Expression& expr, unigui::Rect& client); };
+
+		template<class Struct>
+		struct Universal : public UserStructConverter_NameCheck<Struct>
+		{ 
+			virtual const char* structName() const { return mirror::type().typeName(); } 
+			void convert(const Expression& expr, Struct& client)
+			{
+				auto refl = mirror::type().typeName();
+				const ConstExprList& vl = extractConstList(expr);
+
+				ENFORCE(vl.size() == refl.size());
+
+				for (std::size_t i = 0; i < vl.size(); ++i)
+				{
+					
+				}
+			}
+		};
+		
+		template<class Struct>
+		struct Type : public mirror::Type<Struct>
+		{
+			void buildConverter() const
+			{
+				UserStructsConvertersLib::addInst<Universal<Struct>>();
+			}
+		};
+
+		template<class Func>
+		void defineStruct(Func func)
+		{
+			const auto& type = func();
+			type.buildConverter
+		}
 
 		
 		

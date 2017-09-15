@@ -15,8 +15,6 @@
 
 namespace Expressions
 {
-	struct ScopeNames;
-	
 	struct ExprList : public std::vector<Expression*>
 	{
 		ExprList(){}
@@ -31,11 +29,21 @@ namespace Expressions
 		ConstExprList(const ExprList& exprList);
 		template<class... P0> ConstExprList(const P0&... p0) : vector{ Expressions::add_const(p0)... }	{ }
 		
-		void evaluate(const ScopeNames& environment, ConstExprList& result, boost::any* userData) const;
+		void evaluate(const EvaluatedScope& environment, ConstExprList& result, boost::any* userData) const;
 		std::string string() const;
 		References references() const;
 
 	};
+
+	
+	struct EvalUtinList : public std::vector<const EvaluationUnit*>
+	{
+		EvalUtinList() {}
+		EvalUtinList(const EvalUtinList& exprList);
+
+		std::string string() const;
+	};
+
 }
 
 

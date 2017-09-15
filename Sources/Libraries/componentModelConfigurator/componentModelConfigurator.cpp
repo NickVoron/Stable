@@ -9,6 +9,7 @@
 #include "componentModelConfigurator.h"
 #include "descParser/library.include.h"
 #include "resourceUtils/library.include.h"
+#include "componentModelTesting/library.include.h"
 #include "common/ptr_utils.h"
 #include "common/breakpoint.h"
 
@@ -18,34 +19,40 @@
 namespace ComponentModel
 {
 
-	void ComponentModelConfigurator::InstanceHandle::debug(int& depth) const
-	{
-		LOG_MSG(logs::spaces(depth++) << " " << name);
 
-		if (!components.empty())
+	struct HierarchyNode
+	{
+		ObjectParser::InstanceHandle* parent = nullptr;
+		ObjectParser::InstanceHandle* self = nullptr;
+	};
+
+	std::vector<HierarchyNode> linearize(HierarchyNode parent, Expressions::EvaluatedScope& scope)
+	{
+		std::vector<HierarchyNode> result;
+
+		for (auto& unit : scope)
 		{
-			LOG_MSG(logs::spaces(depth) << " components: " << components.size());
-			for (auto&& comp : components)
+			if (auto instanceHandle = unit.second->cast<ObjectParser::InstanceHandle>())
 			{
-				LOG_MSG(logs::spaces(depth + 1) << " " << comp.first->component->className);
-				LOG_MSG(logs::spaces(depth + 1) << "properties: " << comp.second.properties.size());
-					
-				for (auto&& property : comp.second.properties)
-				{			
-					LOG_MSG(logs::spaces(depth + 2) << property.debug());
+				result.push_back({ parent.self, instanceHandle });
+				auto children = linearize(result.back(), *instanceHandle);
+				result.insert(result.end(), children.begin(), children.end());
+			}
+			else if (auto instances = unit.second->cast<Expressions::EvaluatedArray>())
+			{
+				for (std::size_t i = 0; i < instances->count(); ++i)
+				{
+					if (auto instanceHandle = const_cast<Expressions::EvaluationUnit*>(instances->element(i))->cast<ObjectParser::InstanceHandle>())
+					{
+						result.push_back({ parent.self, instanceHandle });
+						auto children = linearize(result.back(), *instanceHandle);
+						result.insert(result.end(), children.begin(), children.end());
+					}
 				}
 			}
-		}	
-
-		if (!instances.empty())
-		{
-			LOG_MSG(logs::spaces(depth) << " instances: " << instances.size() );
-			for (auto inst : instances)
-			{
-				int dpth = depth;
-				inst->debug(dpth);
-			}
 		}
+
+		return result;
 	}
 
 	template<class MapType>
@@ -60,15 +67,15 @@ namespace ComponentModel
 			{
 				try
 				{
-					if (auto prop = resource->findProperty(a.name.c_str()))
+					if (auto prop = resource->findProperty(a.first.c_str()))
 					{
-						ENFORCE(a.expression);
+						ENFORCE(a.second);
 						
-						prop->convert(component, *a.expression);
+						prop->convert(component, *a.second);
 					}
 					else
 					{
-						LOG_ERROR("component: " << ComponentsFactory::className(component) << " hasn't property: " << a.name);
+						LOG_ERROR("component: " << ComponentsFactory::className(component) << " hasn't property: " << a.first);
 					}
 				}
 				catch (std::exception& e)
@@ -79,303 +86,116 @@ namespace ComponentModel
 		}
 		catch (std::exception& e)
 		{
-			LOG_ERROR(e.what());
+			LOG_ERROR(e);
 			throw;
 		}
 	}
 
-	void initInstance(const ComponentModelConfigurator::InstanceHandle* instance, const Entity* parent, Entity*& entity)
+	EntitiesList& initializeEntities(Expressions::EvaluatedScope& scope, EntitiesList& entities)
 	{
-		ENFORCE(instance && entity);
-		ENFORCE_EQUAL(instance->classDesc->className, entity->getClass().name());
-		ENFORCE_EQUAL(instance->components.size(), entity->getComponentsCount());
-
+		auto objects = linearize(HierarchyNode(), scope);
 		
-		for (auto& source : instance->initData())
+
+		std::map<ObjectParser::InstanceHandle*, ClassDesc*> objectToClassDesc;
+		ClassDescList classes;
+		for (auto& object : objects)
 		{
-			try
+			ClassDesc& classDesc = classes.add(object.self->type);
+			objectToClassDesc[object.self] = &classDesc;
+			for (auto* componentHandle : object.self->components())
 			{
-				auto& component = entity->getComponent(std::get<1>(std::get<0>(source)));
-				auto& properties = std::get<1>(source);
-				initComponent(component, properties);
-			}
-			catch (std::exception& e)
-			{
-				LOG_ERROR(e);
-			}					
-		}
-		
-
-		entity->finalize();
-
-		if (parent)
-		{
-			parent->map(*entity, &ComponentsFactory::inheriteProperties);
-		}
-
-		Entity* prnt = entity;
-		for (auto&& child : instance->instances)
-		{
-			entity->iterate(entity);
-			initInstance(child, prnt, entity);
-		}
-	}	
-
-	ComponentModelConfigurator::ComponentState& ComponentModelConfigurator::ClassState::componentState()
-	{
-		ENFORCE(!components.empty());
-		return components.top();
-	}
-
-	ComponentModelConfigurator::ClassState& ComponentModelConfigurator::classState()
-	{
-		ENFORCE(!state.empty());
-		return state.top();
-	}
-
-	ClassDesc* ComponentModelConfigurator::currentClass()
-	{
-		return classState().current;
-	}
-
-	ComponentDesc* ComponentModelConfigurator::currentComponent()
-	{
-		return classState().componentState().current;
-	}
-
-	void ComponentModelConfigurator::beginCreateInstance(const std::string& name, const std::string& type)
-	{
-
-		state.push(ClassState());
-		auto instanceClass = &classes.add(type);
-		classState().current = instanceClass;
-		auto instance = Expressions::add<InstanceHandle>(instanceCounter, currentInstance, name, instanceClass);
-		classState().instance = instance;
-		currentInstance = instance;
- 		++instanceCounter;
- 		++level;
-	}
-
-	ObjectParser::InstanceHandle* ComponentModelConfigurator::endCreateInstance()
-	{
-		--level;
-
-
-
-		auto instance = classState().instance;
-		
-		
-		if (auto parentClassDesc = instance->parent->classDesc)
-		{
-			parentClassDesc->localObjects.push_back({ instance->name, instance->classDesc->className, instance->classDesc->classIndex });
-		}
-		
-		
-		currentInstance = instance->parent;
-		state.pop();
-		return instance;
-	}
-
-	ObjectParser::ComponentHandle* ComponentModelConfigurator::preCreateComponent(const std::string& type, const std::string& name)
-	{
-		classState().components.push(ComponentState());
-		auto& componentState = classState().componentState();
-		componentState.current = classState().current->addComponent(type, name, componentState.runtimeProperties.value("category"));
-		
-		ComponentHandle* comp = Expressions::add<ComponentHandle>(currentInstance, currentComponent());
-		
-		return comp;
-	}
-
-	void ComponentModelConfigurator::beginCreateComponent(ObjectParser::ComponentHandle* handle, const std::string& type, const std::string& name)
-	{
-
-
-		++level;
-	}
-
-	void ComponentModelConfigurator::endCreateComponent(ObjectParser::ComponentHandle* inhandle)
-	{
-		--level;
-
-		auto instance = classState().instance;
-		auto current = classState().componentState().current;
-
-
-		ComponentHandle* handle = dynamic_cast<ComponentHandle*>(inhandle);
-
-		instance->components[handle] = classState().componentState();
-		classState().components.pop();
-		auto& comps = classState().components;
-	}
-
-
-	void ComponentModelConfigurator::bindRuntimeProperty(ObjectParser::ComponentHandle* handle, const std::string& name, const std::string& value)
-	{
-		if (name == "category")
-		{
-			classState().componentState().runtimeProperties.emplace_back(name, value);
-			classState().current->categories.insert(value);
-		}
-	}
-
-	void ComponentModelConfigurator::bindLink(ObjectParser::ComponentHandle* handle, const std::string& name, const ObjectParser::ComponentHandle* value)
-	{
-		const ComponentHandle* valueHandle = dynamic_cast<const ComponentHandle*>(value);
-		ENFORCE(valueHandle && valueHandle->component);
-		currentComponent()->dependencies.push_back(valueHandle->component);
-	}
-
-	void addDependencies(std::vector<ComponentDesc*>& dependencies, const Expressions::Expression* value)
-	{
-		if (auto array = value->cast<Expressions::Array>())
-		{
-			for (std::size_t i = 0; i < array->count(); ++i)
-			{
-				addDependencies(dependencies, array->element(i));
-			}
-		}
-		else if (auto handle = value->cast<ComponentModelConfigurator::ComponentHandle>())
-		{
-			ENFORCE(handle->component);
-			dependencies.push_back(handle->component);
-		}
-	}
-
-	void ComponentModelConfigurator::bindComponentProperty(ObjectParser::ComponentHandle* handle, const std::string& name, const Expressions::Expression* value)
-	{
-		if (value)
-		{
-			if (auto proxy = value->cast<Expressions::Proxy>())
-			{
-				THROW("Expression must not be Proxy");
+				if (object.self->isClassMember(componentHandle))
+				{
+					classDesc.addComponent(componentHandle->type, componentHandle->name, "");
+				}
 			}
 
-			classState().componentState().properties.emplace_back(name, value);
-			addDependencies(currentComponent()->dependencies, value);
-		}	
-		else
-		{
-			LOG_ERROR("bindComponentProperty: " << name << " value is nullptr ");
+			LOG_MSG("");
+			classDesc.debug();
 		}
-	}
 
-	void ComponentModelConfigurator::debug() const
-	{
-		for (auto instance : root.instances)
-		{
-			int depth = 0;
-			instance->debug(depth);
-		}
-	}
-
-	EntitiesList& ComponentModelConfigurator::configure(ObjectParser::Unroller& unroller, EntitiesList& entities)
-	{
 		classes.finalize();
 		entities.classes.create(classes, entities.executionList);
-		ENFORCE_EQUAL(classes.size(), entities.classes.classes.size());
-		configure(unroller, root, entities);
-		ENFORCE_EQUAL(entities.pool.entitiesCount(), instanceCounter);
+		ObjectParser::ObjectConverter::classes = &entities.classes;
 
-		return entities;
-	}
-
-
-
-
-
-
-
-
-
-
-	void createInstance(const ComponentModelConfigurator::InstanceHandle& handle, EntitiesList& entities)
-	{
-		if (handle.classDesc)
+		std::map<ObjectParser::InstanceHandle*, Entity*> objectToEntity;
+		for (std::size_t objectIdx = 0; objectIdx < objects.size(); ++objectIdx)
 		{
-			auto classIndex = handle.classDesc->classIndex;
-			auto* entity = entities.create(classIndex);
-			auto count = entities.pool.entitiesCount();
+			auto& object = objects[objectIdx];
 
-
-
-			initInstance(&handle, nullptr, entity);
+			auto classDesc = objectToClassDesc[object.self];
+			auto classIndex = classDesc->classIndex;
+			auto entity = entities.create(classIndex);
+			
+			objectToEntity[object.self] = entity;
+			std::vector<ObjectParser::ComponentHandle*> componentHandles;
+			for (std::size_t i = 0; i < entity->getComponentsCount(); ++i)
+			{
+				std::string componentName = entity->getClass().getComponentName(i);
+				auto componentHandle = object.self->component(componentName);
+				ENFORCE(componentHandle);
+				componentHandles.push_back(componentHandle);
+				componentHandle->objectIndex = objectIdx;
+				componentHandle->componentIndex = i;
+			}
 		}
-	}
 
+		for (std::size_t objectIdx = 0; objectIdx < objects.size(); ++objectIdx)
+		{
+			auto& object = objects[objectIdx];
+			auto entity = objectToEntity[object.self];
+			for (std::size_t i = 0; i < entity->getComponentsCount(); ++i)
+			{
+				std::string componentName = entity->getClass().getComponentName(i);
+				auto componentHandle = object.self->component(componentName);
+				ENFORCE(componentHandle);
+				initComponent(entity->getComponent(i), *componentHandle);
+			}
+			entity->finalize();
+		}
 
-
-
-
-
-
-
-
-
-
-	EntitiesList& ComponentModelConfigurator::configure(ObjectParser::Unroller& unroller, const InstanceHandle& rootInstance, EntitiesList& entities)
-	{
-		scoped_pointer_assigner<ObjectParser::Unroller> urptr(ObjectParser::ObjectConverter::unroller, unroller);
-
-
-
-		createInstance(rootInstance, entities);
-
- 		for (auto& instance : rootInstance.instances)
- 		{
- 			ENFORCE(instance);
- 			createInstance(*instance, entities);
- 		}
+		for (auto& object : objects)
+		{
+			if (object.parent)
+			{
+				auto parent = objectToEntity[object.parent];
+				ENFORCE(parent);
+				ENFORCE(object.self);
+				auto self = objectToEntity[object.self];
+				ENFORCE(self);
+				parent->map(*self, &ComponentsFactory::inheriteProperties);
+			}
+		}
 
 		entities.classes.finalize(entities.executionList);
-		
+
 		for (auto& entity : entities)
 		{
 			entity.getClass().bindToExecutionList(entity);
 		}
-		
+
 		return entities;
-	}
-
-	EntitiesList& createInstance(const ObjectParser::InstanceDefinitionExpression& instance, ObjectParser::Unroller& unroller, ComponentModelConfigurator& configurator, EntitiesList& entities, bool debug)
-	{
-		auto scope = Expressions::ScopeNames();
-		unroller.unrollInstance(&instance, scope);
-
-		if (debug)
-		{
-			configurator.debug();
-		}
-
-		scoped_pointer_assigner<ClassesLib> clptr(ObjectParser::ObjectConverter::classes, entities.classes);
-		
-		return configurator.configure(unroller, entities);
 	}
 	
 	EntitiesList& descriptionLoad(const char* filename, EntitiesList& entities)
 	{
 		ENFORCE(filename);
-
 		ObjectParser::Compiler comp(filename);
-		ComponentModelConfigurator configurator;
-		
-		const char* entryPoint = "Main";
-		ObjectParser::Unroller unroller(comp.result.classes(), configurator, true);
-		createInstance(ObjectParser::InstanceDefinitionExpression(entryPoint, entryPoint), unroller, configurator, entities, false);
-		
-		return entities;
+		auto& classTable = comp.result.classes();
+		ObjectParser::ObjectConverter::classTable = &classTable;
+		auto result = ObjectParser::unroll(classTable, "Main", "main");
+		return initializeEntities(result, entities);		
 	}
-	
+
 	void descriptionTest(const char* filename)
 	{
 		ENFORCE(filename);
 
 		EntitiesList entities;
-		descriptionLoad(filename, entities);
-		entities.activate(true);
+		descriptionLoad(filename, entities).activate(true);
 		
 
-		for (int i = 0; i < 5; ++i)
+		for (int i = 0; i < 3; ++i)
 		{
 			entities.execute();
 		}

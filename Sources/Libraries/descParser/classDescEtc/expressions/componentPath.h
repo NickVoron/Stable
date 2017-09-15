@@ -12,16 +12,18 @@
 
 namespace ObjectParser
 {
-	struct InstanceHandle;
+	class InstanceHandle;
 
-	struct ComponentPath : public Expressions::Proxy::PathElement
+	struct ComponentPath : public Expressions::Reference::PathElement
 	{
 		ComponentPath(const std::string& componentType_) : componentType(componentType_) {}
-		virtual const Expressions::Expression* evaluate(const Expressions::Expression* input, const Expressions::ScopeNames& context) const override;
+		virtual Expressions::EvaluationUnit* evaluate(const Expressions::EvaluationUnit* input, const Expressions::EvaluatedScope& context) const override;
+
+		virtual std::unique_ptr<Expressions::Reference::PathElement> copy() const override;
 
 		const std::string componentType;
 	private:
-		static const Expressions::Expression* getComponent(const InstanceHandle* instanceHandle, std::string componentType);
+		static const Expressions::EvaluationUnit* getComponent(const InstanceHandle* instanceHandle, std::string componentType);
 	};
 
 }

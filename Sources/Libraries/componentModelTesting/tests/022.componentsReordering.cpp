@@ -9,9 +9,9 @@
 #include "022.componentsReordering.h"
 
 #include "utils.h"
-#include "quietConfigurator.h"
 #include "componentLinkModelConfigurator.h"
 
+#ifdef ENABLE_TEST
 namespace ComponentModelTesting
 {
 	ComponentsReordering::ComponentsReordering()
@@ -20,6 +20,7 @@ namespace ComponentModelTesting
 		ComponentModel::descriptionTest(path.c_str());
 	}
 }
+#endif
 
 
 

@@ -35,7 +35,7 @@ namespace
 		Autorun,
 		Logs,
 		ProcessTerminator,
-		ComponentModel,
+		AppModules::ComponentModel,
 		ResourcesManager,
 		Application
 	> Prologue;

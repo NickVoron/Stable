@@ -8,17 +8,12 @@
 
 #include "025.nestedSpawners.h"
 #include "utils.h"
-#include "quietConfigurator.h"
 #include "componentLinkModelConfigurator.h"
 
 #include "componentModel/library.include.h"
 #include "commonComponents/library.include.h"
 
-namespace
-{
-	std::string result;
-}
-
+#ifdef ENABLE_TEST
 namespace ComponentModelTesting
 {
 
@@ -27,9 +22,13 @@ class ComponentS1 : public UpdatableComponentAutoLink<ComponentS1, ConfigurableS
 public:
 	CM_IMPLEMENT_SYSTEM_COMPONENT_INTERFACE(ComponentS1);
 
-	ComponentS1() { result += "1"; }
-	void update() { spawn([](Position& component) { 	}); }
-
+	void update() 
+	{ 
+		spawn([](Position& component)
+		{ 
+			LOG_EXPRESSION_VALUE(typeid(component).name()) 
+		}); 
+	}
 };
 
 class ComponentS2 : public UpdatableComponentAutoLink<ComponentS2, ConfigurableSpawner<ComponentS1>>
@@ -37,9 +36,13 @@ class ComponentS2 : public UpdatableComponentAutoLink<ComponentS2, ConfigurableS
 public:
 	CM_IMPLEMENT_SYSTEM_COMPONENT_INTERFACE(ComponentS2);
 
-	ComponentS2() { result += "2"; }
-	void update() { spawn([](ComponentS1& component) {}); }
-
+	void update() 
+	{ 
+		spawn([](ComponentS1& component)
+		{
+			LOG_EXPRESSION_VALUE(typeid(component).name());
+		}); 
+	}
 };
 
 class ComponentS3 : public UpdatableComponentAutoLink<ComponentS3, ConfigurableSpawner<ComponentS2>>
@@ -47,9 +50,13 @@ class ComponentS3 : public UpdatableComponentAutoLink<ComponentS3, ConfigurableS
 public:
 	CM_IMPLEMENT_SYSTEM_COMPONENT_INTERFACE(ComponentS3);
 
-	ComponentS3() { result += "3"; }
-	void update() { spawn([](ComponentS2& component) {}); }
-
+	void update() 
+	{ 
+		spawn([](ComponentS2& component)
+		{
+			LOG_EXPRESSION_VALUE(typeid(component).name());
+		}); 
+	}
 };
 
 class ComponentS4 : public UpdatableComponentAutoLink<ComponentS4, ConfigurableSpawner<ComponentS3>>
@@ -57,9 +64,13 @@ class ComponentS4 : public UpdatableComponentAutoLink<ComponentS4, ConfigurableS
 public:
 	CM_IMPLEMENT_SYSTEM_COMPONENT_INTERFACE(ComponentS4);
 
-	ComponentS4() { result += "4"; }
-	void update() { spawn([](ComponentS3& component) { }); }
-
+	void update() 
+	{ 
+		spawn([](ComponentS3& component)
+		{
+			LOG_EXPRESSION_VALUE(typeid(component).name());
+		}); 
+	}
 };
 
 class ComponentS5 : public UpdatableComponentAutoLink<ComponentS5, ConfigurableSpawner<ComponentS4>>
@@ -67,29 +78,32 @@ class ComponentS5 : public UpdatableComponentAutoLink<ComponentS5, ConfigurableS
 public:
 	CM_IMPLEMENT_SYSTEM_COMPONENT_INTERFACE(ComponentS5);
 
-	ComponentS5() { result += "5"; }
-	void update() { spawn([](ComponentS4& component) { }); }
-
-
+	void update() 
+	{ 
+		spawn([](ComponentS4& component)
+		{
+			LOG_EXPRESSION_VALUE(typeid(component).name());
+		}); 
+	}
 };
-									 
+
+
+	
+
 
 NestedSpawners::NestedSpawners()
 {
+	ComponentModel::components<ComponentS1,	ComponentS2, ComponentS3, ComponentS4, ComponentS5>();
+
+	std::string path = Resources::resourceRelativePath("desc/cm2Testing/1.basic/025.nestedSpawners.desc");
+	ObjectParser::Compiler comp(path.c_str());
+	ComponentLinkModelConfigurator debugConfigurator;
+
+	Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), debugConfigurator, "Main", "main");
+
 	try
 	{
-
-
-
-		ComponentsCore::components<ComponentS1, ComponentS2, ComponentS3, ComponentS4, ComponentS5>();
-		result.clear();
-		std::string path = Resources::resourceRelativePath("desc/cm2Testing/1.basic/025.nestedSpawners.desc");
-		ComponentModel::descriptionTest(
-			path, 10,
-			[](auto&) { ENFORCE_EQUAL(result, "54321"); result.clear(); }, 
-			[](auto&) { ENFORCE_EQUAL(result, "4321"); },
-			[](auto&, auto&) {}
-		);
+		ComponentModel::descriptionTest(path.c_str());
 	}
 	catch (const std::exception& e)
 	{
@@ -97,7 +111,8 @@ NestedSpawners::NestedSpawners()
 	}
 }
 
-}//
+}
+#endif
 
 
 

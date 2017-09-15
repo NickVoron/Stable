@@ -7,57 +7,10 @@
 //
 
 #include "scopeNames.h"
-#include "expression.h"
 
 namespace Expressions
 {
 
-const std::string ScopeNames::unnamed = "unnamed";
-
-
-void ScopeNames::add(const std::string& name, const Expressions::Expression* expr, Method method)
-{
-	auto found = find(name);
-	ENFORCE_MSG(method != INSERT || found == this->end(), "INSERT: scopenames alredy have property by name: " + name);
-	ENFORCE_MSG(method != REPLACE || found != this->end(), "REPLACE: scopenames not have property by name: " + name);
-
-	if (method==IGNORE_IF_EXIST && found != end())
-	{
-		return;
-	}
-
-	(*this)[name] = expr;
-}
-
-const Expressions::Expression* ScopeNames::get(const std::string& name) const
-{
-	auto iter = find(name);
-	return (iter != end()) ? iter->second : nullptr;
-}
-
-bool ScopeNames::exists(const std::string& name) const
-{
-	return find(name) != end();
-}
-
-const Expressions::Expression* ScopeNames::getByType(const std::string& type) const
-{
-	for (auto& iter: *this)
-	{
-		const Expression* expr = iter.second;
-		if (expr->typeName() == type)
-		{
-			return expr;
-		}
-	}
-
-	return 0;
-}
-
-void ScopeNames::copyFrom(const ScopeNames& proto)
-{
-	(map&)(*this) = (map&)proto;
-}
 
 }//
 

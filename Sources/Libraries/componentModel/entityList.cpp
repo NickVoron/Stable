@@ -91,31 +91,35 @@ void EntitiesList::solveLoadList(const LoadList& loadList)
 {
 	for(auto& info : loadLinks)
 	{
-		if(info.data.objectIndex >= 0)
+		if (info.data.objectIndex < loadList.size())
 		{
+			ENFORCE(info.data.objectIndex < loadList.size());
 			Entity* obj = loadList[info.data.objectIndex];
 			ENFORCE_EQUAL(info.data.componentIndices.size(), info.links.size());
 
 			for (std::size_t idx = 0; idx < info.data.componentIndices.size(); ++idx)
 			{
 				*info.links[idx] = &obj->getComponent(info.data.componentIndices[idx]);
-			}			
-		}		
+			}
+		}				
 	}
 }
 
 bool EntitiesList::findComponent(ComponentBase* component, std::size_t& objectIndex, std::size_t& componentIndex) const
 {
-	std::size_t i = 0;
-	for(auto& entity : *this)
+	if (component)
 	{
-		if(entity.componentIndex(component, componentIndex))
+		std::size_t i = 0;
+		for (auto& entity : *this)
 		{
-			objectIndex = i;
-			return true;
+			if (entity.componentIndex(component, componentIndex))
+			{
+				objectIndex = i;
+				return true;
+			}
+			++i;
 		}
-		++i;
-	}
+	}	
 
 	return false;
 }
@@ -142,17 +146,19 @@ void EntitiesList::debugOutput() const
 
 std::string EntitiesList::debugstr() const
 {
+
 	std::map<const Class*, int > sorted;
 	for (auto& entity : *this)
 	{
 		++sorted[&entity.getClass()];
 	}
 
-	str::spaced result;
+	str::spaced result("entities: {");
 	for (auto& v : sorted)
 	{
-		result(*v.first, " objects count: ",v.second);
+		result(*v.first, " objects count: ", v.second);
 	}
+	result("}");
 
 	return result.str();
 }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.3
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "resources", "resources", "{9326E0B7-BA11-4284-AB38-E079F0A3EB98}"
 EndProject
@@ -220,6 +220,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "curve", "Sources\Libraries\curve\curve.vcxproj", "{754BBCCD-F3B2-44DF-AB0D-2ABCA5420091}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lightSources", "Sources\Libraries\lightSources\lightSources.vcxproj", "{E65A6AC6-CD7F-44CA-9AE0-C5955F6EBA1F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "reflection", "Sources\Libraries\reflection\reflection.vcxproj", "{E2E7788D-DE9B-4A7A-AC95-653B78B24A95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1053,6 +1055,14 @@ Global
 		{E65A6AC6-CD7F-44CA-9AE0-C5955F6EBA1F}.Release|x64.ActiveCfg = Release|x64
 		{E65A6AC6-CD7F-44CA-9AE0-C5955F6EBA1F}.Release|x64.Build.0 = Release|x64
 		{E65A6AC6-CD7F-44CA-9AE0-C5955F6EBA1F}.Release|x64.Deploy.0 = Release|x64
+		{E2E7788D-DE9B-4A7A-AC95-653B78B24A95}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E2E7788D-DE9B-4A7A-AC95-653B78B24A95}.Debug|Win32.Build.0 = Debug|Win32
+		{E2E7788D-DE9B-4A7A-AC95-653B78B24A95}.Debug|x64.ActiveCfg = Debug|x64
+		{E2E7788D-DE9B-4A7A-AC95-653B78B24A95}.Debug|x64.Build.0 = Debug|x64
+		{E2E7788D-DE9B-4A7A-AC95-653B78B24A95}.Release|Win32.ActiveCfg = Release|Win32
+		{E2E7788D-DE9B-4A7A-AC95-653B78B24A95}.Release|Win32.Build.0 = Release|Win32
+		{E2E7788D-DE9B-4A7A-AC95-653B78B24A95}.Release|x64.ActiveCfg = Release|x64
+		{E2E7788D-DE9B-4A7A-AC95-653B78B24A95}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1097,5 +1107,8 @@ Global
 		{E43EAEF9-825A-4AA3-AB0D-FCF08D69D225} = {710D9D61-D1D7-4F06-8140-F1E3AC0F25D2}
 		{6A5FAE02-8E71-46BD-A3B6-CCF5A9A92AAA} = {9326E0B7-BA11-4284-AB38-E079F0A3EB98}
 		{1D358CC1-1623-477E-8B33-287F3E62242C} = {9326E0B7-BA11-4284-AB38-E079F0A3EB98}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {80611B01-4A29-4918-A536-5131AFCAF32E}
 	EndGlobalSection
 EndGlobal

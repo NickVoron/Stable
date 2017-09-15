@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -14,14 +14,9 @@ void LinearMover::Resource::properties(LinearMover& component)
 	property("global", component.global);
 }
 
-LinearMover::LinearMover():position(0), global(false)
-{
-
-}
-
 void LinearMover::update(float dt)
 {
-	State& s = position->state;
+	State& s = component<Position>().state;
 	Vector3 res;
 	if(!global)
 	{
@@ -46,15 +41,31 @@ void LinearMover::update(float dt)
 	s.position += res;
 }
 
-void LinearMover::linker()
+
+
+
+void AroundRotator::Resource::properties(AroundRotator& component)
 {
-	link(position);
+	property("target", component.target);
+	property("velocity", component.velocity);
+}
+
+void AroundRotator::update(float dt)
+{
+	auto& selfPosition = component<Position>();
+	target([&selfPosition](auto& linkPosition)
+	{ 
+		Vector3& src = linkPosition.state.position;
+		Vector3& dst = selfPosition.state.position;
+				
+		dst = src + Vector3(10, 0, 0);
+	});
 }
 
 
 
 
-// Copyright (C) 2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

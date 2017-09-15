@@ -12,12 +12,7 @@ namespace LogComponents
 {
 	void PositionLogger::update(float dt)
 	{
-		LOG_MSG("position: " << position->state.position << " HPB: " << position->state.GetHPB());
-	}
-
-	void PositionLogger::linker()
-	{
-		link(position);
+		LOG_MSG("position: " << component<const Position>().state.position << " HPB: " << component<const Position>().state.GetHPB());
 	}
 	
 	
@@ -25,12 +20,7 @@ namespace LogComponents
 	
 	void LinearMoverBreaker::update(float dt)
 	{
-		mover->velocity *= 0.95f * dt;
-	}
-
-	void LinearMoverBreaker::linker()
-	{
-		link(mover);
+		component<LinearMover>().velocity *= 0.95f * dt;
 	}
 }
 

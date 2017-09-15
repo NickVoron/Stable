@@ -17,9 +17,8 @@ public:
 	CrossReference();
 
 };
+}
 
-
-}//
 
 
 

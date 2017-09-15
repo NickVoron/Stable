@@ -47,12 +47,12 @@ namespace ComponentModelTesting
 			else
 			{
 			
-				currInst->erase(name);
-				DebugArray* arrayInstances = add<DebugArray>();
-				arrayInstances->add(firstInstance);
-				arrayInstances->add(handle);
+				
+				
+				
+				
 
-				currInst->add(name, arrayInstances, Expressions::ScopeNames::INSERT);
+				
 			}
 
 			DebugInstanceHandle* handle = Expressions::add<DebugInstanceHandle>(name);
@@ -60,13 +60,14 @@ namespace ComponentModelTesting
 		}
 		else
 		{
-			currInst->add(name, handle, Expressions::ScopeNames::INSERT);
+			currInst->add(name, handle, InsertMethod::INSERT);
 		}
 
 		currInst = handle;
+
 	}
 
-	InstanceHandle* ComponentLinkModelConfigurator::endCreateInstance()
+	void ComponentLinkModelConfigurator::endCreateInstance(ObjectParser::InstanceHandle* )
 	{
 		ENFORCE(currInst);
 		DebugInstanceHandle* handle = currInst;
@@ -74,16 +75,14 @@ namespace ComponentModelTesting
 		
 		
 		currInst = currInst->parent;
-		
-		return handle;
 	}
 
-	ObjectParser::ComponentHandle* ComponentLinkModelConfigurator::preCreateComponent(const std::string& type, const std::string& name)
+	void ComponentLinkModelConfigurator::preCreateComponent(const std::string& type, const std::string& name)
 	{
 		ENFORCE(currInst);
 
 		ComponentHandle* comp = Expressions::add<ComponentHandle>();
-		currInst->add(name, comp, Expressions::ScopeNames::INSERT);
+		currInst->add(name, comp, InsertMethod::INSERT);
 
 		currComp = comp;
 
@@ -93,9 +92,6 @@ namespace ComponentModelTesting
 		++logstack;
 		
 		compStack.push_back(currComp);
-
-		return currComp;
-
 	}
 
 	void ComponentLinkModelConfigurator::beginCreateComponent(ObjectParser::ComponentHandle* handle, const std::string& type, const std::string& name)
@@ -119,7 +115,7 @@ namespace ComponentModelTesting
 	void ComponentLinkModelConfigurator::bindComponentProperty(ObjectParser::ComponentHandle* handle, const std::string& name, const Expressions::Expression* value)
 	{
 		ENFORCE(currComp);
-		currComp->add(name, value, Expressions::ScopeNames::INSERT);
+		
 		
 	}
 
@@ -142,7 +138,8 @@ namespace ComponentModelTesting
 		}
 	}
 
-}//
+}
+
 
 
 

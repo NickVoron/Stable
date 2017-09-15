@@ -56,9 +56,10 @@ namespace AppModules
 	{
 		static ComponentsEditor::EntityEditor editor;
 
-		ComponentsCore::template init<
+		::ComponentModel::template init<
 			CommonComponents::Module 
 			, TestComponents::Module
+			, LogComponents::Module
 			, ReferencesComponents::Module
 			, DebugDrawComponents::Module
 

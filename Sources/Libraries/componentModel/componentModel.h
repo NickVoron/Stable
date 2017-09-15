@@ -22,7 +22,7 @@
 #include "links.h"
 #include "syncronization.h"
 
-namespace ComponentsCore
+namespace ComponentModel
 {
 	template<class... ModulesList>
 	void init();
@@ -35,7 +35,7 @@ namespace ComponentsCore
 		template<class ContextData>
 		static void init(const ContextData& context)
 		{
-			ComponentsCore::template init<Module>(context);
+			ComponentModel::template init<Module>(context);
 		}
 	};
 
@@ -124,7 +124,7 @@ namespace ComponentsCore
 	template<class... ComponentsList>
 	void components()
 	{
-		ComponentsCore::template init<Module<ComponentsList...>>();
+		ComponentModel::template init<Module<ComponentsList...>>();
 	}
 }
 

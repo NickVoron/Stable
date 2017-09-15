@@ -8,7 +8,8 @@
 
 #include "component.h"		
 #include "classDesc.h"
-#include "unroller.h"
+#include "../unroll/unroller.h"
+#include "../unroll/componentHandle.h"
 
 
 
@@ -23,12 +24,6 @@ ComponentParam::ComponentParam(const std::string& type_, const std::string& valu
 
 }
 
-
-Component::~Component()
-{												  
-
-}
-
 std::string Component::string() const
 {
 	if (bindedComponent)
@@ -39,29 +34,19 @@ std::string Component::string() const
 	return str::stringize("component type = ", componentType, ", name = ", name, " bindedHandle = nullptr");	
 }
 
-const Expressions::Expression* Component::evaluated(const Expressions::ScopeNames& parentScopenames, boost::any* userData) const
+Expressions::EvaluationUnit* Component::evaluated(const Expressions::EvaluatedScope& parentScopenames, boost::any* userData) const
 {
-	Unroller* unroller = boost::any_cast<Unroller*>(*userData);
-	ENFORCE_MSG(unroller, "");
-	return unroller->unrollComponent(const_cast<Expressions::ScopeNames&>(parentScopenames), *this);
+	ComponentHandle* handle = Expressions::add<ComponentHandle>(runtimeProps, linkParams, propertyAssigments);
+	handle->name = name;
+	handle->scopeName = name;
+	handle->type = componentType;
+
+	return handle;
 }
 
 std::string Component::typeName() const
 {
 	return componentType;
-}
-
-Expressions::References Component::references() const
-{
-	Expressions::References resultRefs;
-
-	const Expressions::References& propertiesRefs = propertyAssigments.references();
-	resultRefs.insert(resultRefs.begin(), propertiesRefs.begin(), propertiesRefs.end());
-	
-	const Expressions::References& linksRefs = linkParams.references();
-	resultRefs.insert(resultRefs.begin(), linksRefs.begin(), linksRefs.end());
-
-	return resultRefs;
 }
 
 
@@ -101,12 +86,11 @@ Component* ComponentBuilder::create(const std::string& type, const std::string& 
 	Component* component = Expressions::add<Component>();
 	component->componentType = type;
 	component->name = name;
-	component->runtimeParams = runtimeParams;
 
 	
 	for (auto& link: linkParams)
 	{
-		Expressions::Proxy* linkProxy = Expressions::add<Expressions::Proxy>();
+		Expressions::Reference* linkProxy = Expressions::add<Expressions::Reference>();
 		linkProxy->addPathElement(new Expressions::PropertyPath(link->value));
 		component->linkParams.emplace_back(new PropertyAssignment(link->type, linkProxy));
 	}

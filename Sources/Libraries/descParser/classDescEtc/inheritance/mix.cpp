@@ -16,6 +16,13 @@ namespace ObjectParser
 		return str::stringize("ParentInit type = ", type).str();
 	}
 
+
+	Expressions::EvaluationUnit* MixInheritance::evaluated(const Expressions::EvaluatedScope& environment, boost::any* userData) const
+	{
+		INCOMPLETE;
+		return 0;
+	}
+
 }//
 
 

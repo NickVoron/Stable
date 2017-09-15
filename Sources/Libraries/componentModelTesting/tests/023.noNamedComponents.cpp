@@ -8,9 +8,9 @@
 
 #include "023.noNamedComponents.h"
 #include "utils.h"
-#include "quietConfigurator.h"
 #include "componentLinkModelConfigurator.h"
 
+#ifdef ENABLE_TEST
 namespace ComponentModelTesting
 {
 	NoNamedComponents::NoNamedComponents()
@@ -19,7 +19,7 @@ namespace ComponentModelTesting
  		ObjectParser::Compiler comp(path.c_str());
 		ComponentLinkModelConfigurator debugConfigurator;
 
- 		Expressions::ScopeNames worldScopename = unroll(comp.result.classes(), debugConfigurator, "Main", "main");
+ 		Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), debugConfigurator, "Main", "main");
 
 		
 		
@@ -28,6 +28,7 @@ namespace ComponentModelTesting
 
 	}
 }
+#endif
 
 
 

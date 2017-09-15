@@ -25,8 +25,6 @@
 
 
 
-
-
 // Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 

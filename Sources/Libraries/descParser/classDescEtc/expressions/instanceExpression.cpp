@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -7,11 +7,42 @@
 //
 
 #include "instanceExpression.h"
-#include "../unroller.h"
-
+#include "../../unroll/unroller.h"
 
 namespace ObjectParser
 {
+
+using namespace Expressions;
+
+template<typename Functor>
+bool arrayUnroller(Expressions::EvaluatedScope& parentScopename, const Expressions::Expression* arrayData, Functor unrollInstanceFunctor)
+{
+	ENFORCE(arrayData);
+
+	size_t elementsCount = 0;
+
+	if (auto expr = arrayData->cast< Expressions::Const<int> >())
+	{
+		elementsCount = expr->value;
+	}
+	else if (auto expr = arrayData->cast<Expressions::EvaluatedArray>())
+	{
+		elementsCount = expr->count();
+	}
+	else
+	{
+		THROW("ArrayData type no Array and no Const<int>: " + arrayData->string())
+	}
+
+	for (int i = 0; i < elementsCount; i++)
+	{
+		EvaluationUnit* index = Expressions::convertType(i)->cast<Expressions::Const<int>>();
+		unrollInstanceFunctor(EvaluatedScope());
+	}
+
+	return true;
+}
+
 
 InstanceDefinitionExpression::InstanceDefinitionExpression(const std::string& type_, const std::string& name_, const PropertyAssignmentList& params_, bool noinst):
 	type(type_),
@@ -41,35 +72,124 @@ std::string InstanceDefinitionExpression::string() const
 
 
 
-const Expressions::Expression* InstanceDefinitionExpression::evaluated(const Expressions::ScopeNames& parentScopenames, boost::any* userData) const
+Expressions::EvaluationUnit* InstanceDefinitionExpression::evaluated(const EvaluatedScope& parentScopenames, boost::any* userData) const
 {
-	ENFORCE_MSG(userData, "Unroller == 0");
+	ENFORCE_POINTER(userData);
 	Unroller* unroller = boost::any_cast<Unroller*>(*userData);
-	ENFORCE_MSG(unroller, "Unroller == 0");
-	return unroller->unrollInstance(this, const_cast<Expressions::ScopeNames&>(parentScopenames));
+	ENFORCE_POINTER(unroller);
+	
+	EvaluationUnit* result = 0;
+
+	if (!noinstance)
+	{
+		if (arrayData)
+		{
+			References refs = arrayData->references();
+			if (refs.canResolveReverence(parentScopenames))
+			{
+				EvaluationUnit* evaluatedArrayData = arrayData->evaluated(parentScopenames);
+				evaluatedArrayData->evaluateStep(parentScopenames, userData);
+
+				EvaluatedArray* arrayInstances = add<EvaluatedArray>(evaluatedArrayData, &parentScopenames);
+
+				arrayUnroller(const_cast<EvaluatedScope&>(parentScopenames), evaluatedArrayData, [&parentScopenames, this, unroller, &arrayInstances, userData](EvaluatedScope& immediatelyParams)
+				{
+					Expressions::EvaluationUnit* object = evaluateOnce(unroller->classes, type, name, params);
+					arrayInstances->add(object);
+				});
+
+				result = arrayInstances;
+			}
+		}
+		else
+		{
+			result = evaluateOnce(unroller->classes, type, name, params);
+		}
+	}
+	else
+	{
+		result = add<PrototypeHandle>(parentScopenames, *this);
+	}
+
+	return result;
 }
 
 Expressions::References InstanceDefinitionExpression::references() const
 {
+	
 	Expressions::References resultRefs;
-
-	const Expressions::References& propertiesRefs = params.references();
-	resultRefs.insert(resultRefs.begin(), propertiesRefs.begin(), propertiesRefs.end());
 
 	if (arrayData)
 	{
-		const Expressions::References& arrayDataRefs = arrayData->references();
+		Expressions::References& arrayDataRefs = arrayData->references();
 		resultRefs.insert(resultRefs.begin(), arrayDataRefs.begin(), arrayDataRefs.end());
 	}
 
 	return resultRefs;
 }
 
+InstanceDefinitionExpression* InstanceDefinitionExpression::instance() const
+{
+	return Expressions::add<InstanceDefinitionExpression>(type, name, params, false);
+}
+
+
+EvaluationUnit* evaluateOnce(const ClassTable& classes, const std::string& type, const std::string& name,
+								PropertyAssignmentList params)
+{
+	InstanceHandle* instance = add<InstanceHandle>("");
+	instance->params = params;
+	instance->name = name;
+	instance->scopeName = name;
+	instance->type = type;
+
+	const ClassDesc* instanceClass = classes.get(type);
+	ENFORCE_MSG(instanceClass, str::stringize(__FUNCTION__" class: ", type, " not exist").str());
+	
+	
+	fillScopenamesFromClass(classes, *instanceClass, params, instance->unEvaluatedPropertyies);
+	
+
+	return instance;
+}
+
+
+void fillScopenamesFromClass(const ClassTable& classes, const ClassDesc& classDesc, const PropertyAssignmentList& params, Expressions::ExpressionScope& result)
+{
+	
+	for (auto& iterator : classDesc.properties())
+	{
+		const std::string propName = iterator.first;
+		const Expression* propValue = iterator.second;
+
+		if (!params.exist(propName))
+		{
+			result.add(propName, propValue, Expressions::InsertMethod::IGNORE_IF_EXIST);
+		}
+	}
+
+	for (auto& mixInheritance: classDesc.mixInheritanceList)
+	{
+		const ClassDesc* inheritanceClass = classes.get(mixInheritance->type);
+		ENFORCE_MSG(inheritanceClass, str::stringize(__FUNCTION__" class: ", mixInheritance->type, " not exist").str());
+
+		
+		for (auto& assigments : mixInheritance->params)
+		{
+			INCOMPLETE;
+			
+		}
+
+		
+		fillScopenamesFromClass(classes, *inheritanceClass, params, result);
+	}
+}
+
 }
 
 
 
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

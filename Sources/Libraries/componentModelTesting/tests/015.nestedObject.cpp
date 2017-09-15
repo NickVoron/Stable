@@ -8,6 +8,7 @@
 
 #include "015.nestedObject.h"
 
+#ifdef ENABLE_TEST
 namespace ComponentModelTesting
 {
 	using namespace Expressions;
@@ -22,7 +23,7 @@ namespace ComponentModelTesting
 
 		testClassesCount(comp.result, 3);
 		
-		Expressions::ScopeNames worldScopename = unroll(comp.result.classes(), "Main", "main");
+		Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), "Main", "main");
 		testInstance(worldScopename, "main");		
 
 		for (int i = 0; i < 10; ++i)
@@ -31,7 +32,8 @@ namespace ComponentModelTesting
 		}
 	}
 
-}//
+}
+#endif
 
 
 

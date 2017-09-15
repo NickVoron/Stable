@@ -115,6 +115,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="array.cpp" />
+    <ClCompile Include="binder.cpp" />
     <ClCompile Include="conversion\commonUserStruct.cpp" />
     <ClCompile Include="conversion\convertType.cpp" />
     <ClCompile Include="expression.cpp" />
@@ -125,7 +126,7 @@
     <ClCompile Include="lambda.cpp" />
     <ClCompile Include="property.cpp" />
     <ClCompile Include="functions\func.cpp" />
-    <ClCompile Include="proxy.cpp" />
+    <ClCompile Include="reference.cpp" />
     <ClCompile Include="scopeNames.cpp" />
     <ClCompile Include="constExprList.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -139,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="array.h" />
+    <ClInclude Include="binder.h" />
     <ClInclude Include="const.h" />
     <ClInclude Include="constExprList.h" />
     <ClInclude Include="conversion\commonUserStruct.h" />
@@ -154,7 +156,7 @@
     <ClInclude Include="library.include.h" />
     <ClInclude Include="property.h" />
     <ClInclude Include="functions\func.h" />
-    <ClInclude Include="proxy.h" />
+    <ClInclude Include="reference.h" />
     <ClInclude Include="scopeNames.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="struct.h" />

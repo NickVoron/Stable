@@ -7,18 +7,19 @@
 //
 
 #pragma once
-#include <string>
-
 #include "expression.h"
+#include <string>
 #include "typeTraits.h"
 #include "holder.h"
+#include "constExprList.h"
 
 #include "variantType/library.include.h"
 
 namespace Expressions
 {
+	
 	template<class ValueType>
-	class Const : public Expression
+	class Const : public EvaluationUnit
 	{
 	public:
 		typedef ValueType Type;
@@ -31,14 +32,21 @@ namespace Expressions
 		virtual std::string string() const						{ return str::stringize(value).str(); }
 		virtual bool elementary() const							{ return true; }
 		virtual std::string typeName() const					{ return Variant::TypeTraits<Type>::name(); }
+
+		EvaluationUnit* evaluated(const EvaluatedScope& environment, boost::any* userData = 0) const
+		{
+			auto result = Expressions::add<Const<ValueType>>(value);
+			return result;
+		}
+
+		References references() const							{ return References(); }
 	};
 
-	template<class P0>
-	inline Expression* add_const(P0 p0) { return add<Const<P0>>(p0); }
+	template<class P0, typename = std::enable_if_t<!std::is_base_of_v<Expression, std::remove_pointer_t<P0>>>>
+	Const<P0>* add_const(const P0& p0) { return add<Const<P0>>(p0); }
 	
-	template<>
-	inline Expression* add_const<Expression*>(Expression* p0) { return p0; }
-	
+	inline Expression* add_const(Expression* p0) { return p0; }
+
 }
 
 

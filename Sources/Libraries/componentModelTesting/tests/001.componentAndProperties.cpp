@@ -8,9 +8,9 @@
 
 #include "001.componentAndProperties.h"
 #include "utils.h"
-#include "quietConfigurator.h"
-#include "utils.h"
 #include "componentLinkModelConfigurator.h"
+
+#ifdef ENABLE_TEST
 
 namespace ComponentModelTesting
 {
@@ -63,7 +63,7 @@ namespace ComponentModelTesting
 
 		
 		ComponentLinkModelConfigurator debugConfigurator;
-		Expressions::ScopeNames worldScopename = unroll(comp.result.classes(), debugConfigurator, "Main", "main");
+		Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), debugConfigurator, "Main", "main");
 
 		
 		auto unrolledMainInstace = testInstance(worldScopename, "main");
@@ -121,9 +121,27 @@ namespace ComponentModelTesting
 		
 		const Expression* position2derivativeFromVel = get(worldScopename, "main.object.position2.position");
 		test(position2derivativeFromVel, Vector3(20, 20, 20));
+
+
+		{
+			const InstanceHandle* object = get(worldScopename, "main.object")->cast<InstanceHandle>();
+			const EvaluationUnit* position = get(worldScopename, "main.object.position");
+			const EvaluationUnit* posParam = get(worldScopename, "main.object.pos");
+
+			bool isClassMemberPosition = object->isClassMember(position);
+			bool isClassMemberPosParam = object->isClassMember(posParam);
+
+			ENFORCE(isClassMemberPosition);
+			ENFORCE(!isClassMemberPosParam);
+		}
+
+
+
 	}
 
-}//
+}
+
+#endif
 
 
 

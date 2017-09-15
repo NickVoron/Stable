@@ -58,7 +58,7 @@ public:
 	NearestTargetSearcher* searcher;
 };
 
-typedef ComponentsCore::Module<SeekStearing, StearingTarget, NearestTargetSearcher> Module;
+typedef ComponentModel::Module<SeekStearing, StearingTarget, NearestTargetSearcher> Module;
 
 }
 

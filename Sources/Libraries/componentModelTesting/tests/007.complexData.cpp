@@ -8,6 +8,7 @@
 
 #include "007.complexData.h"
 
+#ifdef ENABLE_TEST
 
 namespace ComponentModelTesting
 {
@@ -24,7 +25,7 @@ namespace ComponentModelTesting
 
 		testClassesCount(comp.result, 1);
 
-		Expressions::ScopeNames worldScopename = unroll(comp.result.classes(), "Main", "main");
+		Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), "Main", "main");
 				
 		for(int i=0; i < 3; ++i)
 		{
@@ -36,7 +37,9 @@ namespace ComponentModelTesting
 		test(worldScopename, "main.complexData[1].text", std::string("second"));
 		test(worldScopename, "main.complexData[2].text", std::string("third"));
 	}
-}//
+}
+
+#endif
 
 
 

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -13,29 +13,51 @@
 namespace ComponentModelTesting
 {
 
-using namespace Expressions;
-using namespace ObjectParser;
+class InnerComponent : public UpdatableComponentAutoLink<InnerComponent>
+{
+public:
+	CM_IMPLEMENT_SYSTEM_COMPONENT_INTERFACE(InnerComponent);
 
+	struct Resource : public ResourceBase
+	{
+		void properties(InnerComponent& component)
+		{
+			property("link", component.link);
+			property("info", component.info);
+		}
+	};
 
+	void update()
+	{
+		link([this](auto& target)
+		{
+			LOG_EXPRESSION_VALUE2(info, target.info);
+		});
+	}
+
+	std::string info;
+	ComponentLink<InnerComponent> link;
+};
+	
 CrossReference::CrossReference()
 {
+	ComponentModel::components<InnerComponent>();
+
 	std::string path = Resources::resourceRelativePath("desc/cm2Testing/1.basic/019.crossReference.desc");
-
-	
 	ObjectParser::Compiler comp(path.c_str());
+	Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), "Main", "main");
 
-	Expressions::ScopeNames worldScopename = unroll(comp.result.classes(), "Main", "main");
-	testInstance(worldScopename, "main");
-
-	const Expressions::Expression* reference =  get(worldScopename, "main.reference");
-	const Expressions::Expression* reference2 = get(worldScopename, "main.reference2");	
+	EntitiesList entities;
+	ComponentModel::descriptionLoad(path, entities).activate(true);
+	entities.execute();
 }
 
-}//
+}
 
 
 
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

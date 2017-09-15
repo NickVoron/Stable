@@ -8,42 +8,39 @@
 
 #include "objectConverter.h"
 
+namespace ComponentModel
+{	
+	EntitiesList& initializeEntities(Expressions::EvaluatedScope& scope, EntitiesList& entities);
+}
 
 namespace ObjectParser
 {
+
 	ClassesLib* ObjectConverter::classes = nullptr;
-	Unroller* ObjectConverter::unroller = nullptr;
+	const ClassTable* ObjectConverter::classTable = nullptr;
 
 	void ObjectConverter::convert(const Expressions::Expression& expr, EntitiesStream& client)
 	{
-		ENFORCE(unroller);
-		ENFORCE(classes);
-
-		if (auto prototype = expr.cast<PrototypeHandle>())
+  		ENFORCE(classTable);
+  		ENFORCE(classes);
+		
+		if (auto prototype = const_cast<PrototypeHandle*>(expr.cast<PrototypeHandle>()))
 		{
 
 			auto& prototypes = classes->prototypes;
-			
 			void* identifier = (void*)&prototype->prototype;
 
 			if (!prototypes.find(identifier))
 			{			 
-				ComponentModel::ComponentModelConfigurator configurator;
-				Unroller localUnroller(unroller->classes, configurator, false);
-				boost::any unrlr(&localUnroller);
-				auto evaluatedPrototype = prototype->evaluated(Expressions::ScopeNames(), &unrlr);
-				ENFORCE(evaluatedPrototype);
-				if (auto instance = evaluatedPrototype->cast<ComponentModel::ComponentModelConfigurator::InstanceHandle>())
-				{
-					auto& ios = prototypes.create(identifier, instance->classDesc->className).ios;
+				auto& ios = prototypes.create(identifier, prototype->prototype.type).ios;
 
-					EntitiesList entities;
-					configurator.configure(localUnroller, entities);
-					classes->merge(entities.classes);
+				auto sourceClasses = classes;
+				EntitiesList entities;
+				ComponentModel::initializeEntities(ObjectParser::unroll(*classTable, *prototype->prototype.instance()), entities);
+				sourceClasses->merge(entities.classes);
+				sourceClasses->debugOutput();
 
-
-					entities.saveObjects(ios);
-				}
+				entities.saveObjects(ios);
 			}
 
 			client.streamId = identifier;

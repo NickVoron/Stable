@@ -21,6 +21,13 @@ namespace ObjectParser
 
 	}
 
+	bool PropertyAssignment::canResolveReverence(const Expressions::EvaluatedScope& parentScopename) const
+	{
+		ENFORCE_MSG(value, "");
+		Expressions::References refs = value->references();
+		return refs.canResolveReverence(parentScopename);
+	}
+
 	
 	Expressions::References PropertyAssignmentList::references() const
 	{
@@ -32,6 +39,16 @@ namespace ObjectParser
 		}
 
 		return refs;
+	}
+
+	bool PropertyAssignmentList::exist(const std::string& name) const
+	{
+		auto& it = find_if(begin(), end(), [&name](auto& element)
+		{
+			return element->propertyName == name;
+		});
+
+		return it != end();
 	}
 
 	

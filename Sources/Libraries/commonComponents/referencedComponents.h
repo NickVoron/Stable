@@ -60,7 +60,7 @@ public:
 	ComponentLinkList<ReferencedBase> links;
 };
 
-typedef ComponentsCore::Module<ReferencedUtilizer, ReferencedBase, ReferencedRed, ReferencedBlue> Module;
+typedef ComponentModel::Module<ReferencedUtilizer, ReferencedBase, ReferencedRed, ReferencedBlue> Module;
 
 }
 

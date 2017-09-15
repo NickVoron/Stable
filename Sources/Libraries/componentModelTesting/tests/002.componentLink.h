@@ -11,6 +11,8 @@
 #include "utils.h"
 #include "componentLinkModelConfigurator.h"
 
+#ifdef ENABLE_TEST
+
 namespace ComponentModelTesting
 {
 	struct ComponentLink 
@@ -18,6 +20,8 @@ namespace ComponentModelTesting
 		ComponentLink();
 	};
 }
+
+#endif
 
 
 

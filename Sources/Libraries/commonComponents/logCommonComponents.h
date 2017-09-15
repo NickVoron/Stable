@@ -8,35 +8,28 @@
 
 #pragma once
 
-#include "commonComponents/library.include.h"
+#include "position.h"
+#include "linearMover.h"
 
 namespace LogComponents
 {														
-	class PositionLogger : public UpdatableComponent<PositionLogger>
+	class PositionLogger : public UpdatableComponentAutoLink<PositionLogger, const Position>
 	{
 	public:
 		CM_IMPLEMENT_SYSTEM_COMPONENT_INTERFACE(PositionLogger);
 
 		void update(float dt);
-		void linker();
-
-	private:
-		const Position* position;
 	};
 
-	class LinearMoverBreaker : public UpdatableComponent<LinearMoverBreaker>
+	class LinearMoverBreaker : public UpdatableComponentAutoLink<LinearMoverBreaker, LinearMover>
 	{
 	public:
 		CM_IMPLEMENT_SYSTEM_COMPONENT_INTERFACE(LinearMoverBreaker);
 
 		void update(float dt);
-		void linker();
-
-	private:
-		LinearMover* mover;
 	};
 
-typedef ComponentsCore::Module<PositionLogger, LinearMoverBreaker> Module;
+typedef ComponentModel::Module<PositionLogger, LinearMoverBreaker> Module;
 
 }
 

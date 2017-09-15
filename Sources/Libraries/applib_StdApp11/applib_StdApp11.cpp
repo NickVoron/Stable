@@ -65,7 +65,7 @@ namespace AppModules
 						ScreenMouseHelper, 
 						CameraCreator, 
 						ProcessTerminator, 
-						ComponentModel, 
+						AppModules::ComponentModel,
 						ComponentModelHelpers,
 
 						Application, 

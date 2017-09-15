@@ -7,12 +7,11 @@
 //
 
 #include "011.spawner.h"
-
-
 #include "utils.h"
-#include "quietConfigurator.h"
 #include "utils.h"
 #include "componentLinkModelConfigurator.h"
+
+#ifdef ENABLE_TEST
 
 namespace ComponentModelTesting
 {
@@ -24,11 +23,15 @@ namespace ComponentModelTesting
 		std::string path = Resources::resourceRelativePath("desc/cm2Testing/1.basic/011.spawner.desc");
 
 		ObjectParser::Compiler comp(path.c_str());
-		Expressions::ScopeNames worldScopename = unroll(comp.result.classes(), "Main", "main");
-
+		Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), "Main", "main");
+		
+		
+		test(worldScopename, "main.objectsSpawner.spawner.prototype.one", 1);
 		ComponentModel::descriptionTest(path.c_str());
 	}
 }
+
+#endif
 
 
 

@@ -110,6 +110,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="tests\008.1.objectArrayEmbeddedScopename.cpp" />
     <ClCompile Include="tests\024.noNamedInstance.cpp" />
     <ClCompile Include="tests\023.noNamedComponents.cpp" />
     <ClCompile Include="tests\021.staticTypization.cpp" />
@@ -130,7 +131,6 @@
     <ClCompile Include="tests\006.dataStruct.cpp" />
     <ClCompile Include="tests\005.dataArray.cpp" />
     <ClCompile Include="tests\004.functionCall.cpp" />
-    <ClCompile Include="tests\quietConfigurator.cpp" />
     <ClCompile Include="tests\003.componentAsParameter.cpp" />
     <ClCompile Include="tests\001.componentAndProperties.cpp" />
     <ClCompile Include="tests\002.componentLink.cpp" />
@@ -144,6 +144,8 @@
     <ClCompile Include="tests\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="config.h" />
+    <ClInclude Include="tests\008.1.objectArrayEmbeddedScopename.h" />
     <ClInclude Include="tests\024.noNamedInstance.h" />
     <ClInclude Include="tests\023.noNamedComponents.h" />
     <ClInclude Include="tests\021.staticTypization.h" />
@@ -165,7 +167,6 @@
     <ClInclude Include="tests\006.dataStruct.h" />
     <ClInclude Include="tests\005.dataArray.h" />
     <ClInclude Include="tests\004.functionCall.h" />
-    <ClInclude Include="tests\quietConfigurator.h" />
     <ClInclude Include="tests\003.componentAsParameter.h" />
     <ClInclude Include="tests\001.componentAndProperties.h" />
     <ClInclude Include="tests\002.componentLink.h" />

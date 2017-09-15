@@ -10,6 +10,7 @@
 
 #include "expression.h"
 #include "constExprList.h"
+#include "scopeNames.h"
 
 namespace Expressions
 {
@@ -19,21 +20,49 @@ namespace Expressions
 		Array(){}
 		Array(const ConstExprList& params);
 
-		virtual const Expression* evaluated(const ScopeNames& environment, boost::any* userData = 0) const override;
+		virtual EvaluationUnit* evaluated(const EvaluatedScope& environment, boost::any* userData = 0) const override;
 		virtual std::string string() const override;
 		virtual std::string typeName() const override;
 		virtual References references() const override;
 
-		virtual const Expression* child(const PropertyPath* path) const override;
-		virtual const Expression* child(const ArrayPath* path) const override;
-
-		
+	
 		void add(const Expression* expr);
 		const Expression* element(std::size_t index) const;
 		std::size_t count() const;
 
 		ConstExprList elements;
 	};
+
+	
+	class EvaluatedArray : public EvaluationUnit
+	{
+	public:
+		EvaluatedArray(size_t size, const EvaluatedScope* environment_);
+		EvaluatedArray(EvaluationUnit* arrayData_, const EvaluatedScope* environment_);
+
+		virtual std::string string() const override;
+		virtual std::string typeName() const override;
+
+		virtual EvaluateState evaluateStep(const Expressions::EvaluatedScope&, boost::any* userData = 0) override;
+
+		virtual const EvaluationUnit* child(const PropertyPath* path) const override;
+		virtual const EvaluationUnit* child(const ArrayPath* path) const override;
+
+
+		void add(const EvaluationUnit* expr);
+		const EvaluationUnit* element(std::size_t index) const;
+		std::size_t count() const;
+
+		ConstExprList unEvaluatedElements;
+	private:
+		EvaluatedScope internalScopename;
+
+		EvalUtinList elements;
+
+		EvaluationUnit* arrayData = 0;
+		const Expressions::EvaluatedScope* environment;
+	};
+
 }
 
 

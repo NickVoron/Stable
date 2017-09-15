@@ -13,10 +13,14 @@
 namespace ObjectParser
 {
 	
-	class NoValueExpression : public Expressions::Expression
+	class NoValueExpression : public Expressions::EvaluationUnit
 	{
 	public:
 		virtual std::string string() const;
+
+		virtual Expressions::References references() const override;
+		virtual Expressions::EvaluationUnit* evaluated(const Expressions::EvaluatedScope& environment, boost::any* userData = 0) const override;
+
 	};
 }//
 

@@ -7,10 +7,12 @@
 //
 
 #include "compiler.h"
+
 #include "../parser/lexer.h"
 #include "../classDescEtc/classDesc.h"
-#include "expressions/library.include.h"
 #include "../classDescEtc/expressions/objectConverter.h"
+
+#include "expressions/library.include.h"
 
 namespace ObjectParser
 {

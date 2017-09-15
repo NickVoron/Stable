@@ -126,8 +126,6 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="classDescEtc\componentModelConfigurator.cpp" />
-    <ClCompile Include="classDescEtc\debugConfigurator.cpp" />
     <ClCompile Include="classDescEtc\expressions\objectConverter.cpp" />
     <ClCompile Include="classDescEtc\inheritance\aggregate.cpp" />
     <ClCompile Include="classDescEtc\classDesc.cpp" />
@@ -153,11 +151,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="classDescEtc\unroller.cpp" />
+    <ClCompile Include="unroll\componentHandle.cpp" />
+    <ClCompile Include="unroll\componentModelConfigurator.cpp" />
+    <ClCompile Include="unroll\debugConfigurator.cpp" />
+    <ClCompile Include="unroll\instanceHandle.cpp" />
+    <ClCompile Include="unroll\prototypeHandle.cpp" />
+    <ClCompile Include="unroll\unroller.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="classDescEtc\componentModelConfigurator.h" />
-    <ClInclude Include="classDescEtc\debugConfigurator.h" />
     <ClInclude Include="classDescEtc\expressions\objectConverter.h" />
     <ClInclude Include="classDescEtc\inheritance\aggregate.h" />
     <ClInclude Include="classDescEtc\classDesc.h" />
@@ -178,7 +179,12 @@
     <ClInclude Include="classDescEtc\propertyAssignment.h" />
     <ClInclude Include="classDescEtc\expressions\constantProperty.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="classDescEtc\unroller.h" />
+    <ClInclude Include="unroll\componentHandle.h" />
+    <ClInclude Include="unroll\componentModelConfigurator.h" />
+    <ClInclude Include="unroll\debugConfigurator.h" />
+    <ClInclude Include="unroll\instanceHandle.h" />
+    <ClInclude Include="unroll\prototypeHandle.h" />
+    <ClInclude Include="unroll\unroller.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="parser\flex.skl" />

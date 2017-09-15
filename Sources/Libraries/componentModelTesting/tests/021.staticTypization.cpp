@@ -9,12 +9,10 @@
 #include "021.staticTypization.h"
 
 #include "utils.h"
-#include "quietConfigurator.h"
 #include "utils.h"
 #include "componentLinkModelConfigurator.h"
 
-
-
+#ifdef ENABLE_TEST
 namespace ComponentModelTesting
 {
 	using namespace Expressions;
@@ -26,7 +24,7 @@ namespace ComponentModelTesting
 		std::string path = Resources::resourceRelativePath("desc/cm2Testing/1.basic/021.staticTypization.desc");
 
 		ObjectParser::Compiler comp(path.c_str());
-		Expressions::ScopeNames worldScopename = unroll(comp.result.classes(), "Main", "main");
+		Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), "Main", "main");
 
 		const Expression* utilizerObjectRef = get(worldScopename, "main.objectUtilizer.utilizer.references[0]");
 		const Expression* blueObjectRef = get(worldScopename, "main.blue.ref");
@@ -38,7 +36,8 @@ namespace ComponentModelTesting
 
 		ENFORCE_MSG(utilizerComponentRef == blueComponentRef, "");
 	}
-}//
+}
+#endif
 
 
 

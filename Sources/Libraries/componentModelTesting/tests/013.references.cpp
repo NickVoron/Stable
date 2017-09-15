@@ -9,14 +9,17 @@
 #include "013.references.h"
 #include "utils.h"
 
-
+#ifdef ENABLE_TEST
 namespace ComponentModelTesting
 {
+
 	using namespace Expressions;
-	using namespace ObjectParser;
 
 	References::References()
 	{
+		using namespace Expressions;
+		using namespace ObjectParser;
+
 		std::string path = Resources::resourceRelativePath("desc/cm2Testing/1.basic/013.references.desc");
 
 		
@@ -25,13 +28,13 @@ namespace ComponentModelTesting
  		testClassesCount(comp.result, 4);
 		
 		
-		Expressions::ScopeNames worldScopename = unroll(comp.result.classes(), "Main", "main");
+		EvaluatedScope worldScopename = unroll(comp.result.classes(), "Main", "main");
 		testInstance(worldScopename, "main");		
 
-		const Array* refsArrayBlue = get(worldScopename, "main.rUtilizer.refs[0]")->cast<Array>();
-		const Array* refsArrayRed = get(worldScopename, "main.rUtilizer.refs[1]")->cast<Array>();
+		const EvaluatedArray* refsArrayBlue = get(worldScopename, "main.rUtilizer.refs[0]")->cast<EvaluatedArray>();
+		const EvaluatedArray* refsArrayRed = get(worldScopename, "main.rUtilizer.refs[1]")->cast<EvaluatedArray>();
 
-		int dataCount = get(worldScopename, "main.data")->cast<const Expressions::Array>()->elements.size();
+		int dataCount = get(worldScopename, "main.data")->cast<const Expressions::EvaluatedArray>()->count();
 		for (int i=0; i<dataCount; ++i)
 		{
 			std::string tRedPath = str::stringize("main.trees[", i, "].red");
@@ -61,7 +64,7 @@ namespace ComponentModelTesting
 		}
 
 		ENFORCE_MSG(leafComponents.size() == 19, "");
-		const Array* leafArray = get(worldScopename, str::stringize("main.trees.leaves.leafComponent"))->cast<const Array>();
+		const EvaluatedArray* leafArray = get(worldScopename, str::stringize("main.trees.leaves.leafComponent"))->cast<EvaluatedArray>();
 		ENFORCE_MSG(leafArray, "");
 		
 		for (size_t i=0; i< leafComponents.size(); i++ )
@@ -70,7 +73,9 @@ namespace ComponentModelTesting
 		}
 	}
 
-}//
+}
+#endif
+
 
 
 

@@ -8,19 +8,18 @@
 
 #include "024.noNamedInstance.h"
 #include "utils.h"
-#include "quietConfigurator.h"
 #include "componentLinkModelConfigurator.h"
 
+#ifdef ENABLE_TEST
 namespace ComponentModelTesting
 {
-
 NoNamedInstance::NoNamedInstance()
 {
 	std::string path = Resources::resourceRelativePath("desc/cm2Testing/1.basic/024.noNamedInstance.desc");
 	ObjectParser::Compiler comp(path.c_str());
 	ComponentLinkModelConfigurator debugConfigurator;
 
-	Expressions::ScopeNames worldScopename = unroll(comp.result.classes(), debugConfigurator, "Main", "main");
+	Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), debugConfigurator, "Main", "main");
 
 	
 	
@@ -28,7 +27,8 @@ NoNamedInstance::NoNamedInstance()
 	
 }
 
-}//
+}
+#endif
 
 
 

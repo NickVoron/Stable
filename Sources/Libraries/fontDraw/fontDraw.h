@@ -53,12 +53,12 @@ private:
 namespace str
 {
 	template<class StrType>	
-	int length(StrType str);
+	std::size_t length(StrType str);
 
-	template<>	inline int length<const char*>			(const char* str)			{ return strlen(str); }
-	template<>	inline int length<const wchar_t*>		(const wchar_t* str)		{ return wcslen(str); }
-	template<>	inline int length<const std::string&>	(const std::string& str)	{ return str.length(); }
-	template<>	inline int length<const std::wstring&>	(const std::wstring& str)	{ return str.length(); }
+	template<>	inline std::size_t length<const char*>			(const char* str)			{ return strlen(str); }
+	template<>	inline std::size_t length<const wchar_t*>		(const wchar_t* str)		{ return wcslen(str); }
+	template<>	inline std::size_t length<const std::string&>	(const std::string& str)	{ return str.length(); }
+	template<>	inline std::size_t length<const std::wstring&>	(const std::wstring& str)	{ return str.length(); }
 }
 
 template<class StrType>	

@@ -13,7 +13,7 @@
 
 namespace CameraComponents
 {
-	typedef ComponentsCore::Module<
+	typedef ComponentModel::Module<
 		CameraParamHolder, 
 		FreeRotator, 
 		Forward, 

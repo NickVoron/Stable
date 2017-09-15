@@ -17,12 +17,15 @@ namespace Expressions{
 	}
 
 
-	const Expression* Function::evaluated(const ScopeNames& environment, boost::any* userData) const
+	EvaluationUnit* Function::evaluated(const EvaluatedScope& environment, boost::any* userData) const
 	{
 		ConstExprList evaluatedParams;
 		params.evaluate(environment, evaluatedParams, userData);
+			
+		Expression* result =  FUNCTIONS::execute(functionName, evaluatedParams);
+
+		return result->evaluated(EvaluatedScope()); 
 		
-		return FUNCTIONS::execute(functionName, evaluatedParams);
 	}
 
 	std::string Function::string() const

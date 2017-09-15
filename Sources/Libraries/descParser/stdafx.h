@@ -18,6 +18,7 @@
 #include <map>
 #include <set>
 #include <iostream>
+#include <algorithm>
 
 #include <utility>
 

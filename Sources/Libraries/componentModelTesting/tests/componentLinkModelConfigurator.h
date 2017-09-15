@@ -9,7 +9,6 @@
 #pragma once
 #include "utils.h"
 
-
 namespace ComponentModelTesting
 {
 	struct ComponentLinkModelConfigurator : public ObjectParser::ComponentModelConfigurator
@@ -28,14 +27,13 @@ namespace ComponentModelTesting
 
 		};
 
-
 		ComponentLinkModelConfigurator();
 
 		virtual void beginCreateInstance(const std::string& name, const std::string& type) override;
-		virtual ObjectParser::InstanceHandle* endCreateInstance() override;
+		virtual void endCreateInstance(ObjectParser::InstanceHandle* handle) override;
 
 		
-		virtual ObjectParser::ComponentHandle* preCreateComponent(const std::string& type, const std::string& name) override;
+		virtual void preCreateComponent(const std::string& type, const std::string& name) override;
 		virtual void beginCreateComponent(ObjectParser::ComponentHandle* handle, const std::string& type, const std::string& name) override;
 		virtual void bindRuntimeProperty(ObjectParser::ComponentHandle* handle, const std::string& name, const std::string& value) override;
 		virtual void bindLink(ObjectParser::ComponentHandle* handle, const std::string& name, const ObjectParser::ComponentHandle* value) override;
@@ -52,7 +50,8 @@ namespace ComponentModelTesting
 		int logstack = 0;
 	};
 
-}//
+}
+
 
 
 

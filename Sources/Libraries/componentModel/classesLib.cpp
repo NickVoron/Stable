@@ -99,6 +99,8 @@ void ClassesLib::load(stream::istream& is, ExecutionList& executionList)
 
 void ClassesLib::merge(ClassesLib& other)
 {
+	ENFORCE(this != &other);
+
 	for (auto& src : other.classes)
 	{
 		classes.emplace_back(src.release());

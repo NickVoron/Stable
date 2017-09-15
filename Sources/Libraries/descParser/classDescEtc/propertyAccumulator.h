@@ -19,7 +19,7 @@ namespace ObjectParser
 	struct RuntimeProperty
 	{
 		std::string paramName;
-		Expressions::Proxy* path;
+		Expressions::Reference* path;
 		RuntimeDirection direction;
 	};
 
@@ -29,7 +29,7 @@ namespace ObjectParser
 	struct PropertyAccumulator
 	{
 	public:
-		void bindRuntimeProperty(const std::string& paramName, Expressions::Proxy* path, RuntimeDirection direction);
+		void bindRuntimeProperty(const std::string& paramName, Expressions::Reference* path, RuntimeDirection direction);
 		RuntimePropeties runtimeProperties() { return runtimeProps; }
 
 		void clear();

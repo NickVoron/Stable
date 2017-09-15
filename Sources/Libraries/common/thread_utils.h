@@ -86,10 +86,10 @@ inline std::thread launch_named_thread(const char* name, F&& f, Args&&... args)
 {
 	return std::thread([=]() 
 	{
-		LOG_MSG("start thread: " << name);
+		
 		SetThreadName(name);
 		f(args...);
-		LOG_MSG("finish thread: " << name);
+		
 	});
 }
 

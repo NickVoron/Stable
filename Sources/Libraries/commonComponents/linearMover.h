@@ -9,7 +9,7 @@
 #pragma once
 #include "position.h"
 
-class LinearMover : public UpdatableComponent<LinearMover>
+class LinearMover : public UpdatableComponentAutoLink<LinearMover, Position>
 {
 public:
   	CM_IMPLEMENT_SYSTEM_COMPONENT_INTERFACE(LinearMover);
@@ -19,16 +19,26 @@ public:
 		void properties(LinearMover& component);
 	};
 
-	LinearMover();
-
 	void update(float dt);
-	void linker();
 
 	Vector3 velocity;
 	bool global = false;
+};
 
-private:
-	Position* position = nullptr;
+class AroundRotator : public UpdatableComponentAutoLink<AroundRotator, Position>
+{
+public:
+	CM_IMPLEMENT_SYSTEM_COMPONENT_INTERFACE(AroundRotator);
+
+	struct Resource : public ResourceBase
+	{
+		void properties(AroundRotator& component);
+	};
+
+	void update(float dt);
+
+	ComponentLink<Position> target;
+	float velocity;
 };
 
 

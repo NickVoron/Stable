@@ -155,6 +155,7 @@ void LinkDesc::flush(ComponentLink<ComponentType...>& link, const EntitiesList& 
 		const Entity* entity = entities.at(address.objectIndex);
 		std::size_t idx = 0;
 		auto nlink = ComponentLink<ComponentType...>(entity, (ComponentType*) &entity->getComponent(address.componentIndices[idx++])...);
+		nlink.debug();
 		link = nlink;
 	}
 }

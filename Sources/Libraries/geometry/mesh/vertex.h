@@ -125,7 +125,7 @@ public:
 	template<class Vertex2>
 	inline VertexBase& maxAssign(const Vertex2& v2) 
 	{
-		
+		Loki::TupleMaxSet<VertexTuple, Vertex2::VertexTuple>::exec(data, v2.data); 
 		return *this; 
 	}
 
