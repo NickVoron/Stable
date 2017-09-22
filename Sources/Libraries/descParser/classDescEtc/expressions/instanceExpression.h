@@ -29,7 +29,7 @@ namespace ObjectParser
 		InstanceDefinitionExpression(const std::string& type, const std::string& name);
 		
 		virtual std::string string() const override;
-		virtual Expressions::EvaluationUnit* evaluated(const Expressions::EvaluatedScope& parentScopenames, boost::any* userData = 0) const override;
+		virtual Expressions::EvaluationUnit* evaluated(const Expressions::EvaluatedScope& parentScopenames) const override;
 		virtual Expressions::References references() const override;
 				
 		const std::string name;
@@ -44,7 +44,7 @@ namespace ObjectParser
 	private:
 	};
 
-	Expressions::EvaluationUnit* evaluateOnce(const ClassTable& classes, const std::string& type, const std::string& name, PropertyAssignmentList params);
+	Expressions::EvaluationUnit* evaluateOnce(const Expressions::EvaluatedScope& parentScopenames, const ClassTable& classes, const std::string& type, const std::string& name, const PropertyAssignmentList& params);
 	void fillScopenamesFromClass(const ClassTable& classes, const ClassDesc& classDesc, const PropertyAssignmentList& params, Expressions::ExpressionScope& result);
 
 

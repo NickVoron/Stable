@@ -8,6 +8,8 @@
 
 #pragma once
 
+#if ENABLE_OPENGL_ES
+
 #include "stuff/library.include.h"
 #include "glew/library.include.h"
 
@@ -70,6 +72,8 @@ public:
     EGLPlatformParameters platform;
 	EGLContextConfig ctxconfig;
 };
+
+#endif
 
 
 

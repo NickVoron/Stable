@@ -18,7 +18,7 @@ namespace Resources
 	void ShaderGLSL::Clear()
 	{
 		deactivate();
-		compiler = ShaderProgramCompiler();
+		compiler = opengl::ShaderProgramCompiler();
 	}
 
 	void ShaderGLSL::Compile(stream::ostream& os)
@@ -26,10 +26,11 @@ namespace Resources
 		compiler.serialize(serializer(os));
 	}
 
+	std::unordered_map<std::string, GLenum> dict;
+	std::once_flag flag;
+
 	GLenum extdict(const std::string& ext)
 	{
-		static std::unordered_map<std::string, GLenum> dict;
-		static std::once_flag flag;
 		std::call_once(flag, [] 
 		{
 			dict[".vs"] = GL_VERTEX_SHADER;
@@ -43,10 +44,8 @@ namespace Resources
 	{
 		Resources::call_line_by_line(sourceFile, [sourceFile, this](const boost::filesystem::path& line)
 		{
-			dependencies.addActualDependence(line, line);
-
 			auto path = boost::filesystem::path(sourceFile).remove_filename() / line;
-
+			dependencies.addActualDependence(path, line);
 			TextFile::TextFromFile text(path.string().c_str());
 
 			int len;

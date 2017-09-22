@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -14,13 +14,21 @@
 #include "shaders.h"
 #include "debug.h"
 
-
-
+		  
 namespace opengl
 {
 #if ENABLE_OPENGL
-	HGLRC init(HDC hdc);
-	void release();
+	class OpenGL
+	{
+	public:
+		~OpenGL();
+		HGLRC init(HDC hdc);
+		void release();
+		HGLRC context() const;
+	private:
+		HGLRC ctx {0};
+	};
+	
 #endif
 				 
 	class Viewport : public Viewports::Viewport
@@ -40,7 +48,7 @@ namespace opengl
 
 
 
-// Copyright (C) 2012-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

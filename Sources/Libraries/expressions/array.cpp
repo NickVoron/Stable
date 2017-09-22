@@ -22,9 +22,7 @@ Array::Array(const ConstExprList& params_) : elements(params_)
 
 std::string Array::string() const
 {
-	str::stringize result("array: ", str::comma());
-	result(elements.string());
-	return result;
+	return str::stringize("array: ", str::comma(), elements.string());
 }
 
 std::string Array::typeName() const
@@ -37,9 +35,9 @@ References Array::references() const
 	return elements.references();
 }
 
-EvaluationUnit* Array::evaluated(const EvaluatedScope& environment, boost::any* userData) const
+EvaluationUnit* Array::evaluated(const EvaluatedScope& environment) const
 {
-	EvaluatedArray* result = Expressions::add<EvaluatedArray>(elements.size(), const_cast<EvaluatedScope*>(&environment));
+	EvaluatedArray* result = Expressions::add<EvaluatedArray>(elements.size(),environment);
 	result->unEvaluatedElements = elements;
 	return result;
 }
@@ -74,27 +72,19 @@ void Array::add(const Expression* expr)
 }
 
 
-
-EvaluatedArray::EvaluatedArray(size_t size, const EvaluatedScope* environment_) :
-	environment(environment_) 
+EvaluatedArray::EvaluatedArray(size_t size, const EvaluatedScope& environment_) :
+	ArrayContainer(environment_)
 {
-	internalScopename.setParent(environment);
+	internalScopename.setParent(&environment_);
 
-	arrayData = Expressions::convertType((int)size)->evaluated(EvaluatedScope());
+	arrayData = Expressions::convertType((int)size)->evaluated(EvaluationUnit::commonParent);
 }
 
-EvaluatedArray::EvaluatedArray(EvaluationUnit* arrayData_, const EvaluatedScope* environment_):
-	arrayData(arrayData_),
-	environment(environment_)
+EvaluatedArray::EvaluatedArray(EvaluationUnit* arrayData_, const EvaluatedScope& environment_):
+	ArrayContainer(environment_),
+	arrayData(arrayData_)
 {
-	internalScopename.setParent(environment);
-}
-
-std::string EvaluatedArray::string() const
-{
-	str::stringize result("evalArray: ", str::comma());
-	result(elements.string());
-	return result;
+	internalScopename.setParent(&environment_);
 }
 
 std::string EvaluatedArray::typeName() const
@@ -102,23 +92,21 @@ std::string EvaluatedArray::typeName() const
 	return "EvaluatedArray";
 }
 
-EvaluateState EvaluatedArray::evaluateStep(const Expressions::EvaluatedScope&, boost::any* userData)
+EvaluateState EvaluatedArray::evaluateStep(const Expressions::EvaluatedScope& parentScope)
 {
 	
 	EvaluateState evalState = Complete;
 
 	
 	if (unEvaluatedElements.size())
-	{
-		ENFORCE_MSG(environment, "");
-
+	{			   
 		evalState = Impossible;
-		if (unEvaluatedElements[0]->references().canResolveReverence(*environment))
+		if (unEvaluatedElements[0]->references().canResolveReference(internalScopename))
 		{
 			evalState = Reject;
 			for (auto& elemet: unEvaluatedElements)
 			{
-				elements.push_back(elemet->evaluated(*environment));
+				elements.push_back(elemet->evaluated(internalScopename));
 			}
 			unEvaluatedElements.clear();
 		}
@@ -127,30 +115,34 @@ EvaluateState EvaluatedArray::evaluateStep(const Expressions::EvaluatedScope&, b
 	
 	ENFORCE(arrayData);
 
+	auto stepper = [this](EvaluationUnit* unit, EvaluationUnit* iterator, EvaluationUnit* index)
+	{
+		internalScopename.add("iterator", iterator, InsertMethod::REPLACE_OR_INSERT);
+		internalScopename.add("index", index, InsertMethod::REPLACE_OR_INSERT);
+		internalScopename.add("array_data", this, InsertMethod::REPLACE_OR_INSERT);
+
+		return unit->evaluateStep(internalScopename);
+	};
+
 	if (auto expr = arrayData->cast< Expressions::Const<int> >())
 	{
 		for (int i = 0; i < expr->value; i++)
-		{
-			EvaluationUnit* index = Expressions::convertType(i)->evaluated(EvaluatedScope());
-			internalScopename.add("iterator", index, InsertMethod::REPLACE_OR_INSERT);
-			internalScopename.add("index", index, InsertMethod::REPLACE_OR_INSERT);
+		{			
+			auto unit = const_cast<EvaluationUnit*>(elements[i]);
+			auto index = convertType(i)->evaluated(EvaluationUnit::commonParent);
 
-			const EvaluationUnit* unit = elements[i];
-			EvaluateState unitState = const_cast<EvaluationUnit*>(unit)->evaluateStep(internalScopename, userData);
-			evalState = merge(evalState, unitState);
+			evalState = merge(evalState, stepper(unit, index, index));
 		}
 	}
-	else if (auto expr = arrayData->cast<Expressions::EvaluatedArray>())
+	else if (auto expr = arrayData->cast<Expressions::ArrayContainer>())
 	{
 		for (int i = 0; i < expr->count(); i++)
 		{
-			Expression* indexExpr = Expressions::convertType(i);
-			internalScopename.add("iterator", const_cast<EvaluationUnit*>(expr->element(i)), InsertMethod::REPLACE_OR_INSERT);
-			internalScopename.add("index", indexExpr->cast<Expressions::Const<int>>(), InsertMethod::REPLACE_OR_INSERT);
+			auto unit = const_cast<EvaluationUnit*>(elements[i]);
+			auto index = convertType(i)->cast<EvaluationUnit>();
+			auto iterator = const_cast<EvaluationUnit*>(expr->element(i));
 
-			const EvaluationUnit* unit = elements[i];
-			EvaluateState unitState = const_cast<EvaluationUnit*>(unit)->evaluateStep(internalScopename, userData);
-			evalState = merge(evalState, unitState);
+			evalState = merge(evalState, stepper(unit, iterator, index));
 		}
 	}
 	else
@@ -160,71 +152,6 @@ EvaluateState EvaluatedArray::evaluateStep(const Expressions::EvaluatedScope&, b
 
 
 	return evalState;
-}
-
-
-const EvaluationUnit* EvaluatedArray::child(const PropertyPath* path) const
-{
-	EvaluatedArray* result = Expressions::add<EvaluatedArray>(elements.size(), environment);
-	for (auto& element : elements)
-	{
-		const EvaluationUnit* elementChild = element->child(path);
-		if (elementChild)
-		{
-			if (const EvaluatedArray* elementArray = elementChild->cast<EvaluatedArray>())
-			{
-				for (auto& childArrayElement : elementArray->elements)
-				{
-					result->add(childArrayElement);
-				}
-			}
-			else
-			{
-				result->add(elementChild);
-			}
-		}
-		else
-		{
-			result = 0;
-			break;
-		}
-	}
-
-	return result;
-}
-
-const EvaluationUnit* EvaluatedArray::child(const ArrayPath* path) const
-{
-	return element(path->index);
-}
-
-const EvaluationUnit* EvaluatedArray::element(std::size_t index) const
-{
-	if (index < 0 || index >= elements.size())
-	{
-		if (!elements.empty())
-		{
-			LOG_ERROR("index is out of range. index: " << index << " range: (" << 0 << ", " << elements.size() - 1 << ")");
-		}
-		else
-		{
-			LOG_ERROR("array is empty");
-		}
-
-		return nullptr;
-	}
-
-	return elements[index];
-}
-
-std::size_t EvaluatedArray::count() const
-{
-	return elements.size();
-}
-
-void EvaluatedArray::add(const EvaluationUnit* expr)
-{
-	elements.push_back(expr);
 }
 
 }

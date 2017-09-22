@@ -82,7 +82,7 @@ void IndexBuffer::upload(const IndexStream& is)
  
  	fmt = sizeof(IndexType) == 2 ? D3DFMT_INDEX16 : D3DFMT_INDEX32;
  
- 	indicesCount = is.size();
+ 	indicesCount = (unsigned int)is.size();
  	if(indicesCount == 0) return;
  
  	unsigned int estimatedSize = indicesCount * sizeof(IndexType);

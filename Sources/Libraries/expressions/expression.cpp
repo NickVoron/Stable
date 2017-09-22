@@ -9,9 +9,11 @@
 #include "expression.h"
 #include "holder.h"
 #include "reference.h"
+#include "scopeNames.h"
 
 namespace Expressions
 {
+	EvaluatedScope EvaluationUnit::commonParent;
 
 	EvaluateState merge(EvaluateState first, EvaluateState second)
 	{
@@ -38,11 +40,11 @@ namespace Expressions
 	}
 
 	
-	bool References::canResolveReverence(const EvaluatedScope& scopename)
+	bool References::canResolveReference(const EvaluatedScope& scopename)
 	{
 		for (const Reference* ref : *this)
 		{
-			if (!ref->canResolveReverence(scopename))
+			if (!ref->canResolveReference(scopename))
 			{
 				return false;
 			}
@@ -52,21 +54,28 @@ namespace Expressions
 	}
 
 	
+	EvaluationUnit::EvaluationUnit(const EvaluatedScope& parent_) : parent(parent_.id) {}
+
 	References EvaluationUnit::references() const
 	{ 
 		ENFORCE_MSG(false, "No one references cant be in EvaluationUtin based class;")
 		return References();
 	}
 
-	EvaluationUnit* EvaluationUnit::evaluated(const EvaluatedScope& parentScopename, boost::any* userData) const
+	EvaluationUnit* EvaluationUnit::evaluated(const EvaluatedScope& parentScopename) const
 	{
 		ENFORCE_MSG(false, "Already evaluated;")
-		return 0;
+		return (EvaluationUnit*)this;
 	}
 	
-	EvaluateState EvaluationUnit::evaluateStep(const EvaluatedScope& parentScopename, boost::any* userData)
+	EvaluateState EvaluationUnit::evaluateStep(const EvaluatedScope& parentScopename)
 	{
 		return Complete;
+	}
+
+	bool EvaluationUnit::isParent(const EvaluatedScope& scope) 
+	{ 
+		return parent == scope.id; 
 	}
 
 }

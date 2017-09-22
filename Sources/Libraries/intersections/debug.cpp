@@ -99,12 +99,12 @@ namespace intersections
 
 		void draw( const Vector3& point)
 		{
-			DebugDrawing::sphere(point, 0.1);
+			DebugDrawing::sphere(point, 0.1f);
 		}
 
 		void draw(const Ray& ray)
 		{
-			DebugDrawing::line(ray.origin, ray.origin+ray.direction*1000);
+			DebugDrawing::line(ray.origin, ray.origin + ray.direction * 1000.0f);
 		}
 
 	}

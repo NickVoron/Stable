@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -53,21 +53,11 @@ namespace ComponentModelTesting
 	stream::istream& operator >> (stream::istream& is, SubObjectData& data);
 
 	
-	struct SubObjectDataConverter : public Expressions::UserStructConverter_NameCheck<SubObjectData>
-	{
-		virtual const char* structName() const { return SUB_OBJECT_DATA; }
-		void convert(const Expressions::Expression& expr, SubObjectsList& client);
-	};
-
-	
 	
 	
 	inline std::ostream& operator<<(std::ostream& os, const SubObjectsList& list) { return UserStruct::streamOut(os, list); }
 	inline stream::ostream& operator<<(stream::ostream& os, const SubObjectsList& list) { return UserStruct::stream_out(os, list); }
 	inline stream::istream& operator >> (stream::istream& is, SubObjectsList& list) { return UserStruct::stream_in(is, list); }
-
-	
-	struct SubObjectsListConverter : public Expressions::CommonUserStructures::ListArrayConverter<SubObjectsList> {};
 
 
 	
@@ -82,31 +72,17 @@ namespace ComponentModelTesting
 	stream::istream& operator >> (stream::istream& is, ObjectData& data);
 
 	
-	struct ObjectDataConverter : public Expressions::UserStructConverter_NameCheck<ObjectData>
-	{
-		virtual const char* structName() const { return OBJECT_DATA; }
-		void convert(const Expressions::Expression& expr, SubObjectsList& client);
-	};
-
-	
 	inline std::ostream& operator<<(std::ostream& os, const ObjectsList& list) { return UserStruct::streamOut(os, list); }
 	inline stream::ostream& operator<<(stream::ostream& os, const ObjectsList& list) { return UserStruct::stream_out(os, list); }
 	inline stream::istream& operator >> (stream::istream& is, ObjectsList& list) { return UserStruct::stream_in(is, list); }
 
 	
-	struct ObjectsListConverter : public Expressions::CommonUserStructures::ListArrayConverter<ObjectsList> {};
-
-
-	
 	Expressions::Expression* convertType(const ObjectData& value);
-	Expressions::Expression* convertType(const ObjectsList& value);
-
-
 }//
 
 
 
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

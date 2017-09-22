@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -66,9 +66,10 @@ namespace ObjectParser
 
 		
 		Expressions::Reference* newProxy();
+		Expressions::Reference* newProxy(Expressions::Expression*);
 		Expressions::Reference* newProxy(const std::string& targetName);
 
-		Expressions::Reference::PathElement* newProxyArrayPath(int index);
+		Expressions::Reference::PathElement* newProxyArrayPath(const std::unique_ptr<Expressions::ConstExprList>& params);
 		Expressions::Reference::PathElement* newProxyPropertyPath(const std::string& name);
 		Expressions::Reference::PathElement* newProxyComponentPath(const std::string& name);
 
@@ -127,7 +128,7 @@ namespace ObjectParser
 
 
 
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

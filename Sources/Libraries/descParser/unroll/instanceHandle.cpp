@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -7,6 +7,7 @@
 //
 
 #include "instanceHandle.h"
+#include "unroller.h"
 
 namespace ObjectParser
 {
@@ -20,7 +21,7 @@ size_t InstanceHandle::globalIndexCounter()
 	return index;
 }
 
-EvaluateState InstanceHandle::urollParams(const EvaluatedScope& parentScopename, boost::any* userData)
+EvaluateState InstanceHandle::urollParams(const EvaluatedScope& parentScopename)
 {
 	EvaluateState evalState = Complete;
 
@@ -28,12 +29,12 @@ EvaluateState InstanceHandle::urollParams(const EvaluatedScope& parentScopename,
 	{
 		evalState = Expressions::Impossible;  
 
-		params.erase(std::remove_if(params.begin(), params.end(), [this, &parentScopename, &userData, &evalState](auto& param)
+		params.erase(std::remove_if(params.begin(), params.end(), [this, &parentScopename, &evalState](auto& param)
 		{ 
 			const std::string& name = param->propertyName;
-			if (param->canResolveReverence(parentScopename))
+			if (param->canResolveReference(parentScopename))
 			{
-				EvaluationUnit* evalUnit = param->value->evaluated(parentScopename, userData);
+				EvaluationUnit* evalUnit = param->value->evaluated(parentScopename);
 				add(name, evalUnit, InsertMethod::INSERT);
 				evalState = Reject;	
 
@@ -48,28 +49,27 @@ EvaluateState InstanceHandle::urollParams(const EvaluatedScope& parentScopename,
 	return evalState;
 }
 
-EvaluateState InstanceHandle::unrollUnEvaluatedProperies(boost::any* userData)
+EvaluateState InstanceHandle::unrollUnEvaluatedProperies()
 {
 	EvaluateState evalState = Complete;
 
-	if (unEvaluatedPropertyies.size())
+	if (!unEvaluatedProperties.empty())
 	{
 		evalState = Expressions::Impossible;  
 
-		for (auto& iter = unEvaluatedPropertyies.cbegin(); iter != unEvaluatedPropertyies.cend();)
+		for (auto& iter = unEvaluatedProperties.cbegin(); iter != unEvaluatedProperties.cend();)
 		{
 			const std::string& name = iter->first;
 			const Expression* expr = iter->second;
 
 			References refs = expr->references();
-			if (refs.canResolveReverence(*this))
+			if (refs.canResolveReference(*this))
 			{
-				EvaluationUnit* evalUnit = expr->evaluated(*this, userData);
-				bool isClassMember = unEvaluatedPropertyies.isClassMember(expr);
+				EvaluationUnit* evalUnit = expr->evaluated(*this);
 				add(name, evalUnit, InsertMethod::INSERT, true);
 				evalState = Reject;	
 
-				unEvaluatedPropertyies.erase(iter++);
+				unEvaluatedProperties.erase(iter++);
 			}
 			else
 			{
@@ -81,25 +81,43 @@ EvaluateState InstanceHandle::unrollUnEvaluatedProperies(boost::any* userData)
 	return evalState;
 }
 
-Expressions::EvaluateState InstanceHandle::evaluateStep(const EvaluatedScope& parentScopename, boost::any* userData)
+Expressions::EvaluateState InstanceHandle::evaluateStep(const EvaluatedScope& parentScopename)
 {
-	
-	EvaluateState paramState = urollParams(parentScopename, userData);
+	Unroller* unroller = boost::any_cast<Unroller*>(parentScopename.userData);
+	ENFORCE_POINTER(unroller);
 
-	
-	EvaluateState propertiesState = unrollUnEvaluatedProperies(userData);
+	userData = unroller;
 
-	EvaluateState result = merge(paramState, propertiesState);
-
-	
-	for (auto& iter: *this)
+	if (isParent(parentScopename))
 	{
-		EvaluationUnit* unit = iter.second;
-		EvaluateState unitState = unit->evaluateStep(*this, userData);
-		result = merge(result, unitState);
+		
+		EvaluateState paramState = urollParams(parentScopename);
+
+		
+		EvaluateState propertiesState = unrollUnEvaluatedProperies();
+
+		EvaluateState result = merge(paramState, propertiesState);
+
+		
+		for (auto& iter : *this)
+		{
+			EvaluationUnit* unit = iter.second;
+			if (isClassMember(unit))
+			{
+				EvaluateState unitState = unit->evaluateStep(*this);
+				result = merge(result, unitState);
+
+				if (result == Impossible)
+				{
+					volatile int i = 0;
+				}
+
+			}
+		}
+		return result;
 	}
 
-	return result;
+	return Expressions::Complete;
 }
 
 const ComponentHandle* InstanceHandle::component(const std::string& name) const
@@ -113,7 +131,7 @@ ComponentHandle* InstanceHandle::component(const std::string& name)
 	{
 		if (auto componentHandle = dynamic_cast<ComponentHandle*>(unit.second))
 		{
-			if (componentHandle->name == name)
+			if (isClassMember(componentHandle) && componentHandle->name == name)
 				return componentHandle;
 		}
 	}
@@ -126,11 +144,21 @@ const Expressions::EvaluationUnit* InstanceHandle::child(const Expressions::Prop
 	return get(path->name);
 }
 
+std::vector<std::string> InstanceHandle::fields() const
+{
+	return Expressions::EvaluatedScope::fields();
+}
+
+std::string InstanceHandle::string() const
+{
+	return str::spaced(name).str();
+}
+
 }//
 
 
 
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

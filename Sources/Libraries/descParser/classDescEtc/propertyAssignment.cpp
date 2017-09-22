@@ -21,11 +21,11 @@ namespace ObjectParser
 
 	}
 
-	bool PropertyAssignment::canResolveReverence(const Expressions::EvaluatedScope& parentScopename) const
+	bool PropertyAssignment::canResolveReference(const Expressions::EvaluatedScope& parentScopename) const
 	{
 		ENFORCE_MSG(value, "");
 		Expressions::References refs = value->references();
-		return refs.canResolveReverence(parentScopename);
+		return refs.canResolveReference(parentScopename);
 	}
 
 	

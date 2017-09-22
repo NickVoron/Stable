@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2015 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -58,7 +58,7 @@ namespace dx11
 			std::ifstream fileStream;
 			fileStream.open(finalPath.c_str(), std::ios::binary);
 			
-			int sz = Base::FileUtils::GetFileSize(finalPath.string());
+			auto sz = Base::FileUtils::GetFileSize(finalPath.string());
 			
 			if (sz)
 			{
@@ -66,7 +66,7 @@ namespace dx11
 				fileStream.read(buf, sz);
 
 				*ppData = buf;
-				*pBytes = sz;
+				*pBytes = (UINT)sz;
 			}
 			else
 			{
@@ -146,11 +146,11 @@ namespace dx11
 		return shaderCompilationErrorHandle(hr, pBlobOut, pErrorBlob, memblock);
 	}
 
-	HRESULT compileShader( LPCSTR shaderText, unsigned int shaderLen, LPCSTR szEntryPoint, LPCSTR szShaderModel, mem::mem_desc& memblock)
+	HRESULT compileShader( LPCSTR shaderText, std::size_t shaderLen, LPCSTR szEntryPoint, LPCSTR szShaderModel, mem::mem_desc& memblock)
 	{
 		ID3DBlob* pBlobOut;
 		ID3DBlob* pErrorBlob;
-		HRESULT hr = D3DX11CompileFromMemory( shaderText, shaderLen, 0, NULL, NULL, szEntryPoint, szShaderModel, shaderFlags(), 0, NULL, &pBlobOut, &pErrorBlob, NULL );
+		HRESULT hr = D3DX11CompileFromMemory(shaderText, shaderLen, 0, NULL, NULL, szEntryPoint, szShaderModel, shaderFlags(), 0, NULL, &pBlobOut, &pErrorBlob, NULL );
 		return shaderCompilationErrorHandle(hr, pBlobOut, pErrorBlob, memblock);
 	}
 
@@ -260,7 +260,7 @@ namespace dx11
 
 
 
-// Copyright (C) 2012-2015 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

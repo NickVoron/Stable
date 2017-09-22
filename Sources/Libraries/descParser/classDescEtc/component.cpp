@@ -34,9 +34,9 @@ std::string Component::string() const
 	return str::stringize("component type = ", componentType, ", name = ", name, " bindedHandle = nullptr");	
 }
 
-Expressions::EvaluationUnit* Component::evaluated(const Expressions::EvaluatedScope& parentScopenames, boost::any* userData) const
+Expressions::EvaluationUnit* Component::evaluated(const Expressions::EvaluatedScope& parentScopenames) const
 {
-	ComponentHandle* handle = Expressions::add<ComponentHandle>(runtimeProps, linkParams, propertyAssigments);
+	ComponentHandle* handle = Expressions::add<ComponentHandle>(parentScopenames, runtimeProps, linkParams, propertyAssigments);
 	handle->name = name;
 	handle->scopeName = name;
 	handle->type = componentType;

@@ -19,7 +19,7 @@
 #include "const.h"
 #include "struct.h"
 #include "holder.h"
-#include "conversion/commonUserStruct.h"
+
 #include "conversion/convertType.h"
 #include "conversion/varToType.h"
 

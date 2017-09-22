@@ -24,7 +24,9 @@ namespace Expressions
 	public:
 		typedef ValueType Type;
 
-		Const(const Type &value_) : value(value_) {}
+		Const(const Type &value_) : 
+			EvaluationUnit(commonParent),
+			value(value_) {}
 
 		const Type value;
 
@@ -33,10 +35,14 @@ namespace Expressions
 		virtual bool elementary() const							{ return true; }
 		virtual std::string typeName() const					{ return Variant::TypeTraits<Type>::name(); }
 
-		EvaluationUnit* evaluated(const EvaluatedScope& environment, boost::any* userData = 0) const
+		EvaluationUnit* evaluated(const EvaluatedScope& environment) const override
 		{
-			auto result = Expressions::add<Const<ValueType>>(value);
-			return result;
+			return Expressions::add<Const<ValueType>>(value);
+		}
+
+		virtual std::unique_ptr<mirror::runtime::Type> reflectedType() const 
+		{ 
+			return mirror::type(value).clone();
 		}
 
 		References references() const							{ return References(); }

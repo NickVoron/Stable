@@ -115,13 +115,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="array.cpp" />
+    <ClCompile Include="arrayContainer.cpp" />
     <ClCompile Include="binder.cpp" />
-    <ClCompile Include="conversion\commonUserStruct.cpp" />
     <ClCompile Include="conversion\convertType.cpp" />
     <ClCompile Include="expression.cpp" />
     <ClCompile Include="externalExtension.cpp" />
     <ClCompile Include="function.cpp" />
     <ClCompile Include="functions\arrayfunc.cpp" />
+    <ClCompile Include="functions\debug.cpp" />
     <ClCompile Include="holder.cpp" />
     <ClCompile Include="lambda.cpp" />
     <ClCompile Include="property.cpp" />
@@ -140,10 +141,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="array.h" />
+    <ClInclude Include="arrayContainer.h" />
     <ClInclude Include="binder.h" />
     <ClInclude Include="const.h" />
     <ClInclude Include="constExprList.h" />
-    <ClInclude Include="conversion\commonUserStruct.h" />
     <ClInclude Include="conversion\convertType.h" />
     <ClInclude Include="conversion\varToType.h" />
     <ClInclude Include="expression.h" />
@@ -151,6 +152,7 @@
     <ClInclude Include="externalExtension.h" />
     <ClInclude Include="function.h" />
     <ClInclude Include="functions\arrayfunc.h" />
+    <ClInclude Include="functions\debug.h" />
     <ClInclude Include="holder.h" />
     <ClInclude Include="lambda.h" />
     <ClInclude Include="library.include.h" />
@@ -163,6 +165,9 @@
     <ClInclude Include="ternaryOperator.h" />
     <ClInclude Include="typeTraits.h" />
     <ClInclude Include="unit_test.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="expressions.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

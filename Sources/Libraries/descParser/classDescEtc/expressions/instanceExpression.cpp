@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -8,6 +8,8 @@
 
 #include "instanceExpression.h"
 #include "../../unroll/unroller.h"
+#include "../../unroll/prototypeHandle.h"
+#include "../../unroll/instanceHandle.h"
 
 namespace ObjectParser
 {
@@ -25,7 +27,7 @@ bool arrayUnroller(Expressions::EvaluatedScope& parentScopename, const Expressio
 	{
 		elementsCount = expr->value;
 	}
-	else if (auto expr = arrayData->cast<Expressions::EvaluatedArray>())
+	else if (auto expr = arrayData->cast<Expressions::ArrayContainer>())
 	{
 		elementsCount = expr->count();
 	}
@@ -72,10 +74,9 @@ std::string InstanceDefinitionExpression::string() const
 
 
 
-Expressions::EvaluationUnit* InstanceDefinitionExpression::evaluated(const EvaluatedScope& parentScopenames, boost::any* userData) const
+Expressions::EvaluationUnit* InstanceDefinitionExpression::evaluated(const EvaluatedScope& parentScopenames) const
 {
-	ENFORCE_POINTER(userData);
-	Unroller* unroller = boost::any_cast<Unroller*>(*userData);
+	Unroller* unroller = boost::any_cast<Unroller*>(parentScopenames.userData);
 	ENFORCE_POINTER(unroller);
 	
 	EvaluationUnit* result = 0;
@@ -85,16 +86,16 @@ Expressions::EvaluationUnit* InstanceDefinitionExpression::evaluated(const Evalu
 		if (arrayData)
 		{
 			References refs = arrayData->references();
-			if (refs.canResolveReverence(parentScopenames))
+			if (refs.canResolveReference(parentScopenames))
 			{
 				EvaluationUnit* evaluatedArrayData = arrayData->evaluated(parentScopenames);
-				evaluatedArrayData->evaluateStep(parentScopenames, userData);
+				evaluatedArrayData->evaluateStep(parentScopenames);
 
-				EvaluatedArray* arrayInstances = add<EvaluatedArray>(evaluatedArrayData, &parentScopenames);
+				EvaluatedArray* arrayInstances = add<EvaluatedArray>(evaluatedArrayData, parentScopenames);
 
-				arrayUnroller(const_cast<EvaluatedScope&>(parentScopenames), evaluatedArrayData, [&parentScopenames, this, unroller, &arrayInstances, userData](EvaluatedScope& immediatelyParams)
+				arrayUnroller(const_cast<EvaluatedScope&>(parentScopenames), evaluatedArrayData, [&parentScopenames, this, unroller, &arrayInstances](EvaluatedScope& immediatelyParams)
 				{
-					Expressions::EvaluationUnit* object = evaluateOnce(unroller->classes, type, name, params);
+					Expressions::EvaluationUnit* object = evaluateOnce(arrayInstances->internalScope(), unroller->classes, type, name, params);
 					arrayInstances->add(object);
 				});
 
@@ -103,7 +104,7 @@ Expressions::EvaluationUnit* InstanceDefinitionExpression::evaluated(const Evalu
 		}
 		else
 		{
-			result = evaluateOnce(unroller->classes, type, name, params);
+			result = evaluateOnce(parentScopenames, unroller->classes, type, name, params);
 		}
 	}
 	else
@@ -134,10 +135,9 @@ InstanceDefinitionExpression* InstanceDefinitionExpression::instance() const
 }
 
 
-EvaluationUnit* evaluateOnce(const ClassTable& classes, const std::string& type, const std::string& name,
-								PropertyAssignmentList params)
+EvaluationUnit* evaluateOnce(const EvaluatedScope& parentScopenames, const ClassTable& classes, const std::string& type, const std::string& name, const PropertyAssignmentList& params)
 {
-	InstanceHandle* instance = add<InstanceHandle>("");
+	InstanceHandle* instance = add<InstanceHandle>(parentScopenames, "");
 	instance->params = params;
 	instance->name = name;
 	instance->scopeName = name;
@@ -147,7 +147,7 @@ EvaluationUnit* evaluateOnce(const ClassTable& classes, const std::string& type,
 	ENFORCE_MSG(instanceClass, str::stringize(__FUNCTION__" class: ", type, " not exist").str());
 	
 	
-	fillScopenamesFromClass(classes, *instanceClass, params, instance->unEvaluatedPropertyies);
+	fillScopenamesFromClass(classes, *instanceClass, params, instance->unEvaluatedProperties);
 	
 
 	return instance;
@@ -164,7 +164,7 @@ void fillScopenamesFromClass(const ClassTable& classes, const ClassDesc& classDe
 
 		if (!params.exist(propName))
 		{
-			result.add(propName, propValue, Expressions::InsertMethod::IGNORE_IF_EXIST);
+			result.add(propName, propValue, Expressions::InsertMethod::IGNORE_IF_EXIST, true);
 		}
 	}
 
@@ -189,7 +189,7 @@ void fillScopenamesFromClass(const ClassTable& classes, const ClassDesc& classDe
 
 
 
-// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

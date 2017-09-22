@@ -64,7 +64,7 @@ namespace ComponentModelTesting
 		}
 
 		ENFORCE_MSG(leafComponents.size() == 19, "");
-		const EvaluatedArray* leafArray = get(worldScopename, str::stringize("main.trees.leaves.leafComponent"))->cast<EvaluatedArray>();
+		const ArrayContainer* leafArray = get(worldScopename, str::stringize("main.trees.leaves.leafComponent"))->cast<ArrayContainer>();
 		ENFORCE_MSG(leafArray, "");
 		
 		for (size_t i=0; i< leafComponents.size(); i++ )

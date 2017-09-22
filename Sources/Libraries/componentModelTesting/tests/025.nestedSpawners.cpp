@@ -8,7 +8,7 @@
 
 #include "025.nestedSpawners.h"
 #include "utils.h"
-#include "componentLinkModelConfigurator.h"
+
 
 #include "componentModel/library.include.h"
 #include "commonComponents/library.include.h"
@@ -97,9 +97,9 @@ NestedSpawners::NestedSpawners()
 
 	std::string path = Resources::resourceRelativePath("desc/cm2Testing/1.basic/025.nestedSpawners.desc");
 	ObjectParser::Compiler comp(path.c_str());
-	ComponentLinkModelConfigurator debugConfigurator;
+	
 
-	Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), debugConfigurator, "Main", "main");
+	Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), "Main", "main");
 
 	try
 	{

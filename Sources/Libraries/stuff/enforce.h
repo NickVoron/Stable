@@ -10,6 +10,16 @@
 
 namespace Base
 {
+	inline void dbgbreak()
+	{
+#ifdef WIN32
+		if (IsDebuggerPresent())
+		{
+			__debugbreak();
+		}
+#endif
+	}
+
 	struct DefaultPredicate	{ template <class T> ENFORCEMENT_INLINE static bool Wrong(const T& obj) { return !obj; } };
 
 	struct DefaultRaiser
@@ -17,12 +27,7 @@ namespace Base
 		template <class T>
 		ENFORCEMENT_INLINE static void Throw(const T&, const char* locus)
 		{
-#ifdef WIN32
-			if(IsDebuggerPresent())
-			{
-				__debugbreak();
-			}				
-#endif
+			dbgbreak();
 			throw std::runtime_error(locus);
 		}
 	};
@@ -59,12 +64,15 @@ namespace Base
 #define ENFORCE_LEQUAL(exp0, exp1)		ENFORCE_MSG(exp0 <= exp1, STPP_STRINGIZE_N2(exp0, exp1));
 #define ENFORCE_POINTER(exp)			ENFORCE_MSG(exp, str::stringize(STPP_STRINGIZE_N1(exp), " is null").c_str());
 
-#define VERIFY(x, y) { if (! (x) )	throw Base::Errors::Simple(str::stringize(__FUNCTION__, " verification failed: ", y) ); }
-#define THROW(y)	 {				throw Base::Errors::Simple(str::stringize(__FUNCTION__, " assertion: ", y)); }
+#define VERIFY(x, y)	{ if (! (x) )	{ Base::dbgbreak(); throw Base::Errors::Simple(str::stringize(__FUNCTION__, " verification failed: ", y) );} }
+#define THROW(y)		{ Base::dbgbreak(); throw Base::Errors::Simple(str::stringize(__FUNCTION__, " assertion: ", y)); }
+
 #ifdef WIN32
 #define INCOMPLETE	 {	__pragma(message(SOURCE_LOCATION COMPILER_WARNING(FUNCTION_LOCATION) " function is INCOMPLETE"));	 char buff[512] = {'\0'}; sprintf(buff, "%s : %s", SOURCE_LOCATION COMPILER_WARNING(FUNCTION_LOCATION), " INCOMPLETE"); throw Base::Errors::Simple(buff); }
 #else
 #define INCOMPLETE	 
 #endif
 #define STATIC_INCOMPLETE	 { static_assert(false, __FUNCTION__" not implemented"); }
+
 #define COMPILER_MESSAGE(MESSAGE) __pragma(message(SOURCE_LOCATION FUNCTION_LOCATION STPP_STRINGIZE(MESSAGE)));
+#define COMPILER_WARNING_LOCATION(MESSAGE) __pragma(message(SOURCE_LOCATION COMPILER_WARNING(FUNCTION_LOCATION) STPP_STRINGIZE(MESSAGE)));

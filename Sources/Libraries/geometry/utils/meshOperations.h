@@ -507,7 +507,7 @@ void mergeMeshes(VertexStream<VertexType>& resVS, IndexStream<IndexType>& resIS,
 	
 	for (std::size_t i = start, j = 0; i < resISSize; ++i, ++j)
 	{
-		resIS[i] = addIS[j] + baseVal;
+		resIS[i] = (unsigned int)(addIS[j] + baseVal);
 	}
 
 	resIS.updateMaxValue();

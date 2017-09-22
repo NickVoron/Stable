@@ -9,13 +9,12 @@
 #pragma once
 
 #include "visualSwitcher.h"
+#include "positionLink.h"
 
 
 namespace DevelopmentComponents
 {
-
-
-
+ 	typedef ComponentModel::Module<	PositionLink > Module;
 }
 
 

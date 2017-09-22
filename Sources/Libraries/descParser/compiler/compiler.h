@@ -10,7 +10,6 @@
 
 #include "../classDescEtc/grammarComposition.h"
 #include "../unroll/unroller.h"
-#include "../unroll/debugConfigurator.h"
 #include "../classDescEtc/utils/nameSource.h"
 
 #include <boost/filesystem.hpp>

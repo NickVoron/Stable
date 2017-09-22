@@ -1,4 +1,4 @@
-// Copyright (C) 2014-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -11,6 +11,7 @@
 #include "expression.h"
 #include "constExprList.h"
 #include "scopeNames.h"
+#include "arrayContainer.h"
 
 namespace Expressions
 {
@@ -20,7 +21,7 @@ namespace Expressions
 		Array(){}
 		Array(const ConstExprList& params);
 
-		virtual EvaluationUnit* evaluated(const EvaluatedScope& environment, boost::any* userData = 0) const override;
+		virtual EvaluationUnit* evaluated(const EvaluatedScope& environment) const override;
 		virtual std::string string() const override;
 		virtual std::string typeName() const override;
 		virtual References references() const override;
@@ -34,33 +35,22 @@ namespace Expressions
 	};
 
 	
-	class EvaluatedArray : public EvaluationUnit
+	class EvaluatedArray: public ArrayContainer
 	{
 	public:
-		EvaluatedArray(size_t size, const EvaluatedScope* environment_);
-		EvaluatedArray(EvaluationUnit* arrayData_, const EvaluatedScope* environment_);
+		EvaluatedArray(size_t size, const EvaluatedScope& environment_);
+		EvaluatedArray(EvaluationUnit* arrayData_, const EvaluatedScope& environment_);
 
-		virtual std::string string() const override;
 		virtual std::string typeName() const override;
 
-		virtual EvaluateState evaluateStep(const Expressions::EvaluatedScope&, boost::any* userData = 0) override;
-
-		virtual const EvaluationUnit* child(const PropertyPath* path) const override;
-		virtual const EvaluationUnit* child(const ArrayPath* path) const override;
-
-
-		void add(const EvaluationUnit* expr);
-		const EvaluationUnit* element(std::size_t index) const;
-		std::size_t count() const;
+		virtual EvaluateState evaluateStep(const Expressions::EvaluatedScope&) override;
 
 		ConstExprList unEvaluatedElements;
+
+		const EvaluatedScope& internalScope() { return internalScopename; }
 	private:
 		EvaluatedScope internalScopename;
-
-		EvalUtinList elements;
-
 		EvaluationUnit* arrayData = 0;
-		const Expressions::EvaluatedScope* environment;
 	};
 
 }
@@ -69,7 +59,7 @@ namespace Expressions
 
 
 
-// Copyright (C) 2014-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

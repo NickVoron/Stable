@@ -7,6 +7,7 @@
 //
 
 #include "objectConverter.h"
+#include "../../unroll/prototypeHandle.h"
 
 namespace ComponentModel
 {	
@@ -50,11 +51,6 @@ namespace ObjectParser
 			LOG_ERROR("type: " << expr.string() << " is not an object");
 		}
 	}
-}
-
-namespace Expressions
-{
-	template<> void RegisterExpressionConverter<EntitiesStream>() { UserStructsConvertersLib::addInst<ObjectParser::ObjectConverter>(); }
 }
 
 

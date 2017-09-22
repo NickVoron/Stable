@@ -7,6 +7,7 @@
 //
 
 #pragma once
+#include "tests/000.bugs.h"
 #include "tests/001.componentAndProperties.h"
 #include "tests/002.componentLink.h"
 #include "tests/003.componentAsParameter.h"
@@ -29,8 +30,11 @@
 #include "tests/025.nestedSpawners.h"
 #include "tests/026.cyclicSpawners.h"
 #include "tests/027.configurableSpawners.h"
+#include "tests/028.expressionsConversion.h"
 #include "tests/008.1.objectArrayEmbeddedScopename.h"
 #include "tests/utils.h"
+
+#include "bugs/bug006.h"
 
 #ifdef DEFINE_SDK_LIB
 #pragma DEFINE_SDK_LIB(componentModelTesting)

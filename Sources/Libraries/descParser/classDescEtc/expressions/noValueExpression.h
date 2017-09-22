@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -16,17 +16,18 @@ namespace ObjectParser
 	class NoValueExpression : public Expressions::EvaluationUnit
 	{
 	public:
+		NoValueExpression() : Expressions::EvaluationUnit(Expressions::EvaluationUnit::commonParent) {}
 		virtual std::string string() const;
 
 		virtual Expressions::References references() const override;
-		virtual Expressions::EvaluationUnit* evaluated(const Expressions::EvaluatedScope& environment, boost::any* userData = 0) const override;
+		virtual Expressions::EvaluationUnit* evaluated(const Expressions::EvaluatedScope& environment) const override;
 
 	};
 }//
 
 
 
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

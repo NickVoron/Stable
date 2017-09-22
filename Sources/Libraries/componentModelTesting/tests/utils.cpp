@@ -13,7 +13,7 @@
 
 #ifdef ENABLE_UTILS
 
-#include "componentLinkModelConfigurator.h"
+
 namespace ComponentModelTesting
 {
 	using namespace Expressions;
@@ -115,7 +115,7 @@ namespace ComponentModelTesting
 			Reference::PathElement* pathElement = 0;
 			if (isIndex(token, index))
 			{
-				pathElement = new ArrayPath(index);
+				pathElement = new ArrayPath(ConstExprList(convertType(index)));
 			}
 			else
 			{

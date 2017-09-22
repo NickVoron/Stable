@@ -1,0 +1,212 @@
+float4x4 World      : WORLD;
+float4x4 View       : VIEW;
+float4x4 Projection : PROJECTION;
+
+texture tex0;
+texture sailDiffTex;
+texture sailNormTex;
+
+sampler sailDiffSam = sampler_state
+{
+    Texture = <sailDiffTex>;
+	MaxAnisotropy = 16;
+	MinFilter = ANISOTROPIC;
+    MipFilter = LINEAR;
+    MagFilter = LINEAR;
+};
+
+sampler sailNormSam = sampler_state
+{
+    Texture = <sailNormTex>;
+	MaxAnisotropy = 16;
+	MinFilter = ANISOTROPIC;
+    MipFilter = LINEAR;
+    MagFilter = LINEAR;
+};
+
+sampler ShipSampler = 
+sampler_state
+{
+    Texture = <tex0>;
+    MipFilter = LINEAR;
+    MinFilter = LINEAR;
+    MagFilter = LINEAR;
+};
+
+
+struct VS_OUTPUT
+{
+    float4 Position   : POSITION;   // vertex position 
+};
+
+struct VS_SAILS_OUTPUT
+{
+    float4 Position : POSITION;
+	float3 Normal   : TEXCOORD0;
+	float3 BiNormal : TEXCOORD1;
+	float3 Tangent  : TEXCOORD2;
+	float2 Tex		: TEXCOORD3;
+};
+
+
+
+struct PS_OUTPUT
+{
+    float4 color : COLOR0;  // Pixel color    
+};
+
+struct VS_SHIP_OUTPUT
+{
+    float4 Position   : POSITION; 
+    float2 Tex		: TEXCOORD0; 
+    float4 Diff		: TEXCOORD1; 
+    float3 Normal   : TEXCOORD2; 
+};
+
+
+
+VS_SAILS_OUTPUT SailVS( float4 vPos : POSITION,
+						float3 vNorm : NORMAL,
+						float3 vBiNorm : BINORMAL,
+						float3 vTan : TANGENT,
+						float2 vTex : TEXCOORD0)
+{
+    VS_SAILS_OUTPUT Output;
+	float4x4 viewProjection = mul(View, Projection);
+    Output.Position = mul(vPos, viewProjection);
+
+	Output.Normal = vNorm;
+	Output.BiNormal = normalize(vBiNorm);
+	Output.Tangent = normalize(vTan);
+
+	Output.Tex = vTex;
+    return Output;    
+}
+
+//for verlet sail
+VS_SAILS_OUTPUT VerletSailVS( float4 vPos : POSITION,
+						float3 vNorm : NORMAL,
+						float3 vBiNorm : BINORMAL,
+						float3 vTan : TANGENT,
+						float2 vTex : TEXCOORD0)
+{
+    VS_SAILS_OUTPUT Output;
+    float4x4 worldViewProjection = mul(World, View);
+	worldViewProjection = mul(worldViewProjection, Projection);
+    Output.Position = mul(vPos, worldViewProjection);
+
+	Output.Normal = vNorm;
+	Output.BiNormal = normalize(vBiNorm);
+	Output.Tangent = normalize(vTan);
+
+	Output.Tex = vTex;
+    return Output;    
+}
+
+
+PS_OUTPUT SailPS( VS_SAILS_OUTPUT In ) 
+{ 
+    PS_OUTPUT Output;
+
+	float3 t = normalize(In.Normal);
+	float3 b = normalize(In.BiNormal);
+	float3 n = normalize(In.Tangent);
+
+	float3x3 tbn = {b,  t,  n};
+
+	float3 texN = normalize( tex2D(sailNormSam, In.Tex)  * 2 - 1);
+	//float3 texN = (-1, -1, -1);
+	texN = mul(texN, tbn);
+//	texN = n;
+    
+
+	float nDotL = saturate( dot(texN, normalize(float3(0, 1, 0)) ) ) + 0.3f;
+    Output.color = tex2D(sailDiffSam, In.Tex) * nDotL;
+//	Output.color.xyz = nDotL;
+    return Output;
+}
+
+VS_SHIP_OUTPUT ShipVS(	float4 vPos : POSITION, 
+						float3 vNorm : NORMAL, 
+						float2 vTex : TEXCOORD0)
+{
+    VS_SHIP_OUTPUT Output;
+    
+    float4x4 worldViewProjection = mul(World, View);
+	worldViewProjection = mul(worldViewProjection, Projection);
+	
+    Output.Position = mul(vPos, worldViewProjection);
+    Output.Normal = normalize(mul(vNorm, World));
+    Output.Diff = saturate( dot(Output.Normal, float3(1, 0, 0) ) );
+    Output.Tex = vTex;
+    return Output;      
+}
+
+PS_OUTPUT ShipPS( VS_SHIP_OUTPUT In ) 
+{ 
+    PS_OUTPUT Output;
+    Output.color = (In.Diff + float4(0.5, 0.5, 0.5, 0) )* tex2D(ShipSampler, In.Tex);
+    return Output;
+}
+
+VS_OUTPUT CannonBallVS( float4 vPos : POSITION)
+{
+    VS_OUTPUT Output;
+
+	float4x4 worldViewProjection = mul(World, View);
+	worldViewProjection = mul(worldViewProjection, Projection);
+    Output.Position = mul(vPos, worldViewProjection);
+    return Output;    
+}
+
+PS_OUTPUT CannonBallPS( VS_OUTPUT In ) 
+{ 
+    PS_OUTPUT Output;
+    Output.color = float4(1.0f, 1.0f, 0.0f, 0.0f);
+    return Output;
+}
+
+
+technique RenderSails
+{
+    pass P0
+    {          
+        VertexShader = compile vs_2_0 SailVS();
+        PixelShader  = compile ps_2_0 SailPS(); 
+        //FillMode = Wireframe;
+        CullMode = None;        
+    }
+}
+
+technique RenderShip
+{
+    pass P0
+    {          
+        VertexShader = compile vs_2_0 ShipVS();
+        PixelShader  = compile ps_2_0 ShipPS(); 
+        FillMode = Solid;
+        CullMode = None;        
+    }
+}
+
+technique RenderCannonBall
+{
+    pass P0
+    {          
+        VertexShader = compile vs_2_0 CannonBallVS();
+        PixelShader  = compile ps_2_0 CannonBallPS(); 
+        FillMode = Solid;
+        CullMode = None;        
+    }
+}
+
+technique RenderVerletSails
+{
+    pass P0
+    {          
+        VertexShader = compile vs_2_0 VerletSailVS();
+        PixelShader  = compile ps_2_0 SailPS(); 
+        //FillMode = Wireframe;
+        CullMode = None;        
+    }
+}

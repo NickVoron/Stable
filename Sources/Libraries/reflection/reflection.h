@@ -14,6 +14,8 @@
 #include <memory>
 #include <map>
 
+#include <boost/any.hpp>
+
 struct mirror
 {
 	template<class AccessorType, AccessorType accessor_>
@@ -30,8 +32,11 @@ struct mirror
 		AccessorHolder(const std::string& name, std::size_t index) : name(name), index(index) {}
 		virtual ~AccessorHolder() {}
 
+		
 		virtual void get(const Struct& source, void* data, std::size_t dataSize) const = 0;
 		virtual void set(Struct& dest, const void* data, std::size_t dataSize) = 0;
+		virtual boost::any get(Struct& source) const = 0;
+
 		virtual std::unique_ptr<AccessorHolder> clone() const = 0;
 
 		const std::string name;
@@ -43,21 +48,26 @@ struct mirror
 	{
 		AccessorHolderT(const std::string& name, std::size_t index, AccessorType accessor) :AccessorHolder(name, index), accessor(accessor) {}
 
-		virtual void get(const Struct& source, void* data, std::size_t dataSize) const
+		virtual void get(const Struct& source, void* data, std::size_t dataSize) const override
 		{
 			typedef std::remove_const<std::remove_reference<decltype(source.*accessor)>::type>::type ValueType;
 			ENFORCE(dataSize == sizeof(ValueType));
 			*(ValueType*)data = source.*accessor;
 		}
 
-		virtual void set(Struct& dest, const void* data, std::size_t dataSize)
+		virtual boost::any get(Struct& source) const override
+		{
+			return boost::any(&(source.*accessor));
+		}
+
+		virtual void set(Struct& dest, const void* data, std::size_t dataSize) override
 		{
 			typedef std::remove_reference<decltype(dest.*accessor)>::type  ValueType;
 			ENFORCE(dataSize == sizeof(ValueType));
 			dest.*accessor = *(ValueType*)data;
 		}
 
-		virtual std::unique_ptr<AccessorHolder<Struct>> clone() const
+		virtual std::unique_ptr<AccessorHolder<Struct>> clone() const override
 		{
 			return std::unique_ptr<AccessorHolder<Struct>>(new AccessorHolderT(name, index, accessor));
 		}
@@ -168,6 +178,7 @@ struct mirror
 
 		Type& operator=(const Type& source)
 		{
+			typeName = source.typeName;
 			value = source.value;
 
 			accessors.clear();
@@ -183,7 +194,8 @@ struct mirror
 		operator Struct() const { return value; };
 		Type& operator=(const Struct& v) { value = v; return *this; }
 
-		template<class Value> Type& get(const std::size_t& index, Value& output)
+		template<class Value> 
+		Type& get(const std::size_t& index, Value& output)
 		{
 			if (auto getter = accessor(index))
 				getter->get(value, &output, sizeof(output));
@@ -191,7 +203,8 @@ struct mirror
 			return *this;
 		}
 
-		template<class Value> Type& set(const std::size_t& index, const Value& output)
+		template<class Value> 
+		Type& set(std::size_t index, const Value& output)
 		{
 			if (auto setter = accessor(index))
 				setter->set(value, &output, sizeof(output));
@@ -199,13 +212,21 @@ struct mirror
 			return *this;
 		}
 
-		template<class Accessor> Type& add(const std::string& name, Accessor accessor)
+		void member(std::size_t index, Struct& output, boost::any& result)
+		{
+			if (auto a = accessor(index))
+				result = a->get(output);
+		}
+
+		template<class Accessor> 
+		Type& add(const std::string& name, Accessor accessor)
 		{
 			LOG_MSG("define accessor: " << name);
 			accessors.try_emplace(name, new AccessorHolderT<Struct, Accessor>(name, accessors.size(), accessor));
 			return *this;
 		}
 
+		void name(const std::string& n) { typeName = n; }
 		const std::string& name() const { return typeName; }
 		std::size_t size() const { return accessors.size(); }
 
@@ -268,6 +289,7 @@ struct mirror
 	{
 		TypeBuilder(const std::string& name)
 		{
+			ethalon.name(name);
 			runtime::types().try_emplace(name, &ethalon);
 		}
 
@@ -295,7 +317,14 @@ struct mirror
 			builder<Struct>("").property(name, accessor);
 			return Declaration();
 		}
+
+		template<class Accessor>
+		auto operator()(const std::string& name, Accessor accessor)
+		{
+			return property(name, accessor);
+		}
 	};
+
 	template<class Struct>
 	static TypeBuilder<Struct>& builder(const std::string& name)
 	{

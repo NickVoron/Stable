@@ -11,7 +11,7 @@
 
 namespace ObjectParser
 {
-	struct ObjectConverter : public Expressions::UserStructConverter<EntitiesStream>
+	struct ObjectConverter
 	{
 		void convert(const Expressions::Expression& expr, EntitiesStream& client);
 

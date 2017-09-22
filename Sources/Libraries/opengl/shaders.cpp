@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -13,28 +13,166 @@
 
 namespace opengl
 {
-	void ShaderProgram::create()
+	ShaderProgram::~ShaderProgram()
 	{
-		program = glCreateProgram();
-		check();
+		destroy();
 	}
 
-	void ShaderProgram::attach(const ShaderBase& shader)
+	void ShaderProgram::attach(GLenum type, const std::string& source)
 	{
-		glAttachShader(program, shader.shader);
-		check();
+		GLuint shader = glCreateShader(type);
+
+		const char *sourceArray[1] = { source.c_str() };
+		glShaderSource(shader, 1, sourceArray, NULL);
+		glCompileShader(shader);
+
+		GLint compileResult;
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+
+		if (compileResult == 0)
+		{
+			GLint infoLogLength;
+			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+			
+			if (infoLogLength > 1)
+			{
+				std::vector<GLchar> infoLog(infoLogLength);
+				glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), NULL, &infoLog[0]);
+				std::string info = &infoLog[0];
+				LOG_ERROR("shader compilation failed: " << info);
+			}
+			else
+			{
+				LOG_ERROR("shader compilation failed. <Empty log message>");
+			}
+
+			glDeleteShader(shader);
+			shader = 0;
+		}
+
+		if (shader)
+		{
+			glAttachShader(program, shader);
+		}
+
+		glDeleteShader(shader);
 	}
 
-	void ShaderProgram::link()
+	void ShaderProgram::transformFeedback(const std::vector<std::string> &transformFeedbackVaryings, GLenum bufferMode)
+	{
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+
+	GLuint ShaderProgram::link()
 	{
 		glLinkProgram(program);
-		check();
+
+		GLint linkStatus;
+		glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+
+		if (linkStatus == 0)
+		{
+			GLint infoLogLength;
+			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+			
+			if (infoLogLength > 1)
+			{
+				std::vector<GLchar> infoLog(infoLogLength);
+				glGetProgramInfoLog(program, static_cast<GLsizei>(infoLog.size()), nullptr, &infoLog[0]);
+
+				LOG_ERROR("program link failed: " << &infoLog[0]);
+			}
+			else
+			{
+				LOG_ERROR("program link failed. <Empty log message>");
+			}
+
+			glDeleteProgram(program);
+			return 0;
+		}
+
+		return program;
 	}
 
-	void ShaderProgram::set()
+	void ShaderProgram::create()
+	{
+		destroy();
+		if (!program)
+		{
+			program = glCreateProgram();
+		}
+	}
+
+	void ShaderProgram::destroy()
+	{
+		if (program)
+		{
+			glDeleteProgram(program);
+			program = 0;
+		}
+	}
+
+	void ShaderProgram::set() const
 	{
 		glUseProgram(program);
-		check();
+	}
+
+	GLint ShaderProgram::uniform(GLchar* name) const
+	{
+		GLint res = glGetUniformLocation(program, name);
+		opengl::check();
+		return res;
+	}
+
+	GLint ShaderProgram::attrib(GLchar* name) const
+	{
+		return glGetAttribLocation(program, name);
+	}
+
+	
+	
+	
+	void ShaderProgramCompiler::compile(ShaderProgram& program)
+	{
+		program.create();
+
+		for (auto& shader : shaders)
+		{
+			program.attach(shader.first, shader.second);
+		}
+
+		
+		program.link();
+	}
+
+	void ShaderProgramCompiler::attach(GLenum type, const std::string& source)
+	{
+		shaders[type] = source;
+	}
+
+	void ShaderProgramCompiler::transformFeedback(const std::vector<std::string>& varyings, GLenum mode)
+	{
+		transformFeedbackVaryings = varyings;
+		bufferMode = mode;
+	}
+
+	void ShaderProgramCompiler::serialize(serializer& os)
+	{
+		os << shaders << transformFeedbackVaryings << bufferMode;
 	}
 }
 
@@ -46,7 +184,7 @@ namespace opengl
 
 
 
-// Copyright (C) 2012-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

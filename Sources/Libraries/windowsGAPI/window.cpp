@@ -1,4 +1,4 @@
-// Copyright (C) 2013-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -111,12 +111,51 @@ namespace WindowsGAPI
 	
 	
 	
-	
+	void WindowGL::init()
+	{
+		context.init(hdc);
+	}
+
+	void WindowGL::present()
+	{
+		SwapBuffers(hdc);
+	}
+
+	void WindowGL::clearImpl(const ClearBuffersData& params)
+	{
+		wglMakeCurrent(hdc, context.context());
+		
+		if(params.clearColor || params.clearDepth || params.clearStencil)
+		{
+			GLbitfield res = 0;
+
+			if(params.clearColor)		
+			{
+				glClearColor(params.color.x, params.color.y, params.color.z, params.color.w);
+				res |= GL_COLOR_BUFFER_BIT;
+			}
+
+			if(params.clearDepth)		
+			{
+				glClearDepthf(params.depth);
+				res |= GL_DEPTH_BUFFER_BIT;
+			}
+
+			if(params.clearStencil)		
+			{
+				glClearStencil(params.stencil);
+				res |= GL_STENCIL_BUFFER_BIT;
+			}
+
+			glClear(res);
+		}
+	}
+				
 }
 
 
 
-// Copyright (C) 2013-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -9,7 +9,7 @@
 #include "011.spawner.h"
 #include "utils.h"
 #include "utils.h"
-#include "componentLinkModelConfigurator.h"
+
 
 #ifdef ENABLE_TEST
 
@@ -27,7 +27,8 @@ namespace ComponentModelTesting
 		
 		
 		test(worldScopename, "main.objectsSpawner.spawner.prototype.one", 1);
-		ComponentModel::descriptionTest(path.c_str());
+
+		
 	}
 }
 
@@ -35,7 +36,7 @@ namespace ComponentModelTesting
 
 
 
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

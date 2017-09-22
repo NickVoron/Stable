@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2015 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -36,7 +36,7 @@ namespace EditorInfrastructure
 		}
 	}
 
-	void ActionsManager::undo(int steps)
+	void ActionsManager::undo(std::size_t steps)
 	{
 		for (int i = 0; i < steps; ++i)
 		{
@@ -44,7 +44,7 @@ namespace EditorInfrastructure
 		}
 	}
 
-	void ActionsManager::redo(int steps)
+	void ActionsManager::redo(std::size_t steps)
 	{
 		for (int i = 0; i < steps; ++i)
 		{
@@ -62,7 +62,7 @@ namespace EditorInfrastructure
 		return !undoActions.empty();
 	}
 
-	void ActionsManager::description(std::vector<std::string>& names, int& executedActionsCount, int& undoActionsCount) const
+	void ActionsManager::description(std::vector<std::string>& names, std::size_t& executedActionsCount, std::size_t& undoActionsCount) const
 	{
 		executedActionsCount = actions.size();
 		undoActionsCount = undoActions.size();
@@ -78,10 +78,10 @@ namespace EditorInfrastructure
 		}
 	}
 
-	void ActionsManager::step(int s)
+	void ActionsManager::step(std::size_t s)
 	{
-		int executedActionsCount = actions.size();
-		int undoActionsCount = undoActions.size();
+		auto executedActionsCount = actions.size();
+		auto undoActionsCount = undoActions.size();
 
 		if(s > executedActionsCount) redo(s - executedActionsCount);
 		else 
@@ -95,15 +95,15 @@ namespace EditorInfrastructure
 	void undo()	{	ActionsManager::get().undo();	}
 	void redo()	{	ActionsManager::get().redo();	}
 
-	void undo(int steps) { ActionsManager::get().undo(steps); }
-	void redo(int steps) { ActionsManager::get().redo(steps); }
+	void undo(std::size_t steps) { ActionsManager::get().undo(steps); }
+	void redo(std::size_t steps) { ActionsManager::get().redo(steps); }
 
-	void description(std::vector<std::string>& names, int& executedActionsCount, int& undoActionsCount)
+	void description(std::vector<std::string>& names, std::size_t& executedActionsCount, std::size_t& undoActionsCount)
 	{
 		ActionsManager::get().description(names, executedActionsCount, undoActionsCount);
 	}
 
-	void step(int s)
+	void step(std::size_t s)
 	{
 		ActionsManager::get().step(s);
 	}
@@ -113,7 +113,7 @@ namespace EditorInfrastructure
 
 
 
-// Copyright (C) 2012-2015 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

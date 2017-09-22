@@ -12,6 +12,7 @@
 #include "imguiModules/library.include.h"
 #endif
 #include "componentModel/library.include.h"
+#include "image/library.include.h"
 
 namespace ComponentsEditor
 {

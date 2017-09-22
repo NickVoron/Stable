@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -24,7 +24,7 @@ namespace ObjectParser
 		const InstanceDefinitionExpression& prototype;
 		PropertyAssignmentList unrolledParams;
 
-		virtual Expressions::EvaluateState evaluateStep(const Expressions::EvaluatedScope& parentScopename, boost::any* userData = 0) override;
+		virtual Expressions::EvaluateState evaluateStep(const Expressions::EvaluatedScope& parentScopename) override;
 
 		Expressions::EvaluationUnit*  unroll(Unroller* unroller);
 
@@ -36,7 +36,7 @@ namespace ObjectParser
 
 
 
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

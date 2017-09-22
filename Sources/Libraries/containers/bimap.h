@@ -1,4 +1,4 @@
-// Copyright (C) 2015 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2015-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -41,7 +41,7 @@ public:
 	auto find(const T& index) const { return map1.find(index); }
 	auto find(const A& index) const { return map0.find(index); }
 
-	int size() const { return map0.size(); }
+	auto size() const { return map0.size(); }
 
 	void clear() 
 	{ 
@@ -61,7 +61,7 @@ protected:
 
 
 
-// Copyright (C) 2015 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2015-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

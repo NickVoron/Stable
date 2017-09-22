@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -7,7 +7,7 @@
 //
 
 #include "008.objectArray.h"
-#include "componentLinkModelConfigurator.h"
+
 
 #ifdef ENABLE_TEST
 
@@ -25,9 +25,8 @@ namespace ComponentModelTesting
 		ObjectParser::Compiler comp(path.c_str());
 
 		testClassesCount(comp.result, 2);
-		ComponentLinkModelConfigurator cmConfigurator;
 
-		Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), cmConfigurator, "Main", "main");
+		Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), "Main", "main");
 		
 		for (int i = 0; i < 10; ++i)
 		{
@@ -46,7 +45,7 @@ namespace ComponentModelTesting
 
 
 
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

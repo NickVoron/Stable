@@ -15,6 +15,7 @@ namespace ObjectParser
 
 
 	PrototypeHandle::PrototypeHandle(const Expressions::EvaluatedScope& parentScope_, const InstanceDefinitionExpression& prototype_) :
+		EvaluationUnit(parentScope_),
 		parentScope(parentScope_), prototype(prototype_) 
 	{
 		unrolledParams = prototype.params;
@@ -22,7 +23,7 @@ namespace ObjectParser
 
 	
 	
-	Expressions::EvaluateState PrototypeHandle::evaluateStep(const Expressions::EvaluatedScope& parentScopename, boost::any* userData)
+	Expressions::EvaluateState PrototypeHandle::evaluateStep(const Expressions::EvaluatedScope& parentScopename)
 	{
 		EvaluateState evalState = Complete;
 
@@ -30,12 +31,12 @@ namespace ObjectParser
 		{
 			evalState = Expressions::Impossible;  
 
-			unrolledParams.erase(std::remove_if(unrolledParams.begin(), unrolledParams.end(), [this, &parentScopename, &userData, &evalState](auto& param)
+			unrolledParams.erase(std::remove_if(unrolledParams.begin(), unrolledParams.end(), [this, &parentScopename, &evalState](auto& param)
 			{
 				const std::string& name = param->propertyName;
-				if (param->canResolveReverence(parentScopename))
+				if (param->canResolveReference(parentScopename))
 				{
-					EvaluationUnit* evalUnit = param->value->evaluated(parentScopename, userData);
+					EvaluationUnit* evalUnit = param->value->evaluated(parentScopename);
 					add(name, evalUnit, InsertMethod::INSERT);
 					evalState = Reject;	
 

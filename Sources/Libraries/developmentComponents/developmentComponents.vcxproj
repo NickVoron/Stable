@@ -111,6 +111,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="developmentComponents.cpp" />
+    <ClCompile Include="positionLink.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -122,6 +123,7 @@
   <ItemGroup>
     <ClInclude Include="developmentComponents.h" />
     <ClInclude Include="library.include.h" />
+    <ClInclude Include="positionLink.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="visualSwitcher.h" />
   </ItemGroup>

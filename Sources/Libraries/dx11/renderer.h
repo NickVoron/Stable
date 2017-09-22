@@ -75,7 +75,7 @@ public:
 template<class MeshVertex>
 void VerticesRenderer<MeshVertex>::init(const Geometry::VertexStream<MeshVertex>& meshVS)
 {
-	init(&meshVS[0], meshVS.size());
+	init(&meshVS[0], (int)meshVS.size());
 }
 
 template<class MeshVertex>
@@ -91,7 +91,7 @@ void VerticesRenderer<MeshVertex>::init(const MeshVertex* vertices, int vertices
 template<class MeshVertex, class Index>
 void Renderer<MeshVertex, Index>::init(const Geometry::VertexStream<MeshVertex>& meshVS, const Geometry::IndexStream<Index>& meshIS)
 {
-	init(&meshVS[0], meshVS.size(), &meshIS[0], meshIS.size());
+	init(&meshVS[0], (int)meshVS.size(), &meshIS[0], (int) meshIS.size());
 }
 
 template<class MeshVertex, class Index>

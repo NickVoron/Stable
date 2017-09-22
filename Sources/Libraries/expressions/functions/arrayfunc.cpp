@@ -1,4 +1,4 @@
-// Copyright (C) 2014-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -10,6 +10,8 @@
 
 #include "../array.h"
 #include "../property.h"
+
+#include "common/breakpoint.h"
 
 namespace Expressions{
 namespace Functions{
@@ -37,7 +39,7 @@ namespace Functions{
 			exprs[i] = ps;
 		}
 
-		return add<Array>(exprs);
+		return add<Array>(exprs)->evaluated(EvaluationUnit::commonParent);
 	}
 
 	Expression* propertiesArrayMerge(const std::string& resultName, Array* arr0, Array* arr1)
@@ -56,34 +58,73 @@ namespace Functions{
 			}			
 		}
 
-		return add<Array>(exprs);
+		return add<Array>(exprs)->evaluated(EvaluationUnit::commonParent);
 	}
 
-	Expression* first_elements(Array* array, std::size_t count)
+	Expression* first_elements(ArrayContainer* array, std::size_t count)
 	{
-		ConstExprList exprs;
+		auto result = add<ArrayContainer>(EvaluationUnit::commonParent);
 		count = std::max(std::min(count, array->count()), (std::size_t)0);
-		exprs.resize(count);
 		for (std::size_t i = 0; i < count; ++i)
 		{
-			exprs[i] = array->element(i);
+			result->add(array->element(i));
 		}
 
-		return add<Array>(exprs);
+		return result;
+	}
+
+	Expression* select_elements(ArrayContainer* array, ArrayContainer* indices)
+	{
+		auto result = add<ArrayContainer>(EvaluationUnit::commonParent);
+		auto count = indices->count();
+		for (std::size_t i = 0; i < count; ++i)
+		{
+			int index;
+			convertVar(*indices->element(i), index);
+			if (index >= 0 && index < (int) array->count())
+			{
+				result->add(array->element(index));
+			}
+		}
+
+		return result;
+	}
+
+	std::vector<unsigned int> linear_indices(unsigned int count)
+	{
+		std::vector<unsigned int> result(count);
+		for (unsigned int i = 0; i < count; ++i)
+		{			
+			result[i] = i;
+		}
+		return result;
+	}
+
+	int array_test(const std::vector<Expression*>& input)
+	{
+		for (auto expr : input)
+		{
+			LOG_MSG(expr->string());
+		}
+		return 0;
 	}
 
 	void array()
 	{
 		FUNCTIONS::add("setname", &propertiesStructArray);
 		FUNCTIONS::add("merge", &propertiesArrayMerge);
-		FUNCTIONS::add("first_elements", &first_elements);
+
+		BIND_EXPRESSION_FUNCTION(first_elements);
+		BIND_EXPRESSION_FUNCTION(select_elements);
+		BIND_EXPRESSION_FUNCTION(linear_indices);
+		
 	}
 }
 }
 
 
 
-// Copyright (C) 2014-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

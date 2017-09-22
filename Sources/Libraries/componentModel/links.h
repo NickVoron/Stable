@@ -54,22 +54,19 @@ public:
 		return decltype(stl::apply(operation, std::tie(*std::get<ComponentType*>(components)...)))();
 	}
 
-	void debug() const
-	{
-		LOG_EXPRESSION_VALUE(parent && parent->isInList());
 
-		if (parent)
-		{
-			LOG_EXPRESSION_VALUE(parent->getClass().name());
-			stl::for_each(std::tie(std::get<ComponentType*>(components)...), [](auto* component)
-			{
-				if (component)
-				{
-					
-				}				
-			});
-		}
-	}
+
+
+
+
+
+
+
+
+
+
+
+
 
 	template<class Component>
 	Component* component()
@@ -150,7 +147,9 @@ public:
 		return this->size();
 	}
 
-	Entity* parent = nullptr;
+	EntitiesList& parentEntitiesList() { ENFORCE(parent); return parent->getParent(); }
+
+	const Entity* parent = nullptr;
 
 	friend stream::ostream& operator<<(stream::ostream& os, const ComponentLinkList<ComponentType...>& l) { l.save(os); return os; }
 	friend stream::istream& operator>>(stream::istream& is, ComponentLinkList<ComponentType...>& l) { l.load(is); return is; }
@@ -180,9 +179,9 @@ struct LinksDescList : public std::vector<LinkDesc>
 		if (!empty())
 		{
 			links.resize(size());
-			for (unsigned int i = 0; i < size(); ++i)
+			for (std::size_t i = 0; i < size(); ++i)
 			{
-				at(i).flush(links[i], links.parent->getParent());
+				at(i).flush(links[i], links.parentEntitiesList());
 			}
 		}			
 	}
@@ -190,8 +189,8 @@ struct LinksDescList : public std::vector<LinkDesc>
 	friend std::ostream& operator<<(std::ostream& os, const LinksDescList& ldl);
 };
 
-template<class ComponentType>
-ComponentLink<ComponentType>& ToComponentLink(const LinkDesc& link, ComponentLink<ComponentType>& result)
+template<class... ComponentType>
+ComponentLink<ComponentType...>& ToComponentLink(const LinkDesc& link, ComponentLink<ComponentType...>& result)
 {
 	link.flush(result);
 	return result;

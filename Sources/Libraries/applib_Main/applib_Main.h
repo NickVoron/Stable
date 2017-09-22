@@ -91,7 +91,7 @@ int appmain(SetupReturnType (*setup)(SetupParamsType&), int argc, char_t* argv[]
 			setup_params(setup, internalParams, argc, argv);
 
 			modules.init();
-			UnitTestEngine<(iterationsCount > 0) && unitTestsRun>::run(argc, argv);
+			UnitTestEngine<unitTestsRun>::run(argc, argv);
 			modules.process();
 			modules.release();
 		}

@@ -128,8 +128,9 @@ namespace ObjectParser
 %left NOT
 
 
-
-%expect 43
+%glr-parser
+%expect 246 
+%expect-rr 372
 
 %%
 file: 
@@ -350,10 +351,11 @@ proxy_head:
 	  THISS					{ $$ = yylex.gc.newProxy();					}
 	| ITERATOR				{ $$ = yylex.gc.newProxy("iterator");		}
 	| literal				{ $$ = yylex.gc.newProxy($1);				}
+	| exp					{ $$ = yylex.gc.newProxy($1);  }
 	;	
 
 array_path_element:
-	'[' digit ']'	{ $$ = yylex.gc.newProxyArrayPath($2); }
+	'[' exp_list ']'	{ $$ = yylex.gc.newProxyArrayPath(std::unique_ptr<Expressions::ConstExprList>($2)); }
 	;
 
 components_path_element:

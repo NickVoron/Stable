@@ -18,9 +18,9 @@ namespace Expressions
 	public:
 		Function(const std::string& functionName, const ConstExprList& params);
 
-		virtual EvaluationUnit* evaluated(const EvaluatedScope& environment, boost::any* userData = 0) const override;
+		virtual EvaluationUnit* evaluated(const EvaluatedScope& environment) const override;
 		virtual std::string string() const override;
-		virtual std::string typeName() const override { return std::string("function:") + functionName; }
+		virtual std::string typeName() const override { return str::spaced("function:", functionName); }
 		virtual References references() const override { return params.references(); }
 
 		ConstExprList params;

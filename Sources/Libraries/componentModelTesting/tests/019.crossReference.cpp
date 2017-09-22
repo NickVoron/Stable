@@ -47,9 +47,9 @@ CrossReference::CrossReference()
 	ObjectParser::Compiler comp(path.c_str());
 	Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), "Main", "main");
 
-	EntitiesList entities;
-	ComponentModel::descriptionLoad(path, entities).activate(true);
-	entities.execute();
+ 	EntitiesList entities;
+ 	ComponentModel::descriptionLoad(path, entities).activate(true);
+ 	entities.execute();
 }
 
 }

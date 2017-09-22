@@ -35,7 +35,7 @@ namespace Resources
 	}
 
 	template<class Function>
-	void call_line_by_line(const char* fileName, Function func)
+	void call_line_by_line(const char* fileName, Function&& func)
 	{
 		std::ifstream infile(fileName);
 		for (std::string line; std::getline(infile, line);)

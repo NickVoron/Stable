@@ -13,6 +13,7 @@
 #include <boost/any.hpp>
 
 #include "containers/library.include.h"
+#include "reflection/library.include.h"
 
 namespace Expressions
 {
@@ -31,7 +32,7 @@ namespace Expressions
 	
 	struct References: public std::vector<const Reference*>
 	{
-		bool canResolveReverence(const EvaluatedScope& scopename);
+		bool canResolveReference(const EvaluatedScope& scopename);
 	};
 
 	
@@ -63,9 +64,12 @@ namespace Expressions
 
 		
 		virtual std::string string() const { return "unknown Expression"; }
+		virtual std::vector<std::string> fields() const { return std::vector<std::string>(); }
 
 		
 		virtual bool boolean() const { return false; }
+
+		virtual std::unique_ptr<mirror::runtime::Type> reflectedType() const { return nullptr; }
 
 		
 		virtual std::string typeName() const { return "unknown operand type"; }
@@ -74,7 +78,7 @@ namespace Expressions
 
 		
 		
-		virtual EvaluationUnit* evaluated(const EvaluatedScope& parentScopename, boost::any* userData = 0) const = 0;
+		virtual EvaluationUnit* evaluated(const EvaluatedScope& parentScopename) const = 0;
 		virtual References references() const { return References(); }
 	};
 
@@ -82,15 +86,23 @@ namespace Expressions
 	class EvaluationUnit : public Expression
 	{
 	public: 
+		EvaluationUnit(const EvaluatedScope& parent_);
 		virtual References references() const override;
-		virtual EvaluationUnit* evaluated(const EvaluatedScope& parentScopename, boost::any* userData = 0) const override;
+		virtual EvaluationUnit* evaluated(const EvaluatedScope& parentScopename) const override;
 
 		
-		virtual EvaluateState evaluateStep(const EvaluatedScope& parentScopename, boost::any* userData = 0);
+		virtual EvaluateState evaluateStep(const EvaluatedScope& parentScopename);
 
 		
 		virtual const EvaluationUnit* child(const PropertyPath* path) const { return 0; }
 		virtual const EvaluationUnit* child(const ArrayPath* path) const	{ ENFORCE(false); return 0; }
+	
+		static EvaluatedScope commonParent;
+
+	protected:
+		bool isParent(const EvaluatedScope& scope);
+	private:
+		uint64_t parent;
 	};
 
 	
@@ -98,6 +110,12 @@ namespace Expressions
 	template<> static std::string stringize<std::string>(std::string value) { return value; };
 	template<> static std::string stringize<const Expressions::Expression*>(const Expressions::Expression* value) { return value ? value->string() : "#nullptr"; };
 
+	enum TypeSelector
+	{
+		CONSTANT = 1 << 0,
+		CONTAINER = 1 << 1,
+		STRUCTURE = 1 << 2,
+	};
 }
 
 

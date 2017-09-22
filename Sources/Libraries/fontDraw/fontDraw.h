@@ -71,7 +71,7 @@ template<class StrType>
 void FontDriver::print(const StrType& str, const Rect& rect, const Color& c, bool stroked) const
 {
 	FontMaterialEntry material;
-	material.endStrIndex = str::length(str);
+	material.endStrIndex = (int)str::length(str);
 	material.material.color = c;
 
 	print(str, rect, &material, 1, stroked);

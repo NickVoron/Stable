@@ -17,20 +17,21 @@ namespace Expressions{
 	}
 
 
-	EvaluationUnit* Function::evaluated(const EvaluatedScope& environment, boost::any* userData) const
+	EvaluationUnit* Function::evaluated(const EvaluatedScope& environment) const
 	{
 		ConstExprList evaluatedParams;
-		params.evaluate(environment, evaluatedParams, userData);
-			
-		Expression* result =  FUNCTIONS::execute(functionName, evaluatedParams);
+		params.evaluate(environment, evaluatedParams);
 
-		return result->evaluated(EvaluatedScope()); 
-		
+
+		auto result =  FUNCTIONS::execute(functionName, evaluatedParams);
+		auto evaluated = result->cast<EvaluationUnit>();
+		ENFORCE_POINTER(evaluated);
+		return evaluated;
 	}
 
 	std::string Function::string() const
 	{ 
-		return str::stringize("function call: ", functionName, " ", params.string());
+		return str::spaced("function call:", functionName, params.string());
 	}	
 }
 

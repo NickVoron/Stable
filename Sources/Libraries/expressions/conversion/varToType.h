@@ -140,51 +140,55 @@ namespace Expressions
 	}
 
 	template<class ConstType, class TargetType>
-	bool checkedConvert(const Expression& expr, TargetType& value, bool& converted)
+	struct CheckedConverter
 	{
-		if (!converted)
+		static bool convert(const Expression& expr, TargetType& value)
 		{
 			if (auto res = expr.cast<Const<ConstType>>())
 			{
 				safe_assign(res->value, value);
-				converted = true;
+				return true;
 			}
+			return false;
+		}
+	};
+
+	template<class ConstType>
+	struct CheckedConverter<ConstType, boost::any>
+	{
+		static bool convert(const Expression& expr, boost::any& value)
+		{
+			try
+			{
+				if (auto val = boost::any_cast<ConstType*>(value))
+				{
+					convertVar(expr, *val);
+				}
+				return true;
+			}
+			catch (const std::exception&)
+			{
+
+			}
+
+			return false;
+		}
+	};
+	
+	template<class ConstType, class TargetType>
+	bool checkedConvert(const Expression& expr, TargetType& value, bool& converted)
+	{
+		if (!converted)
+		{
+			converted = CheckedConverter<ConstType, TargetType>::convert(expr, value);
 		}
 		
 		return converted;
 	}
 
-
-	template<class US>
-	struct UserStructConverter
-	{
-		typedef US UserStruct;
-		virtual bool validate(const Expression& expr) const { return true; }
-		virtual void convert(const Expression& expr, UserStruct& client) = 0;
-	};
-
-	template<class US>
-	struct UserStructConverter_NameCheck : public UserStructConverter<US>
-	{
-		virtual const char* structName() const = 0;
-		virtual bool validate(const Expression& expr) const
-		{
-			if (auto structDef = expr.cast<StructBase>())
-			{
-				return structDef->typeName() == structName();
-			}
-			
-			return false;
-		}
-	};
-
 	
-	
-	
-	class UserStructsConvertersLib : public TemplateCallDispatcher<UserStructConverter>{};
-
-	
-	template<class T, bool isExpression = boost::is_base_of<Expression, typename std::remove_pointer<T>::type>::value> struct ConverterExpr;
+	template<class T, bool isExpression = boost::is_base_of<Expression, typename std::remove_pointer<T>::type>::value> 
+	struct ConverterExpr;
 
 	template<class T>
 	struct ConverterExpr<T, true>
@@ -213,7 +217,8 @@ namespace Expressions
 		}
 	};
 
-	template<class T, bool isPointer = std::is_pointer<T>::value> struct ConverterPointer;
+	template<class T, bool isPointer = std::is_pointer<T>::value> 
+	struct ConverterPointer;
 
 	template<class T>
 	struct ConverterPointer<T, true>
@@ -224,40 +229,43 @@ namespace Expressions
 		}
 	};
 
-	template<class T> 
-	void RegisterExpressionConverter();
-
 	template<class T>
 	struct ConverterPointer<T, false>
 	{
 		static bool convert(const Expression& expr, T& value)
 		{
-			RegisterExpressionConverter<T>();
-			UserStructConverter<T>* conv = UserStructsConvertersLib::ptr<T>();
-			ENFORCE(conv);
-			if (conv)
-			{
-				bool valid = conv->validate(expr);
-				if (valid)
-				{
-					conv->convert(expr, value);
-				}
-				else
-				{
-					LOG_ERROR("can't convert expression: " << expr.string() << " to type: " <<  typeid(T).name());
-				}
+			auto type = mirror::type(value);
 
-				return valid;
-			}
-			else
+			
+			if (auto structure = expr.cast<Struct>())
 			{
-				LOG_ERROR("converter for type: " << typeid(T).name() << " not registered");
-			}
-
-			return false;
+				if (structure->typeName() == type.name()) 
+				{
+					auto& params = structure->params;
+					if (!params.empty())
+					{
+						if (params.size() == 1)
+						{
+							if (auto exprtype = params[0]->reflectedType())
+							{
+								exprtype->get(value);
+							}
+						}
+						else if (type.size() == params.size()) 
+						{
+							for (std::size_t i = 0; i < params.size(); ++i)
+							{
+								boost::any ref;
+								type.member(i, value, ref);
+								convertVar(*params[i], ref);
+							}							
+						}
+					}
+				}							
+			}			
+			return true;
 		}
 	};
-
 	
 	template<class V, class... T>
 	struct ChainConverter
@@ -286,7 +294,8 @@ namespace Expressions
 		return ChainConverter<V, T...>::convert(expr, value);
 	}
 	
-	template<class T, bool isAtomic = (Variant::IsAtomicType<T>::value && !std::is_pointer<T>::value)> struct Converter;
+	template<class T, bool isAtomic = (Variant::IsAtomicType<T>::value && !std::is_pointer<T>::value)> 
+	struct Converter;
 
 	template<class T, bool isEnum = std::is_enum<typename std::decay<T>::type>::value>
 	struct EnumSelector;
@@ -350,6 +359,15 @@ namespace Expressions
 		static bool convert(const Expression& expr, T& value)
 		{
 			return ConverterPointer<T>::convert(expr, value);
+		}
+	};
+
+	template<>
+	struct Converter<boost::any, false>
+	{
+		static bool convert(const Expression& expr, boost::any& value)
+		{
+			return EnumSelector<boost::any>::convert(expr, value);
 		}
 	};
 

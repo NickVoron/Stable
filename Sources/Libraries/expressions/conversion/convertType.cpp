@@ -12,20 +12,7 @@
 
 
 namespace Expressions
-{
-	Expression* convertType(Expression* val)		{ return  val; }
-
-	Expression* convertType(const Vector2& value)	{ return Expressions::template add<Struct>("Vector2", ConstExprList(convertType(value.x), convertType(value.y)));	}
-	Expression* convertType(const Vector3& value)	{ return Expressions::template add<Struct>("Vector3", ConstExprList(convertType(value.x), convertType(value.y), convertType(value.z)));	}
-	Expression* convertType(const Vector4& value)	{ return Expressions::template add<Struct>("Vector4", ConstExprList(convertType(value.x), convertType(value.y), convertType(value.z), convertType(value.w)));	}
-
-	Expression* convertType(const nm::index2& value)	{ return Expressions::template add<Struct>("Index2", ConstExprList(convertType(value.x), convertType(value.y))); }
-	Expression* convertType(const nm::index3& value)	{ return Expressions::template add<Struct>("Index3", ConstExprList(convertType(value.x), convertType(value.y), convertType(value.z))); }
-
-	Expression* convertType(const UserStruct::Vector3List& val) { return convertArray(val); }
-	Expression* convertType(const UserStruct::Index2List& val)	{ return convertArray(val); }
-	Expression* convertType(const UserStruct::StringList& val) { return convertArray(val); }
-
+{			
 }
 
 

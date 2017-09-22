@@ -12,12 +12,12 @@
 
 namespace ObjectParser
 {
-	struct ComponentsRefConverter : public Expressions::UserStructConverter<LinksDescList>
+	struct ComponentsRefConverter
 	{
 		void convert(const Expressions::Expression& expr, LinksDescList& client);
 	};
 
-	struct ComponentRefConverter : public Expressions::UserStructConverter<LinkDesc>
+	struct ComponentRefConverter
 	{
 		void convert(const Expressions::Expression& expr, LinkDesc& client);
 	};

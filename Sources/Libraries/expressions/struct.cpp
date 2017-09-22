@@ -30,10 +30,10 @@ namespace Expressions{
 		return result(str::delimeter(), ")");
 	}
 
-	EvaluationUnit* Struct::evaluated(const EvaluatedScope& environment, boost::any* userData) const
+	EvaluationUnit* Struct::evaluated(const EvaluatedScope& environment) const
 	{
 		auto evaluatedValue = Expressions::add<Struct>(typeName(), ConstExprList());
-		params.evaluate(environment, evaluatedValue->params, userData);
+		params.evaluate(environment, evaluatedValue->params);
 		
 		return evaluatedValue;
 	}

@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -22,7 +22,7 @@ Expressions::References NoValueExpression::references() const
 	return Expressions::References();
 }
 
-Expressions::EvaluationUnit* NoValueExpression::evaluated(const Expressions::EvaluatedScope& environment, boost::any* userData) const
+Expressions::EvaluationUnit* NoValueExpression::evaluated(const Expressions::EvaluatedScope& environment) const
 {
 	return Expressions::add<NoValueExpression>();
 }
@@ -33,7 +33,7 @@ Expressions::EvaluationUnit* NoValueExpression::evaluated(const Expressions::Eva
 
 
 
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

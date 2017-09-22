@@ -22,19 +22,33 @@ Reference::Reference(PathElement* element)
 	addPathElement(element);
 }
 
+Reference::Reference(Expression* head_):
+	head(head_)
+{
+
+}
+
 void Reference::addPathElement(PathElement* element)
 {
-	path.emplace_back(element);
+	path.add(element);
 }
 
-EvaluationUnit* Reference::evaluated(const EvaluatedScope& environment, boost::any* userData) const
+EvaluationUnit* Reference::evaluated(const EvaluatedScope& environment) const
 {
-	return path.evaluate(environment);
+	return path.evaluate(environment, head);
 }
 
-bool Reference::canResolveReverence(const EvaluatedScope& rootEnvironment) const
+bool Reference::canResolveReference(const EvaluatedScope& rootEnvironment) const
 {
-	return path.canResolveReverence(rootEnvironment);
+	if(head)
+	{
+		References refs = head->references();
+		return refs.canResolveReference(rootEnvironment);
+	}
+	
+	ENFORCE(!head);
+
+	return path.canResolveReference(rootEnvironment);
 }
 
 std::string Reference::string() const
@@ -63,12 +77,21 @@ References Reference::references() const
 }
 
 
-EvaluationUnit* Reference::Path::evaluate(const EvaluatedScope& rootEnvironment, boost::any* userData) const
+
+void Reference::Path::add(PathElement* element)
 {
-	ENFORCE_MSG(!rootEnvironment.empty(), __FUNCTION__" empty environment.");
-	
+	emplace_back(element);
+	path_string = string();
+}
+
+EvaluationUnit* Reference::Path::evaluate(const EvaluatedScope& rootEnvironment, Expression* head) const
+{
 	const EvaluationUnit* result = 0;
 	const EvaluationUnit* reference = 0;
+	if (head)
+	{
+		reference = head->evaluated(rootEnvironment);
+	}
 	
 	for (auto& element : *this)
 	{
@@ -83,7 +106,7 @@ EvaluationUnit* Reference::Path::evaluate(const EvaluatedScope& rootEnvironment,
 	return const_cast<EvaluationUnit*>(reference); 
 }
 
-bool Reference::Path::canResolveReverence(const EvaluatedScope& rootEnvironment) const
+bool Reference::Path::canResolveReference(const EvaluatedScope& rootEnvironment) const
 {
 	const EvaluationUnit* result = 0;
 	const EvaluationUnit* reference = 0;
@@ -102,10 +125,25 @@ bool Reference::Path::canResolveReverence(const EvaluatedScope& rootEnvironment)
 
 std::string Reference::Path::string() const
 {
-	str::stringize result(str::delimeter("."));
+	str::stringize result;
+	bool first = true;
 	for (auto& element : *this)
 	{
-		result << element->string();
+		if (auto arrayPath = dynamic_cast<ArrayPath*>(element.get()))
+		{
+			result(str::nodelim(), "");
+		}
+		else
+		{
+			if (!first)
+			{
+				result(".");
+			}
+		}
+
+		result(element->string());
+
+		first = false;
 	}
 
 	return result;
@@ -161,27 +199,13 @@ EvaluationUnit* PropertyPath::evaluate(const EvaluationUnit* previous, const Eva
 	return res;
 }
 
-std::unique_ptr<Reference::PathElement> PropertyPath::copy() const
-{
-	return std::unique_ptr<Reference::PathElement>(new PropertyPath(name));
-}
-
 
 EvaluationUnit* ArrayPath::evaluate(const EvaluationUnit* input, const EvaluatedScope& context) const
 {
 	EvaluationUnit* result = const_cast<EvaluationUnit*>(input->child(this));
-	ENFORCE_MSG(result, input->string() + " is not an array");
-	
+	ENFORCE_MSG(result, input->string() + " is not an array");	
 	return result;
 }
-
-
-std::unique_ptr<Reference::PathElement> ArrayPath::copy() const
-{
-	return std::unique_ptr<Reference::PathElement>(new ArrayPath(index));
-}
-
-
 
 }//
 

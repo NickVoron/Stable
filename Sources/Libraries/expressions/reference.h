@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -8,6 +8,7 @@
 
 #pragma once
 #include "expression.h"
+#include "constExprList.h"
 
 
 namespace Expressions
@@ -30,45 +31,45 @@ public:
 		virtual ~PathElement() {}
 
 		virtual EvaluationUnit* evaluate(const EvaluationUnit* input, const EvaluatedScope& context) const = 0;
-		virtual std::unique_ptr<PathElement> copy() const = 0;
 		virtual std::string string() const { return ""; }
 	};
 		
 	
 	struct Path : std::vector<std::unique_ptr<PathElement>>
 	{
-		EvaluationUnit* evaluate(const EvaluatedScope& environment, boost::any* userData = 0) const;
-		bool canResolveReverence(const EvaluatedScope& rootEnvironment) const;
+		void add(PathElement* element);
+		EvaluationUnit* evaluate(const EvaluatedScope& environment, Expression* head) const;
+		bool canResolveReference(const EvaluatedScope& rootEnvironment) const;
 		std::string string() const;
-
 		std::string root() const; 
+
+		std::string path_string;
 	};
 
 	
 	Reference() {}
 	Reference(PathElement* element);
+	Reference(Expression* head);
 
 	void addPathElement(PathElement* element);
 
 	const Path& getPath() const { return path; } 
 	virtual std::string string() const override;
-	virtual EvaluationUnit* evaluated(const EvaluatedScope& environment, boost::any* userData = 0) const override;
+	virtual EvaluationUnit* evaluated(const EvaluatedScope& environment) const override;
 
 	virtual References references() const override;
-	bool canResolveReverence(const EvaluatedScope& rootEnvironment) const;
-
-	bool extraFlag;
+	bool canResolveReference(const EvaluatedScope& rootEnvironment) const;
 
 protected:
+	Expression* head = nullptr;
 	Path path;
 };
 
 
-struct PropertyPath : public Expressions::Reference::PathElement
+struct PropertyPath : public Reference::PathElement
 {
 	PropertyPath(const std::string& name_) : name(name_){}
 	virtual EvaluationUnit* evaluate(const EvaluationUnit* previous, const EvaluatedScope& context) const override;
-	virtual std::unique_ptr<PathElement> copy() const override;
 	virtual std::string string() const override { return name; }
 
 	const std::string name;
@@ -79,22 +80,19 @@ struct PropertyPath : public Expressions::Reference::PathElement
 
 struct ArrayPath : public Reference::PathElement
 {
-	ArrayPath(int index_) : index(index_){}
-	const size_t index;
+	ArrayPath(const ConstExprList& params_) : params(params_){}
+	ConstExprList params;
 
 	virtual EvaluationUnit* evaluate(const EvaluationUnit* input, const EvaluatedScope& context) const override;
-	virtual std::unique_ptr<PathElement> copy() const override;
-	virtual std::string string() const override { return "["+std::to_string(index)+"]"; }
+	virtual std::string string() const override { return str::stringize("[", params.naked_string(), "]"); }
 };
-
-
 
 }
 
 
 
 
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

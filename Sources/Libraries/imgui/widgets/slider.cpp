@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -63,23 +63,23 @@ namespace
 
 	const char* selectFormat(float minVal, float maxVal, int inputFieldLen, Resources::Font* font)
 	{
-		static const int formatsCount = 5;
+		static const std::size_t formatsCount = 5;
 		static const char* formats[formatsCount] = { "%-02.4f", "%-02.3f", "%-02.2f", "%-02.1f", "%-02.0f" };
 
 		char buf[32]; 
 		
 		int cmw = charMaxWidth(font);
-		int rlen = 1000000;
-		int ri = 0;
-		for(int i = 0; i < formatsCount; ++i)
+		std::size_t rlen = 1000000;
+		std::size_t ri = 0;
+		for(std::size_t i = 0; i < formatsCount; ++i)
 		{
 			sprintf(buf, formats[i], minVal);
-			int minLen = strlen(buf);
+			auto minLen = strlen(buf);
 
 			sprintf(buf, formats[i], maxVal);
-			int maxLen = strlen(buf);
+			auto maxLen = strlen(buf);
 
-			int len = std::max(minLen, maxLen) * cmw;
+			auto len = std::max(minLen, maxLen) * cmw;
 
 			if(len <= inputFieldLen)
 				return formats[i];
@@ -267,7 +267,7 @@ float slider_angle(const char* caption, float& val)
 
 
 
-// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

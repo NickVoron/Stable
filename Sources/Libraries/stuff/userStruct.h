@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -17,9 +17,9 @@
 		
 namespace UserStruct
 {
-	struct Vector3List :	public std::vector<Vector3>{};
+	typedef  std::vector<Vector3> Vector3List;
+	typedef  std::vector<std::string> StringList;
 	struct Index2List :		public std::vector<nm::index2>{};
-	struct StringList :		public std::vector<std::string>{};
 	struct IntList :		public std::vector<int>{};
 	struct FloatList :		public std::vector<float>{};
 
@@ -44,28 +44,22 @@ namespace UserStruct
 	template<class T> stream::ostream& stream_out(stream::ostream& os, const std::vector<T>& list)	{ return os << list; }
 	template<class T> stream::istream& stream_in(stream::istream& is, std::vector<T>& list)			{ return is >> list; }
 
-	inline std::ostream& operator<<(std::ostream& os, const Vector3List& list)	{ return streamOut(os, list); }
 	inline std::ostream& operator<<(std::ostream& os, const Index2List& list)	{ return streamOut(os, list); }
-	inline std::ostream& operator<<(std::ostream& os, const StringList& list)	{ return streamOut(os, list); }
 	inline std::ostream& operator<<(std::ostream& os, const IntList& list)		{ return streamOut(os, list); }
 	inline std::ostream& operator<<(std::ostream& os, const FloatList& list)	{ return streamOut(os, list); }
 
-	inline stream::ostream& operator<<(stream::ostream& os, const Vector3List& list)	{ return stream_out(os, list); }
 	inline stream::ostream& operator<<(stream::ostream& os, const Index2List& list)		{ return stream_out(os, list); }
-	inline stream::ostream& operator<<(stream::ostream& os, const StringList& list)		{ return stream_out(os, list); }
 	inline stream::ostream& operator<<(stream::ostream& os, const IntList& list)		{ return stream_out(os, list); }
 	inline stream::ostream& operator<<(stream::ostream& os, const FloatList& list)		{ return stream_out(os, list); }
 
-	inline stream::istream& operator>>(stream::istream& is, Vector3List& list)	{ return stream_in(is, list); }
 	inline stream::istream& operator>>(stream::istream& is, Index2List& list)		{ return stream_in(is, list); }
-	inline stream::istream& operator>>(stream::istream& is, StringList& list)		{ return stream_in(is, list); }
 	inline stream::istream& operator>>(stream::istream& is, IntList& list)		{ return stream_in(is, list); }
 	inline stream::istream& operator>>(stream::istream& is, FloatList& list)		{ return stream_in(is, list); }
 }
 
 
 
-// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

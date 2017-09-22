@@ -31,13 +31,14 @@ namespace Expressions
 		IGNORE_IF_EXIST
 	};
 
+	uint64_t newid();
 
 	template<typename ExpressionType>
 	class ScopeNames: public std::map<std::string, ExpressionType*>
 	{
-	public:
-		ScopeNames():scopeName("unnamed") {};
-		ScopeNames(const std::string& scopeName_) : scopeName(scopeName_){}
+	public:		
+		ScopeNames() :scopeName("unnamed") {};
+		ScopeNames(const std::string& scopeName_) : scopeName(scopeName_) {}
 		~ScopeNames() {}
 
 		void add(const std::string& name, ExpressionType* expr, InsertMethod method, bool classMember = false);
@@ -49,16 +50,34 @@ namespace Expressions
 
 		void remove(const std::string& name);
 
-		std::string scopeName;		
+		uint64_t id = newid();
 
-		void setParent(const ScopeNames<ExpressionType>* parent_) { parent = parent_; }
+		std::string scopeName;		
+		boost::any userData;
+
+		void setParent(const ScopeNames<ExpressionType>* parent_) 
+		{ 
+			parent = parent_; 
+			userData = parent->userData;
+		}
+
 		bool isClassMember(const ExpressionType* expr) const { return classMembers.count(expr); }
+
+		std::vector<std::string> fields() const
+		{
+			std::vector<std::string> result;
+			for (auto& member : *this)
+			{
+				result.push_back(member.first);
+			}
+			return result;
+		}
 
 	protected:
 		std::set<const ExpressionType*> classMembers;
 
 	private:
-		const ScopeNames<ExpressionType>* parent = 0;
+		const ScopeNames* parent = 0;
 	};
 
 	template<typename ExpressionType>

@@ -93,6 +93,9 @@ bool Streamer::active()
 
 void Streamer::add(LoaderBase* loader)
 {
+	loader->load();
+	return;
+
 	if (threads)
 	{
 		threads->queries.emplace(loader);

@@ -9,8 +9,8 @@
 
 #pragma once
 #define _CRT_SECURE_NO_DEPRECATE 1 
-#define ENABLE_OPENGL 0
-#define ENABLE_OPENGL_ES 1
+#define ENABLE_OPENGL 1
+#define ENABLE_OPENGL_ES 0
 
 #ifdef _DEBUG
 						  

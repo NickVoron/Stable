@@ -8,6 +8,7 @@
 
 #include "constExprList.h"
 #include "expression.h"
+#include "reference.h"
 
 namespace Expressions
 {
@@ -30,24 +31,48 @@ namespace Expressions
 		}
 	}	
 
-	void ConstExprList::evaluate(const EvaluatedScope& environment, ConstExprList& result, boost::any* userData) const
+	void ConstExprList::evaluate(const EvaluatedScope& environment, ConstExprList& result) const
 	{
+		
+		std::set<EvaluationUnit*> members;
+
 		result.resize(size());
-		for (unsigned int i = 0; i < size(); ++i)
+		for (std::size_t i = 0; i < size(); ++i)
 		{
-			result[i] = (*this)[i]->evaluated(environment, userData);
+			const Expression* param = at(i);
+			EvaluationUnit* paramUnit = param->evaluated(environment);
+			result[i] = paramUnit;
+			if (!param->cast<Reference>())
+			{
+				members.emplace(paramUnit);
+			}
+		}
+
+		EvaluateState evalState = Reject;
+		while (evalState != Complete)
+		{
+			evalState = Complete;
+			for(auto& paramUnit: members)
+			{
+				evalState = paramUnit->evaluateStep(environment);
+			}
+
+			ENFORCE(evalState != Impossible);
 		}
 	}
 
 	std::string ConstExprList::string() const
 	{
-		str::stringize result("(", str::comma());
-		for (const Expression* expr: *this)
+		return str::stringize("(", str::comma(), naked_string(), str::nodelim(), ")");
+	}
+
+	std::string ConstExprList::naked_string() const
+	{
+		str::stringize result;
+		for (const Expression* expr : *this)
 		{
 			result(stringize(expr));
 		}
-		result(str::nodelim(), ")");
-
 		return result;
 	}
 
@@ -63,27 +88,27 @@ namespace Expressions
 		return refs;
 	}
 
-	
-	EvalUtinList::EvalUtinList(const EvalUtinList& exprList)
-	{
-		reserve(exprList.size());
-		for (auto expr : exprList)
-		{
-			push_back(expr);
-		}
-	}
 
-	std::string EvalUtinList::string() const
+EvalUnitList::EvalUnitList(const EvalUnitList& exprList)
+{
+	reserve(exprList.size());
+	for (auto expr : exprList)
 	{
-		str::stringize result("(", str::comma());
-		for (const Expression* expr : *this)
-		{
-			result(stringize(expr));
-		}
-		result(str::nodelim(), ")");
-
-		return result;
+		push_back(expr);
 	}
+}
+
+std::string EvalUnitList::string() const
+{
+	str::stringize result("(", str::comma());
+	for (const Expression* expr : *this)
+	{
+		result(stringize(expr));
+	}
+	result(str::nodelim(), ")");
+
+	return result;
+}
 
 
 }

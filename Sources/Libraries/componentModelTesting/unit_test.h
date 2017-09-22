@@ -14,26 +14,29 @@
 TEST_SUITE(ComponentModelUnitTest)
 
 TEST_CASE(RootDirSetter) { Base::FileUtils::setModuleDirAsRoot(); }
-TEST_CASE(ComponentAndProperties) { ComponentModelTesting::ComponentAndProperties(); }
-TEST_CASE(ComponentLink) { ComponentModelTesting::ComponentLink(); }
-TEST_CASE(ComponentAsParameter) { ComponentModelTesting::ComponentAsParameter(); }
-TEST_CASE(FunctionCall) { ComponentModelTesting::FunctionCall(); }
-TEST_CASE(CrossReference) { ComponentModelTesting::CrossReference(); }
-TEST_CASE(DataArray) { ComponentModelTesting::DataArray(); }
-TEST_CASE(DataStruct) { ComponentModelTesting::DataStruct(); }
-TEST_CASE(ComplexData) { ComponentModelTesting::ComplexData(); }
-TEST_CASE(ObjectArray) { ComponentModelTesting::ObjectArray(); }
-TEST_CASE(NestedObject) { ComponentModelTesting::NestedObject(); }
-TEST_CASE(References) { ComponentModelTesting::References(); }
-TEST_CASE(CirclePoints) { ComponentModelTesting::CirclePoints(); }
-TEST_CASE(Spawner) { ComponentModelTesting::Spawner(); }
-TEST_CASE(StaticTypization) { ComponentModelTesting::StaticTypization(); }
-TEST_CASE(ComponentsReordering) { ComponentModelTesting::ComponentsReordering(); }
-TEST_CASE(NoNamedComponents) { ComponentModelTesting::NoNamedComponents(); }
-TEST_CASE(NestedSpawners) { ComponentModelTesting::NestedSpawners(); }
-TEST_CASE(CyclicSpawners) { ComponentModelTesting::CyclicSpawners(); }
-TEST_CASE(ConfigurableSpawners) { ComponentModelTesting::ConfigurableSpawners(); }
-TEST_CASE(ObjectArrayEmbeddedScopename) { ComponentModelTesting::ObjectArrayEmbeddedScopename(); }
+TEST_CASE(ExpressionsConversion) { ComponentModelTesting::ExpressionsConversion(); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 TEST_SUITE_END();
 

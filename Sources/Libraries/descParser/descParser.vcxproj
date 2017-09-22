@@ -89,8 +89,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>generate.bat</Command>
     </PreBuildEvent>
     <ClCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -98,8 +97,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>generate.bat</Command>
     </PreBuildEvent>
     <ClCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -107,8 +105,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>generate.bat</Command>
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Full</Optimization>
@@ -117,8 +114,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>generate.bat</Command>
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Full</Optimization>
@@ -152,8 +148,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="unroll\componentHandle.cpp" />
-    <ClCompile Include="unroll\componentModelConfigurator.cpp" />
-    <ClCompile Include="unroll\debugConfigurator.cpp" />
     <ClCompile Include="unroll\instanceHandle.cpp" />
     <ClCompile Include="unroll\prototypeHandle.cpp" />
     <ClCompile Include="unroll\unroller.cpp" />
@@ -180,8 +174,6 @@
     <ClInclude Include="classDescEtc\expressions\constantProperty.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="unroll\componentHandle.h" />
-    <ClInclude Include="unroll\componentModelConfigurator.h" />
-    <ClInclude Include="unroll\debugConfigurator.h" />
     <ClInclude Include="unroll\instanceHandle.h" />
     <ClInclude Include="unroll\prototypeHandle.h" />
     <ClInclude Include="unroll\unroller.h" />

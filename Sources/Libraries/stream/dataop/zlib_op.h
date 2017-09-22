@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -32,7 +32,7 @@ namespace dataop
 			if(d.len)
 			{
 				out.len = OUTPUT_SIZE;
-				int res = compress2( (Bytef*)out.data, (uLongf *)&out.len, (const Bytef*)input.data, input.len, compressionLevel);
+				int res = compress2( (Bytef*)out.data, (uLongf *)&out.len, (const Bytef*)input.data, static_cast<uLong>(input.len), compressionLevel);
 				if(res!=Z_OK) operationError<compression_error>("zlib compression error");
 			}
 
@@ -54,7 +54,9 @@ namespace dataop
 			
 			if(out.len)
 			{
-				auto res = uncompress((Bytef*)out.data, (uLongf *)&out.len, (const Bytef*)input.data, input.len);
+				uLongf outlen = static_cast<decltype(outlen)>(out.len);
+				auto res = uncompress((Bytef*)out.data, (uLongf*)&outlen, (const Bytef*)input.data, static_cast<uLong>(input.len));
+				out.len = static_cast<decltype(out.len)>(outlen);
 				if(res!=Z_OK) operationError<decompression_error>("zlib decompression error");
 			}
 
@@ -75,7 +77,7 @@ namespace dataop
 
 
 
-// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

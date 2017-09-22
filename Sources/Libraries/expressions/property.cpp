@@ -44,7 +44,7 @@ PropertiesStruct::PropertiesStruct(const std::string& typeName) : StructBase(typ
 	
 }
 
-EvaluationUnit* PropertiesStruct::evaluated(const EvaluatedScope& environment, boost::any* userData) const
+EvaluationUnit* PropertiesStruct::evaluated(const EvaluatedScope& environment) const
 {
 	EvalPropertiesStruct* evalStruct = Expressions::add<EvalPropertiesStruct>(structType);
 	for (auto& iter: *this)
@@ -106,7 +106,7 @@ std::string EvalPropertiesStruct::string() const
 	return typeName();
 }
 
-EvaluateState EvalPropertiesStruct::evaluateStep(const Expressions::EvaluatedScope& parentScopename, boost::any* userData)
+EvaluateState EvalPropertiesStruct::evaluateStep(const Expressions::EvaluatedScope& parentScopename)
 {
 	EvaluateState evalState = Complete;
 
@@ -120,9 +120,9 @@ EvaluateState EvalPropertiesStruct::evaluateStep(const Expressions::EvaluatedSco
 			const Expression* expr = iter->second;
 
 			References refs = expr->references();
-			if (refs.canResolveReverence(parentScopename))
+			if (refs.canResolveReference(parentScopename))
 			{
-				EvaluationUnit* evalUnit = expr->evaluated(parentScopename, userData);
+				EvaluationUnit* evalUnit = expr->evaluated(parentScopename);
 				add(name, evalUnit);
 				evalState = Reject;	
 
@@ -139,7 +139,7 @@ EvaluateState EvalPropertiesStruct::evaluateStep(const Expressions::EvaluatedSco
 	{
 		EvaluationUnit* unit = iter.second;
 
-		EvaluateState unitState = const_cast<EvaluationUnit*>(unit)->evaluateStep(parentScopename, userData);
+		EvaluateState unitState = const_cast<EvaluationUnit*>(unit)->evaluateStep(parentScopename);
 		evalState = merge(evalState, unitState);
 	}
 
@@ -151,6 +151,16 @@ const EvaluationUnit* EvalPropertiesStruct::child(const PropertyPath* path) cons
 {
 	const EvaluationUnit* expr = get(path->name);
 	return expr;
+}
+
+std::vector<std::string> EvalPropertiesStruct::fields() const
+{
+	std::vector<std::string> result;
+	for (auto& member : *this)
+	{
+		result.push_back(member.first);
+	}
+	return result;
 }
 
 }

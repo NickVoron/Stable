@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -56,16 +56,13 @@ namespace ComponentModelTesting
 	
 	Expressions::Expression* convertType(const SubObjectData& value)
 	{
-		Expressions::PropertiesStruct* data = Expressions::add<Expressions::PropertiesStruct>("SubObjectData");
-		data->add("index", Expressions::convertType(value.index));
-		data->add("type", Expressions::convertType(value.type));
+		Expressions::EvalPropertiesStruct* data = Expressions::add<Expressions::EvalPropertiesStruct>("SubObjectData");
+		data->add("index", Expressions::convertType(value.index)->cast<Expressions::EvaluationUnit>());
+		data->add("type", Expressions::convertType(value.type)->cast<Expressions::EvaluationUnit>());
 
 		return data;
 	}
-	Expressions::Expression* convertType(const SubObjectsList& value)
-	{
-		return Expressions::convertArray(value);
-	}
+
 
 	
 	
@@ -87,12 +84,6 @@ namespace ComponentModelTesting
 		return is;
 	}
 
-	void SubObjectDataConverter::convert(const Expressions::Expression& expr, SubObjectsList& client)
-	{
-		INCOMPLETE;
-		
-	}
-
 	
 	std::ostream& operator<<(std::ostream& os, const ObjectData& data)
 	{
@@ -112,29 +103,19 @@ namespace ComponentModelTesting
 	
 	Expressions::Expression* convertType(const ObjectData& value)
 	{
-		Expressions::PropertiesStruct* data = Expressions::add<Expressions::PropertiesStruct>("ObjectData");
+		Expressions::EvalPropertiesStruct* data = Expressions::add<Expressions::EvalPropertiesStruct>("ObjectData");
 		 
-		data->add("index", Expressions::convertType(value.index));
-		data->add("type", Expressions::convertType(value.type));
-		data->add("subs", convertType(value.subs));
+		data->add("index", Expressions::convertType(value.index)->cast<Expressions::EvaluationUnit>());
+		data->add("type", Expressions::convertType(value.type)->cast<Expressions::EvaluationUnit>());
+		data->add("subs", Expressions::convertType(value.subs)->cast<Expressions::EvaluationUnit>());
 		return data;
-	}
-
-	Expressions::Expression* convertType(const ObjectsList& value)
-	{
-		return Expressions::convertArray(value);;
-	}
-
-	void ObjectDataConverter::convert(const Expressions::Expression& expr, SubObjectsList& client)
-	{
-		INCOMPLETE;
 	}
 
 }//
 
 
 
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

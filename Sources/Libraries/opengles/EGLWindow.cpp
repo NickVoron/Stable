@@ -8,6 +8,8 @@
 
 #include "EGLWindow.h"
 
+#if ENABLE_OPENGL_ES
+
 EGLPlatformParameters::EGLPlatformParameters()
     : renderer(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE),
       majorVersion(EGL_DONT_CARE),
@@ -297,6 +299,7 @@ EGLBoolean EGLWindow::FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, E
     return EGL_FALSE;
 }
 
+#endif
 
 
 

@@ -22,7 +22,15 @@ namespace ObjectParser
 		{
 			components.push_back(componentExpr);
 		}
-		else if(auto arrayExpr = expr.cast<Expressions::Array>())
+		else if(auto arrayExpr = expr.cast<Expressions::EvaluatedArray>())
+		{
+			for (std::size_t i = 0; i < arrayExpr->count(); ++i)
+			{
+				auto componentsArray = linearize(*arrayExpr->element(i));
+				components.insert(components.end(), componentsArray.begin(), componentsArray.end());
+			}
+		}
+		else if (auto arrayExpr = expr.cast<Expressions::ArrayContainer>())
 		{
 			for (std::size_t i = 0; i < arrayExpr->count(); ++i)
 			{
@@ -32,7 +40,7 @@ namespace ObjectParser
 		}
 		else
 		{
-			
+			THROW("expression must be ObjectParser::Component or Array of them");
 		}
 
 		return components;
@@ -52,7 +60,6 @@ namespace ObjectParser
  				auto& address = client[i].address; 
   				address.objectIndex = componentHandle->objectIndex;
   				address.componentIndices.push_back(componentHandle->componentIndex);
-				LOG_EXPRESSION_VALUE3(componentHandle->objectIndex, componentHandle->type, componentHandle->name);
  			}
  		}
 	}
@@ -69,12 +76,6 @@ namespace ObjectParser
 			client = list[0];
 		}
 	}
-}
-
-namespace Expressions
-{
-    template<> void RegisterExpressionConverter<LinkDesc>() { UserStructsConvertersLib::addInst<ObjectParser::ComponentRefConverter>(); }
-    template<> void RegisterExpressionConverter<LinksDescList>() { UserStructsConvertersLib::addInst<ObjectParser::ComponentsRefConverter>(); }
 }
 
 

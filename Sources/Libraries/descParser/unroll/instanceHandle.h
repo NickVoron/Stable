@@ -16,24 +16,29 @@ namespace ObjectParser
 	class InstanceHandle: public Expressions::EvaluationUnit, public Expressions::EvaluatedScope
 	{
 	public:
-		InstanceHandle(const std::string& name_) : name(name_) { index = globalIndexCounter(); }
+		InstanceHandle(const Expressions::EvaluatedScope& parent, const std::string& name_) : 
+			Expressions::EvaluationUnit(parent),
+			name(name_) { index = globalIndexCounter(); }
 		virtual ~InstanceHandle() {}
 
 		std::string name;
 		std::string type;
 
 		PropertyAssignmentList params;
-		Expressions::ExpressionScope unEvaluatedPropertyies;
+		Expressions::ExpressionScope unEvaluatedProperties;
 
 		virtual std::string typeName() const { return "InstanceHandle"; }
+		virtual std::string string() const override;
 
-		virtual Expressions::EvaluateState evaluateStep(const Expressions::EvaluatedScope& parentScopename, boost::any* userData = 0) override;
+		virtual Expressions::EvaluateState evaluateStep(const Expressions::EvaluatedScope& parentScopename) override;
 		virtual const Expressions::EvaluationUnit* child(const Expressions::PropertyPath* path) const override;
 
 		const ComponentHandle* component(const std::string& name) const;
 		ComponentHandle* component(const std::string& name);
 		auto components() const { return expressionsByType<ComponentHandle>(); }
 		auto children() const { return expressionsByType<InstanceHandle>(); }
+
+		std::vector<std::string> fields() const;
 
 	private:
 
@@ -46,15 +51,18 @@ namespace ObjectParser
 			{
 				if (auto expr = dynamic_cast<ExpressionType*>(unit.second))
 				{
-					result.push_back(expr);
+					if (isClassMember(expr))
+					{
+						result.push_back(expr);
+					}					
 				}
 			}
 
 			return result;
 		}
 
-		Expressions::EvaluateState urollParams(const Expressions::EvaluatedScope& parentScopename, boost::any* userData);
-		Expressions::EvaluateState unrollUnEvaluatedProperies(boost::any* userData);
+		Expressions::EvaluateState urollParams(const Expressions::EvaluatedScope& parentScopename);
+		Expressions::EvaluateState unrollUnEvaluatedProperies();
 		
 		static size_t globalIndexCounter();
 		size_t index = 0;

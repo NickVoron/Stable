@@ -8,7 +8,7 @@
 
 #include "026.cyclicSpawners.h"
 #include "utils.h"
-#include "componentLinkModelConfigurator.h"
+
 
 #include "componentModel/library.include.h"
 #include "commonComponents/library.include.h"
@@ -21,9 +21,9 @@ CyclicSpawners::CyclicSpawners()
 {
 	std::string path = Resources::resourceRelativePath("desc/cm2Testing/1.basic/026.cyclicSpawners.desc");
 	ObjectParser::Compiler comp(path.c_str());
-	ComponentLinkModelConfigurator debugConfigurator;
+	
 
-	Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), debugConfigurator, "Main", "main");
+	Expressions::EvaluatedScope worldScopename = unroll(comp.result.classes(), "Main", "main");
 
 	try
 	{

@@ -11,7 +11,10 @@
 #include "expressions/library.include.h"
 
 #include "positionGenerators/library.include.h"
+
 #include "filesystem.h"
+#include "standard.h"
+#include "tgf.h"
 
 namespace ExpressionFunctions
 {
@@ -32,6 +35,15 @@ namespace ExpressionFunctions
 			BIND_EXPRESSION_FUNCTION(filenames);
 			BIND_EXPRESSION_FUNCTION(resource_filenames);
 			BIND_EXPRESSION_FUNCTION(resource_filename);
+		}
+
+		{
+			BIND_EXPRESSION_FUNCTION(element);
+		}
+
+		{
+			BIND_EXPRESSION_FUNCTION(load_tgf);
+			BIND_EXPRESSION_FUNCTION(node_pos);
 		}
 	}
 }

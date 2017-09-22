@@ -7,10 +7,12 @@
 //
 
 #include "unroller.h"
-#include "expressions/library.include.h"
+#include "instanceHandle.h"
+
 #include "../classDescEtc/propertyAssignment.h"
 #include "../classDescEtc/expressions/noValueExpression.h"
-#include "debugConfigurator.h"
+
+#include "expressions/library.include.h"
 
 
 namespace ObjectParser
@@ -18,22 +20,25 @@ namespace ObjectParser
 
 using namespace Expressions;
 
-Unroller::Unroller(const ClassTable& classes_, ComponentModelConfigurator& configurator_, bool logging):
-	classes(classes_), configurator(&configurator_), logger(logging)
+Unroller::Unroller(const ClassTable& classes_):	classes(classes_)
 {
 
 }
 
 Expressions::EvaluationUnit* Unroller::unrollInstance(const InstanceDefinitionExpression& instanceDefinition, Expressions::EvaluatedScope& parentScopenames)
 {
-	boost::any uroller(this);								
-	EvaluationUnit* unit = instanceDefinition.evaluated(parentScopenames, &uroller);
+	parentScopenames.userData = this;
+	EvaluationUnit* unit = instanceDefinition.evaluated(parentScopenames);
 
 	EvaluateState evalState = Reject;
 	while (evalState != Complete)
 	{
-		boost::any unroller(this);
-		evalState = unit->evaluateStep(parentScopenames, &unroller);
+		evalState = unit->evaluateStep(parentScopenames);
+
+		if (evalState == Impossible)
+		{
+			volatile int i = 0;
+		}
 
 		ENFORCE(evalState != Impossible);
 	}
@@ -48,7 +53,7 @@ Expressions::EvaluatedScope unroll(const ClassTable& classTable, const InstanceD
 	ENFORCE(mainClass);
 
 	Expressions::EvaluatedScope worldScopename;
-	FinalUnroller unroller(classTable);
+	Unroller unroller(classTable);
 	worldScopename.add("main", unroller.unrollInstance(instance, worldScopename), InsertMethod::INSERT);
 	return worldScopename;
 }

@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -8,8 +8,8 @@
 
 #include "componentPath.h"
 #include "instanceExpression.h"
-#include "../../unroll/componentModelConfigurator.h"
 #include "stuff/enforce.h"
+#include "../../unroll/instanceHandle.h"
 
 namespace ObjectParser 
 {
@@ -34,7 +34,7 @@ namespace ObjectParser
 				const Expressions::EvaluatedArray* array = input->cast<const Expressions::EvaluatedArray>();
 
 				ENFORCE_MSG(array, "");
-				Expressions::EvaluatedArray* resultArr = Expressions::add<Expressions::EvaluatedArray>(array->count(), nullptr);
+				Expressions::EvaluatedArray* resultArr = Expressions::add<Expressions::EvaluatedArray>(array->count(), EvaluationUnit::commonParent);
 				result = resultArr;
 
 				for (std::size_t i = 0; i < array->count(); ++i)
@@ -61,11 +61,6 @@ namespace ObjectParser
 		return result;
 	}
 
-	std::unique_ptr<Expressions::Reference::PathElement> ComponentPath::copy() const
-	{
-		return std::unique_ptr<Expressions::Reference::PathElement>(new ComponentPath(componentType));
-	}
-
 	const Expressions::EvaluationUnit* ComponentPath::getComponent(const InstanceHandle* instanceHandle, std::string componentType)
 	{
 		const Expressions::EvaluationUnit* component = instanceHandle->getByType(componentType);
@@ -75,7 +70,7 @@ namespace ObjectParser
 
 
 
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

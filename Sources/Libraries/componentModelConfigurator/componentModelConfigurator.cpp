@@ -34,9 +34,12 @@ namespace ComponentModel
 		{
 			if (auto instanceHandle = unit.second->cast<ObjectParser::InstanceHandle>())
 			{
-				result.push_back({ parent.self, instanceHandle });
-				auto children = linearize(result.back(), *instanceHandle);
-				result.insert(result.end(), children.begin(), children.end());
+				if ((parent.self && parent.self->isClassMember(instanceHandle)) || !parent.self)
+				{
+					result.push_back({ parent.self, instanceHandle });
+					auto children = linearize(result.back(), *instanceHandle);
+					result.insert(result.end(), children.begin(), children.end());
+				}
 			}
 			else if (auto instances = unit.second->cast<Expressions::EvaluatedArray>())
 			{
@@ -104,15 +107,11 @@ namespace ComponentModel
 			objectToClassDesc[object.self] = &classDesc;
 			for (auto* componentHandle : object.self->components())
 			{
-				if (object.self->isClassMember(componentHandle))
-				{
-					classDesc.addComponent(componentHandle->type, componentHandle->name, "");
-				}
+				
+				classDesc.addComponent(componentHandle->type, componentHandle->name, "");
 			}
-
-			LOG_MSG("");
-			classDesc.debug();
 		}
+		
 
 		classes.finalize();
 		entities.classes.create(classes, entities.executionList);
@@ -126,7 +125,6 @@ namespace ComponentModel
 			auto classDesc = objectToClassDesc[object.self];
 			auto classIndex = classDesc->classIndex;
 			auto entity = entities.create(classIndex);
-			
 			objectToEntity[object.self] = entity;
 			std::vector<ObjectParser::ComponentHandle*> componentHandles;
 			for (std::size_t i = 0; i < entity->getComponentsCount(); ++i)
@@ -134,6 +132,7 @@ namespace ComponentModel
 				std::string componentName = entity->getClass().getComponentName(i);
 				auto componentHandle = object.self->component(componentName);
 				ENFORCE(componentHandle);
+				
 				componentHandles.push_back(componentHandle);
 				componentHandle->objectIndex = objectIdx;
 				componentHandle->componentIndex = i;
@@ -149,6 +148,7 @@ namespace ComponentModel
 				std::string componentName = entity->getClass().getComponentName(i);
 				auto componentHandle = object.self->component(componentName);
 				ENFORCE(componentHandle);
+				
 				initComponent(entity->getComponent(i), *componentHandle);
 			}
 			entity->finalize();

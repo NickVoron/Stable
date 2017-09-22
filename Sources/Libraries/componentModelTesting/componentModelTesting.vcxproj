@@ -110,6 +110,8 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bugs\bug006.cpp" />
+    <ClCompile Include="tests\000.bugs.cpp" />
     <ClCompile Include="tests\008.1.objectArrayEmbeddedScopename.cpp" />
     <ClCompile Include="tests\024.noNamedInstance.cpp" />
     <ClCompile Include="tests\023.noNamedComponents.cpp" />
@@ -124,7 +126,6 @@
     <ClCompile Include="tests\025.nestedSpawners.cpp" />
     <ClCompile Include="tests\026.cyclicSpawners.cpp" />
     <ClCompile Include="tests\027.configurableSpawners.cpp" />
-    <ClCompile Include="tests\componentLinkModelConfigurator.cpp" />
     <ClCompile Include="tests\015.nestedObject.cpp" />
     <ClCompile Include="tests\008.objectArray.cpp" />
     <ClCompile Include="tests\007.complexData.cpp" />
@@ -141,10 +142,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="tests\013.references.cpp" />
+    <ClCompile Include="tests\028.expressionsConversion.cpp" />
     <ClCompile Include="tests\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bugs\bug006.h" />
     <ClInclude Include="config.h" />
+    <ClInclude Include="tests\000.bugs.h" />
     <ClInclude Include="tests\008.1.objectArrayEmbeddedScopename.h" />
     <ClInclude Include="tests\024.noNamedInstance.h" />
     <ClInclude Include="tests\023.noNamedComponents.h" />
@@ -154,13 +158,13 @@
     <ClInclude Include="tests\025.nestedSpawners.h" />
     <ClInclude Include="tests\026.cyclicSpawners.h" />
     <ClInclude Include="tests\027.configurableSpawners.h" />
+    <ClInclude Include="tests\028.expressionsConversion.h" />
     <ClInclude Include="unit_test.h" />
     <ClInclude Include="tests\020.circlePoints.h" />
     <ClInclude Include="tests\019.crossReference.h" />
     <ClInclude Include="tests\018.subTreeObjects\018.subTreeObjects.h" />
     <ClInclude Include="tests\018.subTreeObjects\types.h" />
     <ClInclude Include="tests\014.componentByType.h" />
-    <ClInclude Include="tests\componentLinkModelConfigurator.h" />
     <ClInclude Include="tests\015.nestedObject.h" />
     <ClInclude Include="tests\008.objectArray.h" />
     <ClInclude Include="tests\007.complexData.h" />

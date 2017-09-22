@@ -37,15 +37,15 @@ namespace EditorInfrastructure
 		void undo();
 		void redo();
 
-		void undo(int steps);
-		void redo(int steps);
+		void undo(std::size_t steps);
+		void redo(std::size_t steps);
 
 		bool undoAvailable();
 		bool redoAvailable();
 
-		void step(int s);
+		void step(std::size_t s);
 
-		void description(std::vector<std::string>& names, int& executedActionsCount, int& undoActionsCount) const;
+		void description(std::vector<std::string>& names, std::size_t& executedActionsCount, std::size_t& undoActionsCount) const;
 
 	private:
 		std::list<Action*> actions;
@@ -83,12 +83,12 @@ namespace EditorInfrastructure
 	void undo();
 	void redo();
 
-	void undo(int steps);
-	void redo(int steps);
+	void undo(std::size_t steps);
+	void redo(std::size_t steps);
 
-	void step(int s);
+	void step(std::size_t s);
 
-	void description(std::vector<std::string>& names, int& executedActionsCount, int& undoActionsCount);
+	void description(std::vector<std::string>& names, std::size_t& executedActionsCount, std::size_t& undoActionsCount);
 }
 
 

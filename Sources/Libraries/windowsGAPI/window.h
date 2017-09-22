@@ -120,6 +120,22 @@ namespace WindowsGAPI
 	class Windows11 : public WindowsCommon<Window11> {};
 
 	
+	
+	
+	class WindowGL : public ViewportWindow<WindowGL, opengl::Viewport>
+	{
+	public:
+		virtual void present();
+		virtual void init();
+
+		opengl::OpenGL context;
+	protected:
+		virtual void clearImpl(const ClearBuffersData& params);
+	};
+	class WindowsGL : public WindowsCommon<WindowGL> {};
+	
+
+	
 
 }
 

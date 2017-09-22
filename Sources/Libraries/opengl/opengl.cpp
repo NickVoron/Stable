@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -18,8 +18,15 @@ namespace opengl
 
 	PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB;
 
-	HGLRC init(HDC hdc)
+	OpenGL::~OpenGL()
 	{
+		release();
+	}
+
+	HGLRC OpenGL::init(HDC hdc)
+	{
+		release();
+
 		PIXELFORMATDESCRIPTOR pfd;
 		int format;
 
@@ -48,7 +55,7 @@ namespace opengl
 	 	int attribs[] =
 		{
 			WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
-			WGL_CONTEXT_MINOR_VERSION_ARB, 2,
+			WGL_CONTEXT_MINOR_VERSION_ARB, 5,
 			WGL_CONTEXT_FLAGS_ARB,         WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
 			WGL_CONTEXT_PROFILE_MASK_ARB,  WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
 			0
@@ -64,7 +71,8 @@ namespace opengl
 			LOG_ERROR("not glew");
 		}
 
-		if( !GLEW_VERSION_4_2 )
+		opengl::check();
+		if( !GLEW_VERSION_4_5 )
 		{	
 			
 			LOG_ERROR("not OpenGL 4.2");
@@ -72,13 +80,22 @@ namespace opengl
 
 		opengl::check();
 
+		ctx = hglrc;
 		return hglrc;
 	}
 
-
-	void release()
+	HGLRC OpenGL::context() const
 	{
+		return ctx;
+	}
 
+	void OpenGL::release()
+	{
+		if (ctx)
+		{
+			wglDeleteContext(ctx);
+			ctx = 0;
+		}
 	}
 #endif
 
@@ -102,7 +119,7 @@ namespace opengl
 
 
 
-// Copyright (C) 2012-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

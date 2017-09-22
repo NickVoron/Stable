@@ -13,7 +13,8 @@ namespace ObjectParser
 {
 using namespace Expressions;
 
-ComponentHandle::ComponentHandle(RuntimePropeties runtimeProps_, PropertyAssignmentList links_, PropertyAssignmentList params_):
+ComponentHandle::ComponentHandle(const Expressions::EvaluatedScope& parent, RuntimePropeties runtimeProps_, PropertyAssignmentList links_, PropertyAssignmentList params_):
+	Expressions::EvaluationUnit(parent),
 	runtimePropsLarva(runtimeProps_),
 	linksLarva(links_),
 	paramsLarva(params_)
@@ -45,7 +46,7 @@ Expressions::EvaluateState ComponentHandle::unrollLinks(const EvaluatedScope& pa
 			ENFORCE_MSG(ref, "component link param may be only Reference to component");
 			ENFORCE_MSG(ref->getPath().size() == 1, "component link param may be only Reference to component");
 
-			if (ref->canResolveReverence(parentScopename))
+			if (ref->canResolveReference(parentScopename))
 			{
 				EvaluationUnit* evalUnit = ref->evaluated(parentScopename);
 				ComponentHandle* linkedComponent = evalUnit->cast<ComponentHandle>();
@@ -64,7 +65,7 @@ Expressions::EvaluateState ComponentHandle::unrollLinks(const EvaluatedScope& pa
 	return evalState;
 }
 
-EvaluateState ComponentHandle::urollParams(const EvaluatedScope& parentScopename, boost::any* userData)
+EvaluateState ComponentHandle::urollParams(const EvaluatedScope& parentScopename)
 {
 	EvaluateState evalState = Complete;
 
@@ -72,18 +73,22 @@ EvaluateState ComponentHandle::urollParams(const EvaluatedScope& parentScopename
 	{
 		evalState = Expressions::Impossible;  
 
-		paramsLarva.erase(std::remove_if(paramsLarva.begin(), paramsLarva.end(), [this, &parentScopename, &userData, &evalState](auto& param)
+		paramsLarva.erase(std::remove_if(paramsLarva.begin(), paramsLarva.end(), [this, &parentScopename, &evalState](auto& param)
 		{
 			const std::string& name = param->propertyName;
-			if (param->canResolveReverence(parentScopename))
+			if (param->canResolveReference(parentScopename))
 			{
-				EvaluationUnit* evalUnit = param->value->evaluated(parentScopename, userData);
+				EvaluationUnit* evalUnit = param->value->evaluated(parentScopename);
 
+				COMPILER_WARNING_LOCATION(!!!);
 				
-				if (EvaluatedArray* array = evalUnit->cast<EvaluatedArray>())
-				{
-					array->evaluateStep(ScopeNames(), userData);
-				}
+ 				if (EvaluatedArray* array = evalUnit->cast<EvaluatedArray>())
+ 				{
+ 					
+					ScopeNames scope;
+					scope.userData = parentScopename.userData;
+					array->evaluateStep(scope);
+ 				}
 
 				add(name, evalUnit, InsertMethod::INSERT);
 				evalState = Reject;	
@@ -103,7 +108,7 @@ EvaluateState ComponentHandle::urollParams(const EvaluatedScope& parentScopename
 
 		if (PrototypeHandle* unit = iter.second->cast<PrototypeHandle>())
 		{
-			EvaluateState unitState = unit->evaluateStep(parentScopename, userData);
+			EvaluateState unitState = unit->evaluateStep(parentScopename);
 			evalState = merge(evalState, unitState);
 		}
 	}
@@ -111,13 +116,13 @@ EvaluateState ComponentHandle::urollParams(const EvaluatedScope& parentScopename
 	return evalState;
 }
 
-Expressions::EvaluateState ComponentHandle::evaluateStep(const EvaluatedScope& parentScopename, boost::any* userData)
+Expressions::EvaluateState ComponentHandle::evaluateStep(const EvaluatedScope& parentScopename)
 {
 	EvaluateState runtimePropsState = unrollRuntimeProps();
-
+															 
 	EvaluateState linksState = unrollLinks(parentScopename);
 
-	EvaluateState paramsState = urollParams(parentScopename, userData);
+	EvaluateState paramsState = urollParams(parentScopename);
 
 	EvaluateState result = merge(runtimePropsState, linksState);
 	result = merge(result, paramsState);
@@ -128,6 +133,11 @@ Expressions::EvaluateState ComponentHandle::evaluateStep(const EvaluatedScope& p
 Expressions::EvaluationUnit* ComponentHandle::child(const Expressions::PropertyPath* path) const
 {
 	return get(path->name);
+}
+
+std::string ComponentHandle::string() const
+{
+	return str::spaced("component:", type, "name:", name).str();
 }
 
 

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -15,7 +15,9 @@ namespace Expressions
 	class StructBase : public EvaluationUnit
 	{
 	public:
-		StructBase(const std::string& structType) : structType(structType) {}
+		StructBase(const std::string& structType): 
+			EvaluationUnit(commonParent),
+			structType(structType) {}
 
 		virtual std::string typeName() const override { return structType; }
 
@@ -29,7 +31,7 @@ namespace Expressions
 	public:
 		Struct(const std::string& structType, const ConstExprList& params);
 
-		virtual EvaluationUnit* evaluated(const EvaluatedScope& environment, boost::any* userData = 0) const override;
+		virtual EvaluationUnit* evaluated(const EvaluatedScope& environment) const override;
 		virtual std::string string() const override;
 		virtual References references() const override { return params.references(); }
 
@@ -42,7 +44,7 @@ namespace Expressions
 
 
 
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

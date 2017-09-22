@@ -13,7 +13,6 @@
 #include <string>
 
 #include "../classDescEtc/grammarComposition.h"
-#include "componentModelConfigurator.h"
 #include "../classDescEtc/expressions/instanceExpression.h"
 
 
@@ -22,35 +21,15 @@ namespace ObjectParser
 	class Unroller
 	{
 	public:
+		Unroller(const ClassTable& classes);
 		Expressions::EvaluationUnit* unrollInstance(const InstanceDefinitionExpression& prototype, Expressions::EvaluatedScope& parentScopenames);
-	
+
 		const ClassTable& classes;
-
-		Unroller(const ClassTable& classes, ComponentModelConfigurator& configurator, bool logging);
-	
-	private:
-		ComponentModelConfigurator* configurator;
-		Logger logger;
 	};
-
-	template<class Configurator>
-	class UnrollerT: public Unroller
-	{
-	public:
-		UnrollerT(const ClassTable& classes) :
-			Unroller(classes, configurator, false){}
-
-	private:
-		Configurator configurator;
-	};
-
-	typedef UnrollerT<ComponentModelConfigurator> FinalUnroller;
 
 	Expressions::EvaluatedScope unroll(const ClassTable& classTable, const InstanceDefinitionExpression& instance);
-	Expressions::EvaluatedScope unroll(const ClassTable& classTable, const InstanceDefinitionExpression& instance, ComponentModelConfigurator& configurator);
 	Expressions::EvaluatedScope unroll(const ClassTable& classTable, const std::string& mainInstanceClassName, const std::string& mainInstanceName);
-	Expressions::EvaluatedScope unroll(const ClassTable& classTable, ComponentModelConfigurator& configurator, const std::string& mainInstanceClassName, const std::string& mainInstanceName);
-}//
+}
 
 
 

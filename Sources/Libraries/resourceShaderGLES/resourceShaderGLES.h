@@ -11,10 +11,11 @@
 #include "resourceManager/library.include.h"
 
 #include "opengles/library.include.h"
+#include "opengl/library.include.h"
 
 namespace Resources
 {
-	class ShaderGLSL : public ResourceT<ShaderGLSL, ShaderProgram>
+	class ShaderGLSL : public ResourceT<ShaderGLSL, opengl::ShaderProgram>
 	{
 	public:
 		inline static const char* basePath() { return "glsl/"; }
@@ -30,7 +31,7 @@ namespace Resources
 		virtual void LoadCompiled(stream::istream& is);
 
 	private:
-		ShaderProgramCompiler compiler;
+		opengl::ShaderProgramCompiler compiler;
 	};
 }
 

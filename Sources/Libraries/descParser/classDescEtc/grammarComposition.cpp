@@ -263,6 +263,11 @@ Expressions::Reference* GrammarComposition::newProxy()
 	return newProxy("this");
 }
 
+Expressions::Reference* GrammarComposition::newProxy(Expressions::Expression* expr)
+{
+	return Expressions::add<Reference>(expr);
+}
+
 Expressions::Reference* GrammarComposition::newProxy(const std::string& targetName)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", targetName: " << targetName);
@@ -270,9 +275,9 @@ Expressions::Reference* GrammarComposition::newProxy(const std::string& targetNa
 	return Expressions::add<Reference>(new PropertyPath(targetName));
 }
 
-Expressions::Reference::PathElement* GrammarComposition::newProxyArrayPath(int index)
+Expressions::Reference::PathElement* GrammarComposition::newProxyArrayPath(const std::unique_ptr<Expressions::ConstExprList>& params)
 {		
-	return new ArrayPath(index);
+	return new ArrayPath(*params);
 }
 
 Reference::PathElement* GrammarComposition::newProxyPropertyPath(const std::string& name)

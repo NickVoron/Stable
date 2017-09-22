@@ -46,7 +46,7 @@ namespace ObjectParser
 	{
 	public:
 		virtual std::string string() const override;
-		virtual Expressions::EvaluationUnit* evaluated(const Expressions::EvaluatedScope& parentScopenames, boost::any* userData = 0) const override;
+		virtual Expressions::EvaluationUnit* evaluated(const Expressions::EvaluatedScope& parentScopenames) const override;
 		virtual std::string typeName() const override;
 
 		std::string componentType;

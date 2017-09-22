@@ -1,0 +1,120 @@
+#include "instanceHandle.h"
+
+namespace ObjectParser
+{
+
+using namespace Expressions;
+
+size_t InstanceHandle::globalIndexCounter()
+{
+	static size_t index = 0;
+	++index;
+	return index;
+}
+
+EvaluateState InstanceHandle::urollParams(const EvaluatedScope& parentScopename, boost::any* userData)
+{
+	EvaluateState evalState = Complete;
+
+	if (params.size())
+	{
+		evalState = Expressions::Impossible;  // состояние ни разу не Complete, если мы сюда попали, делаем писсимистичное предсказание
+
+		params.erase(std::remove_if(params.begin(), params.end(), [this, &parentScopename, &userData, &evalState](auto& param)
+		{ 
+			const std::string& name = param->propertyName;
+			if (param->canResolveReverence(parentScopename))
+			{
+				EvaluationUnit* evalUnit = param->value->evaluated(parentScopename, userData);
+				add(name, evalUnit, InsertMethod::INSERT);
+				evalState = Reject;	// меняем состояние ведь хоть одна раскрутка уже была
+
+				return true;
+			}
+
+			return false;
+		
+		}), params.end());
+	}
+
+	return evalState;
+}
+
+EvaluateState InstanceHandle::unrollUnEvaluatedProperies(boost::any* userData)
+{
+	EvaluateState evalState = Complete;
+
+	if (unEvaluatedPropertyies.size())
+	{
+		evalState = Expressions::Impossible;  // состояние ни разу не Complete, если мы сюда попали, делаем писсимистичное предсказание
+
+		for (auto& iter = unEvaluatedPropertyies.cbegin(); iter != unEvaluatedPropertyies.cend();)
+		{
+			const std::string& name = iter->first;
+			const Expression* expr = iter->second;
+
+			References refs = expr->references();
+			if (refs.canResolveReverence(*this))
+			{
+				EvaluationUnit* evalUnit = expr->evaluated(*this, userData);
+				add(name, evalUnit, InsertMethod::INSERT);
+				evalState = Reject;	// меняем состояние ведь хоть одна раскрутка уже была
+
+				unEvaluatedPropertyies.erase(iter++);
+			}
+			else
+			{
+				++iter;
+			}
+		}
+	}
+
+	return evalState;
+}
+
+Expressions::EvaluateState InstanceHandle::evaluateStep(const EvaluatedScope& parentScopename, boost::any* userData)
+{
+	//шатаем параметры
+	EvaluateState paramState = urollParams(parentScopename, userData);
+
+	//а теперь ещё не раскрученные проперти
+	EvaluateState propertiesState = unrollUnEvaluatedProperies(userData);
+
+	EvaluateState result = merge(paramState, propertiesState);
+
+	//очередь уже подраскрученных, может они там что раскрутят
+	for (auto& iter: *this)
+	{
+		EvaluationUnit* unit = iter.second;
+		EvaluateState unitState = unit->evaluateStep(*this, userData);
+		result = merge(result, unitState);
+	}
+
+	return result;
+}
+
+const ComponentHandle* InstanceHandle::component(const std::string& name) const
+{
+	return const_cast<InstanceHandle*>(this)->component(name);
+}
+
+ComponentHandle* InstanceHandle::component(const std::string& name)
+{
+	for (auto& unit : *this)
+	{
+		if (auto componentHandle = dynamic_cast<ComponentHandle*>(unit.second))
+		{
+			if (componentHandle->name == name)
+				return componentHandle;
+		}
+	}
+
+	return nullptr;
+}
+
+const Expressions::EvaluationUnit* InstanceHandle::child(const Expressions::PropertyPath* path) const
+{
+	return get(path->name);
+}
+
+}//

@@ -37,7 +37,7 @@ namespace ObjectParser
 		std::string propertyName;
 		const Expressions::Expression* value = 0;
 
-		bool canResolveReverence(const Expressions::EvaluatedScope& parentScopename) const;
+		bool canResolveReference(const Expressions::EvaluatedScope& parentScopename) const;
 
 	};
 

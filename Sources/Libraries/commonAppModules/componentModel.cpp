@@ -62,7 +62,7 @@ namespace AppModules
 			, LogComponents::Module
 			, ReferencesComponents::Module
 			, DebugDrawComponents::Module
-
+			, DevelopmentComponents::Module
 		>();
 
 		ComponentsEditor::init();

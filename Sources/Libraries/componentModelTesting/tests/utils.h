@@ -12,6 +12,7 @@
 #include "math/library.include.h"
 #include "resourceUtils/library.include.h"
 #include "expressions/library.include.h"
+#include "descParser/library.include.h"
 #include "../config.h"
 
 #ifdef ENABLE_UTILS
@@ -47,7 +48,7 @@ namespace ComponentModelTesting
 	{
 		Value exprVal;
 		Expressions::convertVar(*expr, exprVal);
-		ENFORCE_MSG(exprVal == value, str::stringize("Value:", expr->string(), ", != ", value).c_str());
+		ENFORCE_MSG(exprVal == value, str::stringize("value:", expr->string(), " != ", value).str());
 
 		return true;
 	}

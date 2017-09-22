@@ -17,7 +17,7 @@ namespace Expressions
 	{
 	public:
 		BinderExpression(const EvaluatedScope& scopeName, const Reference* proxy);
-		virtual EvaluationUnit* evaluated(const EvaluatedScope& environment, boost::any* userData = 0) const override;
+		virtual EvaluationUnit* evaluated(const EvaluatedScope& environment) const override;
 
 		void set(const Expression* real) const;
 	private:

@@ -139,8 +139,8 @@ namespace dx11
 
 		struct BufferSet : public Set
 		{
-			template<class DataStream>	void create(const DataStream& vs)	{ create(&vs[0], vs.size()); }
-			template<class DataStream>	void upload(const DataStream& vs)	{ upload(&vs[0], vs.size()); }
+			template<class DataStream>	void create(const DataStream& vs)	{ create(&vs[0], (int)vs.size()); }
+			template<class DataStream>	void upload(const DataStream& vs)	{ upload(&vs[0], (int)vs.size()); }
 
 			template<class DataType>	void upload(const DataType* indata, int count)	{ for (int i = 0; i < devices->count(); ++i)	{ data[i].upload(indata, count); } }
 

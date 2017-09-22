@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -180,7 +180,7 @@ namespace str
 		static std::size_t append(stringize& s, const std::pair<Value0, Value1>& value)
 		{
 			std::size_t result = 0;
-			s("pair:{ ", str::comma());
+			s("{ ", str::comma());
 			result += s.append(value.first);
 			result += s.append(value.second);
 			s(str::nodelim(), "}");
@@ -194,7 +194,7 @@ namespace str
 	{
 		static std::size_t append(stringize& s, const std::tuple<Values...>& value)
 		{
-			s("tuple:{ ", str::comma());
+			s("{ ", str::comma());
 			stl::for_each(value, [&s](auto& val) { s.append(val); });
 			s(str::nodelim(), "}");
 
@@ -213,29 +213,29 @@ namespace str
 		{
 			result += s.append(value);
 		}
-		s(str::nodelim(), "} ");
+		s(str::nodelim(), " }");
 
 		return result;
 	}
 
 	template<class ValueType> struct StrAppend<std::vector<ValueType>>
 	{
-		static std::size_t append(stringize& s, const std::vector<ValueType>& values) { return append_container(s("vector:"), values); }
+		static std::size_t append(stringize& s, const std::vector<ValueType>& values) { return append_container(s, values); }
 	};
 	
 	template<class ValueType> struct StrAppend<std::list<ValueType>>
 	{
-		static std::size_t append(stringize& s, const std::vector<ValueType>& values) { return append_container(s("list:"), values); }
+		static std::size_t append(stringize& s, const std::vector<ValueType>& values) { return append_container(s, values); }
 	};
 
 	template<class ValueType> struct StrAppend<std::set<ValueType>>
 	{
-		static std::size_t append(stringize& s, const std::set<ValueType>& values) { return append_container(s("set:"), values); }
+		static std::size_t append(stringize& s, const std::set<ValueType>& values) { return append_container(s, values); }
 	};
 
 	template<class Value0, class Value1> struct StrAppend<std::map<Value0, Value1>>
 	{
-		static std::size_t append(stringize& s, const std::map<Value0, Value1>& values) { return append_container(s("map:"), values); }
+		static std::size_t append(stringize& s, const std::map<Value0, Value1>& values) { return append_container(s, values); }
 	};
 
 	std::ostream& operator<<(std::ostream& os, const stringize& str);
@@ -294,7 +294,7 @@ namespace StrUtils {
 
 
 
-// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

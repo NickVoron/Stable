@@ -8,13 +8,20 @@
 
 #pragma once
 
+#include <unordered_set>
+
 #include "strings/library.include.h"
 #include "stuff/library.include.h"
+#include "reflection/library.include.h"
+#include "TGFParser/library.include.h"
+
 
 #include "../expression.h"
-#include "../array.h"
 #include "../holder.h"
 #include "../const.h"
+#include "../arrayContainer.h"
+#include "../property.h"
+
 
 namespace Expressions
 {
@@ -39,37 +46,148 @@ namespace Expressions
 		static Expression* convert(str::string64 value) { return Expressions::template add<Const<std::string>>(value.c_str()); }
 	};
 
-	template<class T>
-	Expression* convertType(T value)
+	template<class T> struct IsConstant { static const bool value = (std::is_arithmetic<typename std::decay<T>::type>::value || std::is_enum<T>::value); };
+	template<> struct IsConstant<std::string> { static const bool value = true; };
+	template<> struct IsConstant<str::string64> { static const bool value = true; };
+
+
+	template <class T> std::true_type has_value_type_d(typename T::value_type*);
+	template <class T> std::false_type has_value_type_d(...);
+	template <class T>	struct has_value_type : decltype(has_value_type_d<T>(nullptr)) {};
+
+	template <typename C, bool B = has_value_type<C>::value>
+	struct is_std_vector;
+
+	template <class C>
+	struct is_std_vector<C, false>
 	{
-		return ConstExpression<T>::convert(value);
-	}
+		constexpr static bool value = false;
+	};
 
-	Expression* convertType(Expression*);
-	Expression* convertType(const Vector2& val);
-	Expression* convertType(const Vector3& val);
-	Expression* convertType(const Vector4& val);
-	Expression* convertType(const nm::index2& val);
-	Expression* convertType(const nm::index3& val);
-
-
-	Expression* convertType(const UserStruct::Vector3List& val);
-	Expression* convertType(const UserStruct::Index2List& val);
-	Expression* convertType(const UserStruct::StringList& val);
-
-	template<class T>
-	Expression* convertArray(const T& val)
+	template <class C>
+	struct is_std_vector<C, true>
 	{
-		int count = (int)val.size();
-		ConstExprList list;
-		list.resize(count);
-		for(int i = 0; i < count; ++i)
+		constexpr static bool value = std::is_base_of<std::vector<typename C::value_type, typename C::allocator_type>, C>::value;
+	};
+	
+	template<class ValueType, unsigned int selector = 
+		(IsConstant<ValueType>::value ? CONSTANT : 0) | 
+		(is_std_vector<ValueType>::value ? CONTAINER : 0) | 
+		(!is_std_vector<ValueType>::value && !IsConstant<ValueType>::value ? STRUCTURE : 0)>
+	struct ConvertType
+	{
+		static Expression* convert(const ValueType& value);
+	};
+
+	template<class T> Expression* convertType(const T& value);
+
+	template<class Content>
+	Expression* convertGraph(const tgf::Graph<Content>& graph)
+	{
+		auto nodes = add<ArrayContainer>(EvaluationUnit::commonParent);
+
+		std::map<std::string, EvaluationUnit*> dict0;
+		std::map<EvaluationUnit*, ArrayContainer*> dict1;
+		for (auto& val : graph.nodes)
 		{
-			list[i] = convertType(val[i]);
+			auto node = add<EvalPropertiesStruct>("Node");
+			
+			auto id = convertType(val->id)->evaluated(EvaluationUnit::commonParent);
+			auto content = convertType(val->content)->evaluated(EvaluationUnit::commonParent);
+			auto links = add<ArrayContainer>(EvaluationUnit::commonParent);
+
+			dict0[val->id] = id;
+			dict1[id] = links;
+
+			node->add("id", id);
+			node->add("content", content);
+			node->add("links", links);
+
+			nodes->add(node);
 		}
 
-		return Expressions::template add<Array>(list);
+		int idx = 0;
+		for (auto& rib : graph.ribs)
+		{
+			if (rib->node0 && rib->node1)
+			{
+				
+				++idx;
+				auto links = dict1[dict0[rib->node0->id]];
+				auto link = dict0[rib->node1->id];
+				links->add(link);
+			}			
+		}
+
+		auto properties = add<EvalPropertiesStruct>("Graph");
+
+		properties->add("nodes", nodes);
+
+		return properties;
 	}
+
+	template<class Content>	
+	struct ConvertType<tgf::Graph<Content>, STRUCTURE>
+	{ 
+		static Expression* convert(const tgf::Graph<Content>& val) 
+		{
+			return convertGraph(val); 
+		} 
+	};
+
+	template<class T>
+	Expression* convertArray(const T& values)
+	{
+		ArrayContainer* result = add<ArrayContainer>(EvaluationUnit::commonParent);
+		for (auto& val : values)
+		{
+			EvaluationUnit* unit = convertType(val)->cast<EvaluationUnit>();
+			ENFORCE(unit);
+			result->add(unit);
+		}
+
+		return result;
+	}
+
+	template<>	struct ConvertType<Expression*> { static Expression* convert(Expression* value) { return (Expression*) value; } };
+
+	template<class T>
+	Expression* convertType(const T& value);
+
+	template<class ValueType>
+	struct ConvertType<ValueType, CONSTANT>
+	{
+		static Expression* convert(const ValueType& value) 
+		{ 
+			return ConstExpression<ValueType>::convert(value); 
+		}
+	};
+
+	template<class ValueType>
+	struct ConvertType<ValueType, STRUCTURE>
+	{
+		static Expression* convert(const ValueType& val)
+		{
+			auto value = mirror::type(val);
+			auto& name = value.name();
+			return Expressions::add<Struct>(name, ConstExprList(add_const(val)));
+		}
+	};
+
+	template<class ValueType>	
+	struct ConvertType<ValueType, CONTAINER>
+	{ 
+		static Expression* convert(const ValueType& val) 
+		{ 
+			return convertArray(val); 
+		} 
+	};
+
+	template<class T>
+	Expression* convertType(const T& value)
+	{
+		return ConvertType<T>::convert(value);
+	}	
 }
 
 
