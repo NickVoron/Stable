@@ -1,4 +1,4 @@
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -15,6 +15,7 @@ namespace intersections
 	template<class Cls> struct DistInfo;
 
 	template<> struct DistInfo<Vector3> {};
+	template<> struct DistInfo<nm::Vector3> {};
 	template<> struct DistInfo<Segment3>	{	float segmentParam; };
 	template<> struct DistInfo<Line>		{	float lineParam; };
 	template<> struct DistInfo<Triangle>	{	float barycentric[3];	};
@@ -66,7 +67,7 @@ namespace intersections
 
 
 
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

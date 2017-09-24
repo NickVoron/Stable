@@ -1,4 +1,4 @@
-// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2014-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -26,11 +26,34 @@ namespace Expressions
 		ConstExprList params;
 		const std::string functionName;
 	};
+
+
+	class FunctionUnit : public EvaluationUnit, public Expressions::EvaluatedScope
+	{
+	public:
+		FunctionUnit(const EvaluatedScope& parent, const std::string& functionName, const ConstExprList& params);
+
+		virtual std::string string() const override;
+		virtual std::string typeName() const override { return str::spaced("function:", functionName); }
+
+		virtual Expressions::EvaluateState evaluateStep(const Expressions::EvaluatedScope& parentScopename) override;
+
+		ConstExprList params;
+		const std::string functionName;
+
+	private:
+		Expressions::EvaluateState urollParams(const Expressions::EvaluatedScope& parentScopename);
+
+		Expressions::ExpressionScope unEvaluatedProperties;
+
+
+	};
+
 }//
 
 
 
-// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2014-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

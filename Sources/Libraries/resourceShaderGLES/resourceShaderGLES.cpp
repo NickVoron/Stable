@@ -23,7 +23,8 @@ namespace Resources
 
 	void ShaderGLSL::Compile(stream::ostream& os)
 	{
-		compiler.serialize(serializer(os));
+		auto s = serializer(os);
+		compiler.serialize(s);
 	}
 
 	std::unordered_map<std::string, GLenum> dict;
@@ -57,7 +58,8 @@ namespace Resources
 
 	void ShaderGLSL::LoadCompiled(stream::istream& is)
 	{
-		compiler.serialize(serializer(is));
+		auto s = serializer(is);
+		compiler.serialize(s);
 		compiler.compile(nativeResource);
 
 		activate();

@@ -43,7 +43,7 @@ namespace ObjectParser
 
 	bool PropertyAssignmentList::exist(const std::string& name) const
 	{
-		auto& it = find_if(begin(), end(), [&name](auto& element)
+		auto it = find_if(begin(), end(), [&name](auto& element)
 		{
 			return element->propertyName == name;
 		});

@@ -1,17 +1,36 @@
-// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
 
+/* A Bison parser, made by GNU Bison 2.4.1.  */
 
+/* Stack handling for Bison parsers in C++
+   
+      Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008 Free Software
+   Foundation, Inc.
+   
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-
-
-
-
+/* As a special exception, you may create a larger work that contains
+   part or all of the Bison parser skeleton and distribute that work
+   under terms of your choice, so long as that work isn't itself a
+   parser generator using the skeleton or a modified version thereof
+   as a parser skeleton.  Alternatively, if you modify or redistribute
+   the parser skeleton itself, you may (at your option) remove this
+   special exception, which will cause the skeleton and the resulting
+   Bison output files to be licensed under the GNU General Public
+   License without this special exception.
+   
+   This special exception was added by the Free Software Foundation in
+   version 2.2 of Bison.  */
 
 #ifndef BISON_STACK_HH
 # define BISON_STACK_HH
@@ -19,19 +38,19 @@
 #include <deque>
 
 
-
+/* Line 1067 of lalr1.cc  */
 #line 1 "[Bison:b4_percent_define_default]"
 
 namespace ObjectParser {
 
-
+/* Line 1067 of lalr1.cc  */
 #line 48 "parser/stack.hh"
   template <class T, class S = std::deque<T> >
   class stack
   {
   public:
 
-    
+    // Hide our reversed order.
     typedef typename S::reverse_iterator iterator;
     typedef typename S::const_reverse_iterator const_iterator;
 
@@ -73,7 +92,7 @@ namespace ObjectParser {
     }
 
     inline
-    auto
+    unsigned int
     height () const
     {
       return seq_.size ();
@@ -87,7 +106,7 @@ namespace ObjectParser {
     S seq_;
   };
 
-  
+  /// Present a slice of the top of a stack.
   template <class T, class S = stack<T> >
   class slice
   {
@@ -112,32 +131,13 @@ namespace ObjectParser {
     unsigned int range_;
   };
 
-
+/* Line 1153 of lalr1.cc  */
 #line 1 "[Bison:b4_percent_define_default]"
 
-} 
+} // ObjectParser
 
-
+/* Line 1153 of lalr1.cc  */
 #line 141 "parser/stack.hh"
 
-#endif 
+#endif // not BISON_STACK_HH[]dnl
 
-
-
-
-
-// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

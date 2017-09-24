@@ -115,8 +115,8 @@ const Vertex& VertexStreamBase<Vertex>::operator[](std::size_t i) const
 template<class Vertex>
 void VertexStream<Vertex>::update()
 {
-	vertices = data.size() > 0 ? &data[0] : 0;
-	sz = data.size();
+	this->vertices = data.size() > 0 ? &data[0] : 0;
+	this->sz = data.size();
 }
 
 template<class Vertex>
@@ -179,9 +179,9 @@ void VertexStream<Vertex>::addVertices(Vertex** addedVertices, std::size_t count
 template<class Vertex>
 void VertexStream<Vertex>::addVertices(const Vertex* v, std::size_t count)
 {
-	auto csz = size();
+	auto csz = this->size();
 	resize(csz + count);
-	mem::memcpy(&vertices[csz], v, count * sizeof(Vertex));
+	mem::memcpy(&this->vertices[csz], v, count * sizeof(Vertex));
 }
 
 template<class Vertex>
@@ -191,7 +191,7 @@ VertexStream<Vertex>& VertexStream<Vertex>::operator=(const VertexStream<Vertex>
 	resize(s);
 	if(s > 0)
 	{
-		mem::memcpy( vertices, vs.vertices, memory());
+		mem::memcpy(this->vertices, vs.vertices, this->memory());
 	}
 	return *this;
 }
@@ -229,7 +229,7 @@ void VertexStream<Vertex>::maxAssign(const VertexStream<Vertex2>& vs2)
 
 	for (std::size_t i = 0; i < vs2.size(); ++i)
 	{
-		vertices[i].maxAssign( vs2[i] );
+		this->vertices[i].maxAssign( vs2[i] );
 	}
 }
 

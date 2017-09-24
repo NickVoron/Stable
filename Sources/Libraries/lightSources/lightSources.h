@@ -74,7 +74,7 @@ namespace light
 	{
 		inline void add(Source<SourceType>* source)
 		{
-			push_back( *(SourceType*)source );
+			this->push_back( *(SourceType*)source );
 		}
 	};	 
 

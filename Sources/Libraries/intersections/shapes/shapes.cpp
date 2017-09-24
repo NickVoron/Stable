@@ -61,7 +61,7 @@ namespace intersections
 		}
 
 		float r0 = (r1 + r2 + nm::magnitude(c1 - c2)) / 2;
-		auto& c0 = c1 + (c2 - c1)*(r0 - r1) / nm::magnitude(c2 - c1);
+		auto c0 = c1 + (c2 - c1)*(r0 - r1) / nm::magnitude(c2 - c1);
 
 		c1 = c0;
 		r1 = r0;

@@ -1,4 +1,4 @@
-// Copyright (C) 2015-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2015-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -32,13 +32,13 @@ namespace unigui
 		protected:
 			virtual void init()
 			{
-				if (!inited)
+				if (!this->inited)
 				{
 					VertexStream<MeshVtx> vs;
 					IndexStream<unsigned short> is;
 
 					Private::initQuadPrimitive(vs, is);
-					BaseRendererImpl::init(vs, is);
+					BaseRendererAPI<InstVtx, MeshVtx, unsigned short, 4096>::init(vs, is);
 				}			
 			}
 		};
@@ -70,7 +70,7 @@ namespace unigui
 
 
 
-// Copyright (C) 2015-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2015-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

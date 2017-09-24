@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -34,8 +34,8 @@ namespace ComponentModelTesting
 		const EvaluatedArray* refsArrayBlue = get(worldScopename, "main.rUtilizer.refs[0]")->cast<EvaluatedArray>();
 		const EvaluatedArray* refsArrayRed = get(worldScopename, "main.rUtilizer.refs[1]")->cast<EvaluatedArray>();
 
-		int dataCount = get(worldScopename, "main.data")->cast<const Expressions::EvaluatedArray>()->count();
-		for (int i=0; i<dataCount; ++i)
+		auto dataCount = get(worldScopename, "main.data")->cast<const Expressions::EvaluatedArray>()->count();
+		for (std::size_t i=0; i < dataCount; ++i)
 		{
 			std::string tRedPath = str::stringize("main.trees[", i, "].red");
 			std::string tBluePath = str::stringize("main.trees[", i, "].blue");
@@ -79,7 +79,7 @@ namespace ComponentModelTesting
 
 
 
-// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

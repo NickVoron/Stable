@@ -46,13 +46,13 @@ namespace dx11
 			texDesc.SampleDesc.Quality = MultisampleQuality;
 			texDesc.Usage = D3D11_USAGE_DEFAULT;
 			texDesc.BindFlags = usage;
-			ENFORCE(SUCCEEDED(device->device->CreateTexture2D(&texDesc, 0, &ptr)));
+			ENFORCE(SUCCEEDED(this->device->device->CreateTexture2D(&texDesc, 0, &this->ptr)));
 		}
 
 		void size(int& w, int&h) const
 		{
 			D3D11_TEXTURE2D_DESC desc;
-			ptr->GetDesc(&desc);
+			this->ptr->GetDesc(&desc);
 
 			w = desc.Width;
 			h = desc.Height;
@@ -61,7 +61,7 @@ namespace dx11
 		DXGI_FORMAT format() const
 		{
 			D3D11_TEXTURE2D_DESC desc;
-			ptr->GetDesc(&desc);
+			this->ptr->GetDesc(&desc);
 
 			return desc.Format;
 		}

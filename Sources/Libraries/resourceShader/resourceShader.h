@@ -43,40 +43,40 @@ namespace Resources
 	template<int shaders>
 	void Shader<shaders>::Clear()
 	{
-		deactivate();
-		nativeResource.clear();
+		this->deactivate();
+		this->nativeResource.clear();
 	}
 
 	template<int shaders>
 	void Shader<shaders>::Compile(stream::ostream& os)
 	{
-		nativeResource.save(os);
+		this->nativeResource.save(os);
 	}
 
 	template<int shaders>
 	void Shader<shaders>::LoadSource(const char* sourceFile, const void* userData, std::size_t userDataSize)
 	{
-		if(nativeResource.compile(Base::StrUtils::Convert( sourceFile ).c_str(), userData))
+		if(this->nativeResource.compile(Base::StrUtils::Convert( sourceFile ).c_str(), userData))
 		{
-			activate();
+			this->activate();
 		}
 		else
 		{
-			deactivate();
+			this->deactivate();
 		} 		
 	}
 
 	template<int shaders>
 	void Shader<shaders>::LoadCompiled(stream::istream& is)
 	{
-		nativeResource.load(is);
-		activate();
+		this->nativeResource.load(is);
+		this->activate();
 	}
 
 	template<int shaders>
 	bool Shader<shaders>::set(Viewports::Viewport& viewport)
 	{
-		return resource([&viewport](auto& shader) { dx11::execute(viewport, shader); });
+		return this->resource([&viewport](auto& shader) { dx11::execute(viewport, shader); });
 	}
 
 	typedef Shader<gapi::VERTEX_SHADER | gapi::PIXEL_SHADER> VertexPixelShader;

@@ -8,6 +8,8 @@
 
 #pragma once
 #include "expressions/library.include.h"
+#include "componentModel/library.include.h"
+
 #include "prototypeHandle.h"
 #include "../classDescEtc/expressions/instanceExpression.h"
 
@@ -23,6 +25,8 @@ namespace ObjectParser
 		const Expressions::EvaluatedScope& parentScope;
 		const InstanceDefinitionExpression& prototype;
 		PropertyAssignmentList unrolledParams;
+		ClassTable* classTable = nullptr;
+		ClassesLib* classes = nullptr;
 
 		virtual Expressions::EvaluateState evaluateStep(const Expressions::EvaluatedScope& parentScopename) override;
 

@@ -282,7 +282,8 @@ namespace WindowsGUI
 	{
 		WINDOWPLACEMENT place = placement();
 		WINDOWPLACEMENT backPlace;
-		SettingsRegistry::get("windowsParams_window_" + Base::StrUtils::Convert(name()), std::tie(placement(), backPlace, fullscreenState));
+		auto pack = std::tie(place, backPlace, fullscreenState);
+		SettingsRegistry::get("windowsParams_window_" + Base::StrUtils::Convert(name()), pack);
 				
  		placement(place);
 

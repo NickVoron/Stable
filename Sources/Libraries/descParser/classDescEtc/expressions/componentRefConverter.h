@@ -10,17 +10,10 @@
 #include "expressions/library.include.h"
 #include "componentModel/library.include.h"
 
-namespace ObjectParser
+namespace Expressions
 {
-	struct ComponentsRefConverter
-	{
-		void convert(const Expressions::Expression& expr, LinksDescList& client);
-	};
-
-	struct ComponentRefConverter
-	{
-		void convert(const Expressions::Expression& expr, LinkDesc& client);
-	};
+	bool convert(Expressions::Expression& expr, LinksDescList& client);
+	bool convert(Expressions::Expression& expr, LinkDesc& client);
 }
 
 

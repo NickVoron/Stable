@@ -57,55 +57,55 @@ struct VertexEqual
 };
 
 #define VERTEX_COMPONENT_COMMON(TNAME, fname) \
-	inline 		 TNAME& fname()																			{ static_assert( ( IsVertexHas<Vertex, TNAME>::value ), #TNAME ); return get<TNAME>(); }\
-	inline const TNAME& fname() const																	{ static_assert( ( IsVertexHas<Vertex, TNAME>::value ), #TNAME ); return get<TNAME>(); }
+	inline 		 TNAME& fname()																			{ static_assert( ( IsVertexHas<Vertex, TNAME>::value ), #TNAME ); return this->get<TNAME>(); }\
+	inline const TNAME& fname() const																	{ static_assert( ( IsVertexHas<Vertex, TNAME>::value ), #TNAME ); return this->get<TNAME>(); }
 
 
 #define VERTEX_COMPONENT_1(TNAME, fname) \
 	VERTEX_COMPONENT_COMMON(TNAME, fname) \
-	inline 		 TNAME& fname(TNAME::scalar p0)															{ static_assert( ( IsVertexHas<Vertex, TNAME>::value ), #TNAME ); return get<TNAME>()(p0); }
+	inline 		 TNAME& fname(TNAME::scalar p0)															{ static_assert( ( IsVertexHas<Vertex, TNAME>::value ), #TNAME ); return this->get<TNAME>()(p0); }
 
 
 #define VERTEX_COMPONENT_2(TNAME, fname) \
 	VERTEX_COMPONENT_COMMON(TNAME, fname) \
-	inline 		 TNAME& fname(TNAME::scalar p0, TNAME::scalar p1)										{ static_assert( ( IsVertexHas<Vertex, TNAME>::value ), #TNAME ); return get<TNAME>()(p0, p1); }\
-	template<class VectorT> inline TNAME& fname(const VectorT& v)										{ static_assert( ( IsVertexHas<Vertex, TNAME>::value ), #TNAME ); return get<TNAME>()(v); }
+	inline 		 TNAME& fname(TNAME::scalar p0, TNAME::scalar p1)										{ static_assert( ( IsVertexHas<Vertex, TNAME>::value ), #TNAME ); return this->get<TNAME>()(p0, p1); }\
+	template<class VectorT> inline TNAME& fname(const VectorT& v)										{ static_assert( ( IsVertexHas<Vertex, TNAME>::value ), #TNAME ); return this->get<TNAME>()(v); }
 
 #define VERTEX_COMPONENT_3(TNAME, fname) \
 	VERTEX_COMPONENT_COMMON(TNAME, fname) \
-	inline 		 TNAME& fname(TNAME::scalar p0, TNAME::scalar p1, TNAME::scalar p2)						{ static_assert( ( IsVertexHas<Vertex, TNAME>::value ), #TNAME ); return get<TNAME>()(p0, p1, p2); }\
-	template<class VectorT> inline TNAME& fname(const VectorT& v)										{ static_assert((IsVertexHas<Vertex, TNAME>::value), #TNAME); return get<TNAME>()(v); }
+	inline 		 TNAME& fname(TNAME::scalar p0, TNAME::scalar p1, TNAME::scalar p2)						{ static_assert( ( IsVertexHas<Vertex, TNAME>::value ), #TNAME ); return this->get<TNAME>()(p0, p1, p2); }\
+	template<class VectorT> inline TNAME& fname(const VectorT& v)										{ static_assert((IsVertexHas<Vertex, TNAME>::value), #TNAME); return this->get<TNAME>()(v); }
 
 #define VERTEX_COMPONENT_4(TNAME, fname) \
 	VERTEX_COMPONENT_COMMON(TNAME, fname) \
-	inline 		 TNAME& fname(TNAME::scalar p0, TNAME::scalar p1, TNAME::scalar p2, TNAME::scalar p3)	{ static_assert( ( IsVertexHas<Vertex, TNAME>::value ), #TNAME ); return get<TNAME>()(p0, p1, p2, p3);}\
-	template<class VectorT> inline TNAME& fname(const VectorT& v)										{ static_assert((IsVertexHas<Vertex, TNAME>::value), #TNAME); return get<TNAME>()(v); }
+	inline 		 TNAME& fname(TNAME::scalar p0, TNAME::scalar p1, TNAME::scalar p2, TNAME::scalar p3)	{ static_assert( ( IsVertexHas<Vertex, TNAME>::value ), #TNAME ); return this->get<TNAME>()(p0, p1, p2, p3);}\
+	template<class VectorT> inline TNAME& fname(const VectorT& v)										{ static_assert((IsVertexHas<Vertex, TNAME>::value), #TNAME); return this->get<TNAME>()(v); }
 
 
 #define VERTEX_UV_COMPONENT_COMMON(TNAME, fname) \
-	template<int usageIndex> inline TNAME<usageIndex>& fname() { static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value), #TNAME ); return get<TNAME<usageIndex> >(); } \
-	template<int usageIndex> inline const TNAME<usageIndex>& fname() const { static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME); return get<TNAME<usageIndex> >(); }
+	template<int usageIndex> inline TNAME<usageIndex>& fname() { static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value), #TNAME ); return this->get<TNAME<usageIndex> >(); } \
+	template<int usageIndex> inline const TNAME<usageIndex>& fname() const { static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME); return this->get<TNAME<usageIndex> >(); }
 
 #define VERTEX_UV_COMPONENT_1(TNAME, fname) \
 	VERTEX_UV_COMPONENT_COMMON(TNAME, fname) \
-	template<int usageIndex> inline TNAME<usageIndex>& fname(typename TNAME<usageIndex>::scalar p0)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return get<TNAME<usageIndex> >()(p0); }\
-	template<int usageIndex, class VectorT> inline TNAME<usageIndex>& fname( const VectorT& v)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return get<TNAME<usageIndex> >()(v); }
+	template<int usageIndex> inline TNAME<usageIndex>& fname(typename TNAME<usageIndex>::scalar p0)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return this->get<TNAME<usageIndex> >()(p0); }\
+	template<int usageIndex, class VectorT> inline TNAME<usageIndex>& fname( const VectorT& v)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return this->get<TNAME<usageIndex> >()(v); }
 	
 
 #define VERTEX_UV_COMPONENT_2(TNAME, fname) \
 	VERTEX_UV_COMPONENT_COMMON(TNAME, fname) \
-	template<int usageIndex> inline TNAME<usageIndex>& fname(typename TNAME<usageIndex>::scalar p0, typename TNAME<usageIndex>::scalar p1)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return get<TNAME<usageIndex> >()(p0, p1); }\
-	template<int usageIndex, class VectorT> inline TNAME<usageIndex>& fname( const VectorT& v)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return get<TNAME<usageIndex> >()(v); }
+	template<int usageIndex> inline TNAME<usageIndex>& fname(typename TNAME<usageIndex>::scalar p0, typename TNAME<usageIndex>::scalar p1)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return this->get<TNAME<usageIndex> >()(p0, p1); }\
+	template<int usageIndex, class VectorT> inline TNAME<usageIndex>& fname( const VectorT& v)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return this->get<TNAME<usageIndex> >()(v); }
 
 #define VERTEX_UV_COMPONENT_3(TNAME, fname) \
 	VERTEX_UV_COMPONENT_COMMON(TNAME, fname) \
-	template<int usageIndex> inline TNAME<usageIndex>& fname(typename TNAME<usageIndex>::scalar p0, typename TNAME<usageIndex>::scalar p1, typename TNAME<usageIndex>::scalar p2)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return get<TNAME<usageIndex> >()(p0, p1, p2); }\
-	template<int usageIndex, class VectorT> inline TNAME<usageIndex>& fname( const VectorT& v)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return get<TNAME<usageIndex> >()(v); }
+	template<int usageIndex> inline TNAME<usageIndex>& fname(typename TNAME<usageIndex>::scalar p0, typename TNAME<usageIndex>::scalar p1, typename TNAME<usageIndex>::scalar p2)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return this->get<TNAME<usageIndex> >()(p0, p1, p2); }\
+	template<int usageIndex, class VectorT> inline TNAME<usageIndex>& fname( const VectorT& v)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return this->get<TNAME<usageIndex> >()(v); }
 
 #define VERTEX_UV_COMPONENT_4(TNAME, fname) \
 	VERTEX_UV_COMPONENT_COMMON(TNAME, fname) \
-	template<int usageIndex> inline TNAME<usageIndex>& fname(typename TNAME<usageIndex>::scalar p0, typename TNAME<usageIndex>::scalar p1, typename TNAME<usageIndex>::scalar p2, typename TNAME<usageIndex>::scalar p3)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return get<TNAME<usageIndex> >()(p0, p1, p2, p3);  }\
-	template<int usageIndex, class VectorT> inline TNAME<usageIndex>& fname( const VectorT& v)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return get<TNAME<usageIndex> >()(v); }
+	template<int usageIndex> inline TNAME<usageIndex>& fname(typename TNAME<usageIndex>::scalar p0, typename TNAME<usageIndex>::scalar p1, typename TNAME<usageIndex>::scalar p2, typename TNAME<usageIndex>::scalar p3)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return this->get<TNAME<usageIndex> >()(p0, p1, p2, p3);  }\
+	template<int usageIndex, class VectorT> inline TNAME<usageIndex>& fname( const VectorT& v)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return this->get<TNAME<usageIndex> >()(v); }
 
 
 

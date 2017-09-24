@@ -17,27 +17,27 @@ namespace ComponentModel
 namespace ObjectParser
 {
 
-	ClassesLib* ObjectConverter::classes = nullptr;
-	const ClassTable* ObjectConverter::classTable = nullptr;
 
-	void ObjectConverter::convert(const Expressions::Expression& expr, EntitiesStream& client)
+
+
+	void convert(const Expressions::Expression& expr, EntitiesStream& client)
 	{
-  		ENFORCE(classTable);
-  		ENFORCE(classes);
-		
 		if (auto prototype = const_cast<PrototypeHandle*>(expr.cast<PrototypeHandle>()))
 		{
+			ENFORCE(prototype->classTable);
+			ENFORCE(prototype->classes);
 
-			auto& prototypes = classes->prototypes;
+			auto& prototypes = prototype->classes->prototypes;
 			void* identifier = (void*)&prototype->prototype;
 
 			if (!prototypes.find(identifier))
 			{			 
 				auto& ios = prototypes.create(identifier, prototype->prototype.type).ios;
 
-				auto sourceClasses = classes;
+				auto sourceClasses = prototype->classes;
 				EntitiesList entities;
-				ComponentModel::initializeEntities(ObjectParser::unroll(*classTable, *prototype->prototype.instance()), entities);
+				auto worldScope = ObjectParser::unroll(*prototype->classTable, *prototype->prototype.instance());
+				ComponentModel::initializeEntities(worldScope, entities);
 				sourceClasses->merge(entities.classes);
 				sourceClasses->debugOutput();
 

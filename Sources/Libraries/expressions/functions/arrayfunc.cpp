@@ -73,15 +73,37 @@ namespace Functions{
 		return result;
 	}
 
-	Expression* select_elements(ArrayContainer* array, ArrayContainer* indices)
+	std::vector<unsigned int> get_indices(ArrayContainer* array, ArrayContainer* query)
+	{
+		std::vector<unsigned int> result;
+		
+		for (std::size_t i = 0; i < array->count(); ++i)
+		{
+			auto item0 = array->element(i);
+			if (item0)
+			{
+				for (std::size_t j = 0; j < query->count(); ++j)
+				{
+					if (auto item1 = query->element(i))
+					{
+						if (item0->equal(item1))
+						{
+							result.push_back(i);
+						}						
+					}
+				}
+			}			
+		}
+
+		return result;
+	}
+
+	Expression* select_elements(ArrayContainer* array, const std::vector<unsigned int>& indices)
 	{
 		auto result = add<ArrayContainer>(EvaluationUnit::commonParent);
-		auto count = indices->count();
-		for (std::size_t i = 0; i < count; ++i)
+		for (auto index : indices)
 		{
-			int index;
-			convertVar(*indices->element(i), index);
-			if (index >= 0 && index < (int) array->count())
+			if (index >= 0 && index < array->count())
 			{
 				result->add(array->element(index));
 			}
@@ -100,6 +122,7 @@ namespace Functions{
 		return result;
 	}
 
+
 	int array_test(const std::vector<Expression*>& input)
 	{
 		for (auto expr : input)
@@ -117,6 +140,7 @@ namespace Functions{
 		BIND_EXPRESSION_FUNCTION(first_elements);
 		BIND_EXPRESSION_FUNCTION(select_elements);
 		BIND_EXPRESSION_FUNCTION(linear_indices);
+		BIND_EXPRESSION_FUNCTION(get_indices);
 		
 	}
 }

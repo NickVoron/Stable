@@ -1,19 +1,40 @@
-// Copyright (C) 2016 Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
 
+/* A Bison parser, made by GNU Bison 2.4.1.  */
 
+/* Locations for Bison parsers in C++
+   
+      Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
+/* As a special exception, you may create a larger work that contains
+   part or all of the Bison parser skeleton and distribute that work
+   under terms of your choice, so long as that work isn't itself a
+   parser generator using the skeleton or a modified version thereof
+   as a parser skeleton.  Alternatively, if you modify or redistribute
+   the parser skeleton itself, you may (at your option) remove this
+   special exception, which will cause the skeleton and the resulting
+   Bison output files to be licensed under the GNU General Public
+   License without this special exception.
+   
+   This special exception was added by the Free Software Foundation in
+   version 2.2 of Bison.  */
 
-
-
-
-
-
+/**
+ ** \file location.hh
+ ** Define the ObjectParser::location class.
+ */
 
 #ifndef BISON_LOCATION_HH
 # define BISON_LOCATION_HH
@@ -23,63 +44,64 @@
 # include "position.hh"
 
 
-
+/* Line 162 of location.cc  */
 #line 1 "[Bison:b4_percent_define_default]"
 
 namespace ObjectParser {
 
-
+/* Line 162 of location.cc  */
 #line 54 "parser/location.hh"
 
-  
+  /// Abstract a location.
   class location
   {
   public:
 
-    
+    /// Construct a location.
     location ()
       : begin (), end ()
     {
     }
 
 
-    
+    /// Initialization.
     inline void initialize (std::string* fn)
     {
       begin.initialize (fn);
       end = begin;
     }
 
-    
+    /** \name Line and Column related manipulators
+     ** \{ */
   public:
-    
+    /// Reset initial location to final location.
     inline void step ()
     {
       begin = end;
     }
 
-    
+    /// Extend the current location to the COUNT next columns.
     inline void columns (unsigned int count = 1)
     {
       end += count;
     }
 
-    
+    /// Extend the current location to the COUNT next lines.
     inline void lines (unsigned int count = 1)
     {
       end.lines (count);
     }
-    
+    /** \} */
 
 
   public:
-    
+    /// Beginning of the located region.
     position begin;
-    
+    /// End of the located region.
     position end;
   };
 
-  
+  /// Join two location objects to create a location.
   inline const location operator+ (const location& begin, const location& end)
   {
     location res = begin;
@@ -87,7 +109,7 @@ namespace ObjectParser {
     return res;
   }
 
-  
+  /// Add two location objects.
   inline const location operator+ (const location& begin, unsigned int width)
   {
     location res = begin;
@@ -95,28 +117,33 @@ namespace ObjectParser {
     return res;
   }
 
-  
+  /// Add and assign a location.
   inline location& operator+= (location& res, unsigned int width)
   {
     res.columns (width);
     return res;
   }
 
-  
+  /// Compare two location objects.
   inline bool
   operator== (const location& loc1, const location& loc2)
   {
     return loc1.begin == loc2.begin && loc1.end == loc2.end;
   }
 
-  
+  /// Compare two location objects.
   inline bool
   operator!= (const location& loc1, const location& loc2)
   {
     return !(loc1 == loc2);
   }
 
-  
+  /** \brief Intercept output stream redirection.
+   ** \param ostr the destination output stream
+   ** \param loc a reference to the location to redirect
+   **
+   ** Avoid duplicate information.
+   */
   inline std::ostream& operator<< (std::ostream& ostr, const location& loc)
   {
     position last = loc.end - 1;
@@ -133,31 +160,12 @@ namespace ObjectParser {
   }
 
 
-
+/* Line 271 of location.cc  */
 #line 1 "[Bison:b4_percent_define_default]"
 
-} 
+} // ObjectParser
 
-
+/* Line 271 of location.cc  */
 #line 170 "parser/location.hh"
 
-#endif 
-
-
-
-
-// Copyright (C) 2016 Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.
+#endif // not BISON_LOCATION_HH

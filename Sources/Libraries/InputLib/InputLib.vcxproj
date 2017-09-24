@@ -22,7 +22,7 @@
     <ProjectName>inputSys</ProjectName>
     <ProjectGuid>{E97797D8-119B-4E25-8320-7FFB59BAB5BC}</ProjectGuid>
     <RootNamespace>InputLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">

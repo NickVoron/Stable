@@ -14,6 +14,7 @@
 
 #include "containers/library.include.h"
 #include "reflection/library.include.h"
+#include "multimethods2/library.include.h"
 
 namespace Expressions
 {
@@ -45,7 +46,7 @@ namespace Expressions
 	};
 	Expressions::EvaluateState merge(Expressions::EvaluateState first, Expressions::EvaluateState second);
 
-	class Expression
+	class Expression : public multimethods2::ClientT<Expression>
 	{
 	public:
 		Expression() {}
@@ -96,11 +97,19 @@ namespace Expressions
 		
 		virtual const EvaluationUnit* child(const PropertyPath* path) const { return 0; }
 		virtual const EvaluationUnit* child(const ArrayPath* path) const	{ ENFORCE(false); return 0; }
-	
+		
+		bool equal(const EvaluationUnit* other) const 
+		{ 
+			return (this == other) || deepEqual(other);
+		}
+
 		static EvaluatedScope commonParent;
 
 	protected:
 		bool isParent(const EvaluatedScope& scope);
+
+		virtual bool deepEqual(const EvaluationUnit* other) const { return false; }
+
 	private:
 		uint64_t parent;
 	};

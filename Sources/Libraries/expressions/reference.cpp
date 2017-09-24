@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -11,6 +11,7 @@
 #include "holder.h"
 #include "property.h"
 #include "scopeNames.h"
+#include "function.h"
 
 #include "reflection/library.include.h"
 
@@ -77,7 +78,6 @@ References Reference::references() const
 }
 
 
-
 void Reference::Path::add(PathElement* element)
 {
 	emplace_back(element);
@@ -108,7 +108,6 @@ EvaluationUnit* Reference::Path::evaluate(const EvaluatedScope& rootEnvironment,
 
 bool Reference::Path::canResolveReference(const EvaluatedScope& rootEnvironment) const
 {
-	const EvaluationUnit* result = 0;
 	const EvaluationUnit* reference = 0;
 
 	for (auto& element : *this)
@@ -118,6 +117,11 @@ bool Reference::Path::canResolveReference(const EvaluatedScope& rootEnvironment)
 		{
 			return false;
 		}
+	}
+
+	if (reference && reference->cast<FunctionUnit>())
+	{
+		return false;
 	}
 
 	return true;
@@ -211,7 +215,7 @@ EvaluationUnit* ArrayPath::evaluate(const EvaluationUnit* input, const Evaluated
 
 
 
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

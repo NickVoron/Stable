@@ -64,7 +64,7 @@ class BufferBase : public Buffer, public Base::IntrusiveList<T>::Node
 {
 public:
 	inline BufferBase() { BuffersHolder<T>::insert(*this); }
-  	inline ~BufferBase() { remove(); }
+  	inline ~BufferBase() { this->remove(); }
 
 	static inline void clearAll()				{ BuffersHolder<T>::clearAll();}
 	static inline void updateAllFromCache()	{ BuffersHolder<T>::updateAllFromCache();}
@@ -81,7 +81,7 @@ struct BuffersHolder : public Base::IntrusiveList<BufferClass>, public Base::Mey
 	template<class T>
 	static void insert(BufferBase<T>& buffer)
 	{
-		get().push_back((T&)buffer);
+		Base::MeyersSingleton< BuffersHolder<BufferClass> >::get().push_back((T&)buffer);
 	}
 
 	static void clearAll()

@@ -81,7 +81,7 @@ namespace Expressions
 		References refs;
 		for (const Expression* expr : *this)
 		{
-			References& exprRefs = expr->references();
+			auto exprRefs = expr->references();
 			refs.insert(refs.begin(), exprRefs.begin(), exprRefs.end());
 		}
 

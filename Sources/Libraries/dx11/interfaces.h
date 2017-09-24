@@ -90,23 +90,23 @@ namespace dx11
 		struct Set : public ResultBase
 		{				 			
 
-			template<class InputData>	void create(const InputData& indata)				{ for (int i = 0; i < devices->count(); ++i)	{ data[i].create(indata);		} }
-			template<class TmplArg>		void create()										{ for (int i = 0; i < devices->count(); ++i)	{ data[i].create<TmplArg>(i);	} }
-			void release()																	{ for (int i = 0; i < devices->count(); ++i)	{ data[i].release(); } }
+			template<class InputData>	void create(const InputData& indata)				{ for (int i = 0; i < devices->count(); ++i)	{ this->data[i].create(indata);		} }
+			template<class TmplArg>		void create()										{ for (int i = 0; i < devices->count(); ++i)	{ this->data[i].create<TmplArg>(i);	} }
+			void release()																	{ for (int i = 0; i < devices->count(); ++i)	{ this->data[i].release(); } }
 
-			void set(int deviceIndex) const													{ data[deviceIndex].set(); }
+			void set(int deviceIndex) const													{ this->data[deviceIndex].set(); }
 			
 			template<class Param>
-			void set(int deviceIndex, Param param) const									{ data[deviceIndex].set(param); }
+			void set(int deviceIndex, Param param) const									{ this->data[deviceIndex].set(param); }
 
 			template<class DataSet>
-			void upload(const DataSet& indata)												{ for (int i = 0; i < devices->count(); ++i)	{ data[i].upload(indata); } }
+			void upload(const DataSet& indata)												{ for (int i = 0; i < devices->count(); ++i)	{ this->data[i].upload(indata); } }
 		
 		};
 
 		struct StateSet : public Set
 		{
-			virtual void execute(int deviceIndex)										{ set(deviceIndex); }
+			virtual void execute(int deviceIndex)										{ this->set(deviceIndex); }
 		};
 
 		struct ShaderSet : public Set
@@ -128,23 +128,23 @@ namespace dx11
 
 			virtual void execute(int deviceIndex)										
 			{ 
-				if (flags & gapi::VERTEX_SHADER) data[deviceIndex].vertex(shaderSlots[0]);
-				if (flags & gapi::PIXEL_SHADER) data[deviceIndex].pixel(shaderSlots[1]);
-				if (flags & gapi::GEOMETRY_SHADER) data[deviceIndex].geometry(shaderSlots[2]);
-				if (flags & gapi::HULL_SHADER) data[deviceIndex].hull(shaderSlots[3]);
-				if (flags & gapi::DOMAIN_SHADER) data[deviceIndex].domain(shaderSlots[4]);
-				if (flags & gapi::COMPUTE_SHADER) data[deviceIndex].compute(shaderSlots[5]);
+				if (flags & gapi::VERTEX_SHADER) this->data[deviceIndex].vertex(shaderSlots[0]);
+				if (flags & gapi::PIXEL_SHADER) this->data[deviceIndex].pixel(shaderSlots[1]);
+				if (flags & gapi::GEOMETRY_SHADER) this->data[deviceIndex].geometry(shaderSlots[2]);
+				if (flags & gapi::HULL_SHADER) this->data[deviceIndex].hull(shaderSlots[3]);
+				if (flags & gapi::DOMAIN_SHADER) this->data[deviceIndex].domain(shaderSlots[4]);
+				if (flags & gapi::COMPUTE_SHADER) this->data[deviceIndex].compute(shaderSlots[5]);
 			}
 		};
 
 		struct BufferSet : public Set
 		{
-			template<class DataStream>	void create(const DataStream& vs)	{ create(&vs[0], (int)vs.size()); }
-			template<class DataStream>	void upload(const DataStream& vs)	{ upload(&vs[0], (int)vs.size()); }
+			template<class DataStream>	void create(const DataStream& vs)	{ this->create(&vs[0], (int)vs.size()); }
+			template<class DataStream>	void upload(const DataStream& vs)	{ this->upload(&vs[0], (int)vs.size()); }
 
-			template<class DataType>	void upload(const DataType* indata, int count)	{ for (int i = 0; i < devices->count(); ++i)	{ data[i].upload(indata, count); } }
+			template<class DataType>	void upload(const DataType* indata, int count)	{ for (int i = 0; i < devices->count(); ++i)	{ this->data[i].upload(indata, count); } }
 
-			virtual void execute(int deviceIndex)										{ set(deviceIndex); }
+			virtual void execute(int deviceIndex)										{ this->set(deviceIndex); }
 		};
 	};
 }

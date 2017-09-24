@@ -87,7 +87,7 @@ namespace CameraSystem
 	template<class CameraType, class ControllerType>
 	struct ControlledCamera : public CameraType
 	{
-		ControlledCamera() { controller = &controllerTYPE; }
+		ControlledCamera() { this->controller = &controllerTYPE; }
 
 		ControllerType controllerTYPE;
 	};

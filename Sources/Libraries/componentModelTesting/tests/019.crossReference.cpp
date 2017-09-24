@@ -31,7 +31,7 @@ public:
 	{
 		link([this](auto& target)
 		{
-			LOG_EXPRESSION_VALUE2(info, target.info);
+			LOG_EXPRESSION(info, target.info);
 		});
 	}
 

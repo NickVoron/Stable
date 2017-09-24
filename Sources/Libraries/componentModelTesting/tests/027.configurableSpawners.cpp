@@ -26,7 +26,7 @@ public:
 	{ 
  		spawn([](Position& component)
  		{ 
- 			LOG_EXPRESSION_VALUE(typeid(component).name()) 
+ 			LOG_EXPRESSION(typeid(component).name()) 
  		}); 
 	}
 };

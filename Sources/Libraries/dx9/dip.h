@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2013 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -48,7 +48,7 @@ namespace dx9
 	public:
 		inline IndexedDrawer():verticesCount(0),baseVertexIndex(0),minVertexIndex(0),startVertexIndex(0){}
 
-		inline void setIndicesCount(unsigned int indCount)			{ primitivesCount = gapi::PrimitiveCountEvaluator9<primitiveType>::eval(indCount); }
+		inline void setIndicesCount(unsigned int indCount)			{ this->primitivesCount = gapi::PrimitiveCountEvaluator9<primitiveType>::eval(indCount); }
 		inline void setVerticesCount(unsigned int vertCount)		{verticesCount = vertCount;}
 		inline void setBaseVertexIndex(unsigned int baseIndex)		{baseVertexIndex = baseIndex;}
 		inline void setStartVertexIndex(unsigned int startIndex)	{startVertexIndex = startIndex;}
@@ -58,9 +58,9 @@ namespace dx9
 
 		inline void call() const
 		{
-			++callCounter;
-			primitivesCounter += primitivesCount;
-			device->DrawIndexedPrimitive(primitiveType, baseVertexIndex, 0, verticesCount, 0, primitivesCount); 
+			++this->callCounter;
+			this->primitivesCounter += this->primitivesCount;
+			device->DrawIndexedPrimitive(primitiveType, baseVertexIndex, 0, verticesCount, 0, this->primitivesCount);
 		}
 
 	private:
@@ -97,7 +97,7 @@ namespace dx9
 
 
 
-// Copyright (C) 2012-2013 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

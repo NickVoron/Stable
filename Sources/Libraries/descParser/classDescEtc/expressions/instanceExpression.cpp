@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -39,7 +39,7 @@ bool arrayUnroller(Expressions::EvaluatedScope& parentScopename, const Expressio
 	for (int i = 0; i < elementsCount; i++)
 	{
 		EvaluationUnit* index = Expressions::convertType(i)->cast<Expressions::Const<int>>();
-		unrollInstanceFunctor(EvaluatedScope());
+		unrollInstanceFunctor(parentScopename);
 	}
 
 	return true;
@@ -122,7 +122,7 @@ Expressions::References InstanceDefinitionExpression::references() const
 
 	if (arrayData)
 	{
-		Expressions::References& arrayDataRefs = arrayData->references();
+		auto arrayDataRefs = arrayData->references();
 		resultRefs.insert(resultRefs.begin(), arrayDataRefs.begin(), arrayDataRefs.end());
 	}
 
@@ -189,7 +189,7 @@ void fillScopenamesFromClass(const ClassTable& classes, const ClassDesc& classDe
 
 
 
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

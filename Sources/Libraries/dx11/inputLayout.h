@@ -22,20 +22,16 @@
 namespace dx11
 {
 	template<class VertexElement> const wchar_t*		SemanticNameW() { return VertexElement::semanticNameW(); }
-	template<class VertexElement> const char*			SemanticName()	{ return VertexElement::semanticName(); }
-	template<class VertexElement> const unsigned int	SemanticIndex() { return VertexElement::semanticIndex(); }
-
-	template<class VertexElement> DXGI_FORMAT Format() { return dxgi::FormatFind<VertexElement::ScalarType, VertexElement::dimensions>::format; }
-
+	
 	template<class VertexElement, int slotIndex, int instanceDataRate> 
 	inline void inputElement(D3D11_INPUT_ELEMENT_DESC& element)
 	{
-		element.SemanticName = SemanticName<VertexElement>();
-		element.Format = Format<VertexElement>();
+		element.SemanticName = VertexElement::semanticName();
+		element.Format = dxgi::FormatFind<VertexElement::ScalarType, VertexElement::dimensions>::format;;
 		element.InputSlot = slotIndex;
 		element.InputSlotClass = (instanceDataRate == 0) ? D3D11_INPUT_PER_VERTEX_DATA : D3D11_INPUT_PER_INSTANCE_DATA;
 		element.InstanceDataStepRate = instanceDataRate;
-		element.SemanticIndex = SemanticIndex<VertexElement>();;
+		element.SemanticIndex = VertexElement::semanticIndex();
 		element.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 	}
 

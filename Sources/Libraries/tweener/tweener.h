@@ -83,7 +83,7 @@ namespace tween
 				timeCount = 0;
 			}
 
-			return (TweenerParamBase*)next;
+			return (TweenerParamBase*)this->next;
 		}
 
 	protected:
@@ -92,7 +92,7 @@ namespace tween
 			if( time > timeCount ) 
 			{
 				evaluateImpl();
-				return (TweenerParamBase*) next;
+				return (TweenerParamBase*) this->next;
 			}
 			else
 			{
@@ -153,9 +153,9 @@ namespace tween
 
 		TWEENER_INLINE void process(float time)
 		{
-			if(!empty())
+			if(!this->empty())
 			{
-				for(auto* p = first(); p != end(); )
+				for(auto* p = this->first(); p != this->end(); )
 				{
 					p = p->evaluate(time);
 				}
@@ -236,9 +236,9 @@ namespace tween
 	template<class ValueType, int count>
 	void TweenerParam<ValueType, count>::evaluateImpl()
 	{
-		EasingFunc f = funcs[equation];
-		float t = f(timeCount, time);
-		for(auto& p : properties) 
+		EasingFunc f = funcs[this->equation];
+		float t = f(this->timeCount, this->time);
+		for(auto& p : this->properties)
 		{
 			p.evaluate(t);
 		}
@@ -255,7 +255,7 @@ namespace tween
 	{
 		equation = pequation;
 
-		defaults();
+		this->defaults();
 		TweenerParamBase<ValueType, count>::init(ptime, pdelay);
 	}
 
@@ -271,13 +271,13 @@ namespace tween
 	template<class ValueType, int count>
 	TweenerParamBase<ValueType, count>* TweenerParamBase<ValueType, count>::complete()
 	{
-		return (decreaseRepeat() < 0) ? remove() : next;
+		return (decreaseRepeat() < 0) ? (TweenerParamBase*)this->remove() : (TweenerParamBase*)this->next;
 	}
 	
 	template<class ValueType, int count>
 	void TweenerParamBase<ValueType, count>::finish()
 	{
-		remove();
+		this->remove();
 		defaults();
 	}
 

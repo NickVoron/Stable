@@ -115,7 +115,7 @@ namespace ComponentModel
 
 		classes.finalize();
 		entities.classes.create(classes, entities.executionList);
-		ObjectParser::ObjectConverter::classes = &entities.classes;
+
 
 		std::map<ObjectParser::InstanceHandle*, Entity*> objectToEntity;
 		for (std::size_t objectIdx = 0; objectIdx < objects.size(); ++objectIdx)
@@ -182,7 +182,7 @@ namespace ComponentModel
 		ENFORCE(filename);
 		ObjectParser::Compiler comp(filename);
 		auto& classTable = comp.result.classes();
-		ObjectParser::ObjectConverter::classTable = &classTable;
+
 		auto result = ObjectParser::unroll(classTable, "Main", "main");
 		return initializeEntities(result, entities);		
 	}

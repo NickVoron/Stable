@@ -61,8 +61,8 @@ namespace dx11
 
 		void set() const 
 		{ 
-			shader_set(device->context, ptr); 
-			setted() = (ptr != 0); 
+			shader_set(this->device->context, this->ptr);
+			setted() = (this->ptr != 0);
 		}
 
 		static void reset()		
@@ -204,8 +204,8 @@ namespace dx11
 	template<gapi::ShaderTypeName shaderType>
 	struct Shader : public DeviceShader<shaderType>::StateSet
 	{
-		void save(stream::ostream& os)  const { for (int i = 0; i < devices->count(); ++i) { data[i].save(os); }	}
-		void load(stream::istream& is)		  { for (int i = 0; i < devices->count(); ++i) {	data[i].load(is); } }
+		void save(stream::ostream& os)  const { for (int i = 0; i < devices->count(); ++i) { this->data[i].save(os); }	}
+		void load(stream::istream& is)		  { for (int i = 0; i < devices->count(); ++i) { this->data[i].load(is); } }
 
 		static const char* EntryPointName()		{ return ShaderBase<shaderType>::EntryPointName(); }
 		static const char* ShaderModelName()	{ return ShaderBase<shaderType>::ShaderModelName(); }

@@ -8,12 +8,9 @@
 
 #pragma once
 
-#include "Loki/library.include.h"
 #include "defaultLogs/library.include.h"
 #include "variantType/library.include.h"
 #include "strings/library.include.h"
-
-#include "stuff/callDispatcher.h"
 
 #include "../typeTraits.h"
 #include "../const.h"
@@ -229,6 +226,8 @@ namespace Expressions
 		}
 	};
 
+	extern multimethods2::Table2<bool> multimethodsConversionTable;
+
 	template<class T>
 	struct ConverterPointer<T, false>
 	{
@@ -249,21 +248,31 @@ namespace Expressions
 							if (auto exprtype = params[0]->reflectedType())
 							{
 								exprtype->get(value);
+								return true;
 							}
 						}
 						else if (type.size() == params.size()) 
 						{
+							bool success = true;
 							for (std::size_t i = 0; i < params.size(); ++i)
 							{
 								boost::any ref;
 								type.member(i, value, ref);
-								convertVar(*params[i], ref);
-							}							
+								success &= convertVar(*params[i], ref);
+							}			
+							return success;
 						}
 					}
-				}							
+				}
+			}	
+
+			if (bool result = multimethodsConversionTable.exec((Expression&) expr, type))
+			{
+				value = type.val();
+				return true;
 			}			
-			return true;
+			
+			return false;
 		}
 	};
 	

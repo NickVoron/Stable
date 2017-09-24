@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2015 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -27,7 +27,8 @@ void ScreenMouseHelper::process(const Viewports::CalculatedCamera& camera, Param
 {
 	unigui::Point2 mousePos(Input::mouseX(), Input::mouseY());
 	
-	params.mouseRay = camera.worldRay(nm::index2(mousePos.x, mousePos.y));
+	auto mpos = nm::index2((int) mousePos.x, (int) mousePos.y);
+	params.mouseRay = camera.worldRay(mpos);
 
 	if(params.frustumCalc)
 	{
@@ -43,7 +44,7 @@ void ScreenMouseHelper::process(const Viewports::CalculatedCamera& camera, Param
 			DebugDrawing::rect( unigui::Rect(point, mousePos - point) );
 		}	
 
-		params.mouseFrustum = camera.worldFrustum(nm::index2(point.x, point.y), nm::index2(mousePos.x, mousePos.y));
+		params.mouseFrustum = camera.worldFrustum(nm::index2(point.x, point.y), mpos);
 	}	
 }
 
@@ -52,7 +53,7 @@ void ScreenMouseHelper::process(const Viewports::CalculatedCamera& camera, Param
 
 
 
-// Copyright (C) 2012-2015 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

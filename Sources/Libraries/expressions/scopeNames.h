@@ -83,11 +83,11 @@ namespace Expressions
 	template<typename ExpressionType>
 	void ScopeNames<ExpressionType>::add(const std::string& name, ExpressionType* expr, InsertMethod method, bool isClassMember)
 	{
-		auto& found = find(name);
-		ENFORCE_MSG(method != InsertMethod::INSERT || found == end(), __FUNCTION__ "INSERT: scopenames alredy have property by name: " + name);
-		ENFORCE_MSG(method != InsertMethod::REPLACE || found != end(), __FUNCTION__ "REPLACE: scopenames not have property by name: " + name);
+		auto found = this->find(name);
+		ENFORCE_MSG(method != InsertMethod::INSERT || found == std::end(*this), __FUNCTION__ "INSERT: scopenames alredy have property by name: " + name);
+		ENFORCE_MSG(method != InsertMethod::REPLACE || found != std::end(*this), __FUNCTION__ "REPLACE: scopenames not have property by name: " + name);
 
-		if (method == InsertMethod::IGNORE_IF_EXIST && found != end())
+		if (method == InsertMethod::IGNORE_IF_EXIST && found != std::end(*this))
 		{
 			return;
 		}
@@ -104,8 +104,8 @@ namespace Expressions
 	template<typename ExpressionType>
 	ExpressionType* ScopeNames<ExpressionType>::get(const std::string& name) const
 	{
-		auto found = find(name);
-		ExpressionType* result = (found != end()) ? found->second : nullptr;
+		auto found = this->find(name);
+		ExpressionType* result = (found != std::end(*this)) ? found->second : nullptr;
 		if (!result && parent)
 		{
 			result = parent->get(name);
@@ -124,12 +124,12 @@ namespace Expressions
 	template<typename ExpressionType>
 	ExpressionType* ScopeNames<ExpressionType>::getByType(const std::string& type) const
 	{
-		auto found = std::find_if(begin(), end(), [type](auto& iter)
+		auto found = std::find_if(std::begin(*this), std::end(*this), [type](auto& iter)
 		{
 			return iter.second->typeName() == type;
 		});
 
-		ExpressionType* result = (found != end()) ? found->second : nullptr;
+		ExpressionType* result = (found != std::end(*this)) ? found->second : nullptr;
 
 		if (!result && parent)
 		{

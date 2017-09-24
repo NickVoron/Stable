@@ -8,12 +8,13 @@
 
 #include "componentRefConverter.h"
 #include "../../unroll/componentHandle.h"
-#include "instanceExpression.h"
 #include "../component.h"
 
 
-namespace ObjectParser 
+namespace Expressions
 {
+	multimethods2::Table2<bool> multimethodsConversionTable;
+
 	std::vector<const ObjectParser::ComponentHandle*> linearize(const Expressions::Expression& expr)
  	{
 		std::vector<const ObjectParser::ComponentHandle*> components;
@@ -46,7 +47,7 @@ namespace ObjectParser
 		return components;
 	}
 
-	void ComponentsRefConverter::convert(const Expressions::Expression& expr, LinksDescList& client)
+	bool convert(Expressions::Expression& expr, LinksDescList& client)
 	{
 
  		auto descriptions = linearize(expr);
@@ -62,12 +63,14 @@ namespace ObjectParser
   				address.componentIndices.push_back(componentHandle->componentIndex);
  			}
  		}
+
+		return true;
 	}
 
 	
 	
 	
-	void ComponentRefConverter::convert(const Expressions::Expression& expr, LinkDesc& client)
+	bool convert(Expressions::Expression& expr, LinkDesc& client)
 	{
 		LinksDescList list;
 		convertVar(expr, list);
@@ -75,6 +78,8 @@ namespace ObjectParser
 		{
 			client = list[0];
 		}
+
+		return true;
 	}
 }
 

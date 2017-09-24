@@ -9,6 +9,7 @@
 #pragma once
 
 #include "defaultLogs/library.include.h"
+#include "multimethods2/library.include.h"
 
 #include <string>
 #include <memory>
@@ -46,7 +47,7 @@ struct mirror
 	template<class Struct, class AccessorType>
 	struct AccessorHolderT : public AccessorHolder<Struct>
 	{
-		AccessorHolderT(const std::string& name, std::size_t index, AccessorType accessor) :AccessorHolder(name, index), accessor(accessor) {}
+		AccessorHolderT(const std::string& name, std::size_t index, AccessorType accessor) : AccessorHolder<Struct>(name, index), accessor(accessor) {}
 
 		virtual void get(const Struct& source, void* data, std::size_t dataSize) const override
 		{
@@ -69,7 +70,7 @@ struct mirror
 
 		virtual std::unique_ptr<AccessorHolder<Struct>> clone() const override
 		{
-			return std::unique_ptr<AccessorHolder<Struct>>(new AccessorHolderT(name, index, accessor));
+			return std::unique_ptr<AccessorHolder<Struct>>(new AccessorHolderT(this->name, this->index, accessor));
 		}
 
 		AccessorType accessor;
@@ -104,7 +105,7 @@ struct mirror
 		};
 
 
-		class Type
+		class Type : public multimethods2::BaseClient
 		{
 		public:
 			virtual ~Type() {}
@@ -169,7 +170,7 @@ struct mirror
 	};
 
 	template<class Struct>
-	class Type : public runtime::Type
+	class Type : public multimethods2::ClientT<Type<Struct>, runtime::Type>
 	{
 	public:
 		Type() {}
@@ -193,6 +194,7 @@ struct mirror
 
 		operator Struct() const { return value; };
 		Type& operator=(const Struct& v) { value = v; return *this; }
+		Struct& val() { return value; }
 
 		template<class Value> 
 		Type& get(const std::size_t& index, Value& output)
@@ -221,7 +223,7 @@ struct mirror
 		template<class Accessor> 
 		Type& add(const std::string& name, Accessor accessor)
 		{
-			LOG_MSG("define accessor: " << name);
+			
 			accessors.try_emplace(name, new AccessorHolderT<Struct, Accessor>(name, accessors.size(), accessor));
 			return *this;
 		}
@@ -238,7 +240,14 @@ struct mirror
 		virtual std::pair<bool, std::size_t> index(const std::string& name) override
 		{
 			auto it = accessors.find(name);
-			return (it != accessors.end()) ? std::make_pair(true, it->second->index) : std::make_pair(false, 0);
+			std::pair<bool, std::size_t> result;
+			result.first = (it != accessors.end());
+			if (result.first)
+			{
+				result.second = it->second->index;
+			}
+
+			return  result;
 		}
 
 	private:
@@ -352,7 +361,92 @@ struct mirror
 	}
 };
 
-//MIRROR_DECLARE(Vector3, x, y, z);
+#define MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	auto mirror_declarator_##TYPE_NAME = mirror::declare<TYPE_NAME>(STPP_STRINGIZE(TYPE_NAME))
+
+#define MIRROR_STRUCT_DECLARE_1(TYPE_NAME, M0) \
+	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	(STPP_STRINGIZE(M0), &TYPE_NAME::M0);
+
+#define MIRROR_STRUCT_DECLARE_2(TYPE_NAME, M0, M1) \
+	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
+	(STPP_STRINGIZE(M1), &TYPE_NAME::M1);
+
+#define MIRROR_STRUCT_DECLARE_3(TYPE_NAME, M0, M1, M2) \
+	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
+	(STPP_STRINGIZE(M1), &TYPE_NAME::M1) \
+	(STPP_STRINGIZE(M2), &TYPE_NAME::M2);
+
+#define MIRROR_STRUCT_DECLARE_4(TYPE_NAME, M0, M1, M2, M3) \
+	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
+	(STPP_STRINGIZE(M1), &TYPE_NAME::M1) \
+	(STPP_STRINGIZE(M2), &TYPE_NAME::M2) \
+	(STPP_STRINGIZE(M3), &TYPE_NAME::M3);
+
+#define MIRROR_STRUCT_DECLARE_5(TYPE_NAME, M0, M1, M2, M3, M4) \
+	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
+	(STPP_STRINGIZE(M1), &TYPE_NAME::M1) \
+	(STPP_STRINGIZE(M2), &TYPE_NAME::M2) \
+	(STPP_STRINGIZE(M3), &TYPE_NAME::M3) \
+	(STPP_STRINGIZE(M4), &TYPE_NAME::M4);
+
+#define MIRROR_STRUCT_DECLARE_6(TYPE_NAME, M0, M1, M2, M3, M4, M5) \
+	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
+	(STPP_STRINGIZE(M1), &TYPE_NAME::M1) \
+	(STPP_STRINGIZE(M2), &TYPE_NAME::M2) \
+	(STPP_STRINGIZE(M3), &TYPE_NAME::M3) \
+	(STPP_STRINGIZE(M4), &TYPE_NAME::M4) \
+	(STPP_STRINGIZE(M5), &TYPE_NAME::M5);
+
+#define MIRROR_STRUCT_DECLARE_7(TYPE_NAME, M0, M1, M2, M3, M4, M5, M6) \
+	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
+	(STPP_STRINGIZE(M1), &TYPE_NAME::M1) \
+	(STPP_STRINGIZE(M2), &TYPE_NAME::M2) \
+	(STPP_STRINGIZE(M3), &TYPE_NAME::M3) \
+	(STPP_STRINGIZE(M4), &TYPE_NAME::M4) \
+	(STPP_STRINGIZE(M5), &TYPE_NAME::M5) \
+	(STPP_STRINGIZE(M6), &TYPE_NAME::M6);
+
+#define MIRROR_STRUCT_DECLARE_8(TYPE_NAME, M0, M1, M2, M3, M4, M5, M6, M7) \
+	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
+	(STPP_STRINGIZE(M1), &TYPE_NAME::M1) \
+	(STPP_STRINGIZE(M2), &TYPE_NAME::M2) \
+	(STPP_STRINGIZE(M3), &TYPE_NAME::M3) \
+	(STPP_STRINGIZE(M4), &TYPE_NAME::M4) \
+	(STPP_STRINGIZE(M5), &TYPE_NAME::M5) \
+	(STPP_STRINGIZE(M6), &TYPE_NAME::M6) \
+	(STPP_STRINGIZE(M7), &TYPE_NAME::M7);
+
+#define MIRROR_STRUCT_DECLARE_9(TYPE_NAME, M0, M1, M2, M3, M4, M5, M6, M7, M8) \
+	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
+	(STPP_STRINGIZE(M1), &TYPE_NAME::M1) \
+	(STPP_STRINGIZE(M2), &TYPE_NAME::M2) \
+	(STPP_STRINGIZE(M3), &TYPE_NAME::M3) \
+	(STPP_STRINGIZE(M4), &TYPE_NAME::M4) \
+	(STPP_STRINGIZE(M5), &TYPE_NAME::M5) \
+	(STPP_STRINGIZE(M6), &TYPE_NAME::M6) \
+	(STPP_STRINGIZE(M7), &TYPE_NAME::M7) \
+	(STPP_STRINGIZE(M8), &TYPE_NAME::M8);
+
+#define MIRROR_STRUCT_DECLARE(...) MACRO_ID(GET_MACRO(__VA_ARGS__, \
+	MIRROR_STRUCT_DECLARE_9, \
+	MIRROR_STRUCT_DECLARE_8, \
+	MIRROR_STRUCT_DECLARE_7, \
+	MIRROR_STRUCT_DECLARE_6, \
+	MIRROR_STRUCT_DECLARE_5, \
+	MIRROR_STRUCT_DECLARE_4, \
+	MIRROR_STRUCT_DECLARE_3, \
+	MIRROR_STRUCT_DECLARE_2, \
+	MIRROR_STRUCT_DECLARE_1 \
+	)(__VA_ARGS__))
 
 
 

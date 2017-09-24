@@ -114,7 +114,7 @@ EvaluateState EvalPropertiesStruct::evaluateStep(const Expressions::EvaluatedSco
 	{
 		evalState = Expressions::Impossible;  
 
-		for (auto& iter = unEvaluatedPropertyies.cbegin(); iter != unEvaluatedPropertyies.cend();)
+		for (auto iter = unEvaluatedPropertyies.cbegin(); iter != unEvaluatedPropertyies.cend();)
 		{
 			const std::string& name = iter->first;
 			const Expression* expr = iter->second;

@@ -35,20 +35,20 @@ struct Color : public ChannelsTranslator<fmt, Color<fmt> >
 
 	Color& zero() { mem::memzero(ChTrans::plane); return *this; }
 
-	template<Format fmt0> void operator += (const Color<fmt0>& c) { addc(c); }
-	template<Format fmt0> void operator -= (const Color<fmt0>& c) { subc(c); }
-	template<Format fmt0> void operator *= (const Color<fmt0>& c) { mulc(c); }
-	template<Format fmt0> void operator /= (const Color<fmt0>& c) { divc(c); }
+	template<Format fmt0> void operator += (const Color<fmt0>& c) { this->addc(c); }
+	template<Format fmt0> void operator -= (const Color<fmt0>& c) { this->subc(c); }
+	template<Format fmt0> void operator *= (const Color<fmt0>& c) { this->mulc(c); }
+	template<Format fmt0> void operator /= (const Color<fmt0>& c) { this->divc(c); }
 
 	template<Format fmt0> Color operator + (const Color<fmt0>& c) const { Color cc(*this); cc += c; return cc; }
 	template<Format fmt0> Color operator - (const Color<fmt0>& c) const { Color cc(*this); cc -= c; return cc; }
 	template<Format fmt0> Color operator * (const Color<fmt0>& c) const { Color cc(*this); cc *= c; return cc; }
 	template<Format fmt0> Color operator / (const Color<fmt0>& c) const { Color cc(*this); cc /= c; return cc; }
 
-	template<typename scalar> void operator += (scalar f)	{ add(f); }
-	template<typename scalar> void operator -= (scalar f)	{ sub(f); }
-	template<typename scalar> void operator *= (scalar f)	{ mul(f); }
-	template<typename scalar> void operator /= (scalar f)	{ div(f); }
+	template<typename scalar> void operator += (scalar f)	{ this->add(f); }
+	template<typename scalar> void operator -= (scalar f)	{ this->sub(f); }
+	template<typename scalar> void operator *= (scalar f)	{ this->mul(f); }
+	template<typename scalar> void operator /= (scalar f)	{ this->div(f); }
 
 	template<typename scalar> Color operator + (scalar f) const	{ Color cc(*this); cc += f; return cc; }
 	template<typename scalar> Color operator - (scalar f) const	{ Color cc(*this); cc -= f; return cc; }

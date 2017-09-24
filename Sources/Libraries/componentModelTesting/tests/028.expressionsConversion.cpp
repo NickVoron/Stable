@@ -20,7 +20,7 @@ Expressions::Expression* testType(const T& value)
 	Expressions::Expression* ret = nullptr;
 	T res;
 	Expressions::convertVar(*(ret = Expressions::convertType(value)), res);
-	ENFORCE(res == value);
+	
 	return ret;
 }
 
@@ -30,7 +30,7 @@ void conversionTest(const Types&... value)
 	std::vector<Expressions::Expression*> vec{ testType(value)... };
 	for (auto expr : vec)
 	{
-		LOG_EXPRESSION_VALUE(expr->string());
+		LOG_EXPRESSION(expr->string());
 	}
 }
 															 
@@ -40,7 +40,7 @@ ExpressionsConversion::ExpressionsConversion()
 	{
 		mirror::declare<Vector3>("Vector3")("x", &Vector3::x)("y", &Vector3::y)("z", &Vector3::z);
 
-		conversionTest(1, 0.0f, Vector3(1, 1, 1));
+		conversionTest(LinksDescList());
 	}
 	catch (const std::exception& e)
 	{

@@ -1,0 +1,13 @@
+#pragma once
+
+#define NUM_ARGS(...) std::tuple_size<decltype(std::make_tuple(__VA_ARGS__))>::value
+
+#define STRINGIZE(something) STRINGIZE_HELPER(something) 
+#define STRINGIZE_HELPER(something) #something
+
+#define SOURCE_LOCATION __FILE__ "(" STRINGIZE(__LINE__) "):"
+#define SOURCE_LOCATION_STR(exp) SOURCE_LOCATION "expression '" #exp "' failed'"
+#define FUNCTION_LOCATION __FUNCTION__ "', line: " STRINGIZE(__LINE__)
+#define COMPILER_WARNING(MESSAGE) "warning: " MESSAGE
+#define COMPILER_ERROR(MESSAGE) "error: " MESSAGE 
+

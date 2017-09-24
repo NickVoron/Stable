@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2016 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -31,8 +31,8 @@ namespace AppModules
 		
  		openal::listener::position(oalPos);
 
-		Vector3& dir = camera.orientation.GetZAxis();
-		Vector3& up = camera.orientation.GetYAxis();
+		Vector3 dir = camera.orientation.GetZAxis();
+		Vector3 up = camera.orientation.GetYAxis();
 		
 		Vector3 oalDir(dir.x, -1 * dir.z, dir.y);
 		Vector3 oalUp(up.x, -1 * up.z, -1*up.y);
@@ -48,7 +48,7 @@ namespace AppModules
 
 
 
-// Copyright (C) 2012-2016 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

@@ -133,16 +133,95 @@ namespace logs
 	STPP_STRINGIZE_EXPR(exp2) \
 	).str()
 
-#define STPP_STRINGIZE_VALUES(...) VFUNC(STPP_STRINGIZE_N, __VA_ARGS__)
+#define STPP_STRINGIZE_N4(exp0, exp1, exp2, exp3) str::stringize(str::comma(), \
+	STPP_STRINGIZE_EXPR(exp0), \
+	STPP_STRINGIZE_EXPR(exp1), \
+	STPP_STRINGIZE_EXPR(exp2), \
+	STPP_STRINGIZE_EXPR(exp3) \
+	).str()
+
+#define STPP_STRINGIZE_N5(exp0, exp1, exp2, exp3, exp4) str::stringize(str::comma(), \
+	STPP_STRINGIZE_EXPR(exp0), \
+	STPP_STRINGIZE_EXPR(exp1), \
+	STPP_STRINGIZE_EXPR(exp2), \
+	STPP_STRINGIZE_EXPR(exp3), \
+	STPP_STRINGIZE_EXPR(exp4) \
+	).str()
+
+#define STPP_STRINGIZE_N6(exp0, exp1, exp2, exp3, exp4, exp5) str::stringize(str::comma(), \
+	STPP_STRINGIZE_EXPR(exp0), \
+	STPP_STRINGIZE_EXPR(exp1), \
+	STPP_STRINGIZE_EXPR(exp2), \
+	STPP_STRINGIZE_EXPR(exp3), \
+	STPP_STRINGIZE_EXPR(exp4), \
+	STPP_STRINGIZE_EXPR(exp5) \
+	).str()
+
+#define STPP_STRINGIZE_N7(exp0, exp1, exp2, exp3, exp4, exp5, exp6) str::stringize(str::comma(), \
+	STPP_STRINGIZE_EXPR(exp0), \
+	STPP_STRINGIZE_EXPR(exp1), \
+	STPP_STRINGIZE_EXPR(exp2), \
+	STPP_STRINGIZE_EXPR(exp3), \
+	STPP_STRINGIZE_EXPR(exp4), \
+	STPP_STRINGIZE_EXPR(exp5), \
+	STPP_STRINGIZE_EXPR(exp6) \
+	).str()
+
+#define STPP_STRINGIZE_N8(exp0, exp1, exp2, exp3, exp4, exp5, exp6, exp7) str::stringize(str::comma(), \
+	STPP_STRINGIZE_EXPR(exp0), \
+	STPP_STRINGIZE_EXPR(exp1), \
+	STPP_STRINGIZE_EXPR(exp2), \
+	STPP_STRINGIZE_EXPR(exp3), \
+	STPP_STRINGIZE_EXPR(exp4), \
+	STPP_STRINGIZE_EXPR(exp5), \
+	STPP_STRINGIZE_EXPR(exp6), \
+	STPP_STRINGIZE_EXPR(exp7) \
+	).str()
+
+#define STPP_STRINGIZE_N9(exp0, exp1, exp2, exp3, exp4, exp5, exp6, exp7, exp8) str::stringize(str::comma(), \
+	STPP_STRINGIZE_EXPR(exp0), \
+	STPP_STRINGIZE_EXPR(exp1), \
+	STPP_STRINGIZE_EXPR(exp2), \
+	STPP_STRINGIZE_EXPR(exp3), \
+	STPP_STRINGIZE_EXPR(exp4), \
+	STPP_STRINGIZE_EXPR(exp5), \
+	STPP_STRINGIZE_EXPR(exp6), \
+	STPP_STRINGIZE_EXPR(exp7), \
+	STPP_STRINGIZE_EXPR(exp8) \
+	).str()
+
+#define STPP_STRINGIZE_N10(exp0, exp1, exp2, exp3, exp4, exp5, exp6, exp7, exp8, exp9) str::stringize(str::comma(), \
+	STPP_STRINGIZE_EXPR(exp0), \
+	STPP_STRINGIZE_EXPR(exp1), \
+	STPP_STRINGIZE_EXPR(exp2), \
+	STPP_STRINGIZE_EXPR(exp3), \
+	STPP_STRINGIZE_EXPR(exp4), \
+	STPP_STRINGIZE_EXPR(exp5), \
+	STPP_STRINGIZE_EXPR(exp6), \
+	STPP_STRINGIZE_EXPR(exp7), \
+	STPP_STRINGIZE_EXPR(exp8), \
+	STPP_STRINGIZE_EXPR(exp9) \
+	).str()
+
+#define STPP_STRINGIZE_VALUES(...) MACRO_ID(GET_MACRO(__VA_ARGS__, \
+	STPP_STRINGIZE_N10, \
+	STPP_STRINGIZE_N9, \
+	STPP_STRINGIZE_N8, \
+	STPP_STRINGIZE_N7, \
+	STPP_STRINGIZE_N6, \
+	STPP_STRINGIZE_N5, \
+	STPP_STRINGIZE_N4, \
+	STPP_STRINGIZE_N3, \
+	STPP_STRINGIZE_N2, \
+	STPP_STRINGIZE_N1 \
+	)(__VA_ARGS__))
 
 #define EXVAL(expr) STPP_STRINGIZE_EXPR(expr)
 
 #define LOG_REPORT_CLEAR	{ LOG_SYSTEM_THREAD_SAFE; logs::report().clear(); };
 
-#define LOG_EXPRESSION(exp) do { LOG_MSG(STPP_STRINGIZE(exp)); (exp); } while (false);
-#define LOG_EXPRESSION_VALUE(exp) do { LOG_MSG(STPP_STRINGIZE_N1(exp)); } while (false);
-#define LOG_EXPRESSION_VALUE2(exp0, exp1) do { LOG_MSG(STPP_STRINGIZE_N2(exp0, exp1)); } while (false);
-#define LOG_EXPRESSION_VALUE3(exp0, exp1, exp2) do { LOG_MSG(STPP_STRINGIZE_N3(exp0, exp1, exp2)); } while (false);
+#define LOG_EXPRESSION(...) do { LOG_MSG(STPP_STRINGIZE_VALUES(__VA_ARGS__)); } while (false);
+
 
 }
 

@@ -875,8 +875,8 @@ namespace DebugDrawing
 			int next = nm::ring_clamp(i + 1, maxVal);
 			const Vector3& b1 = base[next];
 
-			Vector3& b01 = b0 + edge;
-			Vector3& b11 = b1 + edge;
+			auto b01 = b0 + edge;
+			auto b11 = b1 + edge;
 
 			addLine(b0, b1);
 			addLine(b01, b11);

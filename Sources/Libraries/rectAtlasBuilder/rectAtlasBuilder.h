@@ -55,7 +55,7 @@ public:
 	RectSource& addSourceRect(const std::string& fileName);
 
 	template<class ImageOperation>
-	RectSource& addSourceRectOp(const std::string& name, const std::string& fileName, ImageOperation& op)
+	RectSource& addSourceRectOp(const std::string& name, const std::string& fileName, ImageOperation&& op)
 	{
 		AtlasImage img;
 		image::freeimage::load(fileName.c_str(), img);
@@ -64,9 +64,9 @@ public:
 	}
 
 	template<class ImageOperation>
-	RectSource& addSourceRectOp(const std::string& fileName, ImageOperation& op)
+	RectSource& addSourceRectOp(const std::string& fileName, ImageOperation&& op)
 	{
-		return addSourceRectOp(fileName, fileName, op);
+		return addSourceRectOp(fileName, fileName, std::forward<ImageOperation>(op));
 	}
 
 	void addSourceDir(const std::string& dirName, bool recursive, bool visibleLayers);
@@ -75,14 +75,14 @@ public:
 	void addImagesSourceDir(const std::string& dirName, const std::string& extension, bool recursive);
 
 	template<class ImageOperation>
-	void addImagesSourceDir(const std::string& dirName, const std::string& extension, bool recursive, ImageOperation& op)
+	void addImagesSourceDir(const std::string& dirName, const std::string& extension, bool recursive, ImageOperation&& op)
 	{
 		auto files = Base::FileUtils::GetFileNamesByMask(dirName + "/", extension, true);
 		std::sort(files.begin(), files.end());
 
 		for (const auto& fileName : files)
 		{
-			addSourceRectOp(fileName.string(), op);
+			addSourceRectOp(fileName.string(), std::forward<ImageOperation>(op));
 		}
 	}
 

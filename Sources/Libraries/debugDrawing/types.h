@@ -69,8 +69,18 @@ namespace DebugDrawing
 		template<class PT>
 		struct DrawableList : public std::vector<PT>, public DrawableListBase
 		{
-			template<class P0, class P1>			void add(bool immediate, const Vector4& color,  const P0& p0, const P1& p1)					{ immediate ? Primitives::draw( PT(color, p0, p1) )		: push_back( PT(color, p0, p1) );		}
-			template<class P0, class P1, class P2>	void add(bool immediate, const Vector4& color, const P0& p0, const P1& p1, const P2& p2)	{ immediate ? Primitives::draw( PT(color, p0, p1, p2) )	: push_back( PT(color, p0, p1, p2) );	}
+			template<class... P0>			
+			void add(bool immediate, const Vector4& color,  const P0&... p0)					
+			{ 
+				if (immediate)
+				{
+					Primitives::draw(PT(color, p0...));
+				}
+				else
+				{
+					this->push_back(PT(color, p0...));
+				}
+			}
 
 			DrawableList()
 			{
@@ -93,7 +103,7 @@ namespace DebugDrawing
 
 
 			}
-			virtual void reset()			{	clear();	}
+			virtual void reset()			{	this->clear();	}
 		};
 
 		template<class RE>

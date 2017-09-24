@@ -74,12 +74,14 @@ namespace tgf
 
 	TGFGraph load(const char* fileName)
 	{
-		return load(std::ifstream(fileName));
+		std::ifstream is(fileName);
+		return load(is);
 	}
 
 	void save(const TGFGraph& graph, const char* fileName)
 	{
-		return save(graph, std::ofstream(fileName));
+		std::ofstream os(fileName);
+		return save(graph, os);
 	}
 }
 

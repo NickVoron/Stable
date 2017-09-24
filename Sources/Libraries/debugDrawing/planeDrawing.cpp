@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -14,7 +14,7 @@ namespace DebugDrawing
 
 	void plane(const nm::plane& plane, const Vector3& basis)
 	{
-		Vector3& basePoint = plane.projection(basis);
+		auto basePoint = plane.projection(basis);
 		
 
 		Vector3 planeVector = plane.n;
@@ -67,7 +67,7 @@ namespace DebugDrawing
 
 
 
-// Copyright (C) 2016 Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

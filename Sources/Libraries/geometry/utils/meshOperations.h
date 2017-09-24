@@ -113,9 +113,10 @@ unsigned int mergeVertices(Mesh<VertexType, IndexType>& mesh)
 
 	unsigned int result = 0;
 
-	Mesh::IndexStreamType oldIs = mesh.indices();
-	Mesh::VertexStreamType& vs	= mesh.vertices();
-	Mesh::IndexStreamType& is	= mesh.indices();
+	auto& vs = mesh.vertices();
+	auto& is = mesh.indices();
+	auto oldIs = is;
+
 	std::vector<bool> removed;
 	int vc = vs.getSize();
 

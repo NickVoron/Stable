@@ -1,4 +1,4 @@
-// Copyright (C) 2013-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -21,13 +21,13 @@ namespace WindowsGUI
 	{
 	public:
 		Functions(){}
-		void add(FunctionType func)	{ at(cursor++) = std::move(func); }
+		void add(FunctionType func)	{ this->at(cursor++) = std::move(func); }
 		void reset()
 		{
 			cursor = 0;
 			for (auto& func : *this)
 			{
-				std::swap(func, std::function<FunctionType>());
+				func = std::move(std::function<FunctionType>());
 			}
 		}
 
@@ -156,7 +156,7 @@ namespace WindowsGUI
 	public:
 		virtual ~WindowT()
 		{
-			remove();
+			this->remove();
 		}
 	};
 
@@ -178,7 +178,7 @@ namespace WindowsGUI
 			
 			window->windowProcs = funcs;
 
-			push_back(*window);
+			this->push_back(*window);
 
 			return window;
 		}
@@ -216,7 +216,7 @@ namespace WindowsGUI
 
 
 
-// Copyright (C) 2013-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

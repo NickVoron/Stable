@@ -38,7 +38,12 @@ namespace AppModules
 		};
 
 		template<class Params> void init(Params& params)	{ ::init();							}
-		template<class Params> void process(Params& params)	{ ::process(StdAppParams(params));	}
+		template<class Params> void process(Params& params)	
+		{ 
+			StdAppParams inparams(params);
+			::process(inparams);
+		}
+
 		template<class Params> void release(Params& params)	{ ::release();						}
 	};
 

@@ -8,14 +8,15 @@
 
 #pragma once
 
+#include <boost/filesystem.hpp>
+
 #include "../classDescEtc/grammarComposition.h"
 #include "../unroll/unroller.h"
 #include "../classDescEtc/utils/nameSource.h"
-
-#include <boost/filesystem.hpp>
-#include "expressions/library.include.h"
 #include "stuff/atof.h"
+
 #include "common/includes.h"
+#include "expressions/library.include.h"
 
 namespace ObjectParser
 {

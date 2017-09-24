@@ -73,17 +73,17 @@ namespace WindowsGAPI
 	public:
 		void present()
 		{
-			for (auto wnd = begin(); wnd != end(); ++wnd)
+			for (auto& wnd : *this)
 			{
-				wnd->present();
+				wnd.present();
 			}
 		}
 
 		void clear()
 		{
-			for (auto wnd = begin(); wnd != end(); ++wnd)
+			for (auto& wnd : *this)
 			{
-				wnd->clear();
+				wnd.clear();
 			}
 		}
 	};

@@ -1,4 +1,4 @@
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -92,10 +92,10 @@ namespace intersections
 	}	 
 
 
-	float distanceSq( const Vector3& point, const Segment3& segment, Segment3& res, DistParams<Vector3, Segment3>& params)
+	float distanceSq( const nm::Vector3& point, const Segment3& segment, Segment3& res, DistParams<Vector3, Segment3>& params)
 	{
-		Vector3 c = point - segment.p0;	
-		Vector3 v = segment.direction(); 
+		nm::Vector3 c = point - segment.p0;	
+		nm::Vector3 v = segment.direction(); 
 		float d = nm::magnitude(v);	
 		v /= d;
 		float t = nm::dot(v, c);	
@@ -108,11 +108,11 @@ namespace intersections
 		return nm::magnitudeSq(res.direction());
 	}
 
-	float distanceSq( const Vector3& point, const intersections::Triangle& triangle, Segment3& res, DistParams<Vector3, Triangle>&	params)
+	float distanceSq( const nm::Vector3& point, const intersections::Triangle& triangle, Segment3& res, DistParams<nm::Vector3, Triangle>&	params)
 	{
-		Vector3 kDiff	= triangle.vertices[0] - point;
-		Vector3 kEdge0	= triangle.vertices[1] - triangle.vertices[0];
-		Vector3 kEdge1	= triangle.vertices[2] - triangle.vertices[0];
+		nm::Vector3 kDiff	= triangle.vertices[0] - point;
+		nm::Vector3 kEdge0	= triangle.vertices[1] - triangle.vertices[0];
+		nm::Vector3 kEdge1	= triangle.vertices[2] - triangle.vertices[0];
 
 		float fA00 = nm::magnitudeSq(kEdge0);
 		float fA01 = nm::dot(kEdge0, kEdge1);
@@ -705,7 +705,7 @@ namespace intersections
 
 
 
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

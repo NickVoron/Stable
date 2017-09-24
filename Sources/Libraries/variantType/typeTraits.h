@@ -18,7 +18,7 @@ namespace Variant
 	{
 		typedef T Type;
 		static const char* name() { return typeid(T).name(); }
-		static bool boolean(Type val) { return static_cast<int>(val) != 0; }
+		static bool boolean(Type val) { return false; }
 	};
 
 	template<> struct TypeTraits<std::string>				{ typedef std::string	Type;	static const char* name() { return "string"; }	static bool boolean(Type val) { return true; } };

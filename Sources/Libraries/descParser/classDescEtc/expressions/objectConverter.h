@@ -11,13 +11,7 @@
 
 namespace ObjectParser
 {
-	struct ObjectConverter
-	{
-		void convert(const Expressions::Expression& expr, EntitiesStream& client);
-
-		static ClassesLib* classes;
-		static const ClassTable* classTable;
-	};
+	void convert(const Expressions::Expression& expr, EntitiesStream& client);
 }
 
 

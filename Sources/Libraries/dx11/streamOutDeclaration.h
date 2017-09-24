@@ -1,4 +1,4 @@
-// Copyright (C) 2013 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -21,8 +21,8 @@ namespace dx11
 	template<class VertexElement, int slotIndex, int instanceDataRate> 
 	inline void streamOutElement(D3D11_SO_DECLARATION_ENTRY& element)
 	{
-		element.SemanticName = SemanticName<VertexElement>();
-		element.SemanticIndex = SemanticIndex<VertexElement>();
+		element.SemanticName = VertexElement::semanticName();
+		element.SemanticIndex = VertexElement::semanticIndex();
 		element.OutputSlot = slotIndex;
 		element.StartComponent = 0;
 		element.ComponentCount = VertexElement::dimensions;
@@ -69,7 +69,7 @@ namespace dx11
 
 
 
-// Copyright (C) 2013 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

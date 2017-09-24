@@ -26,7 +26,7 @@ public:
 	{ 
 		spawn([](Position& component)
 		{ 
-			LOG_EXPRESSION_VALUE(typeid(component).name()) 
+			LOG_EXPRESSION(typeid(component).name()) 
 		}); 
 	}
 };
@@ -40,7 +40,7 @@ public:
 	{ 
 		spawn([](ComponentS1& component)
 		{
-			LOG_EXPRESSION_VALUE(typeid(component).name());
+			LOG_EXPRESSION(typeid(component).name());
 		}); 
 	}
 };
@@ -54,7 +54,7 @@ public:
 	{ 
 		spawn([](ComponentS2& component)
 		{
-			LOG_EXPRESSION_VALUE(typeid(component).name());
+			LOG_EXPRESSION(typeid(component).name());
 		}); 
 	}
 };
@@ -68,7 +68,7 @@ public:
 	{ 
 		spawn([](ComponentS3& component)
 		{
-			LOG_EXPRESSION_VALUE(typeid(component).name());
+			LOG_EXPRESSION(typeid(component).name());
 		}); 
 	}
 };
@@ -82,7 +82,7 @@ public:
 	{ 
 		spawn([](ComponentS4& component)
 		{
-			LOG_EXPRESSION_VALUE(typeid(component).name());
+			LOG_EXPRESSION(typeid(component).name());
 		}); 
 	}
 };
