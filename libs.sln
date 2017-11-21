@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "resources", "resources", "{9326E0B7-BA11-4284-AB38-E079F0A3EB98}"
 EndProject
@@ -1323,8 +1323,7 @@ Global
 		{E5E0DCD1-BBC2-40EE-BD77-AAB3DE80B177}.Release|x64.Build.0 = Release|x64
 		{2FAD615B-EEB9-4B16-9073-A34C58C938BA}.Debug|Win32.ActiveCfg = Debug|Win32
 		{2FAD615B-EEB9-4B16-9073-A34C58C938BA}.Debug|Win32.Build.0 = Debug|Win32
-		{2FAD615B-EEB9-4B16-9073-A34C58C938BA}.Debug|x64.ActiveCfg = Debug|x64
-		{2FAD615B-EEB9-4B16-9073-A34C58C938BA}.Debug|x64.Build.0 = Debug|x64
+		{2FAD615B-EEB9-4B16-9073-A34C58C938BA}.Debug|x64.ActiveCfg = Debug|Win32
 		{2FAD615B-EEB9-4B16-9073-A34C58C938BA}.Release|Win32.ActiveCfg = Release|Win32
 		{2FAD615B-EEB9-4B16-9073-A34C58C938BA}.Release|Win32.Build.0 = Release|Win32
 		{2FAD615B-EEB9-4B16-9073-A34C58C938BA}.Release|x64.ActiveCfg = Release|Win32
@@ -1338,8 +1337,7 @@ Global
 		{2320F9D5-0343-4957-8EC4-0DC836EC24DA}.Release|x64.Build.0 = Release|x64
 		{E93C94EE-749E-4047-86E9-EEFF7ABD2C77}.Debug|Win32.ActiveCfg = Debug|Win32
 		{E93C94EE-749E-4047-86E9-EEFF7ABD2C77}.Debug|Win32.Build.0 = Debug|Win32
-		{E93C94EE-749E-4047-86E9-EEFF7ABD2C77}.Debug|x64.ActiveCfg = Debug|x64
-		{E93C94EE-749E-4047-86E9-EEFF7ABD2C77}.Debug|x64.Build.0 = Debug|x64
+		{E93C94EE-749E-4047-86E9-EEFF7ABD2C77}.Debug|x64.ActiveCfg = Debug|Win32
 		{E93C94EE-749E-4047-86E9-EEFF7ABD2C77}.Release|Win32.ActiveCfg = Release|Win32
 		{E93C94EE-749E-4047-86E9-EEFF7ABD2C77}.Release|Win32.Build.0 = Release|Win32
 		{E93C94EE-749E-4047-86E9-EEFF7ABD2C77}.Release|x64.ActiveCfg = Release|Win32
