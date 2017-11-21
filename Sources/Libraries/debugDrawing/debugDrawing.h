@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include <D3DX9.h>
@@ -33,10 +25,10 @@ namespace DebugDrawing
 	void immediateMode(bool enabled);
 	void shaderMode(ShaderMode mode);
 
-	
+	//
 	void ignoreViewTransform(bool value);
 	
-	
+	//
 	Vector4 color();
 	void color(const Vector3& color);
 	void color(const Vector4& color);
@@ -53,7 +45,7 @@ namespace DebugDrawing
 		color_rgb(clr.r(), clr.g(), clr.b());
 	}
 
-	
+	//
 	void text(const Vector3& worldCoord, const std::string& text);
 	void text(const Vector3& worldCoord, const nm::index2& screenShift, const std::string& text);
 	void text(const nm::index2& screenCoord, const std::string& text);
@@ -62,7 +54,7 @@ namespace DebugDrawing
 	template<class... T> void text(const Vector3& worldCoord, const nm::index2& screenShift, const T&... obj) { text(worldCoord, screenShift, str::stringize(obj...).str() ); }
 	template<class... T> void text(const nm::index2& screenCoord, const T&... obj)							  { text(screenCoord, str::stringize(obj...).str() ); }
 
-	
+	//
 	void line(const Vector3& start, const Vector3& end);
 	void line2(const nm::index2& start, const nm::index2& end);
 	void lineRect(const unigui::Rect& screenRect);
@@ -89,7 +81,7 @@ namespace DebugDrawing
 		lineloop_impl(&points[0], sizeof...(p0));
 	}
 	
-	
+	//
 	void wireBox(const State& s, const Vector3& extents);
 	void wireBox(const State& s, float extents);
 	void wireBox(const Vector3& position, const Vector3& extents);
@@ -175,21 +167,3 @@ namespace DebugDrawing
 	void camera(const CameraSystem::Params& cam, float size, bool drawFrustum);
 	void camera(const CameraSystem::UserCameraBase& cam, float size, bool drawFrustum);
 };
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

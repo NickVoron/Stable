@@ -29,6 +29,8 @@ namespace ObjectParser
 		GrammarComposition& gc;
 		Compiler& compiler;
 
+		//int location() { return yylloc; }
+
 	private:
 		int yylex();
 		Parser::semantic_type* yylval;
@@ -36,6 +38,9 @@ namespace ObjectParser
 		
 		std::istringstream input;
 	};
+
+	std::string strlocation(const Parser::location_type& loc);
+	
 }
 
 #endif

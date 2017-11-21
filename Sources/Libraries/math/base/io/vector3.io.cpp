@@ -1,15 +1,7 @@
-// Copyright (C) 2012-2016 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "vector3.io.h"
 
 
-
+// Output:
 std::ostream& operator<<( std::ostream& s, const Vector4& v ){	return s << "(" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ")";	}
 std::ostream& operator<<( std::ostream& s, const Vector3& v ){	return s << "(" << v.x << ", " << v.y << ", " << v.z << ")";}
 std::ostream& operator<<( std::ostream& s, const Vector2& v ){	return s << "(" << v.x << ", " << v.y << ")";}
@@ -20,58 +12,40 @@ std::ostream &operator<<(std::ostream& s, const std::vector<Vector3> & vector)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// std::istream& operator>>( std::istream& s, Vector4& v )
+// {
+// 	s >> Base::Parsers::Token("(");
+// 	s >> v.x;
+// 	s >> Base::Parsers::Token(",");
+// 	s >> v.y;
+// 	s >> Base::Parsers::Token(",");
+// 	s >> v.z;
+// 	s >> Base::Parsers::Token(",");
+// 	s >> v.w;
+// 	s >> Base::Parsers::Token(")");
+// 	return s;
 // }
-
-
-
-// Copyright (C) 2012-2016 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// std::istream& operator>>( std::istream& s, Vector3& v )
+// {
+// 	s >> Base::Parsers::Token("(");
+// 	s >> v.x;
+// 	s >> Base::Parsers::Token(",");
+// 	s >> v.y;
+// 	s >> Base::Parsers::Token(",");
+// 	s >> v.z;
+// 	s >> Base::Parsers::Token(")");
+// 	return s;
+// }
 // 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
+// std::istream& operator>>( std::istream& s, Vector2& v )
+// {
 // 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.
+// 	s >> Base::Parsers::Token("(");
+// 	s >> v.x;
+// 	s >> Base::Parsers::Token(",");
+// 	s >> v.y;
+// 	s >> Base::Parsers::Token(")");
+// 	return s;
+// 
+// }

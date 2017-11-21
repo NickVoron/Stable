@@ -118,13 +118,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="visualSwitcher.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="autoActor.h" />
+    <ClInclude Include="baseActor.h" />
     <ClInclude Include="developmentComponents.h" />
     <ClInclude Include="library.include.h" />
     <ClInclude Include="positionLink.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="visualActor.h" />
     <ClInclude Include="visualSwitcher.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

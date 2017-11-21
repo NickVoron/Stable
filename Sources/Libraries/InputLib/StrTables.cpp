@@ -1,20 +1,18 @@
-// Copyright (C) 2012-2014 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "InputSystem.h"
 #include <sstream>
 
 namespace Input
 {
 
-	
+	/*
+	Примеры консольных команд
 
-	
+	bind action key_a mod_lshift
+	bind action mouse_x
+	bind action gpad_axis_x3 mod_lshift
+	*/
+
+	// конвертация строка <-> InputSystem::enum`s, 0 - не найден идентификатор
 	std::string InputModifierToStr(int modifiers)	
 	{
 		std::string res;
@@ -54,11 +52,11 @@ namespace Input
 		case InputEvent::XPAD:		s = CONVERT_ENUM_TO_STR(XPadCode	, (XPadCode		)code ); break;
 		};
 
-		
+		// если это не геймпад
 		if(device != InputEvent::XPAD)
 			return s;
 
-		
+		// добавить индекс для геймпада
 		return str::stringize(s, ev.port());
 	}
 
@@ -67,12 +65,12 @@ namespace Input
 		if(str.empty())	{	return InputEvent();	}
 
 		
-		
+		// если это геймпад
 		if(str.find("XPAD_") != std::string::npos)
 		{
 			std::string s = str;
 
-			
+			// читаем цифру - порт в конце
 			int port = str[str.size() - 1] - '0';
 
 			s[str.size() - 1] = 0;
@@ -80,13 +78,13 @@ namespace Input
 			return InputEvent(CONVERT_STR_TO_ENUM(XPadCode, s.c_str()), port);
 		}
 
-		
+		// если это мышка
 		if(str.find("MOUSE_") != std::string::npos)
 		{
 			return InputEvent(CONVERT_STR_TO_ENUM(MouseCode, str.c_str()));
 		}
 
-		
+		// клавиша
 		return InputEvent(CONVERT_STR_TO_ENUM(KeyCode, str.c_str()));
 	}
 
@@ -325,7 +323,7 @@ namespace Input
 	{ MOUSE_AXIS_Z				,	"MOUSE_AXIS_Z" 		},
 	END_ENUM_STR_TABLE(MouseCode);
 
-	
+	// коды геймпада
 	BEGIN_ENUM_STR_TABLE(XPadCode)
 		{ XPAD_DPAD_UP,					"XPAD_DPAD_UP"},
 		{ XPAD_DPAD_DOWN,				"XPAD_DPAD_DOWN"},
@@ -358,51 +356,33 @@ namespace Input
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// 	BEGIN_ENUM_STR_TABLE(GamePadCode)
+// 	{ ERROR_GAMEPAD_CODE		,	"ERROR_GAMEPAD_CODE"},
+// 	{ GAMEPAD_BUTTON_LUP		,	"GPAD_LUP"			},
+// 	{ GAMEPAD_BUTTON_LDOWN		,	"GPAD_LDOWN" 		},
+// 	{ GAMEPAD_BUTTON_LLEFT		,	"GPAD_LLEFT" 		},
+// 	{ GAMEPAD_BUTTON_LRIGHT		,	"GPAD_LRIGHT"		},
+// 	
+// 	{ GAMEPAD_BUTTON_L1			,	"GPAD_L1" 			},
+// 	{ GAMEPAD_BUTTON_L2			,	"GPAD_L2" 			},
+// 	{ GAMEPAD_BUTTON_R1			,	"GPAD_R1" 			},
+// 	{ GAMEPAD_BUTTON_R2			,	"GPAD_R2" 			},
+// 
+// 	{ GAMEPAD_BUTTON_RUP		,	"GPAD_RUP"			},
+// 	{ GAMEPAD_BUTTON_RDOWN		,	"GPAD_RDOWN"		},
+// 	{ GAMEPAD_BUTTON_RLEFT		,	"GPAD_RLEFT"		},
+// 	{ GAMEPAD_BUTTON_RRIGHT		,	"GPAD_RRIGHT"		},
+// 
+// 	{ GAMEPAD_STICK_BUTTON_A	,	"GPAD_A" 			},
+// 	{ GAMEPAD_STICK_BUTTON_B	,	"GPAD_B" 			},
+// 	
+// 	{ GAMEPAD_BUTTON_START		,	"GPAD_START"		},
+// 	{ GAMEPAD_BUTTON_SELECT		,	"GPAD_SELECT"		},
+// 
+// 	{ GAMEPAD_STICK_AXIS_LEFT_X	,	"GPAD_AXISLX" 		},
+// 	{ GAMEPAD_STICK_AXIS_LEFT_Y	,	"GPAD_AXISLY" 		},
+// 	{ GAMEPAD_STICK_AXIS_RIGHT_X,	"GPAD_RIGHTX" 		},
+// 	{ GAMEPAD_STICK_AXIS_RIGHT_Y,	"GPAD_RIGHTY" 		},
+// 	END_ENUM_STR_TABLE(GamePadCode);
 
 }
-
-
-
-// Copyright (C) 2012-2014 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

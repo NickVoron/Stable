@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #ifdef WIN32
 
 #include "inputSysWin.h"
@@ -219,9 +211,9 @@ WinInput::KeyboardDict::KeyboardDict()
 }			  
 		
 		
-
-
-
+//		
+//
+//
 WinInput::WinInput()
 {
 	ENFORCE(!current);
@@ -277,7 +269,68 @@ void WinInput::init()
 
 void WinInput::xpadProc()
 {
-	
+	/*
+	for(unsigned int i = 0; i < XPadBuffer::DEVICE_COUNT; ++i)
+	{
+		CONTROLER_STATE& state = xpadControllers[i];
+		// Simply get the state of the controller from XInput.
+		DWORD dwResult = XInputGetState( i, &state.state );
+		state.connected = ( dwResult == ERROR_SUCCESS );
+		if(state.connected)
+		{
+			LOG_REPORT("connected: " << i << " XPad Device");
+
+			WORD wButtons = state.state.Gamepad.wButtons;
+
+			data.xpad[0](i, XPAD_BUTTON_A)	= ( wButtons & XINPUT_GAMEPAD_A ) ? 1.0f : 0.0f;
+			data.xpad[0](i, XPAD_BUTTON_B)	= ( wButtons & XINPUT_GAMEPAD_B ) ? 1.0f : 0.0f;
+			data.xpad[0](i, XPAD_BUTTON_X)	= ( wButtons & XINPUT_GAMEPAD_X ) ? 1.0f : 0.0f;
+			data.xpad[0](i, XPAD_BUTTON_Y)	= ( wButtons & XINPUT_GAMEPAD_Y ) ? 1.0f : 0.0f;
+
+			data.xpad[0](i, XPAD_DPAD_UP)	= ( wButtons & XINPUT_GAMEPAD_DPAD_UP		) ? 1.0f : 0.0f;
+			data.xpad[0](i, XPAD_DPAD_DOWN)	= ( wButtons & XINPUT_GAMEPAD_DPAD_DOWN		) ? 1.0f : 0.0f;
+			data.xpad[0](i, XPAD_DPAD_LEFT)	= ( wButtons & XINPUT_GAMEPAD_DPAD_LEFT		) ? 1.0f : 0.0f;
+			data.xpad[0](i, XPAD_DPAD_RIGHT)= ( wButtons & XINPUT_GAMEPAD_DPAD_RIGHT	) ? 1.0f : 0.0f;
+
+			data.xpad[0](i, XPAD_BUTTON_LEFT_SHOULDER)	= ( wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER		) ? 1.0f : 0.0f;
+			data.xpad[0](i, XPAD_BUTTON_RIGHT_SHOULDER)	= ( wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER	) ? 1.0f : 0.0f;
+			data.xpad[0](i, XPAD_BUTTON_LEFT_THUMB)		= ( wButtons & XINPUT_GAMEPAD_LEFT_THUMB		) ? 1.0f : 0.0f;
+			data.xpad[0](i, XPAD_BUTTON_RIGHT_THUMB)	= ( wButtons & XINPUT_GAMEPAD_RIGHT_THUMB		) ? 1.0f : 0.0f;
+
+			data.xpad[0](i, XPAD_BUTTON_START)		= ( wButtons & XINPUT_GAMEPAD_START		) ? 1.0f : 0.0f;
+			data.xpad[0](i, XPAD_BUTTON_BACK)		= ( wButtons & XINPUT_GAMEPAD_BACK		) ? 1.0f : 0.0f;
+
+			const int minV = std::numeric_limits<SHORT>::min() + 1;
+			const float maxV = 1.0f / std::numeric_limits<USHORT>::max();
+			const float maxT = 1.0f / std::numeric_limits<BYTE>::max();
+
+			int lx = state.state.Gamepad.sThumbLX;
+			int ly = state.state.Gamepad.sThumbLY;
+			int rx = state.state.Gamepad.sThumbRX;
+			int ry = state.state.Gamepad.sThumbRY;
+			int lt = state.state.Gamepad.bLeftTrigger;
+			int rt = state.state.Gamepad.bRightTrigger;
+
+			if(abs(lx) < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)	lx = 0;
+			if(abs(ly) < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)	ly = 0;
+			if(abs(rx) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)	rx = 0;
+			if(abs(ry) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)	ry = 0;
+			if(abs(lt) < XINPUT_GAMEPAD_TRIGGER_THRESHOLD)		lt = 0;
+			if(abs(rt) < XINPUT_GAMEPAD_TRIGGER_THRESHOLD)		rt = 0;	
+
+			LOG_REPORT("left: " << ((lx - minV) * maxV ));
+
+			data.xpad[0](i, XPAD_AXIS_LEFT_TRIGGER)		= lt * maxT;
+			data.xpad[0](i, XPAD_AXIS_RIGHT_TRIGGER)	= rt * maxT;
+
+			data.xpad[0](i, XPAD_AXIS_LEFT_STICK_X)		= ((lx - minV) * maxV ) * 2.0f - 1.0f;
+			data.xpad[0](i, XPAD_AXIS_LEFT_STICK_Y)		= ((ly - minV) * maxV ) * 2.0f - 1.0f;
+
+			data.xpad[0](i, XPAD_AXIS_RIGHT_STICK_X)	= ((rx - minV) * maxV ) * 2.0f - 1.0f;
+			data.xpad[0](i, XPAD_AXIS_RIGHT_STICK_Y)	= ((ry - minV) * maxV ) * 2.0f - 1.0f;
+		}
+	}	
+	*/
 }
 
 void WinInput::update()
@@ -314,22 +367,3 @@ float WinInput::directpad2_impl(DirectInputCode2 code, float& prev)
 }
 
 #endif
-
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

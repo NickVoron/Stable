@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include "bufstream.h"
@@ -17,8 +9,8 @@
 namespace stream
 {
 
-
-
+// �������������� ���������� � ���� �������� CRC32
+// ������ ��������� ����� �������� � ������ ������
 struct FormatHeader
 {
 	char o1; 
@@ -52,14 +44,14 @@ template<> inline char FormatHeader::tag<dataop::null>()		{return 0;}
 template<> inline char FormatHeader::tag<dataop::zlib>()		{return 1;}
 template<> inline char FormatHeader::tag<dataop::rijndael>()	{return 2;}
 
-
+// ������� ��� ������/������ ����������
 template<bool read>
 void readAndCheckStreamHeader(cfile& file, const FormatHeader& header);
 
 template<bool write>
 void writeStreamHeader(cfile& file, const FormatHeader& header);
 
-
+//
 class basic_ifstream : public istream
 {
 public:
@@ -96,7 +88,7 @@ protected:
 	FormatHeader header;
 };
 
-
+//
 class basic_ofstream : public ostream
 {
 public:
@@ -157,9 +149,9 @@ protected:
 	}
 };
 
-
-
-
+//
+//
+//
 template<
 template <class> class O1 = dataop::null,
 template <class> class O2 = dataop::null,
@@ -176,7 +168,7 @@ bool crcCheck = false,
 int bufferSize = 4096*4>
 class ofstream;
 
-
+//
 template<template <class> class O1, template <class> class O2, bool readHeader, bool crcCheck, int bufferSize >
 class ifstream : public basic_ifstream, public streambuf<bufferSize, O1, O2>
 {
@@ -233,7 +225,7 @@ protected:
 	}
 };
 
-
+//
 template<int bufferSize, bool readHeader, bool crcCheck>
 class ifstream<dataop::null, dataop::null, readHeader, crcCheck, bufferSize>
 	:public basic_ifstream, public streambuf<bufferSize, dataop::null, dataop::null>
@@ -276,7 +268,7 @@ private:
 };
 
 
-
+//
 template<template <class> class O1, template <class> class O2, bool writeHeader, bool crcCheck, int bufferSize>
 class ofstream : public streambuf<bufferSize, O1, O2>, public basic_ofstream
 {
@@ -325,7 +317,7 @@ protected:
 	}
 };
 
-
+//
 template<int bufferSize, bool writeHeader, bool crcCheck>
 class ofstream<dataop::null, dataop::null, writeHeader, crcCheck, bufferSize> : public streambuf<bufferSize, dataop::null, dataop::null>, public basic_ofstream
 {
@@ -365,25 +357,24 @@ protected:
 	}
 };
 
+/*
+typedef ofstream<mem::KB * 4, false, dataop::rijndael_operator> rofstream;
+typedef ofstream<mem::KB * 4, false, dataop::zlib_operator> zofstream;
 
+typedef ifstream<mem::KB * 4, false, dataop::rijndael_operator> rifstream;
+typedef ifstream<mem::KB * 4, false, dataop::zlib_operator> zifstream;
+
+typedef ofstream<mem::KB * 4, true, dataop::rijndael_operator> rcofstream;
+typedef ofstream<mem::KB * 4, true, dataop::zlib_operator> zcofstream;
+
+typedef ifstream<mem::KB * 4, true, dataop::rijndael_operator> rcifstream;
+typedef ifstream<mem::KB * 4, true, dataop::zlib_operator> zcifstream;
+
+typedef ofstream<mem::KB * 4, false, dataop::zlib_operator, dataop::rijndael_operator> zrofstream;
+typedef ifstream<mem::KB * 4, false, dataop::zlib_operator, dataop::rijndael_operator> zrifstream;
+
+typedef ofstream<mem::KB * 4, true, dataop::zlib_operator, dataop::rijndael_operator> zrcofstream;
+typedef ifstream<mem::KB * 4, true, dataop::zlib_operator, dataop::rijndael_operator> zrcifstream;
+*/
 
 }
-
-
-
-
-// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

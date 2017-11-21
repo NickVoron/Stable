@@ -115,9 +115,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="array.cpp" />
-    <ClCompile Include="arrayContainer.cpp" />
     <ClCompile Include="binder.cpp" />
+    <ClCompile Include="callable.cpp" />
     <ClCompile Include="conversion\convertType.cpp" />
+    <ClCompile Include="conversion\varToType.cpp" />
     <ClCompile Include="expression.cpp" />
     <ClCompile Include="externalExtension.cpp" />
     <ClCompile Include="function.cpp" />
@@ -128,7 +129,7 @@
     <ClCompile Include="property.cpp" />
     <ClCompile Include="functions\func.cpp" />
     <ClCompile Include="reference.cpp" />
-    <ClCompile Include="scopeNames.cpp" />
+    <ClCompile Include="namescope.cpp" />
     <ClCompile Include="constExprList.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -141,12 +142,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="array.h" />
-    <ClInclude Include="arrayContainer.h" />
     <ClInclude Include="binder.h" />
+    <ClInclude Include="callable.h" />
     <ClInclude Include="const.h" />
     <ClInclude Include="constExprList.h" />
     <ClInclude Include="conversion\convertType.h" />
     <ClInclude Include="conversion\varToType.h" />
+    <ClInclude Include="evaluation.h" />
     <ClInclude Include="expression.h" />
     <ClInclude Include="extension\extension.h" />
     <ClInclude Include="externalExtension.h" />
@@ -159,7 +161,7 @@
     <ClInclude Include="property.h" />
     <ClInclude Include="functions\func.h" />
     <ClInclude Include="reference.h" />
-    <ClInclude Include="scopeNames.h" />
+    <ClInclude Include="namescope.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="ternaryOperator.h" />
@@ -167,7 +169,9 @@
     <ClInclude Include="unit_test.h" />
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="expressions.natvis" />
+    <Natvis Include="expressions.natvis">
+      <SubType>Designer</SubType>
+    </Natvis>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

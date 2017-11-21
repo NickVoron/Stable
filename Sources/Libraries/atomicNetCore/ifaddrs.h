@@ -1,12 +1,12 @@
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
-
+/*
+ *  Copyright 2013 The WebRTC Project Authors. All rights reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree. An additional intellectual property rights grant can be found
+ *  in the file PATENTS.  All contributing project authors may
+ *  be found in the AUTHORS file in the root of the source tree.
+ */
 #pragma once
 
 
@@ -19,18 +19,18 @@
 
 namespace net {
 
-	
-	
-	
-	
+	// Implementation of getifaddrs for Android.
+	// Fills out a list of ifaddr structs (see below) which contain information
+	// about every network interface available on the host.
+	// See 'man getifaddrs' on Linux or OS X (nb: it is not a POSIX function).
 	struct ifaddrs {
 		struct ifaddrs* ifa_next;
 		char* ifa_name;
 		unsigned int ifa_flags;
 		struct sockaddr* ifa_addr;
 		struct sockaddr* ifa_netmask;
-		
-		
+		// Real ifaddrs has broadcast, point to point and data members.
+		// We don't need them (yet?).
 	};
 
 
@@ -38,22 +38,3 @@ int getifaddrs(struct ifaddrs** result);
 void freeifaddrs(struct ifaddrs* addrs);
 
 }
-
-
-
-
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

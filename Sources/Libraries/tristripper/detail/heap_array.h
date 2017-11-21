@@ -1,19 +1,11 @@
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
+// Copyright (C) 2004 Tanguy Fautré.
+// For conditions of distribution and use,
+// see copyright notice in tri_stripper.h
 //
-// This work is based on the RedStar project
-//
-
-
-
-
-
-
-
-
-
+//////////////////////////////////////////////////////////////////////
+// SVN: $Id: heap_array.h 86 2005-06-08 17:47:27Z gpsnoopy $
+//////////////////////////////////////////////////////////////////////
 
 #ifndef TRI_STRIPPER_HEADER_GUARD_HEAP_ARRAY_H
 #define TRI_STRIPPER_HEADER_GUARD_HEAP_ARRAY_H
@@ -30,39 +22,39 @@ namespace triangle_stripper {
 
 
 
-
-
+// mutable heap
+// can be interfaced pretty muck like an array
 template <class T, class CmpT = std::less<T> > 
 class heap_array
 {
 public:
 
-	
+	// Pre = PreCondition, Post = PostCondition 
 
-	heap_array() : m_Locked(false) { }		
+	heap_array() : m_Locked(false) { }		// Post: ((size() == 0) && ! locked())
 
-	void clear();							
+	void clear();							// Post: ((size() == 0) && ! locked())
 
 	void reserve(size_t Size);
 	size_t size() const;
 
 	bool empty() const;
 	bool locked() const;
-	bool removed(size_t i) const;			
+	bool removed(size_t i) const;			// Pre: (valid(i))
 	bool valid(size_t i) const;
 
-	size_t position(size_t i) const;		
+	size_t position(size_t i) const;		// Pre: (valid(i))
 
-	const T & top() const;					
-	const T & peek(size_t i) const;			
-	const T & operator [] (size_t i) const;	
+	const T & top() const;					// Pre: (! empty())
+	const T & peek(size_t i) const;			// Pre: (! removed(i))
+	const T & operator [] (size_t i) const;	// Pre: (! removed(i))
 
-	void lock();							
-	size_t push(const T & Elem);			
+	void lock();							// Pre: (! locked())   Post: (locked())
+	size_t push(const T & Elem);			// Pre: (! locked())
 
-	void pop();								
-	void erase(size_t i);					
-	void update(size_t i, const T & Elem);	
+	void pop();								// Pre: (locked() && ! empty())
+	void erase(size_t i);					// Pre: (locked() && ! removed(i))
+	void update(size_t i, const T & Elem);	// Pre: (locked() && ! removed(i))
 
 protected:
 
@@ -96,9 +88,9 @@ protected:
 
 
 
-
-
-
+//////////////////////////////////////////////////////////////////////////
+// heap_indexed inline functions
+//////////////////////////////////////////////////////////////////////////
 
 template <class T, class CmpT> 
 inline void heap_array<T, CmpT>::clear()
@@ -259,11 +251,11 @@ inline void heap_array<T, CmpT>::Adjust(size_t i)
 
 	size_t j;
 
-	
+	// Check the upper part of the heap
 	for (j = i; (j > 0) && (Less(m_Heap[(j - 1) / 2], m_Heap[j])); j = ((j - 1) / 2))
 		Swap(j, (j - 1) / 2);
 
-	
+	// Check the lower part of the heap
 	for (i = j; (j = 2 * i + 1) < size(); i = j) {
  		if ((j + 1 < size()) && (Less(m_Heap[j], m_Heap[j + 1])))
 			++j;
@@ -295,30 +287,11 @@ inline bool heap_array<T, CmpT>::Less(const linker & a, const linker & b) const
 
 
 
-	} 
+	} // namespace detail
 
-} 
-
-
-
-
-#endif 
+} // namespace triangle_stripper
 
 
 
 
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.
+#endif // TRI_STRIPPER_HEADER_GUARD_HEAP_ARRAY_H

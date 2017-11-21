@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "opengl.h"
 
 #include "gapi/library.include.h"
@@ -34,7 +26,7 @@ namespace opengl
 		pfd.nSize = sizeof( pfd );
 
 
-		pfd.nVersion = 1; 
+		pfd.nVersion = 1; // версия всегда равна 1 (MSDN)
 		pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
 		pfd.iPixelType = PFD_TYPE_RGBA;
 		pfd.cColorBits = 32;
@@ -44,9 +36,8 @@ namespace opengl
 		SetPixelFormat( hdc, format, &pfd );
 
 		HGLRC hglrc = wglCreateContext( hdc );
-		wglMakeCurrent( hdc, hglrc );
-		opengl::check();
-
+		GL_CALL(wglMakeCurrent(hdc, hglrc));
+		
 		wglCreateContextAttribsARB = reinterpret_cast<PFNWGLCREATECONTEXTATTRIBSARBPROC>( wglGetProcAddress( "wglCreateContextAttribsARB" ));
 
 		wglMakeCurrent( 0, 0 );
@@ -62,23 +53,21 @@ namespace opengl
 		};
 
 		hglrc = wglCreateContextAttribsARB( hdc, 0, attribs );
-		wglMakeCurrent( hdc, hglrc );
-		opengl::check();
-
+		GL_CALL(wglMakeCurrent( hdc, hglrc ));
+		
 		if( glewInit() != GLEW_OK )
 		{		
-			
+			// обработка ошибки
 			LOG_ERROR("not glew");
 		}
 
-		opengl::check();
+		opengl::check(SOURCE_LOCATION);
 		if( !GLEW_VERSION_4_5 )
 		{	
-			
+			// обработка ошибки
 			LOG_ERROR("not OpenGL 4.2");
-		}
-
-		opengl::check();
+		}							 
+		opengl::check(SOURCE_LOCATION);
 
 		ctx = hglrc;
 		return hglrc;
@@ -115,22 +104,3 @@ namespace opengl
 	int Viewport::deviceIndex() const { return 0; }
 }
 
-
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

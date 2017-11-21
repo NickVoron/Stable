@@ -125,6 +125,7 @@
     <ClCompile Include="inheritanceTable.cpp" />
     <ClCompile Include="links.cpp" />
     <ClCompile Include="property.cpp" />
+    <ClCompile Include="prototypesHolder.cpp" />
     <ClCompile Include="resourceDriver.cpp" />
     <ClCompile Include="spawner.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -156,6 +157,7 @@
     <ClInclude Include="pointer.h" />
     <ClInclude Include="property.h" />
     <ClInclude Include="propertyEditor.h" />
+    <ClInclude Include="prototypesHolder.h" />
     <ClInclude Include="resourceDriver.h" />
     <ClInclude Include="serializer.h" />
     <ClInclude Include="spawner.h" />

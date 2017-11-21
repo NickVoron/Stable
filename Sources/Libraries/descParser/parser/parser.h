@@ -156,8 +156,8 @@ namespace ObjectParser {
 
 	int intVal;
 	float fltVal;
-	char strVal[128];
-	char name[128];
+	char strVal[512];
+	char name[512];
 
 	Expressions::Expression* expr;
 	Expressions::Reference* proxy;
@@ -172,11 +172,13 @@ namespace ObjectParser {
 	ComponentParams* componentParams;
 
 	Component* component;
+	Expressions::Lambda* lambda;
+	Expressions::Callable* callable;
 
 
 
 /* Line 35 of lalr1.cc  */
-#line 180 "parser/parser.h"
+#line 182 "parser/parser.h"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -200,37 +202,35 @@ namespace ObjectParser {
      COLLECTION = 267,
      instance_key = 268,
      THISS = 269,
-     VAR = 270,
-     PROPERTY = 271,
-     LAMBDA = 272,
-     ARRAY = 273,
-     NOINSTANCE = 274,
-     true_key = 275,
-     false_key = 276,
-     LESS = 277,
-     GREATER = 278,
-     EQUAL = 279,
-     NOT_EQUAL = 280,
-     LESS_EQUAL = 281,
-     MORE_EQUAL = 282,
-     NOT = 283,
-     AND = 284,
-     OR = 285,
-     XOR = 286,
-     PLUS = 287,
-     MINUS = 288,
-     DIV = 289,
-     MOD = 290,
-     MUL = 291,
-     QUERY = 292,
-     COLON = 293,
-     ITERATOR = 294,
-     EXTERNAL = 295,
-     PRIVATE = 296,
-     AGGREGATE = 297,
-     MIX = 298,
-     GREATER_EQUAL = 299,
-     COMPARISON = 300
+     PROPERTY = 270,
+     LAMBDA = 271,
+     ARRAY = 272,
+     NOINSTANCE = 273,
+     true_key = 274,
+     false_key = 275,
+     LESS = 276,
+     GREATER = 277,
+     EQUAL = 278,
+     NOT_EQUAL = 279,
+     LESS_EQUAL = 280,
+     MORE_EQUAL = 281,
+     NOT = 282,
+     AND = 283,
+     OR = 284,
+     XOR = 285,
+     PLUS = 286,
+     MINUS = 287,
+     DIV = 288,
+     MOD = 289,
+     MUL = 290,
+     QUERY = 291,
+     COLON = 292,
+     ITERATOR = 293,
+     EXTERNAL = 294,
+     PRIVATE = 295,
+     RETURN = 296,
+     GREATER_EQUAL = 297,
+     COMPARISON = 298
    };
 
     };
@@ -309,7 +309,7 @@ namespace ObjectParser {
     /* Tables.  */
     /// For a state, the index in \a yytable_ of its portion.
     static const short int yypact_[];
-    static const short int yypact_ninf_;
+    static const signed char yypact_ninf_;
 
     /// For a state, default rule to reduce.
     /// Unless\a  yytable_ specifies something else to do.

@@ -1,11 +1,3 @@
-// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "shaders.h"
 #include "defaultLogs/library.include.h"
 
@@ -34,7 +26,7 @@ void ShaderProgram::attach(GLenum type, const std::string& source)
 		GLint infoLogLength;
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-		
+		// Info log length includes the null terminator, so 1 means that the info log is an empty  string.
 		if (infoLogLength > 1)
 		{
 			std::vector<GLchar> infoLog(infoLogLength);
@@ -63,17 +55,17 @@ void ShaderProgram::transformFeedback(const std::vector<std::string> &transformF
 {
 	create();
 
-
-
-
-
-
-
-
-
-
-
-
+// 	if (transformFeedbackVaryings.size() > 0)
+// 	{
+// 		std::vector<const char *> constCharTFVaryings;
+// 
+// 		for (const std::string &transformFeedbackVarying : transformFeedbackVaryings)
+// 		{
+// 			constCharTFVaryings.push_back(transformFeedbackVarying.c_str());
+// 		}
+// 
+// 		glTransformFeedbackVaryings(program, static_cast<GLsizei>(transformFeedbackVaryings.size()), &constCharTFVaryings[0], bufferMode);
+// 	}
 }
 
 GLuint ShaderProgram::link()
@@ -88,7 +80,7 @@ GLuint ShaderProgram::link()
 		GLint infoLogLength;
 		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-		
+		// Info log length includes the null terminator, so 1 means that the info log is an empty string.
 		if (infoLogLength > 1)
 		{
 			std::vector<GLchar> infoLog(infoLogLength);
@@ -133,7 +125,7 @@ void ShaderProgram::set() const
 GLint ShaderProgram::uniform(GLchar* name) const
 {
 	GLint res = glGetUniformLocation(program, name);
-	opengl::check();
+	opengl::check(SOURCE_LOCATION);
 	return res;
 }
 
@@ -142,9 +134,9 @@ GLint ShaderProgram::attrib(GLchar* name) const
 	return glGetAttribLocation(program, name);
 }
 
-
-
-
+//
+//
+//
 void ShaderProgramCompiler::compile(ShaderProgram& program)
 {
 	program.destroy();
@@ -173,21 +165,3 @@ void ShaderProgramCompiler::serialize(serializer& os)
 {
 	os << shaders << transformFeedbackVaryings << bufferMode;
 }
-
-
-
-// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

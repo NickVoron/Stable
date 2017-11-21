@@ -123,6 +123,7 @@
     <ClInclude Include="ptr_utils.h" />
     <ClInclude Include="thread_utils.h" />
     <ClInclude Include="typelist.h" />
+    <ClInclude Include="type_traits.h" />
     <ClInclude Include="waitable_queue.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

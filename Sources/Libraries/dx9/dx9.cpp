@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "dx9.h"
 #include "interfaces.h"
 #include "device.h"
@@ -43,7 +35,7 @@ LPDIRECT3D9 DeviceCreate(D3DFORMAT fmt)
 
 	d3d = Direct3DCreate9( D3D_SDK_VERSION );
 
-	
+	//enumerate all adapters and videomodes
 	numAdapters = d3d->GetAdapterCount();
 	for(unsigned int a=0; a<numAdapters; a++)
 	{
@@ -58,7 +50,7 @@ LPDIRECT3D9 DeviceCreate(D3DFORMAT fmt)
 			D3DDISPLAYMODE mode;
 			d3d->EnumAdapterModes(a, format, m, &mode);
 
-			
+			//skip already added resolution due to ignoring format
 			unsigned int em;
 			for(em=0; em<adapters[a].modeCount; em++)
 				if(adapters[a].mode[em].width == mode.Width && adapters[a].mode[em].height == mode.Height)
@@ -116,7 +108,7 @@ LPDIRECT3DDEVICE9 DeviceInit(HWND hwnd, bool windowed, unsigned int adapterIdx, 
 		return device;
 	}
 
-	
+	//skip device recreation if not required
 	static HMONITOR curMonitor;
 	static unsigned int curWidth, curHeight;
 	static bool windowMode;
@@ -125,7 +117,7 @@ LPDIRECT3DDEVICE9 DeviceInit(HWND hwnd, bool windowed, unsigned int adapterIdx, 
 		return device;
 	}
 
-	
+	//release device
 	if(device)	
 	{
 		DeviceRelease();
@@ -140,7 +132,7 @@ LPDIRECT3DDEVICE9 DeviceInit(HWND hwnd, bool windowed, unsigned int adapterIdx, 
 		ZeroMemory( &d3dpp, sizeof(d3dpp) );
 
 		d3dpp.Windowed = windowed;
-		d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+		d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;//d3dpp.Windowed ? D3DSWAPEFFECT_DISCARD : D3DSWAPEFFECT_FLIP;
 		d3dpp.BackBufferWidth = width;
 		d3dpp.BackBufferHeight = height;
 		d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
@@ -152,7 +144,7 @@ LPDIRECT3DDEVICE9 DeviceInit(HWND hwnd, bool windowed, unsigned int adapterIdx, 
 		d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
 		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
-		
+		//DWORD creationFlags = D3DCREATE_PUREDEVICE | D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED; 
 		DWORD creationFlags = D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED | D3DCREATE_FPU_PRESERVE; 
 		d3d->CreateDevice( a, D3DDEVTYPE_HAL, hwnd, creationFlags, &d3dpp, &device);
 		if(device)
@@ -187,7 +179,14 @@ bool DeviceIsValid()
 
 	if( device->TestCooperativeLevel() != D3D_OK )
 	{
-		
+		/*HRESULT ee = dev->TestCooperativeLevel();
+		if(ee==D3DERR_DEVICELOST)	wcscpy(rr, L"D3DERR_DEVICELOST");
+		else
+		if(ee==D3DERR_DEVICENOTRESET)		wcscpy(rr, L"D3DERR_DEVICENOTRESET");
+		else
+		if(ee==D3DERR_DRIVERINTERNALERROR)		wcscpy(rr, L"D3DERR_DRIVERINTERNALERROR");
+		else	wcscpy(rr, L"FUCK");
+		releases++;*/
 		DeviceRelease();
 		return false;
 	}
@@ -225,21 +224,3 @@ int Viewport::deviceIndex() const
 }
 
 }
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

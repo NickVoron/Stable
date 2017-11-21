@@ -1,11 +1,3 @@
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "componentRefConverter.h"
 #include "../../unroll/componentHandle.h"
 #include "../component.h"
@@ -13,44 +5,11 @@
 
 namespace Expressions
 {
-	multimethods2::Table2<bool> multimethodsConversionTable;
-
-	std::vector<const ObjectParser::ComponentHandle*> linearize(const Expressions::Expression& expr)
- 	{
-		std::vector<const ObjectParser::ComponentHandle*> components;
-
-		if (auto componentExpr = expr.cast<ObjectParser::ComponentHandle>())
-		{
-			components.push_back(componentExpr);
-		}
-		else if(auto arrayExpr = expr.cast<Expressions::EvaluatedArray>())
-		{
-			for (std::size_t i = 0; i < arrayExpr->count(); ++i)
-			{
-				auto componentsArray = linearize(*arrayExpr->element(i));
-				components.insert(components.end(), componentsArray.begin(), componentsArray.end());
-			}
-		}
-		else if (auto arrayExpr = expr.cast<Expressions::ArrayContainer>())
-		{
-			for (std::size_t i = 0; i < arrayExpr->count(); ++i)
-			{
-				auto componentsArray = linearize(*arrayExpr->element(i));
-				components.insert(components.end(), componentsArray.begin(), componentsArray.end());
-			}
-		}
-		else
-		{
-			THROW("expression must be ObjectParser::Component or Array of them");
-		}
-
-		return components;
-	}
-
-	bool convert(Expressions::Expression& expr, LinksDescList& client)
+	bool convert(Expressions::EvaluationUnit& expr, LinksDescList& client)
 	{
-
- 		auto descriptions = linearize(expr);
+//		LOG_WARNING("references need check for compatible types");
+		std::vector<ObjectParser::ComponentHandle*> descriptions;
+ 		linearize(expr, descriptions);
  		auto count = descriptions.size();
  		if (count > 0)
  		{
@@ -58,19 +17,27 @@ namespace Expressions
  			for (std::size_t i = 0; i < count; ++i)
  			{
  				auto componentHandle = descriptions[i];
+				//LOG_EXPRESSION(componentHandle->string(), componentHandle->objectIndex.value(), componentHandle->componentIndex.value());
  				auto& address = client[i].address; 
-  				address.objectIndex = componentHandle->objectIndex;
-  				address.componentIndices.push_back(componentHandle->componentIndex);
+				if(componentHandle->objectIndex)
+				{
+					address.objectIndex = componentHandle->objectIndex.value();
+				}  				
+
+				if(componentHandle->componentIndex)
+				{
+					address.componentIndices.push_back(componentHandle->componentIndex.value());
+				}				
  			}
  		}
 
 		return true;
 	}
 
-	
-	
-	
-	bool convert(Expressions::Expression& expr, LinkDesc& client)
+	//
+	//
+	//
+	bool convert(Expressions::EvaluationUnit& expr, LinkDesc& client)
 	{
 		LinksDescList list;
 		convertVar(expr, list);
@@ -81,22 +48,18 @@ namespace Expressions
 
 		return true;
 	}
+
+	bool convert(Expressions::EvaluationUnit& expr, ValueAddress& client)
+	{
+		if (auto addrexpr = expr.cast<ObjectParser::ValueAddressDesc>())
+		{
+			if(addrexpr->componentHandle.componentIndex)
+			{
+				client.componentIndex = addrexpr->componentHandle.componentIndex.value();
+				client.componentShift = addrexpr->componentShift;
+			}			
+		}	
+
+		return client.componentIndex.has_value();
+	}
 }
-
-
-
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

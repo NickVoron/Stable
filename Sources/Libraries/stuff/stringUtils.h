@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include <string>
@@ -16,6 +8,8 @@
 #include <list>
 #include <map>
 #include <set>
+#include <unordered_map>
+#include <unordered_set>
 
 #include "exceptions/library.include.h"
 #include "strings/library.include.h"
@@ -218,27 +212,44 @@ namespace str
 		return result;
 	}
 
-	template<class ValueType> struct StrAppend<std::vector<ValueType>>
+	template<class ValueType, class Allocator> struct StrAppend<std::vector<ValueType, Allocator>>
 	{
 		static std::size_t append(stringize& s, const std::vector<ValueType>& values) { return append_container(s, values); }
 	};
 	
-	template<class ValueType> struct StrAppend<std::list<ValueType>>
+	template<class ValueType, class Allocator> struct StrAppend<std::list<ValueType, Allocator>>
 	{
-		static std::size_t append(stringize& s, const std::vector<ValueType>& values) { return append_container(s, values); }
+		static std::size_t append(stringize& s, const std::list<ValueType>& values) { return append_container(s, values); }
 	};
 
-	template<class ValueType> struct StrAppend<std::set<ValueType>>
+	template<class ValueType, class Allocator> struct StrAppend<std::deque<ValueType, Allocator>>
 	{
-		static std::size_t append(stringize& s, const std::set<ValueType>& values) { return append_container(s, values); }
+		static std::size_t append(stringize& s, const std::deque<ValueType>& values) { return append_container(s, values); }
 	};
 
-	template<class Value0, class Value1> struct StrAppend<std::map<Value0, Value1>>
+	template<class ValueType, class Compare, class Allocator> struct StrAppend<std::set<ValueType, Compare, Allocator>>
 	{
-		static std::size_t append(stringize& s, const std::map<Value0, Value1>& values) { return append_container(s, values); }
+		static std::size_t append(stringize& s, const std::set<ValueType, Compare, Allocator>& values) { return append_container(s, values); }
+	};
+
+	template<class Key, class Mapped, class Compare, class Allocator> struct StrAppend<std::map<Key, Mapped, Compare, Allocator>>
+	{
+		static std::size_t append(stringize& s, const std::map<Key, Mapped, Compare, Allocator>& values) { return append_container(s, values); }
+	};
+
+	template<class Value, class Hasher, class Equal, class Allocator> struct StrAppend<std::unordered_set<Value, Hasher, Equal, Allocator>>
+	{
+		static std::size_t append(stringize& s, const std::unordered_set<Value, Hasher, Equal, Allocator>& values) { return append_container(s, values); }
+	};
+
+	template<class Key, class Mapped, class Hasher, class Equal, class Allocator> struct StrAppend<std::unordered_map<Key, Mapped, Hasher, Equal, Allocator>>
+	{
+		static std::size_t append(stringize& s, const std::unordered_map<Key, Mapped, Hasher, Equal, Allocator>& values) { return append_container(s, values); }
 	};
 
 	std::ostream& operator<<(std::ostream& os, const stringize& str);
+
+	std::string msvs_out(const std::string& fileName, unsigned int line, const std::string& message);
 }
 
 namespace Base {
@@ -252,18 +263,18 @@ namespace Errors {
 			ModuleFailed( const std::string& str ) { Unknown::errorCode = "Base module failed: " + str; }
 			virtual ~ModuleFailed() throw() {}
 		};
-	} 
+	} // namespace Base::Errors
 
 namespace StrUtils {
 
-	
+	//
 	std::string getLine(std::istream& stream);
 
-	
+	// Frow string to wstring:
 	std::wstring Convert( const std::string& s );
 	std::string	 Convert( const std::wstring& s );
 
-	
+	//
 	template< typename T>
 	T fromString( const std::string& str )
 	{
@@ -274,38 +285,19 @@ namespace StrUtils {
 		return res;
 	}
 
-	
+	// ��� ������� � �������/������ �������
 	void toUpper(std::string& str);
 	void toLower(std::string& str);
 
-	
+	// �������������� ����� � ������
 	std::wstring toUnicode(const std::string& str);
 
-	
+	// ������������ ������ � ������ � �������� ��� (4096 - 4 kb)
 	std::string sizeString(size_t sizeInBytes);
 
-	
-	
+	//����������� ������ ���� 0xFF00FF00 � �����
+	//DWORD hexToDword(const std::string & hex);
 
-} 
+} // namespace StrUtils
 }
 
-
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

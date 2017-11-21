@@ -1,11 +1,3 @@
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include "expressions/library.include.h"
@@ -14,66 +6,50 @@
 
 namespace ObjectParser
 {
-	class ComponentHandle : public Expressions::EvaluationUnit, public Expressions::EvaluatedScope
+	class ComponentHandle : public Expressions::EvaluationUnit
 	{
 	public:
-		typedef std::map<std::string, const ComponentHandle*> Links;
-		
-		ComponentHandle(const Expressions::EvaluatedScope& parent):
-			EvaluationUnit(parent){}
+		ComponentHandle(const Expressions::Expression& proto, Expressions::EvaluatedScope& parent):
+			  Expressions::EvaluationUnit("component_handle", proto, parent)
+			, links("links", nullptr)
+		{}
 
-		ComponentHandle(const Expressions::EvaluatedScope& parent, RuntimePropeties runtimeProps, PropertyAssignmentList links, PropertyAssignmentList params);
+		ComponentHandle(const Expressions::Expression& proto, Expressions::EvaluatedScope& parent, RuntimePropeties runtimeProps, PropertyAssignmentList links, PropertyAssignmentList params);
 
 		virtual std::string typeName() const { return type; }
 		virtual std::string string() const;
 
-		std::string type;
-		std::string name;
-
-		virtual Expressions::EvaluateState evaluateStep(const Expressions::EvaluatedScope& parentScopename) override;
-		virtual Expressions::EvaluationUnit* child(const Expressions::PropertyPath* path) const override;
-
+		virtual void extract(EvaluationSet& result) override;
 		
-		Links links;
+		//дополнительное хранение связей
 		RuntimePropeties& runtimeProperties() { return runtimePropsLarva;  }
 		const RuntimePropeties& runtimeProperties() const { return runtimePropsLarva; }
 
-		std::size_t objectIndex = -1;
-		std::size_t componentIndex = -1;
+		Expressions::EvaluatedScope links;
+		std::string type;
+		std::string name;
+		std::optional<std::size_t> objectIndex;
+		std::optional<std::size_t> componentIndex;
 
 	private:
-		Expressions::EvaluateState unrollRuntimeProps();
-		Expressions::EvaluateState unrollLinks(const Expressions::EvaluatedScope& parentScopename);
-		Expressions::EvaluateState urollParams(const Expressions::EvaluatedScope& parentScopename);
+		// example
+		// component[category = client] Logic logic(firstSpawner = unitSpawner, secondSpawner = buildingSpawner)
+		// {
+		//	param = a
+		// }
+		RuntimePropeties runtimePropsLarva;	// use for prefix "[category = client]"
+		PropertyAssignmentList linksLarva;	// use for "(firstSpawner = unitSpawner, secondSpawner = buildingSpawner)"
+		PropertyAssignmentList paramsLarva;	// use for "param = a"
+	};
 
-		
-		
-		
-		
-		
-		RuntimePropeties runtimePropsLarva;	
-		PropertyAssignmentList linksLarva;	
-		PropertyAssignmentList paramsLarva;	
+	class ValueAddressDesc : public Expressions::EvaluationUnit
+	{
+	public:
+		ValueAddressDesc(const ComponentHandle& handle, std::size_t shift);
+
+		const ComponentHandle& componentHandle;
+		std::size_t componentShift;
 	};
 
 
-
 }//
-
-
-
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

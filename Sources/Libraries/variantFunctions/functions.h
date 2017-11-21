@@ -1,11 +1,3 @@
-// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include <string>
@@ -19,21 +11,21 @@
 
 namespace VariantFunctions
 {
-	
-	
-	
+	//
+	//
+	//
 	template<class VariantType, class VariantTypeList>
 	struct Executor 
 	{
 		virtual VariantType* call(const VariantTypeList& expressions) const = 0;
 	};
 
-	
-	
-	
-	
-	
-	
+	//
+	//
+	//
+	//
+	//
+	//
 	template<class VariantType, class VariantTypeList>
 	struct SimpleExecutor : public Executor<VariantType, VariantTypeList>
 	{
@@ -59,9 +51,9 @@ namespace VariantFunctions
 		Func function;
 	};
 
-	
-	
-	
+	//
+	//
+	//
 	template<class VariantType, class VariantTypeList>
 	struct UnaryExecutor : public Executor<VariantType, VariantTypeList>
 	{
@@ -91,9 +83,9 @@ namespace VariantFunctions
 		Func function;
 	};
 
-	
-	
-	
+	//
+	//
+	//
 	template<class VariantType, class VariantTypeList>
 	struct BinaryExecutor : public Executor<VariantType, VariantTypeList>
 	{
@@ -123,9 +115,9 @@ namespace VariantFunctions
 	};
 
 
-	
-	
-	
+	//
+	//
+	//
 	template<class VariantType, class VariantTypeList, template <class> class TypeToName, class VariantName>
 	struct ArgInfo
 	{
@@ -194,9 +186,9 @@ namespace VariantFunctions
 		void init(const VariantTypeList& expressions){}
 	};
 
-	
-	
-	
+	//
+	//
+	//
 	template<int argumentsCount, class VariantType, class VariantTypeList, template <class> class TypeToName, class VariantName>
 	struct FunctionsBucket : std::map< ArgumentsInfo<argumentsCount, VariantType, VariantTypeList, TypeToName, VariantName>, Executor<VariantType, VariantTypeList>*>
 	{	
@@ -257,9 +249,9 @@ namespace VariantFunctions
 		}
 	};
 
-	
-	
-	
+	//
+	//
+	//
 	template<class FunctionType, class VariantType, class VariantTypeList, template <class> class TypeToName, class VariantCreator, class VariantName, class VariantConverter>
 	class SimpleFunction : public FunctionInstance<FunctionType>, public FunctionsBucket<0, VariantType, VariantTypeList, TypeToName, VariantName>
 	{
@@ -291,9 +283,9 @@ namespace VariantFunctions
 		}
 	};
 
-	
-	
-	
+	//
+	//
+	//
 	template<class FunctionType, class VariantType, class VariantTypeList, template <class> class TypeToName, class VariantCreator, class VariantName, class VariantConverter>
 	class UnaryFunction : public FunctionInstance<FunctionType>, public FunctionsBucket<1, VariantType, VariantTypeList, TypeToName, VariantName>
 	{
@@ -331,9 +323,9 @@ namespace VariantFunctions
 		}
 	};
 
-	
-	
-	
+	//
+	//
+	//
 	template<class FunctionType, class VariantType, class VariantTypeList, template <class> class TypeToName, class VariantCreator, class VariantName, class VariantConverter>
 	class BinaryFunction : public FunctionInstance<FunctionType>, public FunctionsBucket<2, VariantType, VariantTypeList, TypeToName, VariantName>
 	{
@@ -381,9 +373,9 @@ namespace VariantFunctions
 		}
 	};
 
-	
-	
-	
+	//
+	//
+	//
 	template<class VariantType, class VariantTypeList, template <class> class TypeToName, class VariantCreator, class VariantConverter, template <class> class ValueFunctionCaller>
 	struct FunctionsLib
 	{					
@@ -407,13 +399,13 @@ namespace VariantFunctions
 		};	
 
 		template<typename RetT, typename F, typename... T, std::size_t... I>
-		static decltype(auto) conversion(F func, const VariantTypeList& params, std::index_sequence<I...>)
+		static decltype(auto) conversion(F&& func, const VariantTypeList& params, std::index_sequence<I...>)
 		{
 			ENFORCE(params.size() == sizeof...(T));
 			return ValueFunctionCaller<RetT>::call(func, VariantConverter::template convert<typename std::remove_const<typename std::remove_reference<T>::type>::type>(*params[I])...);
 		}
 
-		
+		//Envelope
 		template<class RetT, class... P0>
 		struct Envelope : public Caller
 		{
@@ -421,15 +413,32 @@ namespace VariantFunctions
 
 			Envelope(BindedFunction fnc) :f(fnc){}
 
-			BindedFunction f;
 			virtual VariantType* call(const VariantTypeList& params)	
 			{
 				ENFORCE_EQUAL(params.size(), sizeof...(P0));
-				return conversion<RetT, BindedFunction, P0...>(f, params, std::make_index_sequence<sizeof...(P0)>{});
+				return conversion<RetT, BindedFunction, P0...>(std::forward<BindedFunction>(f), params, std::make_index_sequence<sizeof...(P0)>{});
 			}
+
+			BindedFunction f;
 		};
 
-		
+		template<class... T>
+		struct Envelope<void, T...> : public Caller
+		{
+			typedef void(*BindedFunction)(T...);
+
+			Envelope(BindedFunction fnc) :f(fnc) {}
+
+			virtual VariantType* call(const VariantTypeList& params)
+			{
+				ENFORCE(params.size() == sizeof...(T));
+				return conversion<void, BindedFunction, T...>(std::forward<BindedFunction>(f), params, std::make_index_sequence<sizeof...(T)>{});
+			}
+
+			BindedFunction f;
+		};
+
+		//
 		static Caller* func(const std::string& name) { return functions()[name].get();}
 
 		static bool exist(const std::string& name)  { return functions().find(name) != functions().end(); }
@@ -481,21 +490,3 @@ namespace VariantFunctions
 
 	
 }  
-
-
-
-// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

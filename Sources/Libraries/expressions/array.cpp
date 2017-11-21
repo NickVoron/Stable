@@ -1,16 +1,10 @@
-// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "array.h"
 #include "holder.h"
 #include "DefaultLogs/library.include.h"
 #include "reference.h"
 #include "conversion/convertType.h"
+
+#include <optional>
 
 
 namespace Expressions
@@ -30,16 +24,9 @@ std::string Array::typeName() const
 	return "Array"; 
 }
 
-References Array::references() const
+EvaluationUnit* Array::evaluated(EvaluatedScope& environment) const
 {
-	return elements.references();
-}
-
-EvaluationUnit* Array::evaluated(const EvaluatedScope& environment) const
-{
-	EvaluatedArray* result = Expressions::add<EvaluatedArray>(elements.size(),environment);
-	result->unEvaluatedElements = elements;
-	return result;
+	return Expressions::add<ArrayContainer>(*this, environment, elements.evaluated(environment));
 }
 
 const Expression* Array::element(std::size_t index) const
@@ -72,105 +59,129 @@ void Array::add(const Expression* expr)
 }
 
 
-EvaluatedArray::EvaluatedArray(size_t size, const EvaluatedScope& environment_) :
-	ArrayContainer(environment_)
+//
+//
+//
+ArrayContainer::ArrayContainer(const Expression& proto, EvaluatedScope& parent) :
+	EvaluationUnit("array_container", proto, parent)
 {
-	internalScopename.setParent(&environment_);
-
-	arrayData = Expressions::convertType((int)size)->evaluated(EvaluationUnit::commonParent);
 }
 
-EvaluatedArray::EvaluatedArray(EvaluationUnit* arrayData_, const EvaluatedScope& environment_):
-	ArrayContainer(environment_),
-	arrayData(arrayData_)
+ArrayContainer::ArrayContainer(const Expression& proto, EvaluatedScope& parent, EvaluationUnitsList& elements_) :
+	EvaluationUnit("array_container", proto, parent)
+	, elements(elements_)
 {
-	internalScopename.setParent(&environment_);
 }
 
-std::string EvaluatedArray::typeName() const
+std::string ArrayContainer::string() const
 {
-	return "EvaluatedArray";
+	return str::stringize("array:", str::comma(), elements.string());
 }
 
-EvaluateState EvaluatedArray::evaluateStep(const Expressions::EvaluatedScope& parentScope)
+std::string ArrayContainer::typeName() const
 {
-	
-	EvaluateState evalState = Complete;
+	return "ArrayContainer";
+}
 
-	
-	if (unEvaluatedElements.size())
-	{			   
-		evalState = Impossible;
-		if (unEvaluatedElements[0]->references().canResolveReference(internalScopename))
+EvaluationInfo ArrayContainer::evaluate()
+{
+	EvaluationInfo result(Impossible);
+		
+	bool complete = true;
+	for(auto& unit : elements)
+	{
+		complete &= (unit->evaluate() == Complete);
+
+		if(complete)
 		{
-			evalState = Reject;
-			for (auto& elemet: unEvaluatedElements)
+			if(unit->cast<ArrayContainer>())
 			{
-				elements.push_back(elemet->evaluated(internalScopename));
+				result.reject(this);
 			}
-			unEvaluatedElements.clear();
 		}
 	}
 
+	if(complete)
+	{
+		result.complete(this);
+	}
 	
-	ENFORCE(arrayData);
+	return result;
+}
 
-	auto stepper = [this](EvaluationUnit* unit, EvaluationUnit* iterator, EvaluationUnit* index)
+void ArrayContainer::extract(EvaluationSet& result)
+{
+	EvaluationUnitsList linearized;
+	linearize(elements, linearized);
+	elements = linearized;
+	elements.extract(result);
+}
+
+EvaluationUnit*& ArrayContainer::add(EvaluationUnit* expr)
+{
+	ENFORCE_POINTER(expr);
+	elements.push_back(expr);
+	return elements.back();
+}
+
+template<class Container>
+std::optional<std::size_t> checkIdx(const Container& container, std::size_t index)
+{
+	if (index >= container.size())
 	{
-		internalScopename.add("iterator", iterator, InsertMethod::REPLACE_OR_INSERT);
-		internalScopename.add("index", index, InsertMethod::REPLACE_OR_INSERT);
-		internalScopename.add("array_data", this, InsertMethod::REPLACE_OR_INSERT);
-
-		return unit->evaluateStep(internalScopename);
-	};
-
-	if (auto expr = arrayData->cast< Expressions::Const<int> >())
-	{
-		for (int i = 0; i < expr->value; i++)
-		{			
-			auto unit = const_cast<EvaluationUnit*>(elements[i]);
-			auto index = convertType(i)->evaluated(EvaluationUnit::commonParent);
-
-			evalState = merge(evalState, stepper(unit, index, index));
-		}
-	}
-	else if (auto expr = arrayData->cast<Expressions::ArrayContainer>())
-	{
-		for (int i = 0; i < expr->count(); i++)
+		if (!container.empty())
 		{
-			auto unit = const_cast<EvaluationUnit*>(elements[i]);
-			auto index = convertType(i)->cast<EvaluationUnit>();
-			auto iterator = const_cast<EvaluationUnit*>(expr->element(i));
-
-			evalState = merge(evalState, stepper(unit, iterator, index));
+			LOG_ERROR("index is out of range. index: " << index << " range: [" << 0 << ", " << container.size() - 1 << "]");
 		}
+		else
+		{
+			LOG_ERROR("array is empty");
+		}
+
+		return {};
+	}
+
+	return index;
+}
+
+const EvaluationUnit* ArrayContainer::element(std::size_t index) const
+{
+	auto idx = checkIdx(elements, index);
+	return idx ? elements[idx.value()] : nullptr;
+}
+
+EvaluationUnit* ArrayContainer::element(std::size_t index)
+{
+	auto idx = checkIdx(elements, index);
+	return idx ? elements[idx.value()] : nullptr;
+}
+
+std::size_t ArrayContainer::count() const
+{
+	return elements.size();
+}
+
+ArrayContainer* to_array(EvaluationUnit* unit)
+{
+	ENFORCE_POINTER(unit);
+	ArrayContainer* result = nullptr;
+
+	if (auto head = unit->cast<ArrayContainer>(); !head)
+	{
+		//LOG_MSG("make array envelope for: " << unit->string());
+		head = add<Array>()->evaluated(unit->scope())->cast<ArrayContainer>();
+		head->add(unit);
+		result = head;
 	}
 	else
 	{
-		THROW("ArrayData type no Array and no Const<int>: " + arrayData->string())
+		//LOG_MSG("head is " << head->string());
+		result = head;
 	}
 
+	ENFORCE_POINTER(result);
 
-	return evalState;
+	return result;
 }
 
-}
-
-
-
-
-// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.
+}//

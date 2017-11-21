@@ -1,11 +1,3 @@
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "lanDiscover.h"
 #include "stuff/library.include.h"
 
@@ -23,7 +15,7 @@ namespace net
 		auto lanaddr = host.getLAN();
 
         i++;
-
+//		LOG_MSG(i << " lan_discover_udp_node: " << lanaddr.first << " : " << lanaddr.second.addr_str());
 		if (lanaddr.first)
 		{
 			sock.send(lanaddr.second.broadcast(port), Request());
@@ -39,7 +31,7 @@ namespace net
 		{
 			if (std::find_if(host.addresses.begin(), host.addresses.end(), [ip = addr.ip()](auto& addr){ return addr.ip() == ip; }) == host.addresses.end())
 			{
-
+//				LOG_EXPRESSION(addr);
 				result.emplace_back(addr);
 			}			
 		}
@@ -62,9 +54,9 @@ namespace net
 		}
 	}
 
-	
-	
-	
+	//
+	//
+	//
 	void udp_packets_logger::listen(uint16_t port)
 	{
 		sock = std::make_unique<net::Socket>(ProtocolType::UDP, port, false);
@@ -83,9 +75,9 @@ namespace net
 		}		
 	}
 
-	
-	
-	
+	//
+	//
+	//
 	udp_packets_sender::udp_packets_sender() : sock(ProtocolType::UDP, false)
 	{
 
@@ -97,21 +89,3 @@ namespace net
 		sock.send(addr, &buffer[0], size);
 	}
 }
-
-
-
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

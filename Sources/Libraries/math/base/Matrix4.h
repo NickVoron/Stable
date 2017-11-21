@@ -1,12 +1,14 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
+/*********************************************************************
 
+	SiGMan / iO UpG  -  Copyright (C) 2000-2001
 
+	Author: SiGMan
+	  Date: 22.07.2001
+	  Time: 3:19:50
+
+	Abstract:	Standard column major 4x4 Matrix.
+
+*********************************************************************/
 #pragma once
 #include <math.h>
 
@@ -14,11 +16,11 @@
 #include "Matrix3.h"
 
 
-
+// Forwards
 class Vector3;
 class Vector4;
 
-
+// Matrix4 clas
 class Matrix4 {
 public:
 	inline Matrix4();
@@ -28,26 +30,26 @@ public:
 					float m20, float m21, float m22, float m23,
 					float m30, float m31, float m32, float m33 );
 
-	
+	// Load / save
 	inline void Load( const float matrix[] );
 	inline void Save( float matrix[] ) const;
 
-	
+	// Reset vector elements
 	inline void Zero();
 	inline void Identity();
 	static inline Matrix4 GetZero();
 	static inline Matrix4 GetIdentity();
 
-	
+	// Access
 	inline float& operator [] (size_t index );
 	inline float operator [] (size_t index ) const;
 	inline float& operator () (size_t r, size_t c );
 	inline float operator () (size_t r, size_t c ) const;
 
-	
+	// Gets the equalient Matrix3 from the upper left corner
 	inline const void GetMatrix3( Matrix3& matrix ) const;
 
-	
+	// Scalar
 	inline Matrix4& operator += ( float scalar );
 	inline Matrix4& operator -= ( float scalar );
 	inline Matrix4& operator *= ( float scalar );
@@ -58,15 +60,15 @@ public:
 	inline Matrix4 operator * ( float scalar ) const;
 	inline Matrix4 operator / ( float scalar ) const;
 
-	
-	
+	// Vector
+	// 3d vector ops - convert to 4d space, mult and convert back to 3d
 	inline Vector3 operator * ( const Vector3& vector ) const;
 	friend Vector3 operator * ( const Vector3& vector, const Matrix4& matrix );
 
 	inline Vector4 operator * ( const Vector4& vector ) const;
 	friend Vector4 operator * ( const Vector4& vector, const Matrix4& matrix );
 
-	
+	// Matrix
 	inline Matrix4 GetInverse() const;
 	Matrix4& Invert();
 
@@ -77,11 +79,11 @@ public:
 
 	const Vector3& getTranslate() const;
 
-	
+	// Matrix post mult
 	inline void Multiply( const float matrix[] );
 	inline void Multiply( const Matrix4& matrix );
 
-	
+	// Affine
 	inline void Rotate( float x, float y, float z );
 	inline void Rotate( const Vector3& vector );
 	inline void RotateX( float angle );
@@ -93,7 +95,7 @@ public:
 	inline void Translate( float x, float y, float z );
 	inline void Translate( const Vector3& vector );
 
-	
+	// Infix
 	inline Matrix4& operator += ( const Matrix4& matrix );
 	inline Matrix4& operator -= ( const Matrix4& matrix );
 	inline Matrix4& operator *= ( const Matrix4& matrix );
@@ -102,19 +104,19 @@ public:
 	inline Matrix4 operator - ( const Matrix4& matrix ) const;
 	inline Matrix4 operator * ( const Matrix4& matrix ) const;
 
-	
+	// Logical compare
 	inline bool Equal( const Matrix4& matrix, float tolerance = 0.000001f) const;
 	inline bool NotEqual( const Matrix4& matrix, float tolerance = 0.000001f) const;
 
-	
+	// Binary
 	inline bool operator == ( const Matrix4& matrix ) const;
 	inline bool operator != ( const Matrix4& matrix ) const;
 
 	float data[16];
 };
 
-
-
+///////////////////////////////////////////////////////////////////////
+// Implementation
 
 Matrix4::Matrix4()
 {}
@@ -147,7 +149,7 @@ Matrix4::Matrix4( float m00, float m01, float m02, float m03,
 	data[15]	= m33;
 }
 
-
+//
 void Matrix4::Load( const float matrix[] )
 {
 	data[0]		= matrix[0];
@@ -244,7 +246,7 @@ Matrix4 Matrix4::GetIdentity()
 					0.0f, 0.0f, 0.0f, 1.0f );
 }
 
-
+// Access
 float& Matrix4::operator [] (size_t index )
 {
 	return data[ index ];
@@ -265,7 +267,7 @@ float Matrix4::operator () (size_t r, size_t c ) const
 	return data[ c * 4 + r ];
 }
 
-
+//
 const void Matrix4::GetMatrix3( Matrix3& matrix ) const
 {
 	matrix.data[0] = data[0]; matrix.data[3] = data[4]; matrix.data[6] = data[8];
@@ -274,7 +276,7 @@ const void Matrix4::GetMatrix3( Matrix3& matrix ) const
 }
 
 
-
+// Scalar
 Matrix4& Matrix4::operator += ( float scalar )
 {
 	data[0]		+= scalar;
@@ -340,16 +342,16 @@ Matrix4& Matrix4::operator *= ( float scalar )
 
 Matrix4& Matrix4::operator /= ( float scalar )
 {
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	// <> Performance note:
+	// It is always faster to multiply with the reciprocal
+	// instead of dividing. We might loose a few bits of
+	// precision in worst case, but the speed hit is simply
+	// not worth it.
+	// Ref: FDIV ~39, FMUL ~3/1 !!!
+	// We fool compiler, by this inline operator, so then the
+	// do matrix / scalar = [where scalar is the constant]
+	// compiler does recalculate constant as ( 1.0 / scalar )
+	// do only one fmul- cOOl ! But in case where scalar was real var....
 	return operator *= ( 1.0f / scalar );
 }
 
@@ -373,7 +375,7 @@ Matrix4 Matrix4::operator / ( float scalar ) const
 	return Matrix4( *this ) /= scalar;
 }
 
-
+// 3D Vector infix ops
 Vector3 Matrix4::operator * ( const Vector3& vector ) const
 {
 	Vector4 vector4( vector );
@@ -390,7 +392,7 @@ inline Vector3 operator * ( const Vector3& vector, const Matrix4& matrix )
 	return vector4.GetVector3();
 }
 
-
+// 4D vector infix
 Vector4 Matrix4::operator * ( const Vector4& vector ) const
 {
 	return Vector4(
@@ -430,29 +432,29 @@ Matrix4& Matrix4::Transpose()
 
 void Matrix4::Multiply( const float matrix[] )
 {
-	
+	// copy matrix data
 	float temp[16];
 	memcpy(temp, data, sizeof(float) * 16);
 
-	
+	// first column
 	data[0]   = temp[0] * matrix[0]  + temp[4] * matrix[1]  + temp[8]  * matrix[2]  + temp[12] * matrix[3];
 	data[1]   = temp[1] * matrix[0]  + temp[5] * matrix[1]  + temp[9]  * matrix[2]  + temp[13] * matrix[3];
 	data[2]   = temp[2] * matrix[0]  + temp[6] * matrix[1]  + temp[10] * matrix[2]  + temp[14] * matrix[3];
 	data[3]   = temp[3] * matrix[0]  + temp[7] * matrix[1]  + temp[11] * matrix[2]  + temp[15] * matrix[3];
 
-	
+	// second column
 	data[4]   = temp[0] * matrix[4]  + temp[4] * matrix[5]  + temp[8]  * matrix[6]  + temp[12] * matrix[7];
 	data[5]   = temp[1] * matrix[4]  + temp[5] * matrix[5]  + temp[9]  * matrix[6]  + temp[13] * matrix[7];
 	data[6]   = temp[2] * matrix[4]  + temp[6] * matrix[5]  + temp[10] * matrix[6]  + temp[14] * matrix[7];
 	data[7]   = temp[3] * matrix[4]  + temp[7] * matrix[5]  + temp[11] * matrix[6]  + temp[15] * matrix[7];
 
-	
+	// third column
 	data[8]   = temp[0] * matrix[8]  + temp[4] * matrix[9]  + temp[8]  * matrix[10] + temp[12] * matrix[11];
 	data[9]   = temp[1] * matrix[8]  + temp[5] * matrix[9]  + temp[9]  * matrix[10] + temp[13] * matrix[11];
 	data[10]  = temp[2] * matrix[8]  + temp[6] * matrix[9]  + temp[10] * matrix[10] + temp[14] * matrix[11];
 	data[11]  = temp[3] * matrix[8]  + temp[7] * matrix[9]  + temp[11] * matrix[10] + temp[15] * matrix[11];
 
-	
+	// fourth column
 	data[12]  = temp[0] * matrix[12] + temp[4] * matrix[13] + temp[8]  * matrix[14] + temp[12] * matrix[15];
 	data[13]  = temp[1] * matrix[12] + temp[5] * matrix[13] + temp[9]  * matrix[14] + temp[13] * matrix[15];
 	data[14]  = temp[2] * matrix[12] + temp[6] * matrix[13] + temp[10] * matrix[14] + temp[14] * matrix[15];
@@ -464,7 +466,7 @@ void Matrix4::Multiply( const Matrix4& matrix )
 	Multiply( matrix.data );
 }
 
-
+// Affine
 void Matrix4::Rotate( float x, float y, float z )
 {
 	RotateX( x );
@@ -576,7 +578,7 @@ void Matrix4::Translate( const Vector3& vector )
 	Translate( vector.x, vector.y, vector.z );
 }
 
-
+// Matrix ops
 
 Matrix4& Matrix4::operator += ( const Matrix4& matrix )
 {
@@ -641,7 +643,7 @@ Matrix4 Matrix4::operator * ( const Matrix4& matrix ) const
 	return Matrix4( *this ) *= matrix;
 }
 
-
+// Logical
 bool Matrix4::Equal( const Matrix4& matrix, float tolerance ) const
 {
 	return  (fabsf( data[0]	- matrix.data[0])	<= tolerance) &&
@@ -667,7 +669,7 @@ bool Matrix4::NotEqual( const Matrix4& matrix, float tolerance ) const
 	return !Equal( matrix, tolerance );
 }
 
-
+// Binary
 
 bool Matrix4::operator == ( const Matrix4& matrix ) const
 {
@@ -692,21 +694,3 @@ bool Matrix4::operator != ( const Matrix4& matrix ) const
 {
 	return ! operator == ( matrix );
 }
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

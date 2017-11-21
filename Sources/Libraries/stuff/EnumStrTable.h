@@ -1,17 +1,36 @@
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
+/*
+Copyright (c) 2006 Michael Pizik / Home work
+Date: 29.5.2006 21:29
+Description:	макросы для создания таблиц и функций конвертации enum <-> str.s
+Пример использования:
 
+---------------h файл:
+namespace GUI
+{
+	enum HORIZONTAL_FORMATTING{HF_CENTRE_ALIGNED, HF_LEFT_ALIGNED};
+	// описывать в h файле
+	DECLARE_ENUM_STR_TABLE(HORIZONTAL_FORMATTING);
+...
+---------------cpp файл:
+namespace GUI		// <------!!!!! заключать в те же неймспейсы что и enum, иначе не проходит, или объявлять таблицу сразу в h файле
+{
+// описывать таблицу в cpp файле
+BEGIN_ENUM_STR_TABLE(HORIZONTAL_FORMATTING)
+{HF_CENTRE_ALIGNED, "CenterAligned"},
+{HF_LEFT_ALIGNED,	"LeftAligned"},
+END_ENUM_STR_TABLE(HORIZONTAL_FORMATTING);
+}
 
+// конвертация
+HORIZONTAL_FORMATTING hf = CONVERT_STR_TO_ENUM(HORIZONTAL_FORMATTING, "bla bla bla");
+const char* s = CONVERT_ENUM_TO_STR(HORIZONTAL_FORMATTING, HF_CENTRE_ALIGNED);
+...
+*/
 
 #ifndef __EnumStrTable_H
 #define __EnumStrTable_H
 
-
+// таблица конвертации для cpp файла
 #define BEGIN_ENUM_STR_TABLE(_enum)\
 	namespace enum_table_##_enum\
 {\
@@ -35,7 +54,7 @@ struct\
 };}
 
 
-
+// декларация для h файла
 #define DECLARE_ENUM_STR_TABLE(_enum)\
 	namespace enum_table_##_enum\
 {\
@@ -43,31 +62,12 @@ struct\
 	_enum Find(const char* str);\
 }
 
-
+// конвертация прямая Enum в строку
 #define ENUM_STR(_e) { _e, #_e }
 
-
+// конвертация в строку, в случае ошибки вернёт 0
 #define CONVERT_ENUM_TO_STR(_enum, e_value) enum_table_##_enum::Find(e_value)
-
+// конвертация в enum, в случае ошибки вернёт первое вхождение в таблицу
 #define CONVERT_STR_TO_ENUM(_enum, str) enum_table_##_enum::Find(str)
 
-#endif 
-
-
-
-
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.
+#endif //__EnumStrTable_H

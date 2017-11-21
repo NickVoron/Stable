@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include <boost/filesystem.hpp>
@@ -32,62 +24,110 @@ namespace Resources
 
 	template<class T> class ResourceSet;
 
-	template<class ResourceType>
-	class ResourcesPack : public std::vector < ResourceType* >
-	{
-	public:
-		ResourcesPack() : currentIndex(0) {}
-
-		template<class T>
-		void load(const std::string& directory, const std::string& ext, const T& userData)
-		{
-			for (const auto& file : resourceNames(directory, ext))
-			{
-				ResourceType* res = 0;
-				Resources::load(res, directory + "/" + Base::FileUtils::GetFileNameFrom(file.string()), false, userData);
-				ResourcesPack::push_back(res);
-			}
-		}
-
-		void load(const std::string& directory, const std::string& ext)
-		{
-			for (const auto& file : resourceNames(directory, ext))
-			{
-				ResourceType* res = 0;
-				Resources::load(res, directory + "/" + Base::FileUtils::GetFileNameFrom(file.string()), false);
-				ResourcesPack::push_back(res);
-			}
-		}
-		
-		static auto resourceNames(const std::string& directory, const std::string& ext)
-		{
-			return Base::FileUtils::GetFileNamesByMask(std::string(Store::get().developmentPath.c_str()) + "/" + ResourceType::basePath() + directory + "/", ext, false);
-		}
-
-		ResourceType* current() { return ResourcesPack::empty() ? 0 : operator[](currentIdx()); }
-
-		void index(int idx)
-		{
-			currentIndex = idx;
-			currentIdx();
-		}
-
-	private:
-		int currentIdx()
-		{
-			if (currentIndex < 0) currentIndex = 0;
-			if (currentIndex >= (int) ResourcesPack::size()) currentIndex = ResourcesPack::size() - 1;
-
-			return currentIndex;
-		}
-
-		int currentIndex;
-	};
-
 	struct ResourceTypeInfo
 	{
 		virtual int typeId() const = 0;
 		virtual const char* typeName() const = 0;
+	};
+
+	template<class Data>
+	struct UserDataBaseT;
+
+	struct UserData
+	{
+		virtual ~UserData(){}
+
+		virtual std::size_t hash() const = 0;
+
+		template<class DataType>
+		void store(DataType& data) const
+		{
+			auto self = dynamic_cast<const UserDataBaseT<DataType>*>(this);
+			if (self)
+			{
+				data = self->data;
+			}
+		}
+	};
+
+	template<class Data>
+	struct UserDataBaseT : public UserData
+	{
+		UserDataBaseT(const Data& data_) :data(data_) {}
+		Data data;
+	};
+
+	template <class T>
+	inline void hash_combine(std::size_t& seed, const T& v)
+	{
+		std::hash<T> hasher;
+		seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+	}
+
+	template <class T0, class T1>
+	inline void hash_combine(std::size_t& seed, const std::pair<T0, T1>& v)
+	{
+		hash_combine(seed, v.first);
+		hash_combine(seed, v.second);
+	}
+
+	template <class T>
+	inline void hash_combine_container(std::size_t& seed, const T& v)
+	{
+		for (auto& value : v)
+		{
+			hash_combine(seed, value);
+		}
+	}
+
+	enum TYPE_TAG
+	{
+		COMMON_TYPE	   = 0,
+		POD_TYPE	   = 1 << 0,
+		CONTAINER_TYPE = 1 << 1,
+		STRUCTURE_TYPE = 1 << 2,
+	};
+
+	template<class Data, int type = 
+		  ((std::is_trivially_destructible<Data>::value && std::is_trivially_copyable<Data>::value) ? POD_TYPE : 0)
+		| (stl::IsContainer<Data>::value ? CONTAINER_TYPE : 0)
+		| (stl::IsStructure<Data>::value ? STRUCTURE_TYPE : 0)
+	>
+	struct UserDataT;
+
+	template<class Data>
+	struct UserDataT<Data, POD_TYPE> : public UserDataBaseT<Data>
+	{
+		UserDataT(const Data& data) : UserDataBaseT(data) {}
+
+		virtual std::size_t hash() const
+		{
+			return crc::CRC32(&data, sizeof(data));
+		}
+	};
+
+	template<class Data>
+	struct UserDataT<Data, CONTAINER_TYPE> : public UserDataBaseT<Data>
+	{
+		UserDataT(const Data& data) : UserDataBaseT(data) {}
+
+		virtual std::size_t hash() const
+		{
+			std::size_t seed = 0;
+			hash_combine_container(seed, data);
+			return seed;
+		}
+	};
+
+	template<class Data>
+	struct UserDataT<Data, STRUCTURE_TYPE> : public UserDataBaseT<Data>
+	{
+		UserDataT(const Data& data) : UserDataBaseT(data) {}
+
+		virtual std::size_t hash() const
+		{
+			return std::hash<Data>()(data);
+		}
 	};
 
 	class ResourcePath
@@ -99,7 +139,7 @@ namespace Resources
 		struct ID
 		{
 		public:
-			void data(const char* name, const void* userData, std::size_t userDataSize);
+			void data(const char* name, const UserData* userData);
 
 			bool equal(const ID& id) const;
 			str::string32 string() const;
@@ -142,11 +182,11 @@ namespace Resources
 
 		virtual ~Resource();
 				
-		void RegisterAndLoad(const char* path, const char* fileName, const void* userData, std::size_t userDataSize);
+		void RegisterAndLoad(const char* path, const char* fileName, std::unique_ptr<UserData> userData);
 		void Reload();
 		bool ReloadIfUpdate();
 		void UpdateCompiled();
-		void CompileTo(const char* fileName, const void* userData, std::size_t userDataSize, stream::ostream& os);
+		void CompileTo(const char* fileName, const UserData* userData, stream::ostream& os);
 
 		virtual void Clear() = 0;
 		virtual void LoadCompiled(stream::istream& is) = 0;
@@ -155,10 +195,10 @@ namespace Resources
 
 	protected:
 		virtual void Compile(stream::ostream& os) = 0;
-		virtual void LoadSource(const char* sourceFileName, const void* userData, std::size_t userDataSize) = 0;
+		virtual void LoadSource(const char* sourceFileName, const UserData* userData) = 0;
 		virtual void RemoveFromSet() = 0;		
 		
-		static void ConstructID(ID& id, const char* name, const void* userData, std::size_t userDataSize);
+		static void ConstructID(ID& id, const char* name, const UserData* userData);
 
 		Dependencies dependencies;
 
@@ -166,10 +206,10 @@ namespace Resources
 		virtual bool IsCompiledFileIsActual();
 		virtual void OnLoadCompiledComplete() {}
 
-		mem::mem_desc userDataBlock;
+		std::unique_ptr<UserData> userDataBlock;
 
 	private:
-		void Load(const void* userData, uint32_t userDataSize);
+		void Load(std::unique_ptr<UserData> userData);
 		void saveActualTimeStamp();
 		void addDependenciesFromTimeStamp();
 	};
@@ -196,9 +236,26 @@ namespace Resources
 				return *this;
 			}
 
+			template<class Operation>
+			inline Handle& ifnull(Operation&& operation)
+			{
+				if (!client)
+				{
+					operation();
+				}
+
+				return *this;
+			}
+
 			auto load(const char* resourcePath)
 			{
 				return Resources::load(client, resourcePath);
+			}
+
+			template<class UserData>
+			auto load(const char* resourcePath, const UserData& data)
+			{
+				return Resources::load(client, resourcePath, false, data);
 			}
 
 			inline void destroy()
@@ -214,7 +271,6 @@ namespace Resources
 	public:
 		typedef ResourceT BaseT;
 		typedef NativeResource ClientResource;
-		typedef ResourcesPack<ClientClass> Pack;
 
 		virtual ~ResourceT()
 		{
@@ -318,28 +374,9 @@ namespace Resources
 	void compile(int platformID, int resourceTypeID, const StringType& fileName, stream::ostream& os)
 	{
 		Resource* resource = Store::createResource(resourceTypeID);
-		resource->CompileTo(fileName.c_str(), 0, 0, os);
+		resource->CompileTo(fileName.c_str(), nullptr, os);
 		delete resource;
 	}
 
 	template<class ResourceTypeT> struct has_external_editor { static const bool value = false; };
 }
-
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

@@ -1,11 +1,3 @@
-// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include "stuff/userStruct.h"
@@ -16,29 +8,34 @@
 #include "expressions/library.include.h"
 
 
+struct ComponentExternalLink;
+
 struct Property
 {
+// 	virtual void dump(const char* name, ResourceDriver::ResourceBase& resource) const = 0;
+// 	virtual void edit(const char* name, ResourceDriver::ResourceBase& resource) const = 0;
+// 	virtual void edit(const char* name, ResourceDriver::ResourceBase& resource) const { PropertyEditors::edit(name, resourceValue(resource)); }
+// 	virtual void dump(const char* name, ResourceDriver::ResourceBase& resource) const{ LOG_ERROR( logs::tabs(2) << name << ": " << resourceValue(resource)); };
 
-
-
-
-
-	inline Property(std::size_t componentShift_): componentShift(componentShift_){}
+	inline Property(std::size_t componentShift_, mirror::runtime::Type* type_): componentShift(componentShift_), type(type_){}
 	virtual ~Property() {}
 
 	void* componentData(ComponentBase& component) const	{ return ((char*) &component) + componentShift;	}
 
-	virtual bool convert(ComponentBase& component, const Expressions::Expression& rhs) const = 0;
+	virtual bool convert(ComponentBase& component, const Expressions::EvaluationUnit& rhs) const = 0;
 
+	void evaluateExternalLink(ComponentExternalLink& externalLink, ComponentBase& component, const Expressions::EvaluationUnit& rhs) const;
+
+	mirror::runtime::Type* type = nullptr;
 	std::size_t componentShift = 0;
 };
 
 template<class Converter>
 struct PropertyImpl : public Property
 {
-	inline PropertyImpl(std::size_t componentShift_, const Converter& converter_) : Property(componentShift_), converter(converter_) {}
+	inline PropertyImpl(std::size_t componentShift_, mirror::runtime::Type* type_, const Converter& converter_) : Property(componentShift_, type_), converter(converter_) {}
 
-	virtual bool convert(ComponentBase& component, const Expressions::Expression& rhs) const
+	virtual bool convert(ComponentBase& component, const Expressions::EvaluationUnit& rhs) const override
 	{
 		return converter(component, *this, rhs);
 	}
@@ -59,7 +56,7 @@ struct ResourceTable : public std::unordered_map<str::string32, std::unique_ptr<
 {
 public:
 	template<class ValueType, class SourceResourceType>
-	static bool convert(ValueType&(*Function_FromResource)(const SourceResourceType&, ValueType&), SourceResourceType&(*Function_ToResource)(const ValueType&, SourceResourceType&), ComponentBase& component, const Property& property, const Expressions::Expression& rhs)
+	static bool convert(ValueType&(*Function_FromResource)(const SourceResourceType&, ValueType&), SourceResourceType&(*Function_ToResource)(const ValueType&, SourceResourceType&), ComponentBase& component, const Property& property, const Expressions::EvaluationUnit& rhs)
 	{
 		SourceResourceType value;
 		bool result = convertVar(rhs, value);
@@ -73,7 +70,7 @@ public:
 	}
 
 	template<class ValueType>
-	static bool convert(ComponentBase& component, const Property& property, const Expressions::Expression& rhs)
+	static bool convert(ComponentBase& component, const Property& property, const Expressions::EvaluationUnit& rhs)
 	{
 		ValueType value;
 		bool result = convertVar(rhs, value);
@@ -105,7 +102,7 @@ public:
 			serialize_component(component, componentValue);
  			emplace(name, 
 					std::unique_ptr<Property>(componentProperty(pointers_distance(&componentValue, component),
- 						[Function_FromResource, Function_ToResource](ComponentBase& component, const Property& property, const Expressions::Expression& expr)
+ 						[Function_FromResource, Function_ToResource](ComponentBase& component, const Property& property, const Expressions::EvaluationUnit& expr)
  						{
  							return convert<ValueType, SourceResourceType>(Function_FromResource, Function_ToResource, component, property, expr);
  						}))
@@ -131,7 +128,7 @@ private:
 	template<class Converter>
 	static Property* componentProperty(std::size_t componentShift, const Converter& converter)
 	{
-		return new PropertyImpl<Converter>(componentShift, converter);
+		return new PropertyImpl<Converter>(componentShift, nullptr, converter);
 	}
 };
 
@@ -149,22 +146,3 @@ void table_add(ResourceTable* table, const str::string32& name, ValueType& compo
 	CM_KERNEL_ENFORCE(table);
 	table->add(name, componentValue, Function_FromResource, Function_ToResource);
 }
-
-
-
-
-// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

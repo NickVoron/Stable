@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2015 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "thirdPerson.h"
 
 namespace CameraSystem{
@@ -13,8 +5,8 @@ namespace Affectors{
 
 ThirdPerson::ThirdPerson()
 {
-
-
+//	asimuth_speed_k1 = 0;
+//	height = 0;
 }
 
 void ThirdPerson::apply(float dt, Affector::Context& ctx)
@@ -23,44 +15,54 @@ void ThirdPerson::apply(float dt, Affector::Context& ctx)
 	{
 		RangedValue<float>	rise;
 		RangedValue<float>	asimuth;
-		
+		//RangedValue<float>	distance;
 
-		asimuth.SetCycleMode(true); 
+		asimuth.SetCycleMode(true); // азимут зациклен
 		asimuth.SetMin(0);
 		asimuth.SetMax(nm::PI * 2);
-		rise.SetMin(5 * nm::PI_180); 
+		rise.SetMin(5 * nm::PI_180); // от 5 до 175 градусов
 		rise.SetMax(nm::PI - 5 * nm::PI_180);
-		rise = nm::PI_2; 
-
-
+		rise = nm::PI_2; // смотреть изначально по горизонтали вдаль
+// 		distance.SetMin(1);
+// 		distance.SetMax(10);
 
 		float inv = 1.0f / 270.0f;
-		
-		distance -= ctx.input.pos().z * inv; 
+		// применить ввод
+		distance -= ctx.input.pos().z * inv; // вперЄд сокращ€ем дистанцию, поэтому -
 		rise += ctx.input.hpb().y * inv;
 
-		
+		// учесть боунд радиус
 		float radius = ctx.target->radius();
 		if(distance < radius)
 			distance = radius;
 
-		
+		//отладить переворот через 360?...
 
-
+/*		Quaternion qq;
+		float a = 3.14f * 2;
+		SetQAsimuth(qq, a);
+		float b = GetQAsimuth(qq);
+		float d = b - a;
+*/
 		Vector3 dir(0, 0, distance);
 		Quaternion  xRot; xRot.Set(rise - nm::PI_2, Vector3::xAxis);
 		
-		
+		// считаем текущий угол
 		float cur_asimuth = ctx.target->state().orientation.GetZAxis().GetSphereAsimuthAngle();
-
+//		if(!asimuth_speed_k1)
 		{
 			asimuth = cur_asimuth;
 		}
-
+/*		else
+		{
+			float a_delta = cur_asimuth - asimuth;
+			asimuth += a_delta * asimuth_speed_k1 * dt;
+		}
+*/
 		Quaternion  yRot; yRot.Set(asimuth, Vector3::yAxis);
 		Quaternion q(yRot * xRot);
 
-		
+		// повернуть вектор
 		dir = Base::MathUtils::postRotate(dir, q);
 
 		State& s = ctx.params.getStateRef();
@@ -71,21 +73,3 @@ void ThirdPerson::apply(float dt, Affector::Context& ctx)
 
 }
 }
-
-
-
-// Copyright (C) 2012-2015 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

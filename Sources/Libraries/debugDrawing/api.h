@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include "gapi/library.include.h"
@@ -204,7 +196,29 @@ namespace DebugDrawing
 		DrawData drawData;
 	};
 
+/*
+	struct ToolDX9 : public ToolAPI
+	{
+		static const gapi::Id api = gapi::DX9;
 
+		Resources::Effect* effect;
+
+		virtual void init(const char* fxFileName);
+		virtual void uploadPerCamera(Viewports::Viewport& viewport, const ShaderDataPerCamera& data);
+		virtual void uploadPerObject(Viewports::Viewport& viewport, const ShaderDataPerObject& data);
+		virtual void begin(Viewports::Viewport& viewport, ShaderMode mode);
+		virtual void end();
+
+		template<bool triangles, class DrawData>
+		DrawableObject* object(const DrawData& dd, ShaderDataPerObject& shaderData, bool updateDataBuffer)
+		{
+			DrawableObjectAPI<DrawData, triangles, gapi::DX9>* obj = new DrawableObjectAPI<DrawData, triangles, gapi::DX9>();
+			obj->prepare(dd, updateDataBuffer);
+			obj->shaderData = shaderData;
+			obj->tool = this;
+			return obj;
+		}
+	};*/
 
 	struct ToolDX11 : public ToolAPI
 	{
@@ -252,14 +266,14 @@ namespace DebugDrawing
 
 			switch (api)
 			{
-			
+			//case gapi::DX9:		obj = toolDX9.object<triangles>(dd, shaderData, updateDataBuffer); break;
 			case gapi::DX11:	obj = toolDX11.object<triangles>(dd, shaderData, updateDataBuffer); break;
 			}
 
 			return obj;
 		}
 
-		
+		//ToolDX9 toolDX9;
 		ToolDX11 toolDX11;
 	};
 
@@ -269,22 +283,3 @@ namespace DebugDrawing
 
 
 
-
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

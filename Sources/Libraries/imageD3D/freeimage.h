@@ -1,15 +1,8 @@
-// Copyright (C) 2013-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include "stuff/enforce.h"
 #include "libfreeimage/library.include.h"
+#include "stream/library.include.h"
 
 namespace image 
 {
@@ -32,12 +25,12 @@ namespace freeimage
 	{
 		if(bitmap)
 		{
-			
+			//retrieve the image data
 			BYTE* bits = FreeImage_GetBits(bitmap);
-			
+			//get the image width and height
 			unsigned int width = FreeImage_GetWidth(bitmap);
 			unsigned int height = FreeImage_GetHeight(bitmap);
-			
+			//FREE_IMAGE_COLOR_TYPE colorType = FreeImage_GetColorType(bitmap);
 			FREE_IMAGE_TYPE imageType = FreeImage_GetImageType(bitmap);
 			unsigned int bpp = FreeImage_GetBPP(bitmap);
 
@@ -57,7 +50,7 @@ namespace freeimage
 						image::Plane< image::Color<image::BGR8> > rgb8;
 						rgb8.init(bits, FreeImage_GetPitch(bitmap), width, height);
 							
-						
+						//добавление еденичной альфы при загрузки изображений без неё
 						image::Plane< image::Color<image::BGRA8> > rgba8;
 						rgba8.allocate(width, height);
 						rgba8.copy(rgb8);
@@ -148,25 +141,7 @@ namespace freeimage
 
 		return res;		
 	}
-
-
-}
 }
 
 
-
-// Copyright (C) 2013-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.
+}

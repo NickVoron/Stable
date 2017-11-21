@@ -1,60 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
 	<Type Name="Expressions::Expression">
-		<DisplayString>"Expression"</DisplayString>
-		<Expand>
-		</Expand>
+		<DisplayString>expression</DisplayString>
 	</Type>
 	<Type Name="Expressions::Function">
-		<DisplayString>"Function: {functionName}"</DisplayString>
+		<DisplayString>function:              {functionName}</DisplayString>
 		<Expand>
 			<Item Name="[Name]">functionName</Item>
 			<Item Name="[Arguments]">params</Item>
-			<CustomListItems MaxItemsPerView="5000">
-			</CustomListItems>
 		</Expand>
 	</Type>
+	<Type Name="Expressions::FunctionUnit">
+		<DisplayString>function unit: {function.functionName}</DisplayString>
+		<Expand>
+			<Item Name="[InputParams]">readyParams</Item>
+			<Item Name="[InternalScope]">scope</Item>
+		</Expand>
+	</Type>
+	<Type Name="Expressions::Lambda">
+		<DisplayString>lambda:  {*expr}</DisplayString>
+		<Expand>
+			<Item Name="[Capture]">captureParams</Item>
+			<Item Name="[Params]">callParams</Item>
+		</Expand>
+	</Type>
+	<Type Name="Expressions::LambdaUnit">
+		<DisplayString>unit: {prototype}</DisplayString>
+	</Type>
+	<Type Name="Expressions::Struct">
+		<DisplayString>struct:               {structType} {params} </DisplayString>
+		<Expand>
+			<Item Name="[Params]">params</Item>
+		</Expand>
+	</Type>
+	<Type Name="Expressions::PropertiesStruct">
+		<DisplayString>struct:               {structType} </DisplayString>
+	</Type>
+	<Type Name="Expressions::PropertiesStructUnit">
+		<DisplayString>struct:               {((Expressions::PropertiesStruct)protoexpr).structType} </DisplayString>
+	</Type>
 	<Type Name="Expressions::Reference">
-		<DisplayString>"Reference: {path.path_string}"</DisplayString>
+		<DisplayString>ref:                   {path.path_string}</DisplayString>
 		<Expand>
 			<CustomListItems MaxItemsPerView="5000" ExcludeView="Test">
 			<Item>path.path_string</Item> 
 			</CustomListItems>
 		</Expand>
 	</Type>
+	<Type Name="Expressions::ReferenceUnit::PathElement">
+		<DisplayString>{element}</DisplayString>
+	</Type>
+	<Type Name="Expressions::PropertyPathElement">
+		<DisplayString>{name}</DisplayString>
+	</Type>	
+		<Type Name="Expressions::PropertyPathElementUnit">
+		<DisplayString>{protoexpr}</DisplayString>
+	</Type>	
 	<Type Name="Expressions::Const&lt;*&gt;">
-		<DisplayString>const = {value}</DisplayString>
+		<DisplayString>const:                  {value}</DisplayString>
+	</Type>
+	<Type Name="Expressions::Callable">
+		<DisplayString>callable:               {name}</DisplayString>
+	</Type>
+	<Type Name="Expressions::ExpressionConst&lt;*&gt;">
+		<DisplayString>constexpr:       {value}</DisplayString>
 	</Type>
 	<Type Name="ObjectParser::InstanceHandle">
-		<DisplayString>"InstanceHandle"</DisplayString>
-		<Expand>
-			<Item Name="[Type]">type</Item>
-			<Item Name="[Name]">name</Item>
-			<Item Name="[Params]">params</Item>
-			<Item Name="[UnEvaluated]">unEvaluatedProperties</Item>
-		</Expand>
+		<DisplayString>instance:               {type} {name} </DisplayString>
 	</Type>
 	<Type Name="ObjectParser::ComponentHandle">
-		<DisplayString>"ComponentHandle"</DisplayString>
+		<DisplayString>component handle:        {type} {name}</DisplayString>
+	</Type>
+	<Type Name="ObjectParser::PrototypeHandle">
+		<DisplayString>prototype handle:        {prototype.type} {prototype.name}</DisplayString>
 		<Expand>
-			<Item Name="[Type]">type</Item>
-			<Item Name="[Name]">name</Item>
-			<Item Name="[Links]">links</Item>
-			<Item Name="[RuntimeProps]">runtimePropsLarva</Item>
+			<Item Name="[Scope]">scope</Item>
+			<Item Name="[Params]">unrolledParams</Item>
 		</Expand>
 	</Type>
-	<Type Name="Expressions::ScopeNames&lt;*&gt;">
-		<DisplayString>"Scope"</DisplayString>
+	<Type Name="ObjectParser::Component">
+		<DisplayString>component:            {type} {name}</DisplayString>
 		<Expand>
-			<Item Name="[Name]">scopeName</Item>
-			<Item Name="[Parent]">parent</Item>
-			<Item Name="[Members]">classMembers</Item>
+			<Item Name="[Type]">componentType</Item>
+			<Item Name="[Name]">name</Item>
+		</Expand>
+	</Type>
+	<Type Name="ObjectParser::InstanceDefinitionExpression">
+		<DisplayString>instance definition:   {type} {name}</DisplayString>
+	</Type>
+	<Type Name="ObjectParser::VoidExpression">
+		<DisplayString>void expression</DisplayString>
+	</Type>
+	<Type Name="ObjectParser::PropertyAssignment">
+		<DisplayString>property: ({propertyName}: {*value}) </DisplayString>
+	</Type>
+	<Type Name="Expressions::NameScope&lt;*&gt;">
+		<DisplayString>scope: {scopeName} </DisplayString>
+		<Expand>
+			<Item Name="[Parent]">{parent}</Item>
 		</Expand>
 	</Type>
 	<Type Name="Expressions::ArrayContainer">
-		<DisplayString>"ArrayContainer"</DisplayString>
+		<DisplayString>ArrayContainer</DisplayString>
 		<Expand>
 			<Item Name="[Elements]">elements</Item>
 		</Expand>
+	</Type>
+	<Type Name="Expressions::EvaluationInfo">
+		<DisplayString Condition="(evalstate == Expressions::Empty)"> empty </DisplayString>
+		<DisplayString Condition="(evalstate == Expressions::Complete)"> complete:{unit} </DisplayString>
+		<DisplayString Condition="(evalstate == Expressions::Reject)"> reject </DisplayString>
+		<DisplayString Condition="(evalstate == Expressions::Impossible)"> impossible:{unresolved} </DisplayString>
 	</Type>
 </AutoVisualizer>

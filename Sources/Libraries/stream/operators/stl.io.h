@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include <string>
@@ -19,6 +11,7 @@
 #include <boost/type_traits.hpp>
 
 #include "../stream/stream.h"
+#include <optional>
 
 
 namespace stream
@@ -87,9 +80,9 @@ template<> struct VectorLoader<false>
 	}
 };
 
-
-
-
+//
+//
+//
 template<bool trivial> struct VectorSaver;
 
 template<> struct VectorSaver<true>
@@ -137,7 +130,7 @@ template<> struct VectorSaver<false>
 #endif
 
 
-
+// std::vector
 template <class T> istream& operator>>(istream& is, std::vector<T>& vec)		{ return VectorLoader<IS_TRIVIALLY_COPYABLE(T) && std::is_trivially_destructible<T>::value>::load(is, vec); }
 template <class T> ostream& operator<<(ostream& os, const std::vector<T>& vec)	{ return VectorSaver<IS_TRIVIALLY_COPYABLE(T) && std::is_trivially_destructible<T>::value>::save(os, vec);	}
 
@@ -186,7 +179,7 @@ ostream& save_vector_func(ostream& os, const std::vector<T>& vec)
 }
 
 
-
+// std::list
 template <class T>
 istream& operator >>(istream& is, std::list<T>& list)
 {
@@ -212,7 +205,7 @@ ostream& operator<<(ostream& os, const std::list<T>& list)
 	return os;
 }
 
-
+// std::list
 template <class T>
 istream& operator >> (istream& is, std::list<T*>& list)
 {
@@ -238,7 +231,7 @@ ostream& operator<<(ostream& os, const std::list<T*>& list)
 	return os;
 }
 
-
+// std::vector
 template <class T>
 istream& operator >> (istream& is, std::vector<std::unique_ptr<T>>& vector)
 {
@@ -267,11 +260,11 @@ ostream& operator<<(ostream& os, const std::vector<std::unique_ptr<T>>& vector)
 
 
 
-
+// std::pair
 template <class T1, class T2> istream& operator>>(istream& is, std::pair<T1, T2>& p)		{	return is >> p.first >> p.second;	}
 template <class T1, class T2> ostream& operator<<(ostream& os, const std::pair<T1, T2>& p)	{	return os << p.first << p.second;	}
 
-
+// std::map
 template <class T1, class T2>
 istream& operator>>(istream& is, std::map<T1, T2>& map)
 {
@@ -298,7 +291,7 @@ ostream& operator<<(ostream& os, const std::map<T1, T2>& map)
 	return os;
 }
 
-
+// std::set
 template <class T, class C>
 istream& operator>>(istream& is, std::set<T, C>& set)
 {
@@ -324,7 +317,7 @@ ostream& operator<<(ostream& os, const std::set<T, C>& set)
 	return os;
 }
 
-
+// std::string
 inline ostream& operator <<(ostream& stream, const std::string& s)
 {
 	int size = int(s.size()); 
@@ -352,7 +345,7 @@ inline istream& operator >>(istream& stream, std::string& s)
 	return stream;
 }
 
-
+// std::string
 inline ostream& operator <<(ostream& stream, const std::vector<std::string>& s)
 {
 	int count = (int)s.size();
@@ -379,7 +372,7 @@ inline istream& operator >>(istream& stream, std::vector<std::string>& s)
 	return stream;
 }
 
-
+// std::wstring
 inline ostream& operator <<(ostream& stream, const std::wstring& s)
 {
 	int size = int(s.size()); 
@@ -430,22 +423,34 @@ istream& operator>>(istream& is, std::tuple<T...>& tup)
 	return is;
 }
 
+
+template <typename T>
+ostream& operator<<(ostream& os, const std::optional<T>& value)
+{
+	bool has_value = value.has_value();
+	os << has_value;
+	if(has_value)
+	{
+		os << value.value();	
+	}	
+
+	return os;
+}
+
+template <typename T>
+istream& operator>>(istream& is, std::optional<T>& value)
+{
+	bool has_value;
+	is >> has_value;
+	if(has_value)
+	{
+		T val;
+		is >> val;
+		value = val;
+	}
+
+	return is;
 }
 
 
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.
+}

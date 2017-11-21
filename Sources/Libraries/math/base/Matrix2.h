@@ -1,45 +1,47 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
+/*********************************************************************
 
+	SiGMan / iO UpG  -  Copyright (C) 2000-2001
 
+	Author: SiGMan
+	  Date: 21.07.2001
+	  Time: 13:53:06
+
+	Abstract:	Standard column 2x2 Matrix class
+
+*********************************************************************/
 #pragma once
 
 #include <math.h>
 
 #include "Vector2.h"
 
-
+// Matrix2
 class Matrix2 {
 public:
 
-	
+	// Ctors
 	inline Matrix2();
 	inline Matrix2( const float matrix[] );
 	inline Matrix2( float m00, float m01, float m10, float m11 );
 
-	
+	// Load / save
 	inline void Load( const float matrix[] );
 	inline void Save( float matrix[] ) const;
 
-	
+	// Reset
 	inline void Zero();
 	inline void Identity();
 
 	static inline Matrix2 GetZero();
 	static inline Matrix2 GetIdentity();
 
-	
+	// Access
 	inline float& operator [] (size_t index );
 	inline float& operator () (size_t r, size_t c );
 	inline float operator [] (size_t index ) const;
 	inline float operator () (size_t r, size_t c ) const;
 
-	
+	// Scalar
 	inline Matrix2& operator += ( float scalar );
 	inline Matrix2& operator -= ( float scalar );
 	inline Matrix2& operator *= ( float scalar );
@@ -50,11 +52,11 @@ public:
 	inline Matrix2 operator * ( float scalar ) const;
 	inline Matrix2 operator / ( float scalar ) const;
 
-	
+	// Vector
 	inline Vector2 operator * ( const Vector2& vector ) const;
 	friend Vector2 operator * ( const Vector2& vector, const Matrix2& matrix );
 
-	
+	// Matrix ops
 	inline Matrix2 GetInverse() const;
 	inline Matrix2& Invert();
 
@@ -63,24 +65,24 @@ public:
 
 	inline float GetDeterminant() const;
 
-	
+	// Matrix post-multiplication
 	inline void Multiply( const float matrix[] );
 	inline void Multiply( const Matrix2& matrix );
 
-	
-	
-	
-	
-	
-	
-	
+	// Affine transform
+	// All transforms are concatenated with the current matrix
+	// ie newMatrix = oldMatrix * newTransform
+	// The transforms construct matrices to pre-multiply vectors
+	// ie newVector = oldMatrix * newTransform
+	// This means that successive transforms affects the vector
+	// in reverse order of addition
 
 	inline void Rotate( float z );
 	inline void Scale( float scale );
 	inline void Scale( float x, float y );
 	inline void Scale( const Vector2& vector );
 
-	
+	// infix
 	inline Matrix2& operator += ( const Matrix2& matrix );
 	inline Matrix2& operator -= ( const Matrix2& matrix );
 	inline Matrix2& operator *= ( const Matrix2& matrix );
@@ -89,20 +91,20 @@ public:
 	inline Matrix2 operator - ( const Matrix2& matrix ) const;
 	inline Matrix2 operator * ( const Matrix2& matrix ) const;
 
-	
+	// Logic compare
 	inline bool Equal( const Matrix2& matrix, float tolerance = 0.000001f) const;
 	inline bool NotEqual( const Matrix2& matrix, float tolerance = 0.000001f) const;
 
-	
+	// Binary compare
 	inline bool operator == ( const Matrix2& matrix ) const;
 	inline bool operator != ( const Matrix2& matrix ) const;
 
 protected:
-	float data[4];	
+	float data[4];	// matrix elements in column major order
 };
 
-
-
+/////////////////////////////////////////////////////////////////
+// Implementation
 
 Matrix2::Matrix2()
 {}
@@ -162,7 +164,7 @@ Matrix2 Matrix2::GetIdentity()
 	return Matrix2( 1.0f, 0.0f, 0.0f, 1.0f );
 }
 
-
+//
 
 float& Matrix2::operator [] (size_t index )
 {
@@ -184,7 +186,7 @@ float Matrix2::operator () (size_t r, size_t c ) const
 	return data[ c * 2 + r ];
 }
 
-
+//
 
 Matrix2& Matrix2::operator += ( float scalar )
 {
@@ -238,7 +240,7 @@ Matrix2 Matrix2::operator / ( float scalar ) const
 	return Matrix2( *this ) /= scalar;
 }
 
-
+//
 
 Vector2 Matrix2::operator * ( const Vector2& vector ) const
 {
@@ -252,20 +254,20 @@ inline Vector2 operator * ( const Vector2& vector, const Matrix2& matrix )
 					vector.x * matrix.data[2] + vector.y * matrix.data[3] );
 }
 
-
+//
 
 Matrix2 Matrix2::GetInverse() const
 {
-	
+	// build transposed cofactor of matrix
 	Matrix2 matrix( data[3], data[1], data[2], data[0] );
 
-	
+	// calc determinant
 	float det = data[0] * data[3] - data[2] * data[1];
 
-	
+	// Scale each cofactor element by 1 / |M|
 	matrix.Scale( 1.0f / det );
 
-	
+	// return inverse
 	return matrix;
 }
 
@@ -275,7 +277,7 @@ Matrix2& Matrix2::Invert()
 	return *this;
 }
 
-
+//
 
 Matrix2 Matrix2::GetTranspose() const
 {
@@ -288,28 +290,28 @@ Matrix2& Matrix2::Transpose()
 	return *this;
 }
 
-
+//
 
 float Matrix2::GetDeterminant() const
 {
 	return data[0] * data[3] - data[2] * data[1];
 }
 
-
+// 
 void Matrix2::Multiply( const float matrix[] )
 {
-	
+	// copy data
 	float temp[4];
 	temp[0]	= data[0];
 	temp[1]	= data[1];
 	temp[2]	= data[2];
 	temp[3]	= data[3];
 
-	
+	// first col
 	data[0] = temp[0] * matrix[0] + temp[2] * matrix[1];
 	data[1] = temp[1] * matrix[0] + temp[3] * matrix[1];
 
-	
+	// second col
 	data[2] = temp[0] * matrix[2] + temp[2] * matrix[3];
 	data[3] = temp[1] * matrix[2] + temp[3] * matrix[3];
 }
@@ -319,7 +321,7 @@ void Matrix2::Multiply( const Matrix2& matrix )
 	Multiply( matrix.data );
 }
 
-
+// Affine
 
 void Matrix2::Rotate( float z )
 {
@@ -332,7 +334,7 @@ void Matrix2::Rotate( float z )
 		-s,c
 	};
 
-	
+	// concatenate
 	Multiply( m );
 }
 
@@ -366,7 +368,7 @@ void Matrix2::Scale( const Vector2& vector )
 	Multiply( m );
 }
 
-
+// Infix
 Matrix2& Matrix2::operator += ( const Matrix2& matrix )
 {
 	data[0]	+= matrix.data[0];
@@ -406,7 +408,7 @@ Matrix2 Matrix2::operator * ( const Matrix2& matrix ) const
 	return Matrix2( *this ) *= matrix;
 }
 
-
+// Compare
 
 bool Matrix2::Equal( const Matrix2& matrix, float tolerance ) const
 {
@@ -433,22 +435,3 @@ bool Matrix2::operator != ( const Matrix2& matrix ) const
 {
 	return ! operator == ( matrix );
 }
-
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

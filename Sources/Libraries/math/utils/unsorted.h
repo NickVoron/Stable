@@ -1,13 +1,5 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
-
+//
 
 #include <stdlib.h>
 
@@ -17,7 +9,7 @@
 
 #include "../base/Quaternion.h"
 
-
+// forwards:
 class Quaternion;
 
 namespace Base {
@@ -25,9 +17,9 @@ namespace MathUtils {
 
 
 
-		inline float GetRandomThetha() { return static_cast<float>( rand() % 16384 ) * 0.00006103288176f; }	
+		inline float GetRandomThetha() { return static_cast<float>( rand() % 16384 ) * 0.00006103288176f; }	// 1 / 16383
 
-		
+		// ���������� ����, ���� ��������� ������� � ������������ probablity ����� �����.
 		bool GetRandomTrigger( float probablity );
 
 		inline int modulus( int a, int b )
@@ -38,7 +30,7 @@ namespace MathUtils {
 			return (a + (((-a)/b)+1) * b) % b;
 		}
 
-		
+		// ��������� float [a..b]
 		inline float GetRandomFromRange( float a, float b )
 		{
 			float th = GetRandomThetha();
@@ -51,7 +43,7 @@ namespace MathUtils {
 			return a + (rand( ) % diff);
 		}
 
-		
+		// 
 		template<class T> struct Interval;
 		template<class T>
 		inline T GetRandomFromInterval( const Interval<T>& i)
@@ -59,30 +51,30 @@ namespace MathUtils {
 			return GetRandomFromRange(i.minValue, i.maxValue);
 		}
 
-		
+		// ������������ �������:
 		float Egy( float x , float p, float h );
 
-		
+		// ���������� �� ���������� ������ k �����: k*m e Z, k<x res = x-k. ������������ ������
 		float Remnants( float x, float m );
 
-		
+		// ���� �����: 1.0f | -1.0f | 0.0f;
 		float Signum( float x );
 
-		
+		// ���������� �� ����� �� �������. �� �� ������, ������!
 		float SegmentDistanceFlat( const Vector3& sectionStart, const Vector3& sectionEnd, float lengthCashed, const Vector3& point );
 
-		
+		// �������������� �����, ���� ������ �������������, ��� �������. ��� �������� ����� �������� �� R3, ���������� Y ����������
 		float HalfPlane( const Vector2& sectionStart, const Vector2& sectionEnd, const Vector2& point );
 		float HalfPlane( const Vector3& sectionStart, const Vector3& sectionEnd, const Vector3& point );
 
-		
+		// ������������� �������� ��������:
 		int LogInt2( int x );
 
-		
+		// ����:
 		template < class T >
 		T Zero( const T& dummy );
 
-		
+		// power of two:
 		inline int PowerOfTwo( int power );
 		inline int GreaterPowerOf2(int v);
 		inline int LowerPowerOf2(int v);
@@ -91,12 +83,12 @@ namespace MathUtils {
 		Vector3 Interpolate(const Vector3& v1, const Vector3& v2, float coef);
 		Vector2 Interpolate(const Vector2& v1, const Vector2& v2, float coef);
 
-		
+		// Warning: this function uses Fe-19 coord-system, with zero azimuth equal to -Z, and 90 azimuth == 
 		float GetAzimuthNeg( const Vector3& point, const Vector3& targ );
 		float GetAzimuthNeg( const Vector2& point, const Vector2& targ );
 		float GetVertical( const Vector3& point, const Vector3& targ );
 
-		
+		// in DX coord system (+Z == 0 )
 		float GetAzimuthPos( const Vector3& point, const Vector3& targ );
 		float GetAzimuthPos( const Vector2& point, const Vector2& targ );
 
@@ -107,7 +99,7 @@ namespace MathUtils {
 		Vector3 preRotate(Vector3& v, const Quaternion& q);
 
 
-		
+		// PowerOf returns 2 in power of argument.
 		inline int PowerOfTwo( int lod )
 		{
 			static int table[] = {	
@@ -171,10 +163,10 @@ namespace MathUtils {
 
 		inline int LogarithmicNearestP2(int v)
 		{
-			
-			
-			
-			
+			// ��������� - ������� ������, ��������� � ��������� ��������� ������ �����
+			// 		float l2 = Log2( (float) v);
+			// 		int r = (int)floorf(l2 + 0.5f);
+			// 		return PowerOfTwo(r);
 			return PowerOfTwo(LowerPowerOf2(v));
 		}
 
@@ -198,29 +190,10 @@ namespace MathUtils {
 			return fabsf(f1-f2) < tolerance;
 		}
 
-		
+		//p,q -> p^q = n (n - ������ ���� ������������!)
 		void buildPlaneBasis(const Vector3& n, Vector3& p, Vector3& q);
 		Matrix3 changeBasisMatrix(const Vector3& srcNormal, const Vector3& dstNormal);
 
-	} 
-} 
+	} // namespace MathUtils
+} // namespace Base
 
-
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

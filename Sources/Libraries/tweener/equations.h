@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include <math.h>
@@ -60,14 +52,14 @@ namespace tween
 	static float Linear_easeOut(float t, float d);
 	static float Linear_easeInOut(float t, float d);
 
-	
-	
-	
-	
-	
+	//
+	//
+	//
+	//
+	//
 	static const float PI = 3.1415926535897932384626433832795f;
 
-	
+	/***** LINEAR ****/
 	TWEENER_INLINE  float Linear_easeIn(float t, float d)
 	{
 		return t / d;
@@ -83,7 +75,7 @@ namespace tween
 		return t / d;
 	}
 
-	
+	/**** Quad ****/
 	TWEENER_INLINE  float Quad_easeIn(float t, float d)
 	{
 		t = t / d;
@@ -102,7 +94,7 @@ namespace tween
 		return (t < 1) ? 0.5f*t*t : -0.5f * ((t - 3)*(t - 1) - 1);
 	}
 
-	
+	/****  Cubic ****/
 	TWEENER_INLINE  float Cubic_easeIn(float t, float d)
 	{
 		t = t / d;
@@ -130,7 +122,7 @@ namespace tween
 		}
 	}
 
-	
+	/**** Quart ****/
 	TWEENER_INLINE  float Quart_easeIn(float t, float d)
 	{
 		t = t / d;
@@ -150,7 +142,7 @@ namespace tween
 		return -0.5f * (t*t*t*t - 2);
 	}
 
-	
+	/**** Quint ****/
 
 	TWEENER_INLINE  float Quint_easeIn(float t, float d)
 	{
@@ -171,7 +163,7 @@ namespace tween
 		return 0.5f*(t*t*t*t*t + 2);
 	}
 
-	
+	/**** Expo ****/
 
 	TWEENER_INLINE  float Expo_easeIn(float t, float d)
 	{
@@ -191,11 +183,11 @@ namespace tween
 		return 0.5f * (-powf(2, -10 * (t - 1)) + 2);
 	}
 
-	
-	
-	
+	//
+	//
+	//
 
-	
+	/***** SINE ****/
 
 	TWEENER_INLINE  float Sine_easeIn(float t, float d)
 	{
@@ -216,7 +208,7 @@ namespace tween
 	}
 
 
-	
+	/****  Elastic ****/
 
 	TWEENER_INLINE  float Elastic_easeIn(float t, float d)
 	{
@@ -225,7 +217,7 @@ namespace tween
 
 		float p = d*.3f;
 		float s = p / 4;
-		float postFix = powf(2, 10 * (t -= 1)); 
+		float postFix = powf(2, 10 * (t -= 1)); // this is a fix, again, with post-increment operators
 		return -(postFix * sinf((t*d - s)*(2 * PI) / p));
 	}
 
@@ -247,14 +239,14 @@ namespace tween
 
 		if (t < 1)
 		{
-			float postFix = powf(2, 10 * (t -= 1)); 
+			float postFix = powf(2, 10 * (t -= 1)); // postIncrement is evil
 			return -0.5f*(postFix* sinf((t*d - s)*(2 * PI) / p));
 		}
-		float postFix = powf(2, -10 * (t -= 1)); 
+		float postFix = powf(2, -10 * (t -= 1)); // postIncrement is evil
 		return postFix * sinf((t*d - s)*(2 * PI) / p)*.5f + 1.0f;
 	}
 
-	
+	/*** Circ ***/
 
 	TWEENER_INLINE  float Circ_easeIn(float t, float d)
 	{
@@ -273,7 +265,7 @@ namespace tween
 		return 0.5f * (sqrtf(1 - t*(t -= 2)) + 1);
 	}
 
-	
+	/****  Bounce ****/
 	TWEENER_INLINE  float Bounce_easeIn(float t, float d)
 	{
 		return 1.0f - Bounce_easeOut(d - t, d);
@@ -310,9 +302,9 @@ namespace tween
 		else return Bounce_easeOut(t * 2 - d, d) * 0.5f + 0.5f;
 	}
 
-	
-	
-	
+	//
+	/**** Back *****/
+	//
 	TWEENER_INLINE  float Back_easeIn(float t, float d)
 	{
 		t /= d;
@@ -337,21 +329,3 @@ namespace tween
 	}
 
 }
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

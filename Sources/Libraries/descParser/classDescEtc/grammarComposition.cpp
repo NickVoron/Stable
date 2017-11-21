@@ -1,17 +1,8 @@
-// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "grammarComposition.h"
 #include "classDesc.h"
 #include "../compiler/compiler.h"
 #include "expressions/library.include.h"
 #include "expressions/componentRefConverter.h"
-#include "expressions/noValueExpression.h"
 #include "expressions/componentPath.h"
 
 
@@ -19,8 +10,8 @@ namespace ObjectParser
 {
 using namespace Expressions;
 
-static std::string globalScopeName("global");
-  
+static bool debugGC = false;
+
 GrammarComposition::GrammarComposition(Compiler& compiler, ExtensionTable& extensions) :
 	extensions(extensions),
 	compiler(compiler)
@@ -28,21 +19,12 @@ GrammarComposition::GrammarComposition(Compiler& compiler, ExtensionTable& exten
 	beginClass();
 }
 
-GrammarComposition::~GrammarComposition()
-{
-}
-
-Expressions::Function* GrammarComposition::newFunction(const std::string& name, const ConstExprList& params)
-{
-	if (debugGC) LOG_MSG(__FUNCTION__ << ", name: " << name);
-	return Expressions::add<Expressions::Function>(name, params);
-}			   
 
 Expressions::Array* GrammarComposition::newArray(const std::unique_ptr<Expressions::ConstExprList>& params)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__);
 
-	return Expressions::add<Expressions::Array>(*params);
+	return params ? Expressions::add<Expressions::Array>(*params) : Expressions::add<Expressions::Array>();
 }
 
 Expressions::Struct* GrammarComposition::newStruct(const std::string& type, const ConstExprList& params)
@@ -52,12 +34,29 @@ Expressions::Struct* GrammarComposition::newStruct(const std::string& type, cons
 	return Expressions::add<Expressions::Struct>(type, params);
 }
 
+Expressions::Lambda* GrammarComposition::newLambda()
+{
+	return Expressions::add<Expressions::Lambda>();
+}
 
+Expressions::Lambda* GrammarComposition::newLambda(const Expressions::Expression* expr)
+{
+	return Expressions::add<Expressions::Lambda>(expr);
+}
 
+void GrammarComposition::fillLambdaParams(Expressions::Lambda* lambda, const Expressions::ConstExprList* params)
+{
+	ENFORCE_POINTER(lambda);
+	ENFORCE_POINTER(params);
+	lambda->assignParams(*params);
+}
 
-
-
-
+void GrammarComposition::fillLambdaCaptures(Expressions::Lambda* lambda, const Expressions::ConstExprList* params)
+{
+	ENFORCE_POINTER(lambda);
+	ENFORCE_POINTER(params);
+	lambda->assignCapture(*params);
+}
 
 PropertiesStruct* GrammarComposition::newPropertiesStruct(const std::string& name, const std::unique_ptr<PropertyAssignmentList>& propertyAssignment)
 {
@@ -76,7 +75,7 @@ PropertiesStruct* GrammarComposition::newPropertiesStruct(const std::string& nam
 	return res;
 }
 
-
+//components
 Component* GrammarComposition::newComponent(const std::string& type, const std::string& name)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", type: " << type << ", name: " << name);
@@ -104,16 +103,6 @@ void GrammarComposition::endComponentRuntimeParams(const std::unique_ptr<Compone
 
 	compoBuilder.endRuntimeParams(*params);
 }
-
-
-void GrammarComposition::addvar(const std::string& name, Expressions::Expression* expr)
-{
-	if (debugGC) LOG_MSG(__FUNCTION__ << ", name: " << name << ", expr: " << expr->string());
-
-	INCOMPLETE;
-	
-}
-
 	
 PropertyAssignment* GrammarComposition::newPropertyAssignment(const std::string& name, Expressions::Expression* value)
 {
@@ -123,7 +112,30 @@ PropertyAssignment* GrammarComposition::newPropertyAssignment(const std::string&
 	return assigment;
 }
 
-void GrammarComposition::addProperty(const std::string& name, Expressions::Expression* expr, bool isPrivate)
+PropertyAssignment*	GrammarComposition::newPropertyAssignment(Expressions::Expression* value)
+{
+	if (debugGC) LOG_MSG(__FUNCTION__ << ", name: anonymously , value: " << value->string());
+
+	return new PropertyAssignment(ComponentNameSource::strGuid("anonymously"), value);
+}
+
+PropertyAssignmentList* GrammarComposition::newPropertyAssignmentsList(PropertyAssignment* assignment)
+{
+	PropertyAssignmentList* list = new PropertyAssignmentList();
+
+	list->emplace_back(assignment);
+	return list;
+}
+
+PropertyAssignmentList*  GrammarComposition::addPropertyAssignments(PropertyAssignmentList* propertyAssignList, PropertyAssignment* assignment)
+{
+	ENFORCE_POINTER(assignment);
+	propertyAssignList->emplace_back(assignment);
+	return propertyAssignList;
+}
+
+//addProperty
+void GrammarComposition::addProperty(const std::string& name, Expressions::Expression* expr)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", name: " << name << ", expr: " << expr->string());
 		
@@ -132,34 +144,15 @@ void GrammarComposition::addProperty(const std::string& name, Expressions::Expre
 
 void GrammarComposition::addProperty(const std::string& name)
 {
-	if (debugGC) LOG_MSG(__FUNCTION__ << ", name: " << name);
-
-	addProperty(name, Expressions::add<NoValueExpression>());
+	addProperty(name, Expressions::add<VoidExpression>());
 }
 
-PropertyAssignmentList* GrammarComposition::newPropertyAssignmentsList(PropertyAssignment* assignment)
+void GrammarComposition::addProperty(Expressions::Expression* defaultExpr)
 {
-	PropertyAssignmentList* list =  new PropertyAssignmentList();
-
-	list->emplace_back(assignment);
-	return list;
+	addProperty(ComponentNameSource::strGuid("anonymously_property"), defaultExpr);
 }
 
-PropertyAssignmentList*  GrammarComposition::addPropertyAssignments(PropertyAssignmentList* propertyAssignList, PropertyAssignment* assignment)
-{
-	propertyAssignList->emplace_back(assignment);
-	return propertyAssignList;
-}
-
-
-void GrammarComposition::bindRuntimeProperty(const std::string& paramName, Expressions::Reference* path, RuntimeDirection direction)
-{
-	if (debugGC) LOG_MSG(__FUNCTION__ << ", paramName: " << paramName << ", path: " << path->string() << ", direction: " << direction );
-
-	compoBuilder.runtimePropetyAccum.bindRuntimeProperty(paramName, path, direction);
-}
-
-void GrammarComposition::newInstance(const std::string& typeName, const std::string& name, const std::unique_ptr<PropertyAssignmentList>&  propertyAssignmentList)
+InstanceDefinitionExpression* GrammarComposition::newInstance(const std::string& typeName, const std::string& name, const std::unique_ptr<PropertyAssignmentList>&  propertyAssignmentList)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", typeName: " << typeName <<  ", name: "<< name);
 
@@ -175,9 +168,15 @@ void GrammarComposition::newInstance(const std::string& typeName, const std::str
 	}
 			
 	currentClass().addInstance(expr);
+	return expr;
 }
 
-void GrammarComposition::newInstanceArray(const std::string& typeName, const std::string& name, Expressions::Expression* arrayParam, const std::unique_ptr<PropertyAssignmentList>&  propertyAssignmentList)
+InstanceDefinitionExpression* GrammarComposition::newInstance(const std::string& typeName, const std::unique_ptr<PropertyAssignmentList>&  propertyAssignmentList)
+{
+	return newInstance(typeName, ComponentNameSource::strGuid("anonymously_instance"), propertyAssignmentList);
+}
+
+InstanceDefinitionExpression* GrammarComposition::newInstanceArray(const std::string& typeName, const std::string& name, Expressions::Expression* arrayParam, const std::unique_ptr<PropertyAssignmentList>&  propertyAssignmentList)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", typeName: " << typeName << ", name: " << name << ", arrayParam: " << arrayParam->string());
 
@@ -185,26 +184,33 @@ void GrammarComposition::newInstanceArray(const std::string& typeName, const std
 
 	expr->arrayData = arrayParam;
 	currentClass().addInstance(expr);
+	return expr;
+}
+
+InstanceDefinitionExpression* GrammarComposition::newInstanceArray(const std::string& typeName, Expressions::Expression* arrayExpr, const std::unique_ptr<PropertyAssignmentList>&  propertyAssignmentList)
+{
+	return newInstanceArray(typeName, ComponentNameSource::strGuid("anonymously_instance_array"), arrayExpr, propertyAssignmentList);
 }
 
 Expressions::ExternalExtension* GrammarComposition::addExternalExtension(const std::string& extensionName, const std::string& text)
 {												
-	
-	
-
-	
-	return 0;
+	return  Expressions::add<Expressions::ExternalExtension>(extensionName, text);
 }
 
+Expressions::Function* GrammarComposition::newFunction(const std::string& name, const Expressions::ConstExprList& params)
+{
+	if (debugGC) LOG_MSG(__FUNCTION__ << ", name: " << name << ", paramsCount: " << params.size());
 
-Expressions::Expression* GrammarComposition::newFunctionOrStruct(const std::string& name, const std::unique_ptr<Expressions::ConstExprList>& params)
+	return Expressions::add<Function>(name, params);
+}
+
+Expressions::Callable* GrammarComposition::newCallable(const std::string& name, const std::unique_ptr<Expressions::ConstExprList>& params)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", name: " << name << ", paramsCount: " << params->size());
 
-	Expression* expr = FUNCTIONS::exist(name) ? (Expression*)Expressions::add<Function>(name, *params) : (Expression*)Expressions::add<Struct>(name, *params);
-	ENFORCE_MSG(expr, "No one function or struct finded");
-		
-	return expr;
+	auto callable = Expressions::add<Callable>(name, *params);
+	currentClass().addCallable(callable);
+	return callable;
 }
 
 
@@ -212,27 +218,7 @@ InstanceDefinitionExpression* GrammarComposition::newPrototype(const std::string
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", typeName: " << typeName);
 
-	InstanceDefinitionExpression* instance = Expressions::add<InstanceDefinitionExpression>(typeName, "", propertyAssignmentList ? *propertyAssignmentList : PropertyAssignmentList(), true);
-
-	return instance;
-}
-
-void GrammarComposition::endCollection(const std::string& collectionName, const std::string& typeName)
-{
-	
-
-	
-	
-	
-	
-
-	
-}
-
-void GrammarComposition::addCollectionElement(const std::string& name, ConstExprList* guidList)
-{
-	
-	
+	return Expressions::add<InstanceDefinitionExpression>(typeName, "", propertyAssignmentList ? *propertyAssignmentList : PropertyAssignmentList(), true);
 }
 
 void GrammarComposition::setClassName(const std::string& type, bool iface)
@@ -246,55 +232,58 @@ void GrammarComposition::addMixInheriatance(const std::string& type, const std::
 	currentClass().addMixInheritance(type, propertyAssignmentList ? *propertyAssignmentList : PropertyAssignmentList());
 }
 
-void GrammarComposition::addAggregateInheritance(const std::string& type)
-{
-	currentClass().addAggregateInheritance(type);
-}
-
-void GrammarComposition::setInheritanceAssigment(const std::string& type, const std::unique_ptr<PropertyAssignmentList>&  propertyAssignmentList)
-{
-	currentClass().setParentAssigment(type, propertyAssignmentList ? *propertyAssignmentList : PropertyAssignmentList());
-}
-
-
-Expressions::Reference* GrammarComposition::newProxy()
+//proxy
+Expressions::Reference* GrammarComposition::newProxy(ObjectParser::location& lloc)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", this");
-	return newProxy("this");
+	return newProxy("this", lloc);
 }
 
-Expressions::Reference* GrammarComposition::newProxy(Expressions::Expression* expr)
+Expressions::Reference* GrammarComposition::newProxy(Expressions::Expression* expr, ObjectParser::location& lloc)
 {
-	return Expressions::add<Reference>(expr);
+	return setloc(Expressions::add<Reference>(expr), lloc);
 }
 
-Expressions::Reference* GrammarComposition::newProxy(const std::string& targetName)
+Expressions::Reference* GrammarComposition::newProxy(const std::string& targetName, ObjectParser::location& lloc)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", targetName: " << targetName);
 
-	return Expressions::add<Reference>(new PropertyPath(targetName));
+	return setloc(Expressions::add<Reference>(new PropertyPathElement(targetName)), lloc);
 }
 
 Expressions::Reference::PathElement* GrammarComposition::newProxyArrayPath(const std::unique_ptr<Expressions::ConstExprList>& params)
 {		
-	return new ArrayPath(*params);
+	return new ArrayPathElement(*params);
 }
 
 Reference::PathElement* GrammarComposition::newProxyPropertyPath(const std::string& name)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", name: " << name);
 
-	return new PropertyPath(name);
+	return new PropertyPathElement(name);
 }
 
 Expressions::Reference::PathElement* GrammarComposition::newProxyComponentPath(const std::string& componentType)
 {
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", componentType: " << componentType);
 
-	return new ComponentPath(componentType);
+	return new ComponentPathElement(componentType);
+}
+
+Expressions::Reference::PathElement* GrammarComposition::newProxyCallablePath(Expressions::Callable* callable)
+{
+	if (debugGC) LOG_MSG(__FUNCTION__ << ", callable: " << callable->string());
+
+	return new CallablePathElement(*callable);
+
 }
 
 const ClassTable& GrammarComposition::classes() const
+{
+	return classTable;
+}
+
+ClassTable& GrammarComposition::classes()
 {
 	return classTable;
 }
@@ -309,6 +298,7 @@ void GrammarComposition::endClass()
 	ENFORCE(_currentClass);
 	if (debugGC) LOG_MSG(__FUNCTION__ << ", typeName: " << _currentClass->typeName);
 	
+	currentClass().resolveCallables();
 	classTable[_currentClass->typeName] = std::move(_currentClass);
 	beginClass();
 }
@@ -319,33 +309,4 @@ ClassDesc& GrammarComposition::currentClass()
 	return *_currentClass; 
 }
 
-
-
-
-
-
-
-
-
-
-
-
 }//
-
-
-
-// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

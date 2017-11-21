@@ -1,11 +1,3 @@
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include "defaultLogs/library.include.h"
@@ -147,6 +139,8 @@ struct mirror
 			}
 
 			virtual std::pair<bool, std::size_t> index(const std::string& name) = 0;
+			virtual const std::string& name() const = 0;
+			virtual std::vector<std::string> fields() const = 0;
 
 			virtual std::unique_ptr<Type> clone() const = 0;
 
@@ -223,14 +217,25 @@ struct mirror
 		template<class Accessor> 
 		Type& add(const std::string& name, Accessor accessor)
 		{
-			
+			//LOG_MSG("define accessor: " << name);
 			accessors.try_emplace(name, new AccessorHolderT<Struct, Accessor>(name, accessors.size(), accessor));
 			return *this;
 		}
 
 		void name(const std::string& n) { typeName = n; }
-		const std::string& name() const { return typeName; }
+		virtual const std::string& name() const override { return typeName; }
 		std::size_t size() const { return accessors.size(); }
+
+		virtual std::vector<std::string> fields() const override
+		{
+			std::vector<std::string> result;
+			for (auto& it : accessors)
+			{
+				result.push_back(it.first);
+			}
+
+			return result;
+		}
 
 		virtual std::unique_ptr<runtime::Type> clone() const override
 		{
@@ -361,33 +366,33 @@ struct mirror
 	}
 };
 
-#define MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+#define MIRROR_TYPE_DECLARE(TYPE_NAME) \
 	auto mirror_declarator_##TYPE_NAME = mirror::declare<TYPE_NAME>(STPP_STRINGIZE(TYPE_NAME))
 
 #define MIRROR_STRUCT_DECLARE_1(TYPE_NAME, M0) \
-	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	MIRROR_TYPE_DECLARE(TYPE_NAME) \
 	(STPP_STRINGIZE(M0), &TYPE_NAME::M0);
 
 #define MIRROR_STRUCT_DECLARE_2(TYPE_NAME, M0, M1) \
-	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	MIRROR_TYPE_DECLARE(TYPE_NAME) \
 	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
 	(STPP_STRINGIZE(M1), &TYPE_NAME::M1);
 
 #define MIRROR_STRUCT_DECLARE_3(TYPE_NAME, M0, M1, M2) \
-	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	MIRROR_TYPE_DECLARE(TYPE_NAME) \
 	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
 	(STPP_STRINGIZE(M1), &TYPE_NAME::M1) \
 	(STPP_STRINGIZE(M2), &TYPE_NAME::M2);
 
 #define MIRROR_STRUCT_DECLARE_4(TYPE_NAME, M0, M1, M2, M3) \
-	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	MIRROR_TYPE_DECLARE(TYPE_NAME) \
 	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
 	(STPP_STRINGIZE(M1), &TYPE_NAME::M1) \
 	(STPP_STRINGIZE(M2), &TYPE_NAME::M2) \
 	(STPP_STRINGIZE(M3), &TYPE_NAME::M3);
 
 #define MIRROR_STRUCT_DECLARE_5(TYPE_NAME, M0, M1, M2, M3, M4) \
-	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	MIRROR_TYPE_DECLARE(TYPE_NAME) \
 	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
 	(STPP_STRINGIZE(M1), &TYPE_NAME::M1) \
 	(STPP_STRINGIZE(M2), &TYPE_NAME::M2) \
@@ -395,7 +400,7 @@ struct mirror
 	(STPP_STRINGIZE(M4), &TYPE_NAME::M4);
 
 #define MIRROR_STRUCT_DECLARE_6(TYPE_NAME, M0, M1, M2, M3, M4, M5) \
-	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	MIRROR_TYPE_DECLARE(TYPE_NAME) \
 	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
 	(STPP_STRINGIZE(M1), &TYPE_NAME::M1) \
 	(STPP_STRINGIZE(M2), &TYPE_NAME::M2) \
@@ -404,7 +409,7 @@ struct mirror
 	(STPP_STRINGIZE(M5), &TYPE_NAME::M5);
 
 #define MIRROR_STRUCT_DECLARE_7(TYPE_NAME, M0, M1, M2, M3, M4, M5, M6) \
-	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	MIRROR_TYPE_DECLARE(TYPE_NAME) \
 	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
 	(STPP_STRINGIZE(M1), &TYPE_NAME::M1) \
 	(STPP_STRINGIZE(M2), &TYPE_NAME::M2) \
@@ -414,7 +419,7 @@ struct mirror
 	(STPP_STRINGIZE(M6), &TYPE_NAME::M6);
 
 #define MIRROR_STRUCT_DECLARE_8(TYPE_NAME, M0, M1, M2, M3, M4, M5, M6, M7) \
-	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	MIRROR_TYPE_DECLARE(TYPE_NAME) \
 	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
 	(STPP_STRINGIZE(M1), &TYPE_NAME::M1) \
 	(STPP_STRINGIZE(M2), &TYPE_NAME::M2) \
@@ -425,7 +430,7 @@ struct mirror
 	(STPP_STRINGIZE(M7), &TYPE_NAME::M7);
 
 #define MIRROR_STRUCT_DECLARE_9(TYPE_NAME, M0, M1, M2, M3, M4, M5, M6, M7, M8) \
-	MIRROR_TYPE_DECLARATOR(TYPE_NAME) \
+	MIRROR_TYPE_DECLARE(TYPE_NAME) \
 	(STPP_STRINGIZE(M0), &TYPE_NAME::M0) \
 	(STPP_STRINGIZE(M1), &TYPE_NAME::M1) \
 	(STPP_STRINGIZE(M2), &TYPE_NAME::M2) \
@@ -435,7 +440,6 @@ struct mirror
 	(STPP_STRINGIZE(M6), &TYPE_NAME::M6) \
 	(STPP_STRINGIZE(M7), &TYPE_NAME::M7) \
 	(STPP_STRINGIZE(M8), &TYPE_NAME::M8);
-
 #define MIRROR_STRUCT_DECLARE(...) MACRO_ID(GET_MACRO(__VA_ARGS__, \
 	MIRROR_STRUCT_DECLARE_9, \
 	MIRROR_STRUCT_DECLARE_8, \
@@ -447,21 +451,3 @@ struct mirror
 	MIRROR_STRUCT_DECLARE_2, \
 	MIRROR_STRUCT_DECLARE_1 \
 	)(__VA_ARGS__))
-
-
-
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

@@ -1,12 +1,6 @@
-// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "arrayfunc.h"
+
+#include <numeric>
 
 #include "../array.h"
 #include "../property.h"
@@ -16,35 +10,36 @@
 namespace Expressions{
 namespace Functions{
 
-	Expression* propertiesStructMerge(const std::string& resultName, const PropertiesStruct* ps0, const PropertiesStruct* ps1)
-	{
-		INCOMPLETE;
+	EvaluationUnit* propertiesStructMerge(const std::string& structName, const PropertiesStructUnit* ps0, const PropertiesStructUnit* ps1)
+	{		
+		auto proto = add<PropertiesStruct>(structName);
+		auto res = proto->evaluated(EvaluationUnit::commonParent)->cast<PropertiesStructUnit>();
 
-		PropertiesStruct* res = add<PropertiesStruct>(resultName);
-
-		
-		
+		for (auto& it : ps0->scope()) {	res->add(it.first, it.second); }		
+		for (auto& it : ps1->scope()) {	res->add(it.first, it.second); }
 
 		return res;
 	}
 
-	Expression* propertiesStructArray(const std::string& structName, const std::string& fieldName, Array* arr)
+	EvaluationUnit* propertiesStructArray(const std::string& structName, const std::string& fieldName, ArrayContainer* arr)
 	{
-		ConstExprList exprs;
+		auto proto = add<PropertiesStruct>(structName);
+
+		EvaluationUnitsList exprs;
 		exprs.resize(arr->count());
 		for (std::size_t i = 0; i < arr->count(); ++i)
 		{
-			PropertiesStruct* ps = add<PropertiesStruct>(structName);
+			auto ps = proto->evaluated(EvaluationUnit::commonParent)->cast<PropertiesStructUnit>();
 			ps->add(fieldName, arr->element(i));
 			exprs[i] = ps;
 		}
 
-		return add<Array>(exprs)->evaluated(EvaluationUnit::commonParent);
+		return add<ArrayContainer>(*proto, EvaluationUnit::commonParent, exprs);
 	}
 
-	Expression* propertiesArrayMerge(const std::string& resultName, Array* arr0, Array* arr1)
+	EvaluationUnit* propertiesArrayMerge(const std::string& resultName, ArrayContainer* arr0, ArrayContainer* arr1)
 	{
-		ConstExprList exprs;
+		EvaluationUnitsList exprs;
 
 		if (arr0->count() == arr1->count())
 		{
@@ -52,18 +47,21 @@ namespace Functions{
 			exprs.resize(count);
 			for (std::size_t i = 0; i < count; ++i)
 			{
-				const PropertiesStruct* s0 = arr0->element(i)->cast<const PropertiesStruct>();
-				const PropertiesStruct* s1 = arr1->element(i)->cast<const PropertiesStruct>();
+				auto e0 = arr0->element(i);
+				auto e1 = arr1->element(i);
+
+				auto s0 = e0->cast<const PropertiesStructUnit>();
+				auto s1 = e1->cast<const PropertiesStructUnit>();
 				exprs[i] = propertiesStructMerge(resultName, s0, s1);
 			}			
 		}
 
-		return add<Array>(exprs)->evaluated(EvaluationUnit::commonParent);
+		return add<ArrayContainer>(arr0->protoexpr, EvaluationUnit::commonParent, exprs);
 	}
 
-	Expression* first_elements(ArrayContainer* array, std::size_t count)
+	EvaluationUnit* first_elements(ArrayContainer* array, std::size_t count)
 	{
-		auto result = add<ArrayContainer>(EvaluationUnit::commonParent);
+		auto result = add<ArrayContainer>(array->protoexpr, EvaluationUnit::commonParent);
 		count = std::max(std::min(count, array->count()), (std::size_t)0);
 		for (std::size_t i = 0; i < count; ++i)
 		{
@@ -79,8 +77,7 @@ namespace Functions{
 		
 		for (std::size_t i = 0; i < array->count(); ++i)
 		{
-			auto item0 = array->element(i);
-			if (item0)
+			if (auto item0 = array->element(i))
 			{
 				for (std::size_t j = 0; j < query->count(); ++j)
 				{
@@ -98,9 +95,9 @@ namespace Functions{
 		return result;
 	}
 
-	Expression* select_elements(ArrayContainer* array, const std::vector<unsigned int>& indices)
+	EvaluationUnit* select_elements(ArrayContainer* array, const std::vector<unsigned int>& indices)
 	{
-		auto result = add<ArrayContainer>(EvaluationUnit::commonParent);
+		auto result = add<ArrayContainer>(array->protoexpr, EvaluationUnit::commonParent);
 		for (auto index : indices)
 		{
 			if (index >= 0 && index < array->count())
@@ -112,18 +109,26 @@ namespace Functions{
 		return result;
 	}
 
-	std::vector<unsigned int> linear_indices(unsigned int count)
+	std::vector<unsigned int> iota(unsigned int count, int start)
 	{
 		std::vector<unsigned int> result(count);
-		for (unsigned int i = 0; i < count; ++i)
-		{			
-			result[i] = i;
-		}
+		std::iota(result.begin(), result.end(), start);
 		return result;
 	}
 
+	std::vector<unsigned int> linear_indices(unsigned int count)
+	{
+		return iota(count, 0);
+	}
 
-	int array_test(const std::vector<Expression*>& input)
+	unsigned int count(ArrayContainer* array)
+	{
+		ENFORCE_POINTER(array);
+		return array->count();
+	}
+
+
+	int array_test(const std::vector<EvaluationUnit*>& input)
 	{
 		for (auto expr : input)
 		{
@@ -137,29 +142,12 @@ namespace Functions{
 		FUNCTIONS::add("setname", &propertiesStructArray);
 		FUNCTIONS::add("merge", &propertiesArrayMerge);
 
+		BIND_EXPRESSION_FUNCTION(count);
 		BIND_EXPRESSION_FUNCTION(first_elements);
 		BIND_EXPRESSION_FUNCTION(select_elements);
 		BIND_EXPRESSION_FUNCTION(linear_indices);
+		BIND_EXPRESSION_FUNCTION(iota);
 		BIND_EXPRESSION_FUNCTION(get_indices);
-		
 	}
 }
 }
-
-
-
-// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

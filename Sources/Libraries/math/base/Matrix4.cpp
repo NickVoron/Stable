@@ -1,20 +1,22 @@
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
+/*********************************************************************
 
+	SiGMan / iO UpG  -  Copyright (C) 2000-2001
 
+	Author: SiGMan
+	  Date: 22.07.2001
+	  Time: 5:09:59
+
+	Implemented:	Matrix4 class.
+
+*********************************************************************/
 
 #include "Vector4.h"
 #include "Matrix3.h"
 #include "Matrix4.h"
 
-
-
-
+// Graphics gems (IV)
+// Gauss-Jordan elimination with partial pivoting
+// data[ c * 4 + r ]
 float
 Matrix4::GetDeterminant() const
 {	
@@ -45,34 +47,34 @@ Matrix4::Invert()
 {
 	Matrix4 b = GetIdentity();
 	int i, j, i1;
-	
-	for( j = 0; j < 4; j++ ) {	
-		i1	= j;				
+	// Loop over cols of a from left to right, eliminatin above and below diag
+	for( j = 0; j < 4; j++ ) {	// Find a largest pivot in col 'j' among rows j..3
+		i1	= j;				// Row with a largest pivot candidate
 		for( i = j + 1; i < 4; i++ ) {
 			if ( fabsf( data[ j * 4 + i ] ) > fabsf( data[ j * 4 + i1 ] ) ) 
 				i1 = i;
 		}
-		
+		// Swap rows i1 and j in a and b to put pivot onto diagonal
 		float ftmp;
-		
-		
-		
-		
-		
-		
+		// swap rows in data
+		// effectively row gets compiled into:
+		// fld float1;
+		// mov edx, float2
+		// mov float1, edx
+		// fstp float2
 		ftmp = data[i1   ];	data[i1   ]	= data[j   ]; data[j   ] = ftmp;
 		ftmp = data[i1+4 ];	data[i1+4 ]	= data[j+4 ]; data[j+4 ] = ftmp;
 		ftmp = data[i1+8 ];	data[i1+8 ]	= data[j+8 ]; data[j+8 ] = ftmp;
 		ftmp = data[i1+12];	data[i1+12]	= data[j+12]; data[j+12] = ftmp;
-		
+		// swap rows in b
 		ftmp = b.data[i1   ];	b.data[i1   ]	= b.data[j   ]; b.data[j   ] = ftmp;
 		ftmp = b.data[i1+4 ];	b.data[i1+4 ]	= b.data[j+4 ]; b.data[j+4 ] = ftmp;
 		ftmp = b.data[i1+8 ];	b.data[i1+8 ]	= b.data[j+8 ]; b.data[j+8 ] = ftmp;
 		ftmp = b.data[i1+12];	b.data[i1+12]	= b.data[j+12]; b.data[j+12] = ftmp;
-		
-		
+		// Scale row j to have a unit diagonal
+		// Singular matrix !
 		float scale = data[ j *4 + j ];
-		
+		// Trick! Trick!
 		scale = 1.0f / scale;
 		b.data[j   ] *= scale;
 		b.data[j+4 ] *= scale;
@@ -82,7 +84,7 @@ Matrix4::Invert()
 		data[j+4 ] *= scale;
 		data[j+8 ] *= scale;
 		data[j+12] *= scale;
-		
+		// Eliminate off-diagonal elems in col j of data, doing identical on b
 		for( i = 0; i < 4; i++ ) {
 			if ( i != j ) {
 				float c1, c2, c3, c4, c;
@@ -116,22 +118,3 @@ const Vector3& Matrix4::getTranslate() const
 {
 	return *(Vector3*)&data[12];
 }
-
-
-
-
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

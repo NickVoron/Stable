@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
  #include "font.h"
 
 #include "stuff/library.include.h"
@@ -21,7 +13,7 @@ namespace font {
 		int CHARACTER_TABULATION	= 0x0009;
 	}
 
-
+//
 stream::ostream& operator<<(stream::ostream& s, const Face& face)
 {
 	s << face.name << face.systemName << face.codeTable << face.height;
@@ -61,52 +53,52 @@ stream::istream& operator>>(stream::istream& s, CharacterDesc& charDesc)
 	return s >> charDesc.charCode >> charDesc.metric >> charDesc.blackBody >> charDesc.kerning;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// stream::ostream& operator<<(stream::ostream& s, const FontDesc& desc)
+// {
+// 	s << desc.name << desc.sysFontName << desc.textureFileName << desc.fontSize;
+// 
+// 	int size = (int)desc.styles.size();
+// 	s << size;
+// 	for (int i = 0; i < size; ++i)
+// 	{
+// 		s << desc.styles[i];		
+// 	}
+// 
+// 	return s;
+// }
+// 
+// stream::istream& operator>>(stream::istream& s, FontDesc& desc)
+// {
+// 	s >> desc.name >> desc.sysFontName >> desc.textureFileName >> desc.fontSize;
+// 
+// 	int size; s >> size;
+// 	desc.styles.resize(size);
+// 	for (int i = 0; i < size; ++i)
+// 	{
+// 		s >> desc.styles[i];		
+// 	}
+// 
+// 	return s;
+// }
+// 
+// const Style& FontDesc::getStyle(const std::string& str)
+// {
+// 	foreach(const Style& style, styles)
+// 	{
+// 		if(style.name == str) return style;
+// 	}
+// 
+// 	throw Base::Errors::Simple("FontDesc::getStyle() : not found style : font name = " + name + " style name = " + str);
+// }
+// 
+// void Strings::countSymbols()
+// {
+// 	symbolsCount = 0;
+// 	foreach(const std::wstring& str, data)
+// 	{
+// 		symbolsCount += str.size();
+// 	}
+// }
 
 int CharacterDesc::getKerning(UTF32 nextCharCode) const
 {
@@ -125,7 +117,17 @@ Face::Face()
 }
 
 const CharacterDesc& Face::getCharDesc(UTF32 charCode) const
-{					   
+{					   /*
+	CodeTranslationTable::const_iterator it = codeTable.find(unicodeValue);
+	if( it == codeTable.end() )
+	{
+		return characters[ codeTable.begin()->second ];
+		std::string codeStr = Base::StrUtils::toString(unicodeValue);
+		throw Base::Errors::Simple("Style::getCharDesc(): symbol with code [" + codeStr + "] not in compiled range in font");
+	}
+
+	const CharacterDesc& charDesc = characters[ it->second ];
+	return  charDesc;*/
 	return characters[ codeTable[charCode] ];
 }
 
@@ -165,7 +167,7 @@ void Face::getGlyphs(const UTF32* b, const UTF32* e, const Rect& inRect, int fir
 		IntPoint2 wordSize;
 		getStringSize(cbeg, cend, wordSize);
 
-		
+		//GUI2::RenderManager::get().drawLineRect( IntRect(charRect.pos, wordSize), GUI2::Color::WHITE );
 
  		if(wordWrap && charRect.pos.x + wordWidth >= rect.right() && charRect.pos.x != rect.pos.x)
  		{
@@ -203,7 +205,7 @@ void Face::getGlyphs(const UTF32* b, const UTF32* e, const Rect& inRect, int fir
 				currentStringSpacesCount = isSpace ? 1 : 0;
 			}
 
-			
+			//GUI2::RenderManager::get().drawLine(IntPoint2(rect.left(), baseLine), IntPoint2(rect.right(), baseLine), GUI2::Color::WHITE );
 
 			const GlyphMetric& metric = charDesc.metric;
 
@@ -223,7 +225,7 @@ void Face::getGlyphs(const UTF32* b, const UTF32* e, const Rect& inRect, int fir
 		}
 	}
 	  
-	
+	//text align
  	{
  		TextAlign textAlign = TAL_NOT_DEFINED;
  
@@ -348,7 +350,7 @@ void Face::align(TextAlign align, const Rect& rect, int spacesCount, const UTF32
 			if( !isSpaceChar(it->charCode) )
 			{
 				it->rect.pos.x += additionalPos - leadingSpacesWidth;
-				
+				//additionalPos += it->rect.size.x;
 			}
 			else
 			{
@@ -368,15 +370,15 @@ int Face::stringWidth(const char* str) const
 	return stringWidth( string_utf32(str) );
 }
 
-
-
-
-
-
-
-
-
-
+// int Face::stringWidth(const std::string& str) const
+// {
+// 	return stringWidth( string_utf32(str) );
+// }
+// 
+// int Face::stringWidth(const std::wstring& str) const
+// {
+// 	return stringWidth( string_utf32(str) ); 
+// }
 
 int Face::stringWidth(const string_utf32& str) const
 {
@@ -493,164 +495,159 @@ bool Face::prepareGlyphsBuffer(const UTF32* b, const UTF32* e, GlyphInfo*& beg, 
 	return true;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// int Style::getKerning(const CharacterDesc& char1, const CharacterDesc& char2) const
+// {
+// 	size_t i = char1.kerningIdx;
+// 	size_t end = i + char1.numKerningPairs;
+// 	
+// 	unsigned short c2 = char2.symbol;
+// 	for (; i < end; ++i)
+// 	{
+// 		if( kerning[i].character == c2 )	return kerning[i].kerning;
+// 	}
+// 	
+// 	return 0;
+// }
+// 
+// std::wstring Style::validateString(const std::wstring& str)	const
+// {	   /*
+// 	if( codeTable.empty() ) 
+// 	{
+// 		throw Base::Errors::Simple("Style::validateString(): font code table is empty");
+// 	}
+// 
+// 	std::wstring res;
+// 	res.reserve(str.size() );
+// 	foreach(wchar_t c, str)
+// 	{
+// 		CodeTranslationTable::const_iterator it = codeTable.find(c);
+// 		if( it == codeTable.end() ) c = codeTable.begin()->first;
+// 		res.push_back(c);				
+// 	}*/
+// 
+// 	unsigned int i = 0;
+// 	std::wstring res = str;
+// 	foreach(wchar_t c, res)
+// 	{
+// 		res[i++] = codeTable[c];
+// 	}
+// 
+// 	return res;
+// 	
+// }
+// 
+// StringProcessor::GlyphsList StringProcessor::tempGlyphs;
+// 
+// void StringProcessor::reserveBuffer(int count)
+// {
+// 	if( tempGlyphs.size() < count ) tempGlyphs.resize( count );
+// }
+// 
+// void StringProcessor::getGlyphs(const Style& style, const Strings& text, GlyphsList::iterator& beg, GlyphsList::iterator& end)
+// {
+// 	reserveBuffer(text.symbolsCount);
+// 
+// 	beg = tempGlyphs.begin();
+// 	end = beg;
+// 
+// 	size_t stringCount = text.data.size();
+// 	int glyphIdx = 0; 
+// 
+// 	for (size_t strIdx = 0; strIdx < stringCount; ++strIdx)
+// 	{
+// 		const std::wstring& str = text.data[strIdx];
+// 
+// 		int s = str.size() - 1;
+// 		int yShift = style.metric.height * strIdx;
+// 
+// 		if(s >= 0) tempGlyphs[glyphIdx].rect.pos.x = 0;
+// 
+// 		for (int i = 0; i < s; ++i)
+// 		{
+// 			const CharacterDesc& c = style.getCharDesc( str[i] );
+// 			const CharacterDesc& c2 = style.getCharDesc( str[i + 1] );
+// 			GlyphInfo& gi = tempGlyphs[glyphIdx];
+// 
+// 			int kerning = style.getKerning(c, c2);
+// 
+// 			gi.texRect = c.texRect;
+// 			gi.rect.pos.y = c.rect.pos.y + yShift;
+// 			gi.rect.size = c.rect.size;
+// 			
+// 			tempGlyphs[glyphIdx + 1].rect.pos.x = gi.rect.pos.x + c.b + c.c + kerning + c2.a;
+// 			++end;
+// 			++glyphIdx;
+// 		}
+// 
+// 		if(s >= 0)
+// 		{
+// 			const CharacterDesc& c = style.getCharDesc( str[s] );
+// 			GlyphInfo& gi = tempGlyphs[glyphIdx];
+// 
+// 			gi.texRect = c.texRect;
+// 			gi.rect.pos.y = c.rect.pos.y + yShift;
+// 			gi.rect.size = c.rect.size;
+// 			++end;
+// 			++glyphIdx;
+// 		}
+// 	}
+// }
+// 
+// void StringProcessor::getGlyphs(const Style& style, const std::wstring& str, GlyphsList::iterator& beg, GlyphsList::iterator& end )
+// {
+// 	Strings strs;
+// 	strs.data.push_back(str);
+// 	strs.countSymbols();
+// 	getGlyphs(style, strs, beg, end );
+// }
+// 
+// void StringProcessor::loadUnicodeTextFromFile(const char* fileName, Strings& text)
+// {
+// 	if(!Base::FileUtils::FileExists(fileName))
+// 	{
+// 		throw std::runtime_error( (std::string(__FUNCTION__) + " file not found: " + fileName).c_str() );
+// 	}
+// 
+// 	FILE *fl = fopen(fileName , "rb");
+// 
+// 	fseek(fl, 0, SEEK_END);
+// 	int nSyms = ftell(fl);
+// 	fseek(fl, 0, SEEK_SET);
+// 	char *sym = new char[nSyms + 2];
+// 	fread(sym, nSyms, sizeof *sym, fl);
+// 	fclose(fl);
+// 
+// 	sym[nSyms] = sym[nSyms + 1] = 0;
+// 
+// 	wchar_t* str = (wchar_t*)(sym + 2);
+// 	int len = nSyms / 2;
+// 	text.data.reserve(len / 20);
+// 
+// 	int strCounter = 0;
+// 	text.data.resize(1);
+// 	for (int i = 0; i < len; ++i)
+// 	{
+// 		wchar_t c = str[i];
+// 
+// 		if(c == SystemSymbols::EOL)
+// 		{
+// 			++strCounter;
+// 			text.data.push_back( std::wstring() );
+// 			continue;
+// 		}
+// 
+// 		if(c == SystemSymbols::CHARACTER_TABULATION) c = SystemSymbols::SPACE;
+// 		if(c == SystemSymbols::CARRIAGE_RETURN) continue;
+// 		if(c == SystemSymbols::NULL_SYMBOL) break;
+// 
+// 		text.data[strCounter].push_back(c);
+// 	}
+// 
+// 	text.symbolsCount = len;
+// 
+// 	delete [] sym;
+// 
+// }
 
 
 }}
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

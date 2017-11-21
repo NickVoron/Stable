@@ -59,6 +59,8 @@
     <ClCompile Include="utpnet.cpp" />
     <ClCompile Include="componentModelHelpers.cpp" />
     <ClCompile Include="jni.cpp" />
+    <ClCompile Include="qtlog.cpp" />
+    <ClCompile Include="workDir.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3d9\direct3d9.h">
@@ -116,5 +118,6 @@
     <ClInclude Include="utpnet.h" />
     <ClInclude Include="componentModelHelpers.h" />
     <ClInclude Include="jni.h" />
+    <ClInclude Include="qtlog.h" />
   </ItemGroup>
 </Project>

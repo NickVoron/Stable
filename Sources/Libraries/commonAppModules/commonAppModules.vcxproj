@@ -133,6 +133,7 @@
     <ClCompile Include="postEffects.cpp" />
     <ClCompile Include="processTerminator.cpp" />
     <ClCompile Include="profiler.cpp" />
+    <ClCompile Include="qtlog.cpp" />
     <ClCompile Include="resourceManager.cpp" />
     <ClCompile Include="scheme.cpp" />
     <ClCompile Include="screenLog.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="window.cpp" />
     <ClCompile Include="windowParams.cpp" />
     <ClCompile Include="winInput.cpp" />
+    <ClCompile Include="workDir.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="autorun.h" />
@@ -184,6 +186,7 @@
     <ClInclude Include="postEffects.h" />
     <ClInclude Include="processTerminator.h" />
     <ClInclude Include="profiler.h" />
+    <ClInclude Include="qtlog.h" />
     <ClInclude Include="resourceManager.h" />
     <ClInclude Include="scheme.h" />
     <ClInclude Include="screenLog.h" />

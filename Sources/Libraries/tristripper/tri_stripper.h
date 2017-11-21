@@ -1,54 +1,46 @@
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+
+//////////////////////////////////////////////////////////////////////
 //
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
+//  Copyright (C) 2004 Tanguy Fautré.
 //
-// This work is based on the RedStar project
+//  This software is provided 'as-is', without any express or implied
+//  warranty.  In no event will the authors be held liable for any damages
+//  arising from the use of this software.
 //
+//  Permission is granted to anyone to use this software for any purpose,
+//  including commercial applications, and to alter it and redistribute it
+//  freely, subject to the following restrictions:
+//
+//  1. The origin of this software must not be misrepresented; you must not
+//     claim that you wrote the original software. If you use this software
+//     in a product, an acknowledgment in the product documentation would be
+//     appreciated but is not required.
+//  2. Altered source versions must be plainly marked as such, and must not be
+//     misrepresented as being the original software.
+//  3. This notice may not be removed or altered from any source distribution.
+//
+//  Tanguy Fautré
+//  softdev@telenet.be
+//
+//////////////////////////////////////////////////////////////////////
+//
+//							Tri Stripper
+//							************
+//
+// Post TnL cache aware triangle stripifier in O(n.log(n)).
+//          
+// History: see ChangeLog
+//
+//////////////////////////////////////////////////////////////////////
+// SVN: $Id: tri_stripper.h 86 2005-06-08 17:47:27Z gpsnoopy $
+//////////////////////////////////////////////////////////////////////
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Protection against old C habits
 #if defined(max)
 #error "'max' macro defined! It's against the C++ standard. Please use 'std::max' instead (undefine 'max' macro if it was defined in another library)."
 #endif
 
-
+// Protection against old C habits
 #if defined(min)
 #error "'min' macro defined! It's against the C++ standard. Please use 'std::min' instead (undefine 'min' macro if it was defined in another library)."
 #endif
@@ -81,30 +73,30 @@ public:
 
 	void Strip(primitive_vector * out_pPrimitivesVector);
 
+	/* Stripifier Algorithm Settings */
 	
-	
-	
+	// Set the post-T&L cache size (0 disables the cache optimizer).
 	void SetCacheSize(size_t CacheSize = 10);
 
-	
-	
+	// Set the minimum size of a triangle strip (should be at least 2 triangles).
+	// The stripifier discard any candidate strips that does not satisfy the minimum size condition.
 	void SetMinStripSize(size_t MinStripSize = 2);
 
-	
-	
-	
-	
-	
-	
+	// Set the backward search mode in addition to the forward search mode.
+	// In forward mode, the candidate strips are build with the current candidate triangle being the first
+	// triangle of the strip. When the backward mode is enabled, the stripifier also tests candidate strips
+	// where the current candidate triangle is the last triangle of the strip.
+	// Enable this if you want better results at the expense of being slightly slower.
+	// Note: Do *NOT* use this when the cache optimizer is enabled; it only gives worse results.
 	void SetBackwardSearch(bool Enabled = false);
 	
-	
-	
-	
-	
+	// Set the cache simulator FIFO behavior (does nothing if the cache optimizer is disabled).
+	// When enabled, the cache is simulated as a simple FIFO structure. However, when
+	// disabled, indices that trigger cache hits are not pushed into the FIFO structure.
+	// This allows simulating some GPUs that do not duplicate cache entries (e.g. NV25 or greater).
 	void SetPushCacheHits(bool Enabled = true);
 
-	
+	/* End Settings */
 
 private:
 
@@ -155,9 +147,9 @@ private:
 
 
 
-
-
-
+//////////////////////////////////////////////////////////////////////////
+// tri_stripper inline functions
+//////////////////////////////////////////////////////////////////////////
 
 inline void tri_stripper::SetCacheSize(const size_t CacheSize)
 {
@@ -190,28 +182,9 @@ inline void tri_stripper::SetPushCacheHits(bool Enabled)
 
 
 
-} 
+} // namespace triangle_stripper
 
 
 
 
-#endif 
-
-
-
-
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.
+#endif // TRI_STRIPPER_HEADER_GUARD_TRI_STRIPPER_H

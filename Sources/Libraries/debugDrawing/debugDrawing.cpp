@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "debugDrawing.h"
 
 
@@ -24,7 +16,7 @@ namespace DebugDrawing
 
 	namespace 
 	{
-		
+		// const colors:
 		namespace PredefinedColors 
 		{
 			const Vector3 red	(1.0f, 0.0f, 0.0f);
@@ -73,7 +65,7 @@ namespace DebugDrawing
 		
 
 		ShaderMode currentShaderMode = INTERNAL_DEFAULT_SHADER;
-		
+		//ShaderMode currentShaderMode = INTERNAL_SOLID_SHADER;
 		std::unique_ptr<ToolSwitcher> tool;
 
 		bool immediateModeEnabled = true;
@@ -160,9 +152,9 @@ namespace DebugDrawing
 
 	namespace Primitives
 	{
-		
-		
-		
+		//
+		//
+		//
 		DrawableObject* draw(const Primitives::Line& p)
 		{
 			addLineImpl(p.color, p.points[0], p.points[1]);
@@ -234,7 +226,7 @@ namespace DebugDrawing
 	}
 
 
-	
+	//
 	void init(const char* fxFileName, const char* fontName, gapi::Id api)
 	{
 		try
@@ -319,17 +311,17 @@ namespace DebugDrawing
 		color_rgba(r, g, b, a);
 	}
 
-	
-	
-	
+	//
+	//
+	//
 	void ignoreViewTransform(bool value)
 	{
 		shaderDataPerObject.colorFromVertex[1] = value ? 1 : 0;
 	}
 
-	
-	
-	
+	//
+	//
+	//
 	void text(const Vector3& worldCoord, const std::string& txt)
 	{
 		CHECK_INITIALIZED
@@ -415,7 +407,7 @@ namespace DebugDrawing
 		bool bBezier = true;
 
 		auto& vertices = spln.vertices;
-		
+		// render vertices & paths
 		if (renderVertices)
 		{
 			v1 = vertices[0];
@@ -504,7 +496,7 @@ namespace DebugDrawing
 	void lines(const MeshType& usermesh, float scale)							{ lines(usermesh, State::Identity(), scale); }
 	void lines(const MeshType& usermesh, const Vector3& position, float scale)	{ lines(usermesh, State::Simple(position), scale); }
 
-	
+	//
 	void box( const State& s, const Vector3& radius)
 	{
 		CHECK_INITIALIZED
@@ -522,9 +514,9 @@ namespace DebugDrawing
 		box(position, Vector3::one );
 	}
 
-	
-	
-	
+	//
+	//
+	//
 	void cylinder(const State& s, float radius, float height )
 	{
 		CHECK_INITIALIZED
@@ -543,7 +535,7 @@ namespace DebugDrawing
 	}
 
 
-	
+	//
 	void arrow(const Vector3& from, const Vector3& to, float width)
 	{
 		CHECK_INITIALIZED
@@ -587,13 +579,13 @@ namespace DebugDrawing
 				Vector3(-1,-1,-1)
 		};
 
-		
+		// последовательности отрисовок
 		static const int orders[8][4] = 
 		{
 			{0,1,3,4}, {1,0,5,2}, {2,6,3,1}, {3,0,7,2}, {4,0,5,7}, {5,4,1,6}, {6,5,2,7}, {7,4,3,6}
 		};
 
-		
+		// белым цветом рисуем уголки
 		const float len = 0.2f;
 		const float lenfac = nm::SQRT2;
 
@@ -608,24 +600,24 @@ namespace DebugDrawing
 			}
 		}
 
-		
+		// белые полуоси
 		color( PredefinedColors::gray);
 		drawTransformedLine( Vector3::zero, Vector3::xNegAxis * lenfac, s, radius); 
 		drawTransformedLine( Vector3::zero, Vector3::yNegAxis * lenfac, s, radius);
 		drawTransformedLine( Vector3::zero, Vector3::zNegAxis * lenfac, s, radius);
 
-		
+		// цветные полуоси
 		color( PredefinedColors::red + Vector3(0, 0.5f, 0.5f) );
 		drawTransformedLine( Vector3::zero, Vector3::xAxis * lenfac, s, radius );
-		
+		//drawText( Vector3::xAxis * 1.99f, "x" );
 
 		color( PredefinedColors::green + Vector3(0, 0.5f, 0.5f) );
 		drawTransformedLine( Vector3::zero, Vector3::yAxis * lenfac, s, radius );
-		
+		//drawText( Vector3::yAxis * 1.99f, nm::index2(10, 0), "y" );
 
 		color( PredefinedColors::blue + Vector3(0, 0.5f, 0.5f) );
 		drawTransformedLine( Vector3::zero, Vector3::zAxis * lenfac, s, radius );
-		
+		//drawText( Vector3::zAxis * 1.99f, "z" );
 	}
 
 	void locator(const State& s)
@@ -633,9 +625,9 @@ namespace DebugDrawing
 		locator(s, Vector3::one );
 	}
 
-	
-	
-	
+	//
+	//
+	//
 	void triangle(const intersections::Triangle& trg)
 	{
 		triangle(&trg.vertices[0]);
@@ -660,9 +652,9 @@ namespace DebugDrawing
 	}
 
 
-	
-	
-	
+	//
+	//
+	//
 	void sphere( const State& s, float radius )
 	{
 		CHECK_INITIALIZED
@@ -695,9 +687,9 @@ namespace DebugDrawing
 		sphere(Vector3((float) position.x, (float) position.y, (float) position.z), radius);
 	}
 
-	
-	
-	
+	//
+	//
+	//
 	void uniformSphere(const Vector3& pos, float radius, int sphereRings = 6, int sphereSegments = 12, const Vector3& scale = Vector3(1,1,1))
 	{
 		float deltaRingAngle = (nm::PI / sphereRings);
@@ -731,9 +723,9 @@ namespace DebugDrawing
 		}
 	}
 
-	
-	
-	
+	//
+	//
+	//
 	void cone(const State& s, float radius, float height)
 	{
 		CHECK_INITIALIZED
@@ -766,9 +758,9 @@ namespace DebugDrawing
 		cone(coneState, radius, nm::magnitude(direction));
 	}
 
-	
-	
-	
+	//
+	//
+	//
 	void wireBox(const State& s, float extents) { wireBox(s, Vector3(extents, extents, extents)); }
 	void wireBox(const State& s, const Vector3& extents)
 	{
@@ -885,9 +877,9 @@ namespace DebugDrawing
 		endDrawLines();	
 	}
 
-	
-	
-	
+	//
+	//
+	//
 	void frustum(const CameraSystem::Params& cam)
 	{
 		const State& s = cam.getState();
@@ -909,19 +901,19 @@ namespace DebugDrawing
 		top		=	hheight	* farPlane * y;
 		center	=	s.position + farPlane * z;
 
-		nm::Vector3 ftl = center - right + top; 
-		nm::Vector3 ftr = center + right + top; 
-		nm::Vector3 fbl = center - right - top; 
-		nm::Vector3 fbr = center + right - top; 
+		nm::Vector3 ftl = center - right + top; //far top left
+		nm::Vector3 ftr = center + right + top; //far top right
+		nm::Vector3 fbl = center - right - top; //far bottom left
+		nm::Vector3 fbr = center + right - top; //far bottom right
 
 		right	=	hwidth	* nearPlane * x;
 		top		=	hheight	* nearPlane * y;
 		center	=	s.position + nearPlane * z;
 
-		nm::Vector3 ntl = center - right + top; 
-		nm::Vector3 ntr = center + right + top; 
-		nm::Vector3 nbl = center - right - top; 
-		nm::Vector3 nbr = center + right - top; 
+		nm::Vector3 ntl = center - right + top; //far top left
+		nm::Vector3 ntr = center + right + top; //far top right
+		nm::Vector3 nbl = center - right - top; //far bottom left
+		nm::Vector3 nbr = center + right - top; //far bottom right
 
 		nm::Vector4 clr = color();
 
@@ -941,9 +933,9 @@ namespace DebugDrawing
 		color(clr);
 	} 
 
-	
-	
-	
+	//
+	//
+	//
 	void camera(const State& cam, float size)
 	{
 		const Vector3 pos(0,0,0);
@@ -961,7 +953,7 @@ namespace DebugDrawing
 		State cylinderS0 = State::Simple(pos);
 		State cylinderS1 = State::Simple(pos);
 
-		
+		//coneS.position.z -= coneHeight;
 		coneS.SetHPB(Vector3(0, nm::PI_2, 0));
 
 		boxS.position.z -= coneHeight + boxZExt;
@@ -998,21 +990,3 @@ namespace DebugDrawing
 		camera(cam.params, size, drawFrustum);
 	}
 }
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

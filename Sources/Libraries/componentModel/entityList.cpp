@@ -1,11 +1,3 @@
-// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "entityList.h"
 #include "class.h"
 #include "property.h"
@@ -64,7 +56,7 @@ void EntitiesList::load(stream::istream& is)
 {
 	clear();			  
 	classes.load(is, executionList);
-	loadObjects(is, false);
+	loadObjects(is, false, std::vector<ComponentExternalLink>());
 }
 
 void EntitiesList::execute()
@@ -82,31 +74,51 @@ void EntitiesList::saveObjects(stream::ostream& os) const
 	}
 }
 
-void EntitiesList::loadObjects(stream::istream& is, bool activate)
+void EntitiesList::loadObjects(stream::istream& is, bool activate, const std::vector<ComponentExternalLink>& externalLinks)
 {
-	loadObjects(is, activate, [](Entity*) {});
+	loadObjects(is, activate, externalLinks, [](Entity&) {});
 }
 
-void EntitiesList::solveLoadList(const LoadList& loadList)
+void EntitiesList::solveLoadList(const LoadList& loadList/*, const std::vector<ComponentExternalLink>& externalLinks*/)
 {
 	for(auto& info : loadLinks)
 	{
-		if (info.data.objectIndex < loadList.size())
+		if(info.data.objectIndex)
 		{
-			ENFORCE(info.data.objectIndex < loadList.size());
-			Entity* obj = loadList[info.data.objectIndex];
-			ENFORCE_EQUAL(info.data.componentIndices.size(), info.links.size());
-
-			for (std::size_t idx = 0; idx < info.data.componentIndices.size(); ++idx)
+			auto objidx = info.data.objectIndex.value();
+			if (objidx < loadList.size())
 			{
-				*info.links[idx] = &obj->getComponent(info.data.componentIndices[idx]);
+				ENFORCE_LESS(objidx, loadList.size());
+				Entity* obj = loadList[objidx];
+				ENFORCE_EQUAL(info.data.componentIndices.size(), info.links.size());
+
+				for (std::size_t idx = 0; idx < info.data.componentIndices.size(); ++idx)
+				{
+					*info.links[idx] = &obj->getComponent(info.data.componentIndices[idx]);
+				}
 			}
-		}				
+		}
+		else
+		{
+			/*
+			for(auto& link : externalLinks)
+			{
+				auto& address = link.link.address;
+				auto& objidx = address.objectIndex;
+				ENFORCE(objidx);
+				Entity* obj = at(objidx.value());
+				for (std::size_t idx = 0; idx < address.componentIndices.size(); ++idx)
+				{
+					*info.links[idx] = &obj->getComponent(address.componentIndices[idx]);
+				}
+			}*/
+		}
 	}
 }
 
-bool EntitiesList::findComponent(ComponentBase* component, std::size_t& objectIndex, std::size_t& componentIndex) const
+bool EntitiesList::findComponent(ComponentBase* component, std::optional<std::size_t>& objectIndex, std::size_t& componentIndex) const
 {
+	const Entity* object = nullptr;
 	if (component)
 	{
 		std::size_t i = 0;
@@ -115,13 +127,16 @@ bool EntitiesList::findComponent(ComponentBase* component, std::size_t& objectIn
 			if (entity.componentIndex(component, componentIndex))
 			{
 				objectIndex = i;
-				return true;
+				object = &entity;
+				break;
 			}
 			++i;
 		}
+//		auto componentType = ComponentsFactory::className(*component);
+//		LOG_EXPRESSION(object->getClass().name(), objectIndex.value(), componentType, componentIndex);
 	}	
 
-	return false;
+	return objectIndex.has_value();
 }
 
 
@@ -163,9 +178,9 @@ std::string EntitiesList::debugstr() const
 	return result.str();
 }
 
-
-
-
+//
+//
+//
 EntitiesList& EntityArena::create()
 {
 	emplace_back(new EntitiesList());
@@ -179,21 +194,3 @@ void EntityArena::execute()
 		list->execute();
 	}
 }
-
-
-
-// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

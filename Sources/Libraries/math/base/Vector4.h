@@ -1,12 +1,14 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
+/*********************************************************************
 
+	SiGMan / iO UpG  -  Copyright (C) 2000-2001
 
+	Author: SiGMan
+	  Date: 22.07.2001
+	  Time: 2:07:12
+
+	Abstract:	Standatd 4x1 column	Vector class.
+
+*********************************************************************/
 #pragma once
 
 #include <math.h>
@@ -16,11 +18,11 @@
 #undef SDot
 #undef SCross
 
-
+// Vector4 class
 class Vector4 {
 public:
 
-	
+	// Public data
 	float x, y, z, w;
 
 	static const Vector4 zero;
@@ -35,7 +37,7 @@ public:
 	static const Vector4 wNegAxis;
 
 
-	
+	// Ctor
 	inline Vector4();
 	inline Vector4( const Vector2& vector );
 	inline Vector4( const Vector3& vector );
@@ -44,26 +46,26 @@ public:
 	inline Vector4( float x, float y, float z, float w );
 	inline Vector4( const float vector[] );
 
-	
+	// Load / save
 	inline void Load( const float matrix[] );
 	inline void Save( float matrix[] ) const;
 
-	
+	// Reset
 	inline void Zero();
 	inline void Fill(float val);
 
-	
+	// Access
 	inline float& operator [] (size_t index );
 	inline float operator [] (size_t index ) const;
 
-	
+	// Fast convert
 	inline const Vector2& GetVector2() const;
 	inline const Vector3& GetVector3() const;
 
-	
+	// Take this 4d vector back to 3d space.
 	inline void Homogenize();
 
-	
+	// Scalar
 	inline Vector4&	operator += ( float scalar );
 	inline Vector4&	operator -= ( float scalar );
 	inline Vector4&	operator *= ( float scalar );
@@ -78,7 +80,7 @@ public:
 	friend Vector4 operator - ( float scalar, const Vector4& vector );
 	friend Vector4 operator * ( float scalar, const Vector4& vector );
 
-	
+	// Vector
 
 	inline float SDot( const Vector4& vector ) const;
 
@@ -104,11 +106,11 @@ public:
 
 	inline Vector4 PerComponentMul(const Vector4& v) const;
 
-	
+	// Unary
 	friend Vector4 operator + ( const Vector4& vector );
 	friend Vector4 operator - ( const Vector4& vector );
 	
-	
+	// Infix
 	inline Vector4& operator = ( const Vector2& vector );
 	inline Vector4& operator = ( const Vector3& vector );
 	inline Vector4& operator += ( const Vector4& vector );
@@ -128,11 +130,11 @@ public:
 	inline Vector4 operator + ( const Vector4& vector ) const;
 	inline Vector4 operator - ( const Vector4& vector ) const;
 
-	
+	// Logical compare
 	inline bool Equal( const Vector4& vector, float tolerance = 0.000001f) const;
 	inline bool NotEqual( const Vector4& vector, float tolerance = 0.000001f) const;
 
-	
+	// Binary
 	inline bool operator == ( const Vector4& vector ) const;
 	inline bool operator != ( const Vector4& vector ) const;
 
@@ -142,8 +144,8 @@ protected:
 };
 
 
-
-
+//////////////////////////////////////////////////////////////////////
+// Implementation
 
 Vector4::Vector4()
 {}
@@ -196,7 +198,7 @@ Vector4::Vector4( const float vector[] )
 	w = vector[3];
 }
 
-
+// 
 void Vector4::Load( const float vector[] ) 
 {
 	x = vector[0];
@@ -213,11 +215,11 @@ void Vector4::Save( float vector[] ) const
 	vector[3]	= w;
 }
 
-
+//
 void Vector4::Zero() { x = y = z = w = 0.0f; }
 void Vector4::Fill(float val) { x = y = z = w = val;  }
 
-
+//
 float& Vector4::operator [] (size_t index )
 {
 	return *((&x) + index );
@@ -228,7 +230,7 @@ float Vector4::operator [] (size_t index ) const
 	return *((&x) + index );
 }
 
-
+//
 const Vector2& Vector4::GetVector2() const
 {
 	return *(Vector2*)this;
@@ -239,7 +241,7 @@ const Vector3& Vector4::GetVector3() const
 	return *(Vector3*)this;
 }
 
-
+//
 void Vector4::Homogenize()
 {
 	float invW = 1.0f / w;
@@ -249,7 +251,7 @@ void Vector4::Homogenize()
 	w = 1.0f;
 }
 
-
+//
 Vector4& Vector4::operator += ( float scalar )
 {
 	x += scalar;
@@ -309,22 +311,22 @@ Vector4 Vector4::operator / ( float scalar ) const
 inline Vector4 operator + ( float scalar, const Vector4& vector )
 {
 	return Vector4(vector) += scalar;
-	
+	//return vector + scalar;
 }
 
 inline Vector4 operator - ( float scalar, const Vector4& vector )
 {
 	return Vector4(vector) -= scalar;
-	
+	//return vector - scalar;
 }
 
 inline Vector4 operator * ( float scalar, const Vector4& vector )
 {
 	return Vector4(vector) *= scalar;
-	
+	//return vector * scalar;
 }
 
-
+//
 
 float Vector4::SDot( const Vector4& vector ) const
 {
@@ -336,7 +338,7 @@ float Vector4::SDot( const Vector4& vector ) const
 
 Vector4 Vector4::SCross( const Vector4& vector ) const
 {
-	
+	// convert from homogenius to three space
 	float a_oow	= 1.0f / w;
 	float ax	= x * a_oow;
 	float ay	= y * a_oow;
@@ -346,7 +348,7 @@ Vector4 Vector4::SCross( const Vector4& vector ) const
 	float by	= vector.y * b_oow;
 	float bz	= vector.z * b_oow;
 
-	
+	// calculate and return cross product in three space
 	return Vector4( ay * bz - az * by,
 					az * bx - ax * bz,
 					ax * by - ay * bx );
@@ -354,7 +356,7 @@ Vector4 Vector4::SCross( const Vector4& vector ) const
 
 void Vector4::SCross( const Vector4& vector, Vector4& out ) const
 {
-	
+	// convert from homogenius to three space
 	float a_oow	= 1.0f / w;
 	float ax	= x * a_oow;
 	float ay	= y * a_oow;
@@ -397,7 +399,7 @@ float Vector4::InvMagnitudeSquared() const
 	return 1.0f / mag;
 }
 
-
+//
 
 Vector4 Vector4::GetNormalized() const
 {
@@ -434,7 +436,7 @@ float Vector4::ApproximateMagnitude( float x1, float y1 ) const
 	if ( y1 < 0.414213f * x1 )
 		return x1 + 0.483608f * y1 * y1 / x1;
 
-	
+	// function returns infinite float then zero length used
 	float sum = x1 + y1;
 	if ( sum ) 
 		return 1.04907f * sum - 1.36785f * x1 * y1 / sum;
@@ -473,7 +475,7 @@ Vector4& Vector4::ApproxNormalize()
 	return *this;
 }
 
-
+// Unary
 inline Vector4 operator - ( const Vector4& vector )
 {
 	return Vector4( -vector.x, -vector.y, -vector.z, -vector.w );
@@ -484,7 +486,7 @@ inline Vector4 operator + ( const Vector4& vector )
 	return vector;
 }
 
-
+//
 
 Vector4& Vector4::operator = ( const Vector2& vector )
 {
@@ -532,7 +534,7 @@ Vector4 Vector4::operator - ( const Vector4& vector ) const
 	return Vector4( *this ) -= vector;
 }
 
-
+//
 
 bool Vector4::Equal( const Vector4& vector, float tolerance ) const
 {
@@ -559,22 +561,3 @@ bool Vector4::operator != ( const Vector4& vector ) const
 {
 	return ! operator == ( vector );
 }
-
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

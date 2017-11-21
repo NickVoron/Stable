@@ -1,11 +1,3 @@
-// Copyright (C) 2013-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include <d3d9.h>
@@ -39,7 +31,49 @@ namespace texutils
 		void SaveD3DBufferToFile(const std::string& fileName, LPD3DXBUFFER buf);
 		void LoadD3DBufferFromFile(const std::string& fileName, LPD3DXBUFFER* buf);
 
+/*
+		template<class ColorType>
+		void CopyImageRect(image::Plane<ColorType>& srcImage, image::Plane<ColorType>& dstImage, const Base::IndexRect& srcRect, const Base::IndexRect& dstRect)
+		{
+			//validation
+			if(srcRect.size != dstRect.size) throw Base::Errors::Simple(__FUNCTION__": rects sizes must be equal");
 
+			nm::index2 si, di;
+			for(si.x = srcRect.minCorner.x, di.x = dstRect.minCorner.x; si.x < srcRect.minCorner.x + srcRect.size.x; ++si.x, ++di.x)
+			{
+				for(si.y = srcRect.minCorner.y, di.y = dstRect.minCorner.y; si.y < srcRect.minCorner.y + srcRect.size.y; ++si.y, ++di.y)
+				{
+					ColorType& dst = dstImage(di.x, di.y);
+					ColorType& src = srcImage(si.x, si.y);
+
+					dst = src;
+				}
+			}
+		}
+
+		template<D3DFORMAT format>
+		void CopyTextureRect(LPDIRECT3DTEXTURE9 src, LPDIRECT3DTEXTURE9 dst, const Base::IndexRect& srcRect, const Base::IndexRect& dstRect)
+		{
+			//validation
+			ENFORCE(srcRect.size == dstRect.size);
+			ENFORCE(GetTextureFormat(src) == GetTextureFormat(dst));
+
+			D3DLOCKED_RECT dst_lockedRect;
+			D3DLOCKED_RECT src_lockedRect;
+
+			dst->LockRect(0, &dst_lockedRect, 0, 0);
+			src->LockRect(0, &src_lockedRect, 0, 0);
+
+			typedef image::d3d::d3d_to_image_plane<format>::Result ImagePlane;
+
+			ImagePlane srcImage(src_lockedRect.pBits, src_lockedRect.Pitch, srcRect.size.x, srcRect.size.y);
+			ImagePlane dstImage(dst_lockedRect.pBits, dst_lockedRect.Pitch, dstRect.size.x, dstRect.size.y);
+
+			CopyImageRect(srcImage, dstImage, srcRect, dstRect);
+
+			dst->UnlockRect(0);
+			src->UnlockRect(0);
+		}*/
 
 		template<D3DFORMAT format>
 		void SliceTexture(LPDIRECT3DTEXTURE9 src, LPDIRECT3DTEXTURE9* dst, const nm::index2& slicesCount)
@@ -84,7 +118,7 @@ namespace texutils
 			{
 				char ss[64];
 				sprintf(ss, "_%.2d.", i);
-				std::string name = outDir + Base::StrUtils::GetFileNameMinusLastExtention(fileNameClear)+ ss + "dds";
+				std::string name = outDir + Base::StrUtils::GetFileNameMinusLastExtention(fileNameClear)+ ss + "dds";// Base::FileUtils::GetLastExtention(fileName);
 				SaveTextureDDS(name.c_str(), dst[i]);
 				SAFE_RELEASE(dst[i]);
 			}
@@ -95,7 +129,7 @@ namespace texutils
 		template<class ColorType>
 		void LockTexture(LPDIRECT3DTEXTURE9 tex, image::Plane<ColorType>& image)
 		{
-			
+			// 	ENFORCE( image::d3d::image_to_d3d<ColorType>::format == GetTextureFormat(tex) ); 
 
 			D3DLOCKED_RECT lockedRect;
 			tex->LockRect(0, &lockedRect, 0, 0);
@@ -145,8 +179,8 @@ namespace texutils
 		LPDIRECT3DTEXTURE9 CreateTextureABGR32F( const nm::index2& size, int mipsCount = 0);
 		void CreateSolidTexture( LPDIRECT3DTEXTURE9 *ppTexture, const nm::index2& size, unsigned int color);
 		void CreateSolidCubeMap( LPDIRECT3DCUBETEXTURE9 *ppTexture, int size, unsigned int color[6]);
-		
-		
+		// void ComputeBoundBox(dx9::Mesh &xmesh, Geometry::AABB &aabb);
+		// Vector3 getXMeshBoudingBoxSize(dx9::Mesh& xmesh);
 
 		template<D3DFORMAT fmt>
 		LPDIRECT3DTEXTURE9 CreateTexture(const nm::index2& size)
@@ -191,22 +225,3 @@ namespace texutils
 		}
 	}
 }
-
-
-
-
-// Copyright (C) 2013-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

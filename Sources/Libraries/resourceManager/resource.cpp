@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "resource.h"
 #include "resourceSet.h"
 #include "store.h"
@@ -27,13 +19,13 @@ namespace Resources {
 		Streaming::Streamer::commit();
 	}
 	
-	
-	
-	
+	//
+	//
+	//
 	void ResourcePath::getRelativeSourceFileName(str::string256& path) const
 	{ 
 		path += storedPath();
-		
+		//path += "/";
 		path += localFileName;
 	}
 
@@ -110,36 +102,36 @@ namespace Resources {
 	}
 
 
-	
-	
-	
+	//
+	//
+	//
 	Resource::~Resource()
 	{
-		mem::deallocate(userDataBlock);
+		
 	}
 
-	void Resource::RegisterAndLoad(const char* path, const char* fileName, const void* userData, std::size_t userDataSize)
+	void Resource::RegisterAndLoad(const char* path, const char* fileName, std::unique_ptr<UserData> userData)
 	{
 		AssignFileName(fileName);
-		Load(userData, userDataSize);
+		Load(std::move(userData));
 		Store::Register(this);
 	}
 
-	void Resource::CompileTo(const char* fileName, const void* userData, std::size_t userDataSize, stream::ostream& os)
+	void Resource::CompileTo(const char* fileName, const UserData* userData, stream::ostream& os)
 	{
 		AssignFileName(fileName);
 		Clear();
-		LoadSource(sourceFileName.c_str(), userData, userDataSize);
+		LoadSource(sourceFileName.c_str(), userData);
 		Compile(os);
 		Clear();
 	}
 
-	void Resource::ConstructID(ID& id, const char* name, const void* userData, std::size_t userDataSize)
+	void Resource::ConstructID(ID& id, const char* name, const UserData* userData)
 	{
-		id.data(name, userData, userDataSize);
+		id.data(name, userData);
 	}
 
-	void Resource::Load(const void* userData, uint32_t userDataSize)
+	void Resource::Load(std::unique_ptr<UserData> userData)
 	{
 		try
 		{
@@ -147,15 +139,13 @@ namespace Resources {
 
 			addDependenciesFromTimeStamp();
 
+			userDataBlock = std::move(userData);
+
 			BaseResourceLoader<Resource>::Params params;
 			params.sourceFileName = sourceFileName.c_str();
 			params.compiledFileName = compiledFileName.c_str();
 			params.resourceToLoad = this;
-			params.userData = userData;
-			params.userDataSize = userDataSize;
-
-			userDataBlock.copy(userData, userDataSize);
-			
+			params.userData = userDataBlock.get();
 
 			bool loaded = false;
 			if( !IsCompiledFileIsActual() )
@@ -178,7 +168,7 @@ namespace Resources {
 
 	void Resource::Reload()
 	{
-		Load(userDataBlock.data, userDataBlock.len);
+		Load(std::move(userDataBlock));
 	}
 
 	void Resource::UpdateCompiled()
@@ -240,13 +230,13 @@ namespace Resources {
 		}
 	}
 
-	
-	
-	
-	void ResourcePath::ID::data(const char* name, const void* userData, std::size_t userDataSize)
+	//
+	//
+	//
+	void ResourcePath::ID::data(const char* name, const UserData* userData)
 	{
 		crc0 = crc::CRC32(name, strlen(name));
-		crc1 = crc::CRC32(userData, userDataSize);
+		crc1 = userData ? userData->hash() : 0;
 	}
 
 	bool ResourcePath::ID::equal(const ID& id) const
@@ -260,22 +250,3 @@ namespace Resources {
 	}
 }
 
-
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

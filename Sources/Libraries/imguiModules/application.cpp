@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "application.h"
 #include "uniguidraw/library.include.h"
 #include "settingsRegistry/library.include.h"
@@ -28,7 +20,7 @@ Module::Module()
 
 void Module::release()
 {
-	
+	//switchAction = 0;
 }
 
 const wchar_t* Module::viewportName() const
@@ -38,14 +30,25 @@ const wchar_t* Module::viewportName() const
 
 void Module::processInternal()
 {
+/*
+	if(switcher != Input::ERROR_KEYBOARD_CODE)
+	{
+		//switchAction.init() = Input::action(str::stringize("INGUI_MODULE_ACTIVATOR_", name(), switcher).c_str(), switcher);
+		switchAction.init(switcher);
+	}
 
+	if(switchAction.pressed(true))
+	{
+		active = !active;
+	}
+*/
 	if(Application::showActivationFlags)
 	{
 		std::string hotkeyText;
-		
-		
-		
-		
+		// 	if(switchAction)
+		// 	{
+		// 		hotkeyText = str::stringize(" (",  switchAction->GetTextDesc(), ")").str();
+		// 	}
 
 		imgui::checkbox(str::stringize(name(), hotkeyText ).c_str(), active);
 	}
@@ -58,9 +61,9 @@ void Module::processInternal()
 	}
 }
 
-
-
-
+//
+//
+//
 void Modules::process()
 {
 	if(!empty())
@@ -117,14 +120,14 @@ void Modules::load()
 	for (auto& module : *this)	
 	{	
 		std::string name = module.name();
-		
+		//LOG_MSG(name);
 		SettingsRegistry::get(str::stringize("ImguiAppSettings_", name), module.active);
 	}	
 }
 
-
-
-
+//
+//
+//
 bool Application::showActivationFlags = true;
 bool Application::hideOnMouseR = true;
 
@@ -202,9 +205,9 @@ void Application::activateSwitcher(Input::KeyCode& switcher)
 	switchers[switcher] = true;
 }
 
-
-
-
+//
+//
+//
 Editor::Editor(const char* n, EditFunction func):function(func), caption(n)
 {
 
@@ -228,21 +231,3 @@ const char* Editor::name() const
 
 }
 }
-
-
-
-// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

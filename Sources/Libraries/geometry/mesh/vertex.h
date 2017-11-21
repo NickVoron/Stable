@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include "vertexElements/color.h"
@@ -108,7 +100,7 @@ struct VertexEqual
 	template<int usageIndex, class VectorT> inline TNAME<usageIndex>& fname( const VectorT& v)	{ static_assert( ( IsVertexHas<Vertex, TNAME<usageIndex> >::value ), #TNAME ); return this->get<TNAME<usageIndex> >()(v); }
 
 
-
+//
 template<class... T>
 struct VertexBase
 {
@@ -150,40 +142,40 @@ public:
 
 	inline bool equal(const VertexBase& v) { return VertexEqual<VertexTuple>::equal(data, v.data); }
 
-	
+	//получатель данных по типу												   
 	template<class M> inline		M& get()		{ static_assert( (IsVertexHas<VertexBase, M>::value), "Vertex hasn't element" ); return Loki::FieldGetter< VertexTuple, Loki::TL::IndexOf<ComponentsList, M>::value >::get(data); }
 	template<class M> inline const	M& get() const	{ static_assert( (IsVertexHas<VertexBase, M>::value), "Vertex hasn't element" ); return Loki::FieldGetter< VertexTuple, Loki::TL::IndexOf<ComponentsList, M>::value >::get(data);}
 
 	VertexTuple data;
 };
 
-
+//
 template<class... T>
 struct Vertex : public VertexBase<T...>
 {
 public:
-	
+	// позиция
 	VERTEX_COMPONENT_1(POS1, pos1)
 	VERTEX_COMPONENT_2(POS2, pos2)
 	VERTEX_COMPONENT_3(POS3, pos3)
 	VERTEX_COMPONENT_4(POS4, pos4)
 	VERTEX_COMPONENT_4(POST, posT)
 
-	
+	// tangent space
 	VERTEX_COMPONENT_3(NORMAL, normal)
 	VERTEX_COMPONENT_3(BINORMAL, binormal)
 	VERTEX_COMPONENT_3(TANGENT, tangent)
 
-	
+	// colors
 	VERTEX_COMPONENT_4(DIFFUSE, diffuse)
 	VERTEX_COMPONENT_4(SPECULAR, specular)
 	VERTEX_COMPONENT_4(EMISSION, emission)
 
-	
+	// animation
 	VERTEX_UV_COMPONENT_4(BLENDWEIGHT, blendweight)
 	VERTEX_UV_COMPONENT_4(BLENDINDICES, blendindices)
 
-	
+	//texture coords
 	VERTEX_UV_COMPONENT_1(UV1, uv1)
 	VERTEX_UV_COMPONENT_2(UV2, uv2)
 	VERTEX_UV_COMPONENT_3(UV3, uv3)
@@ -214,24 +206,54 @@ template<class VertexList>	struct VertexListElementsCounter
 
 
 
+/*
 
+
+
+
+
+//
+template<class T>
+struct VertexDataStorage
+{
+	static const int ELEMENTS_COUNT = TL::Length<T>::value;
+
+	typedef typename TypeTuple<T, TL::Length<T>::value > VertexTuple;
+	VertexTuple data;
+
+	//получатель данных по типу
+	template<class M>		M& get()		{ return FieldGetter< VertexTuple, TL::IndexOf<T, M>::value >::get(data); }
+	template<class M> const M& get() const	{ return FieldGetter< VertexTuple, TL::IndexOf<T, M>::value >::get(data); }
+};
+
+																						  
+template <class TList, int count> class GenLinearInheritance;
+
+template <class TList, int count> 
+class GenLinearInheritance : public TList::Head, public GenLinearInheritance<typename TList::Tail, count - 1>{};
+
+template <class TList> 
+class GenLinearInheritance<TList, 1> : public TList::Head {};
+
+template< class Storage, class TListRes, class TList> struct InterfacesExtractor;
+
+template< class Storage, class TListRes, class TList>
+struct InterfacesExtractor
+{
+	typedef typename InterfacesExtractor<Storage, typename TL::Append<TListRes, typename TList::Head::Interface<Storage> >::Result, typename TList::Tail >::Result Result;
+};
+
+template< class Storage, class TListRes>
+struct InterfacesExtractor<Storage, TListRes, NullType>
+{
+	typedef TListRes Result;
+};
+
+
+template<class TList>
+struct Vertex : public VertexDataStorage<TList>, public GenLinearInheritance< typename InterfacesExtractor< Vertex<TList>, NullType, TList >::Result, TL::Length<TList>::value >
+{
+};
+*/
 
 // typename TL::Length<typename TL::Append< TYPELIST_1(VertexDataStorage<TList>), typename InterfacesExtractor< VertexDataStorage<TList>, NullType, TList>::Result >::Result>::value
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

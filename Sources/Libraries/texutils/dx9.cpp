@@ -1,11 +1,3 @@
-// Copyright (C) 2013-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "dx9.h"
 
 #include "image/library.include.h"
@@ -30,11 +22,11 @@ namespace texutils
 			nm::index2 i;
 			nm::index2 srcIdx;
 
-			
-			
-			
+			// 	ColorType oneColor;
+			// 	oneColor.zero();
+			// 	oneColor.r() = 255;
 
-			
+			//исправляем 0й - у
 			i = nm::index2(0, 0);
 			srcIdx = nm::index2(0, 1);
 			for(i.x = 0; i.x < size.x; ++i.x, ++srcIdx.x)
@@ -42,7 +34,7 @@ namespace texutils
 				image(i.x, i.y) = image(srcIdx.x, srcIdx.y);
 			}
 
-			
+			//исправляем 0й - x
 			i = nm::index2(0, 0);
 			srcIdx = nm::index2(1, 0);
 			for(i.y = 0; i.y < size.y; ++i.y, ++srcIdx.y)
@@ -50,7 +42,7 @@ namespace texutils
 				image(i.x, i.y) = image(1, i.y);
 			}
 
-			
+			//исправляем size.y - 1 й - у
 			i = nm::index2(0, size.y - 1);
 			srcIdx = nm::index2(0, size.y - 2);
 			for(i.x = 0; i.x < size.x; ++i.x, ++srcIdx.x)
@@ -58,7 +50,7 @@ namespace texutils
 				image(i.x, i.y) = image(srcIdx.x, srcIdx.y);
 			}
 
-			
+			//исправляем size.x - 1 й - x
 			i = nm::index2(size.x - 1, 0);
 			srcIdx = nm::index2(size.x - 2, 0);
 			for(i.y = 0; i.y < size.y; ++i.y, ++srcIdx.y)
@@ -249,44 +241,44 @@ namespace texutils
 		{
 			return GetTextureFormat(t1) == GetTextureFormat(t2);
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		// 
+		// Vector3 getXMeshBoudingBoxSize(dx9::Mesh& xmesh)
+		// {
+		// 	D3DXVECTOR3 vm, vx;
+		// 	D3DXVECTOR3* vb;
+		// 	xmesh.GetResource()->LockVertexBuffer(0, (void**)&vb);
+		// 
+		// 	D3DXComputeBoundingBox(vb, 
+		// 						   xmesh.GetResource()->GetNumVertices(), 
+		// 						   xmesh.GetResource()->GetNumBytesPerVertex(), 
+		// 						   &vm, &vx);
+		// 
+		// 	xmesh.GetResource()->UnlockVertexBuffer();
+		// 
+		// 	Vector3 size(vx.x - vm.x, vx.y - vm.y, vx.z - vm.z);
+		// //
+		// //	float deltav = abs(vx.y) - (abs(vx.y)+abs(vm.y))/2;
+		// //	modelDelta.y = -deltav;
+		// //
+		// 	return size;
+		// }
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		// void ComputeBoundBox(dx9::Mesh &xmesh, Geometry::AABB &aabb)
+		// {
+		// 	D3DXVECTOR3 max, min;
+		// 	D3DXVECTOR3* vb;
+		// 	xmesh.GetResource()->LockVertexBuffer(0, (void**)&vb);
+		// 
+		// 	D3DXComputeBoundingBox(vb, 
+		// 						   xmesh.GetResource()->GetNumVertices(), 
+		// 						   xmesh.GetResource()->GetNumBytesPerVertex(), 
+		// 						   &min, &max);
+		// 
+		// 	xmesh.GetResource()->UnlockVertexBuffer();
+		// 	aabb.maxCorner = max;
+		// 	aabb.minCorner = min;
+		// 
+		// }
 
 		LPDIRECT3DTEXTURE9 LoadTexture( const char* texFileName,  bool dynamic, bool systemMem )
 		{	
@@ -300,14 +292,14 @@ namespace texutils
 					D3DX_DEFAULT_NONPOW2,
 					D3DX_DEFAULT_NONPOW2,
 					D3DX_DEFAULT,
-					dynamic ? D3DUSAGE_DYNAMIC : 0,
-					D3DFMT_A8R8G8B8,
-					systemMem ? D3DPOOL_SYSTEMMEM : D3DPOOL_DEFAULT,
-					D3DX_FILTER_NONE,
-					D3DX_FILTER_NONE,
-					0,
-					NULL,
-					NULL,
+					dynamic ? D3DUSAGE_DYNAMIC : 0,//DWORD Usage,
+					D3DFMT_A8R8G8B8,//D3DFORMAT Format,
+					systemMem ? D3DPOOL_SYSTEMMEM : D3DPOOL_DEFAULT,//D3DPOOL Pool,
+					D3DX_FILTER_NONE,//DWORD Filter,
+					D3DX_FILTER_NONE,//DWORD MipFilter,
+					0,//D3DCOLOR ColorKey,
+					NULL,//D3DXIMAGE_INFO *pSrcInfo,
+					NULL,//PALETTEENTRY *pPalette,
 					&tex);
 				return tex ? tex : image::dx9::loadTexture<image::ARGB8>(texFileName);
 			}
@@ -357,7 +349,7 @@ namespace texutils
 			return S_OK == D3DXSaveTextureToFileA( fileName, D3DXIFF_PNG, pTexture, 0 );
 		}
 
-		VOID WINAPI D3dColorFill(D3DXVECTOR4* pOut, const D3DXVECTOR2* , const D3DXVECTOR2* , LPVOID pData)
+		VOID WINAPI D3dColorFill(D3DXVECTOR4* pOut, const D3DXVECTOR2* /*pTexCoord*/, const D3DXVECTOR2* /*pTexelSize*/, LPVOID pData)
 		{
 			D3DCOLORVALUE* pColor = (D3DCOLORVALUE*)pData;
 			*pOut = D3DXVECTOR4(pColor->r, pColor->g, pColor->b, pColor->a);
@@ -516,21 +508,3 @@ namespace texutils
 
 	}
 }
-
-
-
-// Copyright (C) 2013-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

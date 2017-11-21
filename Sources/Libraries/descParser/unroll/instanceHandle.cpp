@@ -1,123 +1,53 @@
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "instanceHandle.h"
 #include "unroller.h"
+#include "evaluation.h"
+
+namespace Expressions
+{
+	void print_scope(EvaluatedScope& namescope, int tabs);
+	void print_scope_from_root(EvaluatedScope& namescope);
+}
+
 
 namespace ObjectParser
 {
 
 using namespace Expressions;
 
-size_t InstanceHandle::globalIndexCounter()
-{
-	static size_t index = 0;
-	++index;
-	return index;
-}
+Unroller* InstanceHandle::unroller = nullptr;
 
-EvaluateState InstanceHandle::urollParams(const EvaluatedScope& parentScopename)
-{
-	EvaluateState evalState = Complete;
 
-	if (params.size())
+InstanceHandle::InstanceHandle(const ClassDesc& classDesc_, const InstanceDefinitionExpression& proto, Expressions::EvaluatedScope& parent) :
+	EvaluationUnit(proto.name, proto, localScope),
+	definition(proto),
+	classDesc(classDesc_),
+	classProperties("classProperties", nullptr),
+	localScope("local_scope", &parent)
+{
+	for (auto& iterator : classDesc.properties())
 	{
-		evalState = Expressions::Impossible;  
+		const std::string propName = iterator.first;
+		const Expression* propValue = iterator.second;
 
-		params.erase(std::remove_if(params.begin(), params.end(), [this, &parentScopename, &evalState](auto& param)
-		{ 
-			const std::string& name = param->propertyName;
-			if (param->canResolveReference(parentScopename))
-			{
-				EvaluationUnit* evalUnit = param->value->evaluated(parentScopename);
-				add(name, evalUnit, InsertMethod::INSERT);
-				evalState = Reject;	
-
-				return true;
-			}
-
-			return false;
-		
-		}), params.end());
-	}
-
-	return evalState;
-}
-
-EvaluateState InstanceHandle::unrollUnEvaluatedProperies()
-{
-	EvaluateState evalState = Complete;
-
-	if (!unEvaluatedProperties.empty())
-	{
-		evalState = Expressions::Impossible;  
-
-		for (auto iter = unEvaluatedProperties.cbegin(); iter != unEvaluatedProperties.cend();)
+		if (!definition.params.exist(propName))
 		{
-			const std::string& name = iter->first;
-			const Expression* expr = iter->second;
-
-			References refs = expr->references();
-			if (refs.canResolveReference(*this))
-			{
-				EvaluationUnit* evalUnit = expr->evaluated(*this);
-				add(name, evalUnit, InsertMethod::INSERT, true);
-				evalState = Reject;	
-
-				unEvaluatedProperties.erase(iter++);
-			}
-			else
-			{
-				++iter;
-			}
+			classProperties.add(propName, propValue, InsertMethod::IGNORE_IF_EXIST);
+			classProperties.classMembers.emplace(propValue);
 		}
 	}
 
-	return evalState;
+	prepareEvaluationUnits(scope(), classProperties, scope(), true);
+	prepareEvaluationUnits(localScope, definition.params, scope(), false);
+
+	if (definition.arrayData)
+	{
+		evaluatedArrayData = definition.arrayData->evaluated(parent);
+	}	
 }
 
-Expressions::EvaluateState InstanceHandle::evaluateStep(const EvaluatedScope& parentScopename)
-{
-	Unroller* unroller = boost::any_cast<Unroller*>(parentScopename.userData);
-	ENFORCE_POINTER(unroller);
-
-	userData = unroller;
-
-	if (isParent(parentScopename))
-	{
-		
-		EvaluateState paramState = urollParams(parentScopename);
-
-		
-		EvaluateState propertiesState = unrollUnEvaluatedProperies();
-
-		EvaluateState result = merge(paramState, propertiesState);
-
-		
-		for (auto& iter : *this)
-		{
-			EvaluationUnit* unit = iter.second;
-			if (isClassMember(unit))
-			{
-				EvaluateState unitState = unit->evaluateStep(*this);
-				result = merge(result, unitState);
-
-				if (result == Impossible)
-				{
-					volatile int i = 0;
-				}
-
-			}
-		}
-		return result;
-	}
-
-	return Expressions::Complete;
+std::string InstanceHandle::typeName() const 
+{ 
+	return classDesc.typeName; 
 }
 
 const ComponentHandle* InstanceHandle::component(const std::string& name) const
@@ -127,11 +57,11 @@ const ComponentHandle* InstanceHandle::component(const std::string& name) const
 
 ComponentHandle* InstanceHandle::component(const std::string& name)
 {
-	for (auto& unit : *this)
+	for (auto& unit : scope())
 	{
-		if (auto componentHandle = dynamic_cast<ComponentHandle*>(unit.second))
+		if (const auto componentHandle = unit.second->cast<ComponentHandle>())
 		{
-			if (isClassMember(componentHandle) && componentHandle->name == name)
+			if (scope().isClassMember(componentHandle) && componentHandle->name == name)
 				return componentHandle;
 		}
 	}
@@ -139,37 +69,75 @@ ComponentHandle* InstanceHandle::component(const std::string& name)
 	return nullptr;
 }
 
-const Expressions::EvaluationUnit* InstanceHandle::child(const Expressions::PropertyPath* path) const
+void InstanceHandle::extract(EvaluationSet& result)
 {
-	return get(path->name);
+	EvaluationUnit::extract(result);
+	extractDependencies(localScope, result);
+	if (evaluatedArrayData)
+	{
+		result.add(&evaluatedArrayData);
+		evaluatedArrayData->extract(result);
+	}	
 }
 
-std::vector<std::string> InstanceHandle::fields() const
+EvaluationInfo InstanceHandle::evaluate()
 {
-	return Expressions::EvaluatedScope::fields();
+	Expressions::EvaluationInfo result(Impossible);
+
+	if (evaluatedArrayData)
+	{
+		ENFORCE_POINTER(definition.arrayData);
+
+		if(evaluatedArrayData->evaluate() == Complete)
+		{			
+			auto container = Expressions::add<Array>()->evaluated(localScope)->cast<ArrayContainer>();
+
+			auto instance = definition.instance();
+			auto stepper = [container, instance](EvaluationUnit*& unit, EvaluationUnit* iterator, EvaluationUnit* index)
+			{
+				auto newObject = instance->evaluated(container->scope())->cast<InstanceHandle>();
+				ENFORCE_POINTER(newObject);
+				newObject->localScope.add("iterator", iterator, InsertMethod::INSERT);
+				newObject->localScope.add("index", index, InsertMethod::INSERT);
+				newObject->localScope.add("array_data", container, InsertMethod::INSERT);
+				unit = newObject;
+			};
+
+			if (unsigned int count = 0; convertVar(*evaluatedArrayData, count))
+			{
+				container->elements.resize(count);
+				for (unsigned int i = 0; i < count; ++i)
+				{
+					auto index = convertType(i);
+					stepper(container->elements[i], index, index);
+				}
+			}
+			else
+			{
+				auto array = to_array(evaluatedArrayData);
+				container->elements.resize(array->count());
+				for (auto i = 0; i < array->count(); ++i)
+				{
+					auto index = convertType(i);
+					auto iterator = array->element(i);
+					stepper(container->elements[i], iterator, index);
+				}
+			}
+
+			result.reject(container);
+		}
+	}
+	else if(!evaluatedArrayData)
+	{
+		result.complete(this);
+	}
+
+	return result;
 }
 
 std::string InstanceHandle::string() const
 {
-	return str::spaced(name).str();
+	return str::spaced(definition.type, ":", definition.name);
 }
 
 }//
-
-
-
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

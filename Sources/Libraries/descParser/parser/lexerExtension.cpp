@@ -38,4 +38,11 @@ namespace ObjectParser
 	{
 		LOG_ERROR("lexical error: at " << yyloc << " is '" << msg << "'");
 	}
+
+	std::string strlocation(const Parser::location_type& loc)
+	{
+		std::string fileName = *loc.begin.filename;
+		position last = loc.end - 1;
+		return str::stringize(boost::filesystem::canonical(fileName).string(), "(", last.line, "):").str();
+	}
 }

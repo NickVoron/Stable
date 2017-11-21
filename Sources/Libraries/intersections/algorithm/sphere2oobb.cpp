@@ -1,11 +1,3 @@
-// Copyright (C) 2015 Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "sphere2oobb.h"
 #include "../debug.h"
 #include "debugDrawing/library.include.h"
@@ -46,13 +38,13 @@ bool nearestPoint(const Sphere& shpere, const OBB& box, Vector3& point)
 		}
 	}
 
-	if (minDistIdx >= 0) 
+	if (minDistIdx >= 0) // ближайшая точка на одной из плоскостей куба
 	{
 		point = res;
 		return true;
 	}
 
-	
+	//значит на ребре или угле 
 	minAlpha = FLT_MAX;
 	Segment3 ribs[12];
 
@@ -90,7 +82,7 @@ bool nearestPoint(const Sphere& shpere, const OBB& box, Vector3& point)
 		}
 	}
 
-	if (minDistIdx >= 0) 
+	if (minDistIdx >= 0) // пересечение на гране
 	{
 		point = res;
 		return true;
@@ -129,13 +121,13 @@ bool haveNormalProjection(const Sphere& shpere, const Quad& quad, Vector3& point
 		res = test(backNormalRay, trg, point);
 	}
 
-	
+	//		DebugDrawing::triangle(trg);
 	if (!res)
 	{
 		trg.vertices[0] = quad.vertices[0];
 		trg.vertices[1] = quad.vertices[2];
 		trg.vertices[2] = quad.vertices[3];
-		
+		// 			DebugDrawing::triangle(trg);
 
 		if (normalDot < 0)
 		{
@@ -152,10 +144,10 @@ bool haveNormalProjection(const Sphere& shpere, const Quad& quad, Vector3& point
 
 void nearestPoint(const Vector3& M, const Segment3& seg, Vector3& point)
 {
-	
+	//debug::draw(seg);
 
-	
-	
+	//DebugDrawing::line(seg.p0, M);
+	//DebugDrawing::line(seg.p1, M);
 
 	Vector3 A = seg.p0;
 	Vector3 B = seg.p1;
@@ -187,25 +179,9 @@ void nearestPoint(const Vector3& M, const Segment3& seg, Vector3& point)
 	{
 		point = seg.p0;
 	}
-	
+	/*DebugDrawing::color(Vector3(1,1,0));
+	DebugDrawing::sphere(point, 0.1);
+	*/
 }
 
 }//
-
-
-
-// Copyright (C) 2015 Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

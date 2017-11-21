@@ -1,11 +1,3 @@
-// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include "defaultLogs/library.include.h"
@@ -16,7 +8,6 @@
 #include "../const.h"
 #include "../struct.h"
 #include "../property.h"
-
 
 namespace Expressions
 {
@@ -139,9 +130,9 @@ namespace Expressions
 	template<class ConstType, class TargetType>
 	struct CheckedConverter
 	{
-		static bool convert(const Expression& expr, TargetType& value)
+		static bool convert(const EvaluationUnit& unit, TargetType& value)
 		{
-			if (auto res = expr.cast<Const<ConstType>>())
+			if (auto res = unit.cast<Const<ConstType>>())
 			{
 				safe_assign(res->value, value);
 				return true;
@@ -153,13 +144,13 @@ namespace Expressions
 	template<class ConstType>
 	struct CheckedConverter<ConstType, boost::any>
 	{
-		static bool convert(const Expression& expr, boost::any& value)
+		static bool convert(const EvaluationUnit& unit, boost::any& value)
 		{
 			try
 			{
 				if (auto val = boost::any_cast<ConstType*>(value))
 				{
-					convertVar(expr, *val);
+					convertVar(unit, *val);
 				}
 				return true;
 			}
@@ -173,30 +164,30 @@ namespace Expressions
 	};
 	
 	template<class ConstType, class TargetType>
-	bool checkedConvert(const Expression& expr, TargetType& value, bool& converted)
+	bool checkedConvert(const EvaluationUnit& unit, TargetType& value, bool& converted)
 	{
 		if (!converted)
 		{
-			converted = CheckedConverter<ConstType, TargetType>::convert(expr, value);
+			converted = CheckedConverter<ConstType, TargetType>::convert(unit, value);
 		}
 		
 		return converted;
 	}
 
-	
-	template<class T, bool isExpression = boost::is_base_of<Expression, typename std::remove_pointer<T>::type>::value> 
+	//
+	template<class T, bool isEvaluationUnit = boost::is_base_of<EvaluationUnit, typename std::remove_pointer<T>::type>::value> 
 	struct ConverterExpr;
 
 	template<class T>
 	struct ConverterExpr<T, true>
 	{
-		static bool convert(const Expression& expr, T& value)
+		static bool convert(const EvaluationUnit& unit, T& value)
 		{
-			value = dynamic_cast<T>((Expression*) &expr);
+			value = dynamic_cast<T>((EvaluationUnit*) &unit);
 
 			if (!value)
 			{
-				value = (T)expr.cast<typename std::remove_pointer<T>::type>();
+				value = (T)unit.cast<typename std::remove_pointer<T>::type>();
 			}
 						
 			return value != 0;
@@ -206,7 +197,7 @@ namespace Expressions
 	template<class T>
 	struct ConverterExpr<T, false>
 	{
-		static bool convert(const Expression& expr, T& value)
+		static bool convert(const EvaluationUnit& unit, T& value)
 		{
 			value = 0;
 			LOG_ERROR("can't convert: " << typeid(T).name());
@@ -220,9 +211,9 @@ namespace Expressions
 	template<class T>
 	struct ConverterPointer<T, true>
 	{
-		static bool convert(const Expression& expr, T& value)
+		static bool convert(const EvaluationUnit& unit, T& value)
 		{
-			return ConverterExpr<T>::convert(expr, value);
+			return ConverterExpr<T>::convert(unit, value);
 		}
 	};
 
@@ -231,27 +222,27 @@ namespace Expressions
 	template<class T>
 	struct ConverterPointer<T, false>
 	{
-		static bool convert(const Expression& expr, T& value)
+		static bool convert(const EvaluationUnit& unit, T& value)
 		{
 			auto type = mirror::type(value);
 
-			
-			if (auto structure = expr.cast<Struct>())
+			// возможны несколько вариантов правильной конверсии EvaluationUnit в пользовательскую структуру
+			if (auto structure = unit.cast<EvalStruct>())
 			{
-				if (structure->typeName() == type.name()) 
+				if (structure->typeName() == type.name()) // проверяем на эквивалентность имён
 				{
 					auto& params = structure->params;
 					if (!params.empty())
 					{
-						if (params.size() == 1)
+						if (params.size() == 1)// данный вариант срабатывает при конверсии внутри C++ кода вида convertVar(convertType())
 						{
-							if (auto exprtype = params[0]->reflectedType())
+							if (auto unittype = params[0]->reflectedType())
 							{
-								exprtype->get(value);
+								unittype->get(value);
 								return true;
 							}
 						}
-						else if (type.size() == params.size()) 
+						else if (type.size() == params.size()) // если EvaluationUnits::Struct предасталяет из себя список полей
 						{
 							bool success = true;
 							for (std::size_t i = 0; i < params.size(); ++i)
@@ -266,7 +257,7 @@ namespace Expressions
 				}
 			}	
 
-			if (bool result = multimethodsConversionTable.exec((Expression&) expr, type))
+			if (bool result = multimethodsConversionTable.exec((EvaluationUnit&) unit, type))
 			{
 				value = type.val();
 				return true;
@@ -279,10 +270,10 @@ namespace Expressions
 	template<class V, class... T>
 	struct ChainConverter
 	{
-		static bool convert(const Expression& expr, V& value)
+		static bool convert(const EvaluationUnit& unit, V& value)
 		{
 			bool converted = false;
-			auto tpl = std::make_tuple(checkedConvert<T>(expr, value, converted)...);
+			auto tpl = std::make_tuple(checkedConvert<T>(unit, value, converted)...);
 			return converted;
 		}
 	};
@@ -290,17 +281,27 @@ namespace Expressions
 	template<class... T>
 	struct ChainConverter<std::string, T...>
 	{
-		static bool convert(const Expression& expr, std::string& value)
+		static bool convert(const EvaluationUnit& unit, std::string& value)
 		{
-			value = expr.string();
+			value = unit.string();
+			return true;
+		}
+	};
+
+	template<class CT, std::size_t size, class... T>
+	struct ChainConverter<str::string_t<CT, size>, T...>
+	{
+		static bool convert(const EvaluationUnit& unit, str::string_t<CT, size>& value)
+		{
+			value = unit.string().c_str();
 			return true;
 		}
 	};
 
 	template<class... T, class V>
-	bool convert_chain(const Expression& expr, V& value)
+	bool convert_chain(const EvaluationUnit& unit, V& value)
 	{
-		return ChainConverter<V, T...>::convert(expr, value);
+		return ChainConverter<V, T...>::convert(unit, value);
 	}
 	
 	template<class T, bool isAtomic = (Variant::IsAtomicType<T>::value && !std::is_pointer<T>::value)> 
@@ -312,7 +313,7 @@ namespace Expressions
 	template<class T>
 	struct EnumSelector<T, false>
 	{
-		static bool convert(const Expression& expr, T& value)
+		static bool convert(const EvaluationUnit& unit, T& value)
 		{
 			return convert_chain<
 				T,
@@ -328,14 +329,14 @@ namespace Expressions
 				unsigned long long,
 				double,
 				float
-			>(expr, value);
+			>(unit, value);
 		}
 	};
 
 	template<class T>
 	struct EnumSelector<T, true>
 	{
-		static bool convert(const Expression& expr, T& value)
+		static bool convert(const EvaluationUnit& unit, T& value)
 		{
 			return convert_chain<
 				T,
@@ -349,39 +350,82 @@ namespace Expressions
 				unsigned int,
 				unsigned long,
 				unsigned long long
-			>(expr, value);
+			>(unit, value);
+		}
+	};
+
+	template<class T, bool isContainer = stl::IsContainer<T>::value>
+	struct UserTypeConverter;
+
+	template<class T>
+	struct UserTypeConverter<T, true>
+	{
+		static bool convert(const EvaluationUnit& unit, T& value)
+		{
+			auto type = mirror::type(value);
+			if (!multimethodsConversionTable.exists((EvaluationUnit&)unit, type))
+			{
+				if (auto array = unit.cast<ArrayContainer>())
+				{
+					auto count = array->count();
+					for (std::size_t i = 0; i < count; ++i)
+					{
+						typename T::value_type val;
+						if (convertVar(*array->element(i), val))
+						{
+							value.push_back(val);
+						}
+					}
+					return true;
+				}
+			}
+			else
+			{
+				return ConverterPointer<T>::convert(unit, value);
+			}			
+
+			return false;
+		}
+	};
+
+	template<class T>
+	struct UserTypeConverter<T, false>
+	{
+		static bool convert(const EvaluationUnit& unit, T& value)
+		{
+			return ConverterPointer<T>::convert(unit, value);
 		}
 	};
 
 	template<class T> 
 	struct Converter<T, true>
 	{
-		static bool convert(const Expression& expr, T& value)
+		static bool convert(const EvaluationUnit& unit, T& value)
 		{
-			return EnumSelector<T>::convert(expr, value);
+			return EnumSelector<T>::convert(unit, value);
 		}
 	};
 
 	template<class T> 
 	struct Converter<T, false>
 	{
-		static bool convert(const Expression& expr, T& value)
+		static bool convert(const EvaluationUnit& unit, T& value)
 		{
-			return ConverterPointer<T>::convert(expr, value);
+			return UserTypeConverter<T>::convert(unit, value);
 		}
 	};
 
 	template<>
 	struct Converter<boost::any, false>
 	{
-		static bool convert(const Expression& expr, boost::any& value)
+		static bool convert(const EvaluationUnit& unit, boost::any& value)
 		{
-			return EnumSelector<boost::any>::convert(expr, value);
+			return EnumSelector<boost::any>::convert(unit, value);
 		}
 	};
 
 	template<class T>
-	bool convertVar(const Expression& var, T& value)
+	bool convertVar(const EvaluationUnit& var, T& value)
 	{
 		return Converter<T>::convert(var, value);
 	}
@@ -391,22 +435,3 @@ namespace Expressions
 
 
 
-
-
-
-
-// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

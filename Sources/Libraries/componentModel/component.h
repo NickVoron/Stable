@@ -1,11 +1,3 @@
-// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 #include "config.h"
 #include "memoryManager.h"
@@ -15,10 +7,6 @@
 #include "inheritanceTable.h"
 #include "finalizeQuery.h"
 
-
-#include "memory/library.include.h"
-
-#include <atomic>
 
 class Entity;
 class EntitiesList;
@@ -43,6 +31,9 @@ protected:
 
 	template<template <class... Components> class ComponentEnvelope, class... Components> 
 	void link(ComponentEnvelope<Components...>& envelope) { link(envelope.spawner); }
+
+	template<template <class... Components> class ComponentEnvelope, class... Components>
+	void link(int index, ComponentEnvelope<Components...>& envelope) { link(index, envelope.spawner); }
 
 	template<template <class... Components> class ComponentEnvelope, class... Components> 
 	void link(const std::string& alias, ComponentEnvelope<Components...>& envelope) { link(alias, envelope.spawner); }
@@ -113,11 +104,11 @@ public:
 	class ptr
 	{
 	public:
-		inline ptr(ComponentChild* _p = 0) : p(_p) {}
+		ptr(ComponentChild* _p = 0) : p(_p) {}
 
-		inline ComponentChild& operator*() const { return *get(); }
-		inline ComponentChild* operator->() const { return get(); }
-		inline ComponentChild* get() const { return p; }
+		ComponentChild& operator*() const { return *get(); }
+		ComponentChild* operator->() const { return get(); }
+		ComponentChild* get() const { return p; }
 
 	private:
 		ComponentChild* p;
@@ -148,6 +139,9 @@ public:
 	template<class ParameterType>
 	static auto& parameter() { return std::get<ParameterType>(::parameters<ComponentChild>()); }
 
+	template<std::size_t index>
+	static auto& parameter() { return std::get<index>(::parameters<ComponentChild>()); }
+
 	template<class... P>
 	static auto& parameters(P&... param)
 	{ 
@@ -158,6 +152,7 @@ public:
 		params = std::tie(param...);
 		return params;
 	}
+
 
 private:
 	virtual void activate(bool value) override
@@ -177,6 +172,61 @@ private:
 		}		
 	}
 };
+
+
+template<class T, bool pointer, class... TT>
+struct getref_impl;
+
+template<class T, class... TT>
+struct getref_impl<T, false, TT...>
+{
+	static auto& get(std::tuple<TT...>& t) { return std::get<T>(t); }
+	static auto& get(const std::tuple<TT...>& t) { return std::get<T>(t); }
+};
+
+template<class T, class... TT>
+struct getref_impl<T, true, TT...>
+{
+	static auto& get(std::tuple<TT...>& t)
+	{
+		auto& ptr = std::get<T>(t);
+		CM_KERNEL_ENFORCE(ptr);
+		return *ptr;
+	}
+
+	static auto& get(const std::tuple<TT...>& t)
+	{
+		auto& ptr = std::get<T>(t);
+		CM_KERNEL_ENFORCE(ptr);
+		return *ptr;
+	}
+};
+
+
+template<class T, class... TT>
+decltype(auto) getref(std::tuple<TT...>& t)
+{
+	return getref_impl<T, std::is_pointer<T>::value, TT...>::get(t);
+}
+
+template<class T, class... TT>
+decltype(auto) getref(const std::tuple<TT...>& t)
+{
+	return getref_impl<T, std::is_pointer<T>::value, TT...>::get(t);
+}
+
+template<class T, class... TT>
+decltype(auto) getptr(std::tuple<TT...>& t)
+{
+	return &getref_impl<T, std::is_pointer<T>::value, TT...>::get(t);
+}
+
+template<class T, class... TT>
+decltype(auto) getptr(const std::tuple<TT...>& t)
+{
+	return &getref_impl<T, std::is_pointer<T>::value, TT...>::get(t);
+}
+
 
 template<class LinkableElement>
 struct SelectTupleElementType
@@ -207,6 +257,35 @@ struct InterfaceSelector
 	typedef empty_type type;
 };
 
+template<class ClientAutoLink>
+struct InterfaceSelector<ClientAutoLink, Entity>
+{
+	decltype(auto) entity()
+	{
+		return getref<Entity*>(static_cast<ClientAutoLink*>(this)->components_tuple);
+	}
+
+	decltype(auto) entities()
+	{
+		return entity().getParent();
+	}
+
+	/*
+	template<class ComponentType>
+	void componentLink(ComponentLink<ComponentType>& target)
+	{
+		target = ComponentLink<ComponentType>(&entity(), static_cast<ComponentType*>(this));
+	}
+
+	template<class ComponentType>
+	void append(ComponentLinkList<ComponentType>& target)
+	{
+		ComponentLink<ComponentType> lnk;
+		componentLink(lnk);
+		target.push_back(lnk);
+	}*/
+};
+
 template<class ClientAutoLink, class... ComponentType>
 struct InterfaceSelector<ClientAutoLink, ConfigurableSpawner<ComponentType...>>
 {
@@ -216,6 +295,11 @@ struct InterfaceSelector<ClientAutoLink, ConfigurableSpawner<ComponentType...>>
 	decltype(auto) spawn(Configurator&& configurator)
 	{
 		return spawner().spawn(std::forward<Configurator>(configurator));
+	}
+
+	decltype(auto) spawn()
+	{
+		return spawn([](ComponentType&...){});
 	}
 };
 
@@ -228,6 +312,11 @@ struct InterfaceSelector<ClientAutoLink, AccumulatingSpawner<ComponentType...>>
 	decltype(auto) spawn(Configurator&& configurator)
 	{
 		return spawner().spawn(std::forward<Configurator>(configurator));
+	}
+
+	decltype(auto) spawn()
+	{
+		return spawn([](ComponentType&...) {});
 	}
 
 	template<class Predicate, class Configurator>
@@ -253,55 +342,6 @@ struct ComponentInterfaceComposer : public ComponentInterfaceComposerImpl<Client
 {									
 };
 
-
-template<class T, bool pointer, class... TT>
-struct getref_impl;
-
-template<class T, class... TT>
-struct getref_impl<T, false, TT...>
-{
-	static auto& get(std::tuple<TT...>& t)
-	{
-		return std::get<T>(t);
-	}
-
-	static auto& get(const std::tuple<TT...>& t)
-	{
-		return std::get<T>(t);
-	}
-};
-
-template<class T, class... TT>
-struct getref_impl<T, true, TT...>
-{
-	static auto& get(std::tuple<TT...>& t)
-	{
-		auto& ptr = std::get<T>(t);
-		CM_KERNEL_ENFORCE(ptr);
-		return *ptr;
-	}
-
-	static auto& get(const std::tuple<TT...>& t)
-	{
-		auto& ptr = std::get<T>(t);
-		CM_KERNEL_ENFORCE(ptr);
-		return *ptr;
-	}
-};
-
-
-template<class T, class... TT>
-auto& getref(std::tuple<TT...>& t)
-{
-	return getref_impl<T, std::is_pointer<T>::value, TT...>::get(t);
-}
-
-template<class T, class... TT>
-auto& getref(const std::tuple<TT...>& t)
-{
-	return getref_impl<T, std::is_pointer<T>::value, TT...>::get(t);
-}
-
 template<class ComponentChild>								class DataComponent			: public StrictComponentInterface<ComponentChild> { };
 template<class ComponentChild>								class SimpleComponent		: public ComponentInterface<ComponentChild, SimpleComponentInputParameters<ComponentChild>> { };
 template<class ComponentChild>								class UpdatableComponent	: public ComponentInterface<ComponentChild, UpdatableComponentInputParameters<ComponentChild>>{ };
@@ -323,7 +363,6 @@ public:
 		return getref<typename SelectTupleElementType<ComponentT>::type>(components_tuple);
 	}
 
-protected:
 	std::tuple<typename SelectTupleElementType<Link>::type...> components_tuple;
 };
 
@@ -373,9 +412,9 @@ namespace properties_inheritance
 }
 
 
-
-
-
+//
+//
+//
 #define CM_DEFINE_BASE_CLSID(BASE_CLASS)	static const char* ClassName() { return STPP_STRINGIZE(BASE_CLASS); }	
 											
 #define CM_IMPLEMENT_SYSTEM_COMPONENT_INTERFACE(C) \
@@ -385,22 +424,3 @@ namespace properties_inheritance
 	CM_DEFINE_BASE_CLSID(C)
 	
 	
-
-
-
-
-// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

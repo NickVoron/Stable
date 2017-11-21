@@ -1,11 +1,3 @@
-// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "class.h"
 #include "factory.h"
 #include "entityList.h"
@@ -28,14 +20,14 @@ void remapEntitiesToClassesLib(EntitiesList& source, const ClassesLib& classes)
 	for (auto& entity : source)
 	{
 		auto& eclass = (Class&)entity.getClass();
-
+//		LOG_MSG("inspect entity of " << eclass.debugstr());
 
 		for (auto& cls : classes.classes)
 		{
-
+//			LOG_MSG("compare with " << cls.debugstr());
 			if (eclass.equal(*cls))
 			{
-
+//				LOG_MSG("remap \n\t" << eclass.debugstr() << "\nto \n\t" << cls.debugstr());
 				eclass.index = cls->index;
 				break;
 			}
@@ -44,9 +36,9 @@ void remapEntitiesToClassesLib(EntitiesList& source, const ClassesLib& classes)
 }
 
 
-
-
-
+//
+//
+//
 Class::ComponentMapping& Class::ComponentLinksMapping::step()
 {
 	return operator[](current++);
@@ -61,9 +53,9 @@ void Class::GlobalMappingEntry::create()
 	}		
 }	  
 
-
-
-
+//
+//
+//
 void Class::ComponentsGlobalMapping::create()
 {
 	init(ComponentsFactory::classesCount());
@@ -153,8 +145,8 @@ std::pair<std::size_t, bool> Class::findComponentIndex(const std::string& name) 
 
 	return std::make_pair(-1, false);
 
-
-
+// 	LOG_ERROR("can't find component " << name);
+// 	CM_KERNEL_THROW("can't find component " + name);
 }
 
 std::pair<std::size_t, bool> Class::findFirstComponent(const std::string& clsId, std::size_t startIndex)
@@ -234,10 +226,10 @@ std::size_t Class::getIndex() const
 	return index; 
 }
 
-Entity* Class::spawn(Entity& parent) const
+void Class::spawn(Entity& parent) const
 {
 	INCOMPLETE;
-	return spawner.spawn(parent);
+	return spawner.spawn(parent.getParent());
 }
 
 bool Class::equal(const Class& other) const
@@ -284,11 +276,11 @@ Entity& Class::createInstance(Entity& e) const
 {
 	CM_KERNEL_ENFORCE(components.size() == linksTable.size());
 
-	
-	e.prepare(*this);
+	//выделяем память под данные компонент
+	e.prepare(this);
 	for(std::size_t i = 0; i < components.size(); ++i)
 	{
-		
+		//копируем компонент
 		ComponentBase& nc = e.getComponent(i);
 		ComponentsFactory::invokeConstructor(componentClasses[i], &nc);
 		fixPointersForComponent(&e, i);
@@ -314,9 +306,9 @@ void Class::bindToExecutionList(Entity& target) const
 void Class::fixPointersForComponent(Entity* entity, std::size_t componentIndex) const
 {
 	ComponentBase& nc = entity->getComponent(componentIndex);
+	//LOG_MSG(ComponentsFactory::className(nc));
 
-	
-	
+	//исправляем указатели на компоненты принадлежащие одному объекту внутри созданного компонента	
 	auto& links = linksTable[componentIndex];
 	for (std::size_t mappingIdx = 0; mappingIdx < links.size(); ++mappingIdx)
 	{
@@ -325,15 +317,15 @@ void Class::fixPointersForComponent(Entity* entity, std::size_t componentIndex) 
 		*clientDataPtr = &entity->getComponentByShift(mapping.shiftInEntityTable);
 	}
 
+// 	for (const auto& mapping : linksTable[componentIndex])
+// 	{
+// 		ComponentBase** clientDataPtr = (ComponentBase**)(&((char*)&nc)[mapping.shiftFromClientComponentThis]);
+// 		*clientDataPtr = &entity->getComponentByShift(mapping.shiftInEntityTable);
+// 		mappingIdx++;
+// 	}
 
 
-
-
-
-
-
-
-	
+	//исправляем указатели на родительский объект внутри созданного компонента
 	for (const auto& entityMapping : entityPointersTable[componentIndex])
 	{
 		Entity** eptr = (Entity**)(&((char*)&nc)[ entityMapping ]);
@@ -369,13 +361,13 @@ void Class::finalizeComponents(const ClassDesc::ComponentsList& componentsList)
 						
 						if (!index.second)
 						{
-
-
-
-
-
-
-
+// 							auto error = str::spaced(
+// 								"\ncomponent:", componentDesc.className,
+// 								"\nwith name:", componentDesc.name,
+// 								"\nneed component:", entry.clsId(), entry.alias, "for initialization",
+// 								"\nplease see:'", componentDesc.className, "::linker()'for detalis");
+// 
+// 							CM_KERNEL_ENFORCE_MSG(index.second, error.c_str());
 						}
 					}									
 
@@ -386,7 +378,7 @@ void Class::finalizeComponents(const ClassDesc::ComponentsList& componentsList)
 				}
 			}
 
-			
+			//entityPointersTable[i].exist = (query.parent != 0);
 			std::size_t size = query.parentEntries.size();
 			if(size > 0)
 			{
@@ -402,22 +394,22 @@ void Class::finalizeComponents(const ClassDesc::ComponentsList& componentsList)
 
 void Class::mapComponent(ComponentLinksMapping& mapping, std::size_t componentShift, std::size_t shift)
 {
-
+//	LOG_MSG(debugstr() << " shift: " << componentShift);
 	ComponentMapping& cm = mapping.step();
 	cm.shiftFromClientComponentThis = componentShift;
 	cm.shiftInEntityTable = shift;
-
-
-
-
-
-
-
-
-
-
-
-
+// 	for (auto& mm : mapping)
+// 	{
+// 		LOG_MSG("=========================");
+// 		LOG_EXPRESSION(mm.shiftFromClientComponentThis);
+// 		LOG_EXPRESSION(cm.shiftFromClientComponentThis);
+// 		LOG_MSG("");
+// 	}
+//	cm.shiftInEntityTable = pointers_distance(target, entity.componentsMemory.memBlock.data);
+//	LOG_WARNING(cm.shiftFromClientComponentThis)
+// 	CM_KERNEL_ENFORCE(cm.shiftFromClientComponentThis >= 0);
+// 	CM_KERNEL_ENFORCE(cm.shiftInEntityTable >= 0);
+//	CM_KERNEL_ENFORCE( (cm.shiftInEntityTable + ComponentsFactory::sizeOf(target->classIndex())) <= entity.componentsMemory.memBlock.len);
 }
 
 void Class::finalizeLocalObjects(const ClassDesc::LocalObjects& locObjs)
@@ -465,7 +457,7 @@ void Class::load(stream::istream& is)
 
 }
 
-const ClassMapping::Entry& Class::map(const Class& target) const
+const ClassMapping::Entry& Class::map(const Class& target)
 {
 	return classes->mapping.entry(*this, target);
 }
@@ -508,9 +500,9 @@ void Class::LocalObject::load(stream::istream& is)
 	is >> objectName >> clsIndex;
 }
 
-
-
-
+//
+//
+//
 ClassMapping::Entry::Entry(const Class& class0, const Class& class1)
 {
 	create(class0, class1);
@@ -521,7 +513,7 @@ void ClassMapping::Entry::create(const Class& class0, const Class& class1)
 	classes[0] = &class0;
 	classes[1] = &class1;
 
-	
+	//смотрим в каком игровом классе меньше компонент разных типов, и проходимся по нему
 	auto count0 = class0.getComponentsCount();
 	auto count1 = class1.getComponentsCount();
 	const Class& fetch = count0 < count1 ? class0 : class1;
@@ -622,21 +614,3 @@ ClassMapping::Entry* ClassMapping::find(const Class& class0, const Class& class1
 
 	return nullptr;
 }
-
-
-
-// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

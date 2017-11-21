@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2016 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "frustum.h"
 #include "geometry/library.include.h"
 #include "algorithm/threePlanes.h"
@@ -67,28 +59,60 @@ namespace intersections
 
 
 
+/*
+	Frustum::IntersectionType Frustum::intersect(const Box& box) const
+	{
+		IntersectionType ret = IT_INSIDE; 
+		Vector3 vmin, vmax; 
+		Vector3 mins, maxs; 
+		box.getAABB(mins, maxs);
 
+		for(int i = 0; i < 6; ++i) 
+		{ 
+			// X axis 
+			if(planes[i].n.x > 0) 
+			{ 
+				vmin.x = mins.x; 
+				vmax.x = maxs.x; 
+			} 
+			else 
+			{ 
+				vmin.x = maxs.x; 
+				vmax.x = mins.x; 
+			} 
+
+			// Y axis 
+			if(planes[i].n.y > 0) 
+			{ 
+				vmin.y = mins.y; 
+				vmax.y = maxs.y; 
+			} 
+			else 
+			{ 
+				vmin.y = maxs.y; 
+				vmax.y = mins.y; 
+			} 
+
+			// Z axis 
+			if(planes[i].n.z > 0) 
+			{ 
+				vmin.z = mins.z; 
+				vmax.z = maxs.z; 
+			} 
+			else 
+			{ 
+				vmin.z = maxs.z; 
+				vmax.z = mins.z; 
+			} 
+
+			if( planes[i].distToPoint(vmax) < 0 ) return IT_OUTSIDE; 
+			if( planes[i].distToPoint(vmin)<= 0 ) ret = IT_INTERSECT; 
+		} 
+
+		return ret; 
+	}*/
 
 
 
 }
 
-
-
-
-
-// Copyright (C) 2012-2016 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

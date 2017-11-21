@@ -32,7 +32,6 @@ interface	{	return Parser::token::INTERFACE;	}
 this		{	return Parser::token::THISS;		}
 collection	{	return Parser::token::COLLECTION;	}
 [#]include  { 	return Parser::token::INCLUDE;		}
-var			{	return Parser::token::VAR;			}
 property	{	return Parser::token::PROPERTY;		}
 array		{	return Parser::token::ARRAY;		}
 noinstance	{	return Parser::token::NOINSTANCE;	}
@@ -42,8 +41,7 @@ false		{	return Parser::token::false_key;	}
 iterator	{	return Parser::token::ITERATOR;		}
 external	{	return Parser::token::EXTERNAL;		}
 private		{	return Parser::token::PRIVATE;		}
-mix			{	return Parser::token::MIX;		}
-aggregate	{	return Parser::token::AGGREGATE;		}
+return		{	return Parser::token::RETURN;		}
 
 "/*"			{	BEGIN COMMENT; }
 <COMMENT>"*/"	{	BEGIN 0; }
@@ -51,7 +49,7 @@ aggregate	{	return Parser::token::AGGREGATE;		}
 
 "{{"						{ BEGIN EXTERNAL_EXTENSION; }
 <EXTERNAL_EXTENSION>"}}"	{ BEGIN 0; }
-<EXTERNAL_EXTENSION>.|\n	{};
+<EXTERNAL_EXTENSION>[^}]*		{ strcpy(yylval->name, yytext); return Parser::token::literal;};
 
 
 \"[^\n"]*\"	{

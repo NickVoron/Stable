@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include <D3D11.h>
@@ -23,10 +15,10 @@
 
 namespace dx11
 {
-	
-	
-	
-	
+	//
+	//
+	//
+	//
 	HRESULT compileShader( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, mem::mem_desc& memblock);
 	HRESULT compileShader( LPCSTR shaderText, unsigned int shaderLen, LPCSTR szEntryPoint, LPCSTR szShaderModel, mem::mem_desc& memblock);
 
@@ -37,7 +29,7 @@ namespace dx11
 	inline void shader_set(ID3D11DeviceContext* context, ID3D11HullShader* ptr)			{ context->HSSetShader(ptr, 0, 0); }
 	inline void shader_set(ID3D11DeviceContext* context, ID3D11ComputeShader* ptr)		{ context->CSSetShader(ptr, 0, 0); }
 
-	
+	//
 	template<gapi::ShaderTypeName shaderType>  struct DeviceShader;
 
 	template<class ShaderInterfaceType, gapi::ShaderTypeName shaderType>
@@ -94,9 +86,9 @@ namespace dx11
 	template<> struct ShaderDef<gapi::GEOMETRY_STREAMOUT_SHADER>	: public ShaderDefBase<ID3D11GeometryShader,	gapi::GEOMETRY_STREAMOUT_SHADER>{};
 
 
-	
-	
-	
+	//
+	//
+	//
 	template<> 
 	struct ShaderBase<gapi::VERTEX_SHADER> : public ShaderDef<gapi::VERTEX_SHADER>
 	{
@@ -105,7 +97,7 @@ namespace dx11
 		static const char* ShaderModelName() { return "vs_5_0"; }
 	};
 
-	
+	//
 	template<> 
 	struct ShaderBase<gapi::PIXEL_SHADER> : public ShaderDef<gapi::PIXEL_SHADER>
 	{
@@ -114,7 +106,7 @@ namespace dx11
 		static const char* ShaderModelName() { return "ps_5_0"; }
 	};
 
-	
+	//
 	template<> 
 	struct ShaderBase<gapi::GEOMETRY_SHADER> : public ShaderDef<gapi::GEOMETRY_SHADER>
 	{
@@ -123,7 +115,7 @@ namespace dx11
 		static const char* ShaderModelName() { return "gs_5_0"; }
 	};
 
-	
+	//
 	template<> 
 	struct ShaderBase<gapi::GEOMETRY_STREAMOUT_SHADER> : public ShaderDef<gapi::GEOMETRY_STREAMOUT_SHADER>
 	{
@@ -168,7 +160,7 @@ namespace dx11
 		Data data;
 	};
 
-	
+	//
 	template<> 
 	struct ShaderBase<gapi::DOMAIN_SHADER> : public ShaderDef<gapi::DOMAIN_SHADER>
 	{
@@ -177,7 +169,7 @@ namespace dx11
 		static const char* ShaderModelName() { return "ds_5_0"; }
 	};
 
-	
+	//
 	template<> 
 	struct ShaderBase<gapi::HULL_SHADER> : public ShaderDef<gapi::HULL_SHADER>
 	{
@@ -186,7 +178,7 @@ namespace dx11
 		static const char* ShaderModelName() { return "hs_5_0"; }
 	};
 
-	
+	//
 	template<> 
 	struct ShaderBase<gapi::COMPUTE_SHADER> : public ShaderDef<gapi::COMPUTE_SHADER>
 	{
@@ -195,7 +187,7 @@ namespace dx11
 		static const char* ShaderModelName() { return "cs_5_0"; }
 	};
 	
-	
+	//
 	template<gapi::ShaderTypeName shaderType>
 	struct DeviceShader : public ShaderBase<shaderType>
 	{
@@ -211,9 +203,9 @@ namespace dx11
 		static const char* ShaderModelName()	{ return ShaderBase<shaderType>::ShaderModelName(); }
 	};
 
-	
-	
-	
+	//
+	//
+	//
 	struct ShaderCompiler 
 	{
 		template<gapi::ShaderTypeName shaderType>
@@ -254,9 +246,9 @@ namespace dx11
 
 
 
-	
-	
-	
+	//
+	//
+	//
 	struct ShaderSetter		{ template<gapi::ShaderTypeName shaderType>	void operator()(const Shader<shaderType>& shader, int deviceIndex)	{ shader.set(deviceIndex); } };
 	struct ShaderDestroyer	{ template<gapi::ShaderTypeName shaderType> void operator()(Shader<shaderType>& shader)			{  }};
 
@@ -282,9 +274,9 @@ namespace dx11
 	template<>	struct ShaderSetStorage<gapi::VERTEX_SHADER | gapi::PIXEL_SHADER | gapi::HULL_SHADER | gapi::DOMAIN_SHADER>				 { typedef Loki::TypeTuple< Loki::MakeTypelist<Shader<gapi::VERTEX_SHADER>, Shader<gapi::PIXEL_SHADER>, Shader<gapi::HULL_SHADER>, Shader<gapi::DOMAIN_SHADER>> > Storage; };
 	template<>	struct ShaderSetStorage<gapi::VERTEX_SHADER | gapi::HULL_SHADER | gapi::DOMAIN_SHADER | gapi::GEOMETRY_STREAMOUT_SHADER> { typedef Loki::TypeTuple< Loki::MakeTypelist<Shader<gapi::VERTEX_SHADER>, Shader<gapi::HULL_SHADER>, Shader<gapi::DOMAIN_SHADER>, Shader<gapi::GEOMETRY_STREAMOUT_SHADER>> > Storage; };
 	
-	
-	
-	
+	//
+	//
+	//
 	template<int shaders> struct ShadersResetter;
 	template<>	struct ShadersResetter<gapi::VERTEX_SHADER | gapi::PIXEL_SHADER>											
 	{
@@ -315,9 +307,9 @@ namespace dx11
 		}
 	};
 
-	
-	
-	
+	//
+	//
+	//
 	template<int shaders>
 	struct ShaderSetBase : public DrawableObject
 	{
@@ -378,10 +370,10 @@ namespace dx11
 		{ 
 			DeviceShader<gapi::GEOMETRY_STREAMOUT_SHADER>::Data* data = (DeviceShader<gapi::GEOMETRY_STREAMOUT_SHADER>::Data*)userData;
 
-
-
-
-
+// 			if(data)
+// 			{
+// 				streamout().bind(*data);
+// 			}
 			
 			bool succeded = false;
 			ShaderComp compiler(fileName, succeded);
@@ -392,10 +384,10 @@ namespace dx11
 	};
 
 
-	
-	
-	
-	
+	//
+	//
+	//
+	//
 	template<class VertexType>
 	DeviceShader<gapi::GEOMETRY_STREAMOUT_SHADER>::Data* StreamOutData()
 	{
@@ -414,22 +406,3 @@ namespace dx11
 
 
 
-
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

@@ -1,12 +1,12 @@
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
-
+/*
+ *  Copyright 2012 The WebRTC Project Authors. All rights reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree. An additional intellectual property rights grant can be found
+ *  in the file PATENTS.  All contributing project authors may
+ *  be found in the AUTHORS file in the root of the source tree.
+ */
 #include "ifaddrs.h"
 
 #if defined(__ANDROID__)
@@ -43,7 +43,7 @@ namespace {
 
 	const int kMaxReadSize = 4096;
 
-}  
+}  // namespace
 
 int set_ifname(struct ifaddrs* ifaddr, int interface) {
   char buf[IFNAMSIZ] = {0};
@@ -169,7 +169,7 @@ int getifaddrs(struct ifaddrs** result) {
           header = NLMSG_NEXT(header, header_size)) {
       switch (header->nlmsg_type) {
         case NLMSG_DONE:
-          
+          // Success. Return.
           *result = start;
           close(fd);
           return 0;
@@ -236,7 +236,7 @@ void freeifaddrs(struct ifaddrs* addrs) {}
 #pragma comment(lib, "IPHLPAPI.lib")
 
 #define INET
-
+//#define INET6
 #define SCTPDBG(...)
 #define SCTP_DEBUG_USR
 
@@ -270,19 +270,19 @@ int getifaddrs(struct ifaddrs** interfaces)
 			goto cleanup;
 		}
 	}
-	
+	/* Allocate memory from sizing information */
 	if ((pAdapterAddrs = (PIP_ADAPTER_ADDRESSES) GlobalAlloc(GPTR, AdapterAddrsSize)) == NULL) {
 		SCTPDBG(SCTP_DEBUG_USR, "Memory allocation error!\n");
 		ret = -1;
 		goto cleanup;
 	}
-	
+	/* Get actual adapter information */
 	if ((Err = GetAdaptersAddresses(AF_INET, 0, NULL, pAdapterAddrs, &AdapterAddrsSize)) != ERROR_SUCCESS) {
 		SCTPDBG(SCTP_DEBUG_USR, "GetAdaptersV4Addresses() failed with error code %d\n", Err);
 		ret = -1;
 		goto cleanup;
 	}
-	
+	/* Enumerate through each returned adapter and save its information */
 	for (pAdapt = pAdapterAddrs, count; pAdapt; pAdapt = pAdapt->Next, count++) {
 		addr = (struct sockaddr_in *)malloc(sizeof(struct sockaddr_in));
 		ifa = (struct ifaddrs *)malloc(sizeof(struct ifaddrs));
@@ -315,19 +315,19 @@ int getifaddrs(struct ifaddrs** interfaces)
 			goto cleanup;
 		}
 	}
-	
+	/* Allocate memory from sizing information */
 	if ((pAdapterAddrs = (PIP_ADAPTER_ADDRESSES) GlobalAlloc(GPTR, AdapterAddrsSize)) == NULL) {
 		SCTPDBG(SCTP_DEBUG_USR, "Memory allocation error!\n");
 		ret = -1;
 		goto cleanup;
 	}
-	
+	/* Get actual adapter information */
 	if ((Err = GetAdaptersAddresses(AF_INET6, 0, NULL, pAdapterAddrs, &AdapterAddrsSize)) != ERROR_SUCCESS) {
 		SCTPDBG(SCTP_DEBUG_USR, "GetAdaptersV6Addresses() failed with error code %d\n", Err);
 		ret = -1;
 		goto cleanup;
 	}
-	
+	/* Enumerate through each returned adapter and save its information */
 	for (pAdapt = pAdapterAddrs, count; pAdapt; pAdapt = pAdapt->Next, count++) {
 		addr6 = (struct sockaddr_in6 *)malloc(sizeof(struct sockaddr_in6));
 		ifa = (struct ifaddrs *)malloc(sizeof(struct ifaddrs));
@@ -351,7 +351,7 @@ int getifaddrs(struct ifaddrs** interfaces)
 #if defined(INET) || defined(INET6)
 	cleanup:
 		   if (pAdapterAddrs != NULL) {
-
+//			   GlobalFree(pAdapterAddrs);
 		   }
 #endif
 	return (ret);
@@ -363,26 +363,7 @@ void freeifaddrs(struct ifaddrs* addrs)
 }
 
 
-#endif  
+#endif  // defined(__ANDROID__)
 
-}  
+}  // namespace net
 
-
-
-
-
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

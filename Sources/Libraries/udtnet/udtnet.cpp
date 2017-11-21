@@ -1,11 +1,3 @@
-// Copyright (C) 2015-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "udtnet.h"
 
 
@@ -15,11 +7,11 @@
 #include <thread>
 
 
-
-
-
-
-
+// std::ostream& operator<<(std::ostream& os, const UDT::ERRORINFO& e)
+// {
+// 	return os << ((UDT::ERRORINFO&)e).getErrorMessage();
+// }
+// 
 namespace udtnet
 {
 
@@ -99,7 +91,7 @@ namespace udtnet
 
 	bool Connections::server(unsigned short port, std::function<DataDispatcher*()> factory)
 	{	
-		
+		// Создадим сокет для связи клиентов с сервером
 		addrinfo hints;
 		addrinfo* res;
 		memset(&hints, 0, sizeof(struct addrinfo));
@@ -115,7 +107,7 @@ namespace udtnet
 
 		if (UDT::ERROR == UDT::bind(serv, res->ai_addr, res->ai_addrlen)) 
 		{ 
-			
+			//LOG_MSG("bind: " << UDT::getlasterror());
 			return false; 
 		}
 
@@ -136,11 +128,11 @@ namespace udtnet
 
 			if (UDT::ERROR == UDT::listen(serv, 10))
 			{
-				
+				//LOG_ERROR("listen: " << UDT::getlasterror());
 				return false;
 			}
 
-			
+			// Ждём подключения клиентов
 			while (!exitConnection)
 			{
  				sockaddr_storage clientaddr;
@@ -150,7 +142,7 @@ namespace udtnet
  				{
 					if (!exitConnection)
 					{
-						
+						//LOG_ERROR("accept: " << UDT::getlasterror());
 					} 					
 					continue;;
 				}
@@ -198,9 +190,9 @@ namespace udtnet
 	}
 
 
-	
-	
-	
+	//
+	//
+	//
 	Connection::~Connection()
 	{
 	}
@@ -237,7 +229,7 @@ namespace udtnet
 
 	bool Connection::connect(const Address& addr)
 	{
-		
+		// СОКЕТ для связи с сервером
 		struct addrinfo hints, *local, *peer;
 		memset(&hints, 0, sizeof(struct addrinfo));
 		hints.ai_flags = AI_PASSIVE;
@@ -261,7 +253,7 @@ namespace udtnet
 
 		if (UDT::ERROR == UDT::connect(sock, peer->ai_addr, peer->ai_addrlen))
 		{
-			
+			//LOG_ERROR("connect: " << UDT::getlasterror());
 			close();
 			return false;
 		}
@@ -269,13 +261,13 @@ namespace udtnet
 
 		std::thread ct0([this]
 		{
-			
+			//LOG_MSG("START CLIENT");
 			dispatch();
-			
+			//LOG_MSG("STOP CLIENT");
 		});
 		ct0.detach();
 
-		
+		//LOG_MSG("connected to server");
 
 		exitDispatcher = false;
 		return true;
@@ -286,7 +278,7 @@ namespace udtnet
 		exitDispatcher = true;
 		if (sock)
 		{
-			
+			//UDT::close(sock);
 			sock = 0;
 		}		
 	}
@@ -300,7 +292,7 @@ namespace udtnet
 	{
 		if (msgsize > 0)
 		{
-			
+			//LOG_MSG("report : " << msgsize);
 			UDT::sendmsg(sock, msgdata, msgsize, -1, true);
 		}
 	}
@@ -314,7 +306,7 @@ namespace udtnet
 			return 0;
 		if (UDT::ERROR == (rs = UDT::recvmsg(sock, msgdata, msgsize)))
 		{
-			
+			//LOG_ERROR("recv:" << UDT::getlasterror());
 			return 0;
 		}
 		return rs;
@@ -327,21 +319,3 @@ namespace udtnet
 	}
 
 }
-
-
-
-// Copyright (C) 2015-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

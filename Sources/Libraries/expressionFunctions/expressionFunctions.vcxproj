@@ -110,8 +110,10 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="componentModel.cpp" />
     <ClCompile Include="expressionFunctions.cpp" />
     <ClCompile Include="filesystem.cpp" />
+    <ClCompile Include="ods.cpp" />
     <ClCompile Include="standard.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -122,9 +124,11 @@
     <ClCompile Include="tgf.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="componentModel.h" />
     <ClInclude Include="expressionFunctions.h" />
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="library.include.h" />
+    <ClInclude Include="ods.h" />
     <ClInclude Include="standard.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="tgf.h" />

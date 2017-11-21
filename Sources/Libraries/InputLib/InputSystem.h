@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include <vector>
@@ -17,21 +9,21 @@
 
 namespace Input
 {
-	
+	// тип для преобразования клавиш осей разных типов в одно пространство
 	class InputEvent
 	{
 	public:
-		
+		// флаги типа устройства для Action
 		enum DEVICE_TYPE_FLAGS
 		{
-			KEYBOARD	= 0x00100000,	
-			MOUSE		= 0x00200000,	
-			XPAD		= 0x00400000,	
-			DIPAD		= 0x00800000,	
+			KEYBOARD	= 0x00100000,	// клавиш
+			MOUSE		= 0x00200000,	// мышка
+			XPAD		= 0x00400000,	// геймпад XBox360
+			DIPAD		= 0x00800000,	// геймпад DirectInput
 
-			TYPE_MASK	= 0x00F00000,	
-			CODE_MASK	= 0x0000FFFF,	
-			PORT_MASK	= 0xFF000000,	
+			TYPE_MASK	= 0x00F00000,	// маска типа
+			CODE_MASK	= 0x0000FFFF,	// маска кода
+			PORT_MASK	= 0xFF000000,	// маска номера порта
 
 			FORCE_DWORD	= 0x7FFFFFFF,
 		};
@@ -54,9 +46,9 @@ namespace Input
 		int data;
 	};
 
-	
-	
-	
+	//
+	//
+	//
 	class Action
 	{
 	public:
@@ -77,7 +69,7 @@ namespace Input
 		bool state(bool pressed, bool now) const;
 	};
 	
-	
+	// система ввода
 	class InputSystem
 	{
 	public:
@@ -208,21 +200,3 @@ namespace Input
 	inline float value(int index, XPadCode code, int modifiers = MOD_NONE) { return action(index, code, modifiers).value(); }
 	inline float delta(int index, XPadCode code, int modifiers = MOD_NONE) { return action(index, code, modifiers).delta(); }
 }
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

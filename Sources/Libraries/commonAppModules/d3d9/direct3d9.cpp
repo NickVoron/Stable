@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include "settingsRegistry/library.include.h"
@@ -16,12 +8,31 @@
 namespace AppModules
 {
 
+/*
+struct D3DCoreEditor : public imgui::modules::Module
+{
+	D3DCoreEditor(Direct3D9FrameBegin::Params& p):params(p){}
+	virtual void process();
+	virtual const char* name() const;
+
+	Direct3D9FrameBegin::Params& params;
+};
+													 
+void D3DCoreEditor::process()
+{
+	imgui::color_d3d("Clear Target", params.d3dClear_Color);
+}
+
+const char* D3DCoreEditor::name() const
+{
+	return "Direct3D9 Core";
+}
+*/
 
 
-
-
-
-
+//
+//
+//
 Direct3D9FrameBegin::Params::Params()
 {
 	color	= Vector4(0.0f, 0.425f, 0.7f, 1.0f);
@@ -33,23 +44,34 @@ Direct3D9FrameBegin::Params::Params()
 	clearStencil	= false;
 }
 
+/*
 
+DWORD Direct3D9FrameBegin::Params::flags() const
+{
+	DWORD res = 0;
+
+	if(clearColor)		res |= D3DCLEAR_TARGET;
+	if(clearDepth)		res |= D3DCLEAR_ZBUFFER;
+	if(clearStencil)	res |= D3DCLEAR_STENCIL;
+
+	return res;
+}*/
 
 void Direct3D9::create(Window::Params& windowParams, Params& params)
 {
-	
+	//dx11::DeviceCreate();
 
 	windowParams.createWindows(params.windows);
 }
 
 void Direct3D9::release()
 {
-	
+	//dx11::DeviceRelease(); 
 }
 
 void Direct3D9FrameBegin::create(Params& params)
 {
-	
+	//static D3D11CoreEditor editor(params);
 }
 
 void Direct3D9FrameBegin::process(WindowsGAPI::Windows9& windows)
@@ -63,22 +85,3 @@ void Direct3D9FrameEnd::process(WindowsGAPI::Windows9& windows)
 }
 
 }
-
-
-
-
-// Copyright (C) 2012-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

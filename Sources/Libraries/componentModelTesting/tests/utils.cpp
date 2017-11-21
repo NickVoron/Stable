@@ -1,11 +1,3 @@
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "utils.h"
 #include <boost/tokenizer.hpp>
 #include <boost/token_iterator.hpp>
@@ -50,8 +42,8 @@ namespace ComponentModelTesting
 
 	const ComponentHandle* findComponent(const InstanceHandle* inst, int index, const std::string& componentName)
 	{
-		const Expression* expr = inst->get(componentName);
-		ENFORCE_MSG(expr, "No '" + componentName + "' expression in '" + inst->name + "'");
+		auto expr = inst->scope().get(componentName);
+		ENFORCE_MSG(expr, "No '" + componentName + "' expression in '" + inst->definition.name + "'");
 
 		const ComponentHandle* compo = expr->cast<ComponentHandle>();
 		ENFORCE_MSG(compo, "Epression '" + componentName + "' is no component");
@@ -83,9 +75,9 @@ namespace ComponentModelTesting
 		return table.size() == count;
 	}
 
-	const ObjectParser::InstanceHandle* testInstance(Expressions::EvaluatedScope& scopeName, const std::string& instanceName)
+	const ObjectParser::InstanceHandle* testInstance(std::unique_ptr<Expressions::EvaluatedScope>& scopeName, const std::string& instanceName)
 	{
-		const Expressions::Expression* unrolledMainExpr = scopeName.get("main");
+		auto unrolledMainExpr = scopeName->get("main");
 		ENFORCE_MSG(unrolledMainExpr, "Main was not unroll");
 		const ObjectParser::InstanceHandle* unrolledMainInstace = unrolledMainExpr->cast<const ObjectParser::InstanceHandle>();
 		ENFORCE_MSG(unrolledMainInstace, "'main' expr in not ObjectParser::Instance");
@@ -94,7 +86,7 @@ namespace ComponentModelTesting
 	}
 
 
-	
+	//parse
 	bool isIndex(const std::string& val, size_t& index)
 	{
 		char* end;
@@ -115,11 +107,12 @@ namespace ComponentModelTesting
 			Reference::PathElement* pathElement = 0;
 			if (isIndex(token, index))
 			{
-				pathElement = new ArrayPath(ConstExprList(convertType(index)));
+				auto constant = convertType(index)->cast<Const<decltype(index)>>();
+				pathElement = new ArrayPathElement(ConstExprList(constant));
 			}
 			else
 			{
-				pathElement = new PropertyPath(token);
+				pathElement = new PropertyPathElement(token);
 
 			}
 			
@@ -130,31 +123,18 @@ namespace ComponentModelTesting
 		return proxy;
 	}
 
-	const Expressions::EvaluationUnit* get(const Expressions::EvaluatedScope& scopename, const std::string& path)
+	const Expressions::EvaluationUnit* get(Expressions::EvaluatedScope& scopename, const std::string& path)
 	{
 		Reference* proxy = parse(path);
-		return proxy->evaluated(scopename);
+		return Expressions::unrollExpression(*proxy, scopename, false);
 	}
 
-}
+	const Expressions::EvaluationUnit* get(std::unique_ptr<Expressions::EvaluatedScope>& scopename, const std::string& path)
+	{
+		return get(*scopename, path);
+	}
 
-#endif 
 
+}//
 
-
-
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.
+#endif // ENABLE_TEST

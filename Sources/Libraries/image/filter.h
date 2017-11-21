@@ -1,11 +1,3 @@
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include "color.h"
@@ -169,7 +161,7 @@ namespace image
 					const NewColor<ARGB32F>& tc = t0(i, j);
 
 					NewColor<ARGB32F> rc = (dc*dc + tc*tc);
-					
+					//rc.sqrtc();
 					rc *= 1.5f;
 					rc.a() = 1.0f;
 
@@ -198,7 +190,7 @@ namespace image
 			kernel2<kernelWindowSize> sk;
 
 			sobelX(sk);	
-			
+			//sk.normalize();
 			apply_kernel2(*srcFloat, t0, sk, wm);
 
 			sk.transpose(); 
@@ -226,32 +218,40 @@ namespace image
 					float diff = nm::clamp((nm::dot(n, l))+0.1f, 0.0f, 0.99f);
 
 					CT1 dest = rgba<ARGB32F>(diff, diff, diff, 1.0f);
-					
+					//CT1 dest = rgba<ARGB32F>((nx+1.0f)*0.5f, (nz+1.0f)*0.5f, (ny+1.0f)*0.5f, 1.0f);
 					
 					dst(i, j) = dest;	
 				}
 			}
 		}
 
+/*
+		template<int kernelWindowSize, class ColorType>
+		void sobel_gradient(const Plane<ColorType>& src, Plane<ColorType>& dst, WrapMode wm)
+		{
+			kernel2<kernelWindowSize> sk;
+			Plane<ColorType> tmp;
 
+			sobelX(sk);	
+			apply_kernel2(src, tmp, sk, wm);
+
+			sk.transpose(); 
+			apply_kernel2(src, dst, sk, wm);
+
+			for (int j = 0; j < dst.sizeY; ++j)
+			{
+				for (int i = 0; i < dst.sizeX; ++i)
+				{
+					 ColorType& dc = dst(i, j);
+					const ColorType& tc = tmp(i, j);
+
+					float v = atan2f(dc.r(), tc.r())*2;
+					dc = rgba<ARGB8>(v, v, v, 1.0f);
+					//dst(i, j) = (dc*dc + tc*tc);	
+				}
+			}
+
+		}*/
 
 	}
 }
-
-
-
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

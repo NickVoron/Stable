@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include "stuff/library.include.h"
@@ -53,12 +45,10 @@ namespace Resources
 
 		virtual void clear() override;
 
-		template<class UserData>
-		T& add(const char* path, const char* name, const UserData& userData)							{ return add(path, name, &userData, sizeof(userData));	}
-		T& add(const char* path, const char* name)														{ return add(path, name, 0, 0); }
-		T& add(const char* path, const char* name, const char* userData)								{ return add(path, name, (const void*)userData, strlen(userData)); }
-		T& add(const char* path, const char* name, const void* userData, std::size_t userDataSize);
-
+		template<class UserDataType>
+		T& add(const char* path, const char* name, const UserDataType& userData)	{ return add(path, name, std::unique_ptr<UserData>(new UserDataT<UserDataType>(userData)));	}
+		T& add(const char* path, const char* name)									{ return add(path, name, std::unique_ptr<UserData>(nullptr)); }
+		
 		void reloadAll() override;
 		bool reloadIfUpdate() override;
 		virtual bool isValidResource(Resource* res) override;
@@ -70,17 +60,18 @@ namespace Resources
 		virtual Resource* createResource() override { return new T(); }
 
 	private:
+		T& add(const char* path, const char* name, std::unique_ptr<UserData> userData);
 
 		template<class ID>
-		T* find(const char* name, const void* userData, std::size_t userDataSize, ID& id);
+		T* find(const char* name, const UserData* userData, ID& id);
 
 		template<class ID>
-		const T* find(const char* name, const void* userData, std::size_t userDataSize, ID& id) const;
+		const T* find(const char* name, const UserData* userData, ID& id) const;
 	};
 
-	
-	
-	
+	//
+	//
+	//
 	template < class T >
 	void ResourceSet<T>::clear()
 	{
@@ -90,16 +81,16 @@ namespace Resources
 
 	template < class T >
 	template < class ID >
-	const T* ResourceSet<T>::find(const char* name, const void* userData, std::size_t userDataSize, ID& id) const
+	const T* ResourceSet<T>::find(const char* name, const UserData* userData, ID& id) const
 	{
-		return ((ResourceSet<T>*)this)->find(name, userData, userDataSize, id);
+		return ((ResourceSet<T>*)this)->find(name, userData, id);
 	}
 
 	template < class T >
 	template < class ID >
-	T* ResourceSet<T>::find(const char* name, const void* userData, std::size_t userDataSize, ID& id)
+	T* ResourceSet<T>::find(const char* name, const UserData* userData, ID& id)
 	{
-		T::ConstructID(id, name, userData, userDataSize);
+		T::ConstructID(id, name, userData);
 
 		SystemLockGuard lock;
 
@@ -128,12 +119,12 @@ namespace Resources
 	template <class T>	bool ResourceSet<T>::reloadIfUpdate() { bool res = false; for (auto& r : *this) { res |= r.ReloadIfUpdate(); } return res; }
 
 	template<class T>
-	T& ResourceSet<T>::add(const char* path, const char* name, const void* userData, std::size_t userDataSize)
+	T& ResourceSet<T>::add(const char* path, const char* name, std::unique_ptr<UserData> userData)
 	{	
 		SystemLockGuard lock;
 		
 		Resource::ID id;
-		T* item = find(name, userData, userDataSize, id);
+		T* item = find(name, userData.get(), id);
 
 		if (!item)
 		{
@@ -146,7 +137,7 @@ namespace Resources
 			if (!netapp.isClient())
 			{
 #endif
-				item->RegisterAndLoad(path, name, userData, userDataSize);
+				item->RegisterAndLoad(path, name, std::move(userData));
 #ifdef NET_RES_DRIVER
 			}
 			else if (netapp.isClient() && !netapp.isServer())
@@ -176,22 +167,3 @@ namespace Resources
 		return result;
 	}
 }
-
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

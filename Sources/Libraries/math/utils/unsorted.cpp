@@ -1,11 +1,3 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "unsorted.h"
 
 #include <stdlib.h>
@@ -34,9 +26,9 @@ GetRandomTrigger( float probablity )
 }
 
 
-
-
-
+////////////////////////////////////////////////////////////////////
+// Egy: p-period, h - height, x - argument.
+// result is modular saw of x.
 
 float
 Egy( float x , float p, float h )
@@ -80,12 +72,12 @@ SegmentDistanceFlat( const Vector3& a, const Vector3& b, float d, const Vector3&
 	Vector3 segDirection =	endFlat - startFlat;
 	float projLength = (clientFlat - startFlat).Projection( segDirection ) / d;
 
-	
+	// middle:
 	if ( (projLength > 0) && (projLength < 1) )
 	{
 		Vector3 sumVec = startFlat + projLength*segDirection;
 		res = std::min( res, (clientFlat - sumVec).MagnitudeSquared() );
-		
+		//Base::Err3() << "CLI = " << clientFlat << " Proj = " << projLength << " SumVec = " << sumVec << std::endl;
 	}
 
 	return sqrtf(res);
@@ -96,7 +88,7 @@ SegmentDistanceFlat( const Vector3& a, const Vector3& b, float d, const Vector3&
 float
 HalfPlane( const Vector2& a, const Vector2& b, const Vector2& c )
 {
-	
+	// returns 1.0f | 0.0f | -1.0f
 	if ( a == b ) return 0.0f;
 	if ( a == c ) return 0.0f;
 	if ( b == c ) return 0.0f;
@@ -121,7 +113,7 @@ HalfPlane( const Vector3& sectionStart, const Vector3& sectionEnd, const Vector3
 int
 LogInt2( int x )
 {
-	
+	// will return -1 if result is not int:
 	int tmp = 1;
 	for ( int xx = 0; xx < 31; xx++ )
 	{
@@ -133,8 +125,8 @@ LogInt2( int x )
 
 
 
-
-
+////////////////////////////////////////////////////////////////////////////
+// template realizations:
 float Zero( const float& dummy) { return 0.0f; }
 
 int Zero( const int& dummy) { return 0; }
@@ -153,7 +145,7 @@ Vector2 Interpolate(const Vector2& v1, const Vector2& v2 , float coef)
 
 float GetAzimuthNeg( const Vector3& point, const Vector3& targ )
 {
-	
+	// Undefined azimuth:
 	if ( ( point.x == targ.x ) && ( point.z == targ.z ) )
 		return 0;
 	else 
@@ -162,7 +154,7 @@ float GetAzimuthNeg( const Vector3& point, const Vector3& targ )
 
 float GetAzimuthNeg( const Vector2& point, const Vector2& targ )
 {
-	
+	// Undefined azimuth:
 	if ( ( point.x == targ.x ) && ( point.y == targ.y ) )
 		return 0;
 	else 
@@ -171,7 +163,7 @@ float GetAzimuthNeg( const Vector2& point, const Vector2& targ )
 
 float GetAzimuthPos( const Vector3& point, const Vector3& targ )
 {
-	
+	// Undefined azimuth:
 	if ( ( point.x == targ.x ) && ( point.z == targ.z ) )
 		return 0;
 	else 
@@ -180,7 +172,7 @@ float GetAzimuthPos( const Vector3& point, const Vector3& targ )
 
 float GetAzimuthPos( const Vector2& point, const Vector2& targ )
 {
-	
+	// Undefined azimuth:
 	if ( ( point.x == targ.x ) && ( point.y == targ.y ) )
 		return 0;
 	else 
@@ -192,7 +184,7 @@ float GetAzimuthPos( const Vector2& point, const Vector2& targ )
 
 float GetVertical( const Vector3& point, const Vector3& targ )
 {
-	
+	// Undefined azimuth:
 	if ( ( point.y == targ.y ) && ( point.z == targ.z ) )
 		return 0;
 	else 
@@ -230,7 +222,7 @@ float QuaternionHeading(const Quaternion& q)
 	else
 	{
 		float r = 2.0f * atan2f(x, w);
-		return ( test > 0.499f ) ? r : -r;
+		return ( test > 0.499f ) ? r : -r;// singularity at north or south pole
 	}
 }
 
@@ -248,7 +240,7 @@ float QuaternionPitch(const Quaternion& q)
 	}
 	else
 	{
-		return ( test > 0.499f ) ? nm::PI_2 : -nm::PI_2;
+		return ( test > 0.499f ) ? nm::PI_2 : -nm::PI_2;// singularity at north or south pole
 	}
 }
 
@@ -286,12 +278,12 @@ Vector3 QuaterionToHPB(Quaternion qu)
 	}
 	else
 	{
-		
+		// singularity at pole
 		b = 0;
 		h = 2 * atan2f(x, w);
 		p = nm::PI_2;
 
-		if (test < -0.499f) 
+		if (test < -0.499f) // pole is south 
 		{ 
 			h = -h;
 			p = -p;
@@ -313,18 +305,18 @@ void buildPlaneBasis(const Vector3& n, Vector3& p, Vector3& q)
 {
 	if (fabsf(n.z) > nm::SQRT1_2)
 	{
-		
+		// choose p in y-z plane
 		float k = sqrtf(n.y*n.y + n.z*n.z);
 		p.x = 0; p.y = -n.z/k; p.z = n.y/k;
-		
+		// set q = n x p
 		q.x = k; q.y = -n.x*p.z; q.z = n.x*p.y;
 	}
 	else 
 	{
-		
+		// choose p in x-y plane
 		float k = sqrtf(n.x*n.x + n.y*n.y);
 		p.x = -n.y/k; p.y = n.x/k; p.z = 0;
-		
+		// set q = n x p
 		q.x = -n.z*p.y; q.y = n.z*p.x; q.z = k;
 	}
 }
@@ -363,24 +355,5 @@ void SplitFloat( float input, float desiredSize, float& size, int& splices )
 
 
 
-} 
-} 
-
-
-
-
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.
+} // namespace MathUtils
+} // namespace Base

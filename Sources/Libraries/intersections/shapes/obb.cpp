@@ -1,11 +1,3 @@
-// Copyright (C) 2015 Denis Netakhin <denis.netahin@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "obb.h"
 #include "../utils/utils.h"
 #include "debugDrawing/library.include.h"
@@ -65,25 +57,25 @@ Quad OBB::quadXn() const
 
 	
 
-	
-	
-	
-	
+	//DebugDrawing::sphere(leftBot, 0.1);
+	//DebugDrawing::sphere(leftTop, 0.1);
+	//DebugDrawing::sphere(rightTop, 0.1);
+	//DebugDrawing::sphere(rightBot, 0.1);
 
+	//Vector3 minCorner = getminCorner(); Vector3 maxCorner = getMaxCorner();
 	
-	
-	
-	
-	
-	
+	//Vector3 o0(minCorner.x, minCorner.y, minCorner.z);
+	//Vector3 o1(minCorner.x, maxCorner.y, minCorner.z);
+	//Vector3 o2(minCorner.x, maxCorner.y, maxCorner.z);
+	//Vector3 o3(minCorner.x, minCorner.y, maxCorner.z);
 
-	
-	
-	
-	
+	//DebugDrawing::sphere(o0, 0.1);
+	//DebugDrawing::sphere(o1, 0.1);
+	//DebugDrawing::sphere(o2, 0.1);
+	//DebugDrawing::sphere(o3, 0.1);
 
 
-	
+	//Quad result(o0, o1, o2, o3);
 	Quad result(leftBot, leftTop, rightTop, rightBot);
 
 	return result;
@@ -100,23 +92,23 @@ Quad OBB::quadXp() const
 	Vector3 rightTop = center + xDim + yDim + zDim;
 	Vector3 rightBot = center + xDim - yDim + zDim;
 
-	
+	//Vector3 minCorner = getminCorner(); Vector3 maxCorner = getMaxCorner();
 
-	
-	
-	
-	
+	//Vector3 o0(maxCorner.x, minCorner.y, minCorner.z);
+	//Vector3 o1(maxCorner.x, maxCorner.y, minCorner.z);
+	//Vector3 o2(maxCorner.x, maxCorner.y, maxCorner.z);
+	//Vector3 o3(maxCorner.x, minCorner.y, maxCorner.z);
 
-	
-	
-	
-	
+	//DebugDrawing::sphere(o0, 0.1);
+	//DebugDrawing::sphere(o1, 0.1);
+	//DebugDrawing::sphere(o2, 0.1);
+	//DebugDrawing::sphere(o3, 0.1);
 	
 
 	return Quad(leftBot, leftTop, rightTop, rightBot);
 }
 
-Quad OBB::quadYn() const 
+Quad OBB::quadYn() const //y orientated nagative
 {
 	Vector3 xDim = axis[0] * extent[0];
 	Vector3 yDim = axis[1] * extent[1];
@@ -127,16 +119,16 @@ Quad OBB::quadYn() const
 	Vector3 rightTop = center + xDim - yDim + zDim;
 	Vector3 rightBot = center - xDim - yDim + zDim;
 
-	
-	
-	
-	
+	//DebugDrawing::sphere(leftBot, 0.1);
+	//DebugDrawing::sphere(leftTop, 0.1);
+	//DebugDrawing::sphere(rightTop, 0.1);
+	//DebugDrawing::sphere(rightBot, 0.1);
 
 
 	return Quad(leftBot, leftTop, rightTop, rightBot);
 }
 
-Quad OBB::quadYp() const 
+Quad OBB::quadYp() const //y orientated positive
 {
 	Vector3 xDim = axis[0] * extent[0];
 	Vector3 yDim = axis[1] * extent[1];
@@ -150,7 +142,7 @@ Quad OBB::quadYp() const
 	return Quad(leftBot, leftTop, rightTop, rightBot);
 }
 
-Quad OBB::quadZn() const 
+Quad OBB::quadZn() const //z orientated negative
 {
 	Vector3 xDim = axis[0] * extent[0];
 	Vector3 yDim = axis[1] * extent[1];
@@ -163,11 +155,11 @@ Quad OBB::quadZn() const
 
 	return Quad(leftBot, leftTop, rightTop, rightBot);
 
-	
-	
+	//Vector3 minCorner = getminCorner(); Vector3 maxCorner = getMaxCorner();
+	//return Quad(Vector3(minCorner.x, minCorner.y, minCorner.z), Vector3(maxCorner.x, minCorner.y, minCorner.z), Vector3(maxCorner.x, maxCorner.y, minCorner.z), Vector3(minCorner.x, maxCorner.y, minCorner.z));
 }
 
-Quad OBB::quadZp() const 
+Quad OBB::quadZp() const //z orientated positive
 {
 	Vector3 xDim = axis[0] * extent[0];
 	Vector3 yDim = axis[1] * extent[1];
@@ -209,21 +201,3 @@ float OBB::boudingSphere()
 }
 
 }//
-
-
-
-// Copyright (C) 2015 Denis Netakhin <denis.netahin@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

@@ -1,11 +1,3 @@
-// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "fbo.h"
 #include "opengl/library.include.h"
 #include "defaultLogs/library.include.h"
@@ -28,17 +20,17 @@ struct TexturesCache : public std::map<TextureID, TexturesCacheList>
 {
 	std::unique_ptr<TexInfo> get(GLsizei width, GLsizei height, GLenum format)
 	{
+// 		auto& list = operator[]({ width, height, format });
+// 		
+// 		if (!list.empty())
+// 		{
+// //			std::cout << "get FBO from cache" << std::endl;
+// 			std::unique_ptr<TexInfo> result = std::move(list.back());
+// 			list.pop_back();
+// 			return result;
+// 		}
 
-
-
-
-
-
-
-
-
-
-
+//		std::cout << "create new FBO" << std::endl;
 		auto res = new TexInfo();
 		res->setup(width, height, format);
 		return std::unique_ptr<TexInfo>(res);
@@ -46,8 +38,8 @@ struct TexturesCache : public std::map<TextureID, TexturesCacheList>
 
 	void add(std::unique_ptr<TexInfo>& info)
 	{
-	
-	
+	//	auto& list = operator[]({ info->width, info->height, info->format });
+	//	list.push_back(std::move(info));
 	}
 };
 
@@ -160,22 +152,3 @@ void FBO::render(const std::function<void()>& function)
 	GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
 	function();
 }
-
-
-
-
-// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.

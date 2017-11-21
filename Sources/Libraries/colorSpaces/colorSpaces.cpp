@@ -1,11 +1,3 @@
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #include "colorSpaces.h"
 #include <math.h>
 
@@ -77,9 +69,9 @@ namespace image
 		value = a0;
 	}
 
-	
-	
-	
+	//
+	// HSL
+	//
 	inline float helper(float x, float a0, float b0)
 	{
 		if (x < 0) x += 1;
@@ -140,9 +132,9 @@ namespace image
 	}
 
 
-	
-	
-	
+	//
+	// CMYK
+	//
 	void cmyk_to_rgb(float cyan, float magenta, float yellow, float key, float& r, float& g, float& b)
 	{
 		float max = 1 - key;
@@ -167,12 +159,12 @@ namespace image
 		}
 	}
 
-	
-	
-	
+	//
+	// YUV
+	//
 	void yuv_to_rgb(float y, float u, float v, float& r, float& g, float& b)
 	{
-		
+		/* Translate range 0..1 to actual range. */
 		u = 0.436f * (u * 2 - 1);
 		v = 0.615f * (v * 2 - 1);
 		r		= y + v * 1.13983f;
@@ -185,27 +177,9 @@ namespace image
 		y = r * 0.299f		+ g * 0.587f	+ b * 0.114f;
 		u = r * -0.14713f	+ g * -0.28886f	+ b * 0.436f;
 		v = r * 0.615f		+ g * -0.51499f	+ b * -0.10001f;
-		
+		/* Normalize chroma components into 0..1 range. */
 		u = (u / 0.436f + 1) * 0.5f;
 		v = (v / 0.615f + 1) * 0.5f;
 	}
 
 }
-
-
-
-// Copyright (C) 2012 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.
