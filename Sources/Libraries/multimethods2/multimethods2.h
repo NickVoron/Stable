@@ -1,14 +1,7 @@
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-//
-// This library is distributed under the MIT License. See notice at the end
-// of this file.
-//
-// This work is based on the RedStar project
-//
-
 #pragma once
 
 #include "stuff/enforce.h"
+#include "memory/library.include.h"
 
 namespace multimethods2
 {
@@ -32,9 +25,9 @@ namespace multimethods2
 	};
 
 
-	
-	
-	
+	//
+	//
+	//
 	class Table2Simple
 	{
 	public:
@@ -63,6 +56,14 @@ namespace multimethods2
 			const int i1 = c1.index();
 			
 			return (i0 <= i1) ? impl(i0, i1)->execute(c0, c1) : impl(i1, i0)->execute(c1, c0);
+		}
+
+		inline bool exists(BaseClient& c0, BaseClient& c1)
+		{
+			const int i0 = c0.index();
+			const int i1 = c1.index();
+
+			return (i0 >= 0) && (i1 >= 0);
 		}
 
 	protected:
@@ -100,8 +101,8 @@ namespace multimethods2
 			int& i0 = C0::ClassIndex();
 			int& i1 = C1::ClassIndex();
 
-			if(i0 < 0) i0 = cursor++;
-			if(i1 < 0) i1 = cursor++;
+			if(i0 < 0) i0 = (int) cursor++;
+			if(i1 < 0) i1 = (int) cursor++;
 
 			ENFORCE_LESS(cursor, size);
 								 
@@ -149,21 +150,3 @@ namespace multimethods2
 		std::size_t cursor = 0;
 	};
 }
-
-
-
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.
