@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "newmath/library.include.h"
@@ -38,30 +46,29 @@ template<typename ColorT>
 struct Plane
 {
 public:
-
 	typedef ColorT ColorType;
 
 	ColorType* bmp;
 	int sizeX, sizeY;
 	unsigned int pitchInBytes;
 
-	inline Plane()
+	Plane()
 	{
 		defaults(); 
 	}
 
-	inline Plane(void* ptr, unsigned int pitchInBytes, int sx, int sy) 
+	Plane(void* ptr, unsigned int pitchInBytes, int sx, int sy) 
 	{ 
 		defaults();
 		init(ptr, pitchInBytes, sx, sy); 
 	}
 
-	inline ~Plane()
+	~Plane()
 	{
 		clear();
 	}
 
-	inline void defaults() 
+	void defaults() 
 	{
 		bmp = 0;
 		pitchInBytes = 0;
@@ -82,18 +89,18 @@ public:
 		defaults();
 	}
 
-	inline void init(void* ptr, unsigned int pitchInBytes_, int sx, int sy)
+	void init(void* ptr, unsigned int pitchInBytes_, int sx, int sy)
 	{
-		bmp = (ColorType*)ptr;
+		bmp = static_cast<ColorType*>(ptr);
 		sizeX = sx;
 		sizeY = sy;
 		pitchInBytes = pitchInBytes_;
 	}
 
-	inline unsigned int memory() const { return pitchInBytes * sizeY; }
-	inline bool hasPitchOverhead() const { return sizeof(ColorType) * sizeX != pitchInBytes; } 
+	unsigned int memory() const { return pitchInBytes * sizeY; }
+	bool hasPitchOverhead() const { return sizeof(ColorType) * sizeX != pitchInBytes; } 
 
-	inline void fill(const ColorType& c)
+	void fill(const ColorType& c)
 	{
 		for (int y = 0; y < sizeY; ++y)
 		{
@@ -105,7 +112,7 @@ public:
 	}
 
 	template<class Function>
-	inline void fill_fn(Function&& fn)
+	void fill_fn(Function&& fn)
 	{
 		for (int y = 0; y < sizeY; ++y)
 		{
@@ -116,19 +123,19 @@ public:
 		}
 	}
 
-	inline void copy(const void* ptr, int sx, int sy, unsigned int pitchInBytes_)
+	void copy(const void* ptr, int sx, int sy, unsigned int pitchInBytes_)
 	{
 		if (sx != sizeX || sy != sizeY)
 		{
 			allocate(sx, sy);
 		}
 
-		//ENFORCE_EQUAL(pitchInBytes, pitchInBytes_ )
+		
 		mem::memcpy(bmp, ptr, sy * pitchInBytes);
 	}
 
 	template<class ColorType1>
-	inline void copy(const Plane<ColorType1>& plane)
+	void copy(const Plane<ColorType1>& plane)
 	{
 		if(plane.sizeX != sizeX || plane.sizeY != sizeY)
 		{
@@ -145,21 +152,21 @@ public:
 	}
 
 	template<class ColorType1>
-	inline void copy_lt(int szX, int szY, const Plane<ColorType1>& plane)
+	void copy_lt(int szX, int szY, const Plane<ColorType1>& plane)
 	{
 		if (sizeX < szX || sizeY < szY)	{ allocate(szX, szY); }
 		copy_lt(plane);
 	}
 
 	template<class ColorType1>
-	inline void copy_lt(int szX, int szY, const Plane<ColorType1>& plane, int destChannel, int srcChannel)
+	void copy_lt(int szX, int szY, const Plane<ColorType1>& plane, int destChannel, int srcChannel)
 	{
 		if (sizeX < szX || sizeY < szY)	{ allocate(szX, szY); }
 		copy_lt(plane, destChannel, srcChannel);
 	}
 
 	template<class ColorType1>
-	inline void copy_lt(const Plane<ColorType1>& plane)
+	void copy_lt(const Plane<ColorType1>& plane)
 	{
 		for (int y = 0; y < sizeY; ++y)
 		{
@@ -173,7 +180,7 @@ public:
 	}
 
 	template<class ColorType1>
-	inline void copy_lt(const Plane<ColorType1>& plane, int destChannel, int srcChannel)
+	void copy_lt(const Plane<ColorType1>& plane, int destChannel, int srcChannel)
 	{
 		for (int y = 0; y < sizeY; ++y)
 		{
@@ -187,7 +194,7 @@ public:
 	}
 
 	
-	inline void allocate(int szX, int szY)
+	void allocate(int szX, int szY)
 	{
 		if ((memoryOwner && (szX != sizeX || szY != sizeY)) || !memoryOwner)
 		{
@@ -199,24 +206,24 @@ public:
 		}		
 	}
 
-	inline const ColorType& operator ()(int x, int y) const { return line_ptr(y)[x]; }
-	inline ColorType& operator ()(int x, int y) { return line_ptr(y)[x]; }
+	const ColorType& operator ()(int x, int y) const { return line_ptr(y)[x]; }
+	ColorType& operator ()(int x, int y) { return line_ptr(y)[x]; }
 
-	inline Line<ColorType> operator ()(int y) const { return Line<ColorType>( (void*)line_ptr(y), sizeX ); }
+	Line<ColorType> operator ()(int y) const { return Line<ColorType>( (void*)line_ptr(y), sizeX ); }
 
-	inline ColorType* line_ptr(int y) { return ((ColorType*)((char*)bmp + pitchInBytes * y)); }
-	inline const ColorType* line_ptr(int y) const { return ((ColorType*)((char*)bmp + pitchInBytes * y)); }
+	ColorType* line_ptr(int y) { return ((ColorType*)((char*)bmp + pitchInBytes * y)); }
+	const ColorType* line_ptr(int y) const { return ((ColorType*)((char*)bmp + pitchInBytes * y)); }
 
 
-	inline ColorType sample(int x, int y, WrapMode wm) const {	return sampleNearest(x, y, wm);	}
-	inline const ColorType& index(int x, int y, WrapMode wm) const 	{ return indexNearest(x, y, wm); }
+	ColorType sample(int x, int y, WrapMode wm) const {	return sampleNearest(x, y, wm);	}
+	const ColorType& index(int x, int y, WrapMode wm) const 	{ return indexNearest(x, y, wm); }
 
 
 	ColorType sampleNearest(float x, float y, WrapMode wm) const
 	{
 				if( wm == CLAMP )		return sampleNearestClamp(x, y);
 		else	if( wm == REPEAT )		return sampleNearestRepeat(x, y);
-		else /*	if( wm == MIRROR )*/	return sampleNearestMirror(x, y);
+		else 	return sampleNearestMirror(x, y);
 	}
 
 	ColorType sampleNearestClamp(const float x, const float y) const
@@ -245,9 +252,9 @@ public:
 	{
 		return indexNearestClamp(x, y);
 
-// 			if( wm == CLAMP )			return indexNearestClamp(x, y);
-// 		else	if( wm == REPEAT )		return indexNearestRepeat(x, y);
-// 		else /*	if( wm == MIRROR )*/	return indexNearestMirror(x, y);
+
+
+
 	}
 
 	const ColorType& indexNearestClamp(int x, int y) const
@@ -257,22 +264,22 @@ public:
 		return line_ptr(iy)[ix];
 	}
 
-// 	ColorType indexNearestRepeat(const float x, const float y) const
-// 	{
-// 		int ix = iround(frac(x) * sizeX);
-// 		int iy = iround(frac(y) * sizeY);
-// 		return line_ptr(iy)[ix];
-// 	}
-// 
-// 	ColorType indexNearestMirror(const float x, const float y) const
-// 	{
-// 		int ix = mirror(iround(x * sizeX), sizeX);
-// 		int iy = mirror(iround(y * sizeY), sizeY);
-// 		return line_ptr(iy)[ix];
-// 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	
-	inline ColorType interpolate(float u, float v)	const
+	ColorType interpolate(float u, float v)	const
 	{
 		nm::index2 i((int)(sizeX * u), (int)(sizeY * v));
 		
@@ -298,29 +305,29 @@ public:
 			i.y %= sizeY;
 		}
 
-// 		x = Base::Clamp(x, 0, size.x - 1);
-// 		y = Base::Clamp(y, 0, size.y - 1);
+
+
 		return (*this)(i.x, i.y);
-//		return (*this)[ nm::index2(u, v) ];
-// 		float fx = u*size.x;
-// 		int x = int(fx);
-// 		float dx = fx - float(x);
-// 		x = x % size.x;
-// 		int x1 = x + 1;
-// 		if (x1 >= int(size.x))  x1 = 0;
-// 
-// 		float fy = v*size.y;
-// 		int y = int(fy);
-// 		float dy = fy - float(y);
-// 		y = y % size.y;
-// 		int y1 = y + 1;
-// 		if (y1 >= int(size.y))  y1 = 0;
-// 
-// 		return
-// 			Color<float, TOp::nPlanes>(operator[](nm::index2(x ,y ))) * (1.0f-dx)*(1.0f-dy) +
-// 			Color<float, TOp::nPlanes>(operator[](nm::index2(x1,y) )) * dx*(1.0f-dy) +
-// 			Color<float, TOp::nPlanes>(operator[](nm::index2(x ,y1))) * (1.0f-dx)*dy +
-// 			Color<float, TOp::nPlanes>(operator[](nm::index2(x1,y1))) * dx*dy;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	}
 
 private:
@@ -328,52 +335,37 @@ private:
 };
 
 
-/*
-Растяжение с билинейной интерполяцией, небезопасно - нет анализа на границы изображения назначения
-Поддерживает тайлинг
-*/
-/*
-template<typename TfmtSrc, typename TfmtDest>
-void stretch(const TfmtSrc& src, const Base::RectPS& rectSrc,
-						 const TfmtDest& dest, const Base::RectPS& rectDest)
-{	//TODO: оптимизация деления на умножения, не вычислять каждый раз х-координату
-	float v = float(rectSrc.top()) / src.size.y;
-	float dv = float(rectSrc.size.y) / src.size.y / rectDest.size.y;
-	nm::index2 i;
-	for(i.y=rectDest.top(); i.y<rectDest.bottom(); i.y++)
-	{
-		float u = float(rectSrc.left()) / src.size.x;
-		float du = float(rectSrc.size.x) / src.size.x / rectDest.size.x;
-		for(i.x = rectDest.left(); i.x < rectDest.right(); i.x++)
-		{
-			dest[i] = src.interpolate(u, v);
-			u += du;
-		}
-		v += dv;
-	}
-}	*/
 
-						/*
-//небезопасный метод - не анализирует выход за границы, поддерживает тайлинг
-template<typename TfmtSrc, typename TfmtDest>
-void blit(const TfmtSrc& src, const Base::RectPS& rectSrc,
-						 const TfmtDest& dest, const Base::RectPS& rectDest)
+
+
+						
+
+template<Format fmt>
+void rgba_plane(float r, float g, float b, float a, std::size_t width, std::size_t height, Plane<Color<fmt>>& plane)
 {
-	//TODO: оптимизация через обращение к строкам
-	nm::index2 s,d;
-	s.y = rectSrc.top();
-	for(d.y=rectDest.top(); d.y<rectDest.bottom(); d.y++, s.y++)
-	{
-		s.x = rectSrc.left();
-		for(d.x = rectDest.left(); d.x < rectDest.right(); d.x++, s.x++)
-			dest[d] = src[s];
-	}
+	plane.allocate(width, height);
+	plane.fill(rgba<fmt>(r, g, b, a));
 }
-
-
-
-					  */
  #pragma pack(pop)
 
-};	//art
+};	
 
+
+
+
+
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

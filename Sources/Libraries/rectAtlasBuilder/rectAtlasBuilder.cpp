@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "rectAtlasBuilder.h"
 #include "rectAtlas/library.include.h"
 #include "libpsd/library.include.h"
@@ -106,14 +114,14 @@ void TextureAtlasComposer::build(RectAtlas& atlas, AtlasImage& atlasImage)
 	CRectPlacement rectPlacement;
 	for(RectSource* r : rsl)
 	{
-		//rectPlacement.AddAtEmptySpotAutoGrow (&r->dstRect, 8192, 8192);
-		//ENFORCE( rectPlacement.AddAtEmptySpotAutoGrow (&r->dstRect, 8192, 8192) );
+		
+		
 		ENFORCE( rectPlacement.AddAtEmptySpotAutoGrow (&r->dstRect, 16384, 16384) );
 	}
 
-//	LOG_MSG( "result atlas size:" << nm::index2(rectPlacement.GetW(), rectPlacement.GetH()) );
 
-	//сортировка по z-order
+
+	
 	std::sort(rsl.begin(), rsl.end(), [](const RectSource* r0, const RectSource* r1) { return r0->order < r1->order; });
 
 	int count = (int)rsl.size(); 
@@ -191,8 +199,8 @@ void TextureAtlasComposer::addSourcePSD(const std::string& fileName, bool visibl
 	psd_context * context = NULL;
 	psd_status status;
 
-	// parse the psd file to psd_context
-//	LOG_MSG("load psd file: " << fileName);
+	
+
 	status = psd_image_load(&context, (psd_char *)fileName.c_str());
 	ENFORCE(status == psd_status_done);
 
@@ -213,7 +221,7 @@ void TextureAtlasComposer::addSourcePSD(const std::string& fileName, bool visibl
 		}
 	}
 
-	// free if it's done
+	
 	psd_image_free(context);
 	ENFORCE(status == psd_status_done);
 }
@@ -229,7 +237,7 @@ void TextureAtlasComposer::preProcess(std::vector<RectSource*>& output)
 		output.push_back(sourceRect);
 	}
 
-	//сортировка по размеру для эффективной упаковки
+	
 	std::sort(output.begin(), output.end(), [](const RectSource* r0, const RectSource* r1) {return ::greater(r0->srcRect, r1->srcRect); });
 }
 
@@ -280,3 +288,22 @@ void TextureAtlasComposer::clear()
 	sourceRects.clear();
 }
 
+
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

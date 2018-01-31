@@ -1,3 +1,11 @@
+// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "component.h"		
 #include "classDesc.h"
 #include "../unroll/unroller.h"
@@ -8,7 +16,7 @@
 namespace ObjectParser
 {
 
-//ComponentParam
+
 ComponentParam::ComponentParam(const std::string& type_, const std::string& value_):
 	type(type_),
 	value(value_)
@@ -28,7 +36,7 @@ std::string Component::string() const
 
 Expressions::EvaluationUnit* Component::evaluated(Expressions::EvaluatedScope& namescope) const
 {
-	ComponentHandle* handle = Expressions::add<ComponentHandle>(*this, namescope, runtimeProps, linkParams, propertyAssigments);
+	ComponentHandle* handle = Expressions::add<ComponentHandle>(*this, namescope, runtimeParams,  linkParams, propertyAssigments);
 	handle->name = name;
 	handle->scope().scopeName = name;
 	handle->type = componentType;
@@ -41,7 +49,7 @@ std::string Component::typeName() const
 	return componentType;
 }
 
-//Components
+
 const Component* Components::findComponent(const std::string& name) const
 {
 	const_iterator it = find(name);
@@ -55,40 +63,38 @@ Component* Components::addComponent(Component* component)
 
 void Components::copy(const Components& proto)
 {
-	//копирование компонент
+	
 	for(const Components::value_type& compo : proto)
 	{
-		if(find(compo.first) != end()) //если в наследнике уже есть компонент с таким именем - значит он перекрывает родительский
+		if(find(compo.first) != end()) 
 			continue; 
 
 		addComponent(compo.second);
 	}
 }
 
-//
-//Component* ComponentBuilder::create(const std::string& type, const std::string& name, const RuntimePropeties& runtimeProps)
-//{
-//	return create(type, name, runtimeProps, 0);
-//}
-//
+
+
+
+
+
+
 Component* ComponentBuilder::create(const std::string& type, const std::string& name, ComponentParams& linkParams)
 {
-	const RuntimePropeties& runtimeProps = runtimePropetyAccum.runtimeProperties();
-
 	Component* component = Expressions::add<Component>();
 	component->componentType = type;
 	component->name = name;
 
-	//fill links like proxy
+	
 	for (auto& link: linkParams)
 	{
 		Expressions::Reference* linkProxy = Expressions::add<Expressions::Reference>();
 		linkProxy->addPathElement(new Expressions::PropertyPathElement(link->value));
 		component->linkParams.emplace_back(new PropertyAssignment(link->type, linkProxy));
 	}
-	component->runtimeProps = runtimeProps;
+	component->runtimeParams = runtimeParams;
 
-	//clear
+	
 	runtimeParams.clear();
 	runtimePropetyAccum.clear();
 
@@ -102,4 +108,23 @@ void ComponentBuilder::endRuntimeParams(ComponentParams& params_)
 
 
 
-}//
+}
+
+
+
+
+// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

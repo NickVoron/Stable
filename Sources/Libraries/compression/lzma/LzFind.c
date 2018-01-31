@@ -1,5 +1,4 @@
-/* LzFind.c -- Match finder for LZ algorithms
-2009-04-22 : Igor Pavlov : Public domain */
+
 
 #include <string.h>
 
@@ -8,7 +7,7 @@
 
 #define kEmptyHashValue 0
 #define kMaxValForNormalize ((UInt32)0xFFFFFFFF)
-#define kNormalizeStepMin (1 << 10) /* it must be power of 2 */
+#define kNormalizeStepMin (1 << 10) 
 #define kNormalizeMask (~(kNormalizeStepMin - 1))
 #define kMaxHistorySize ((UInt32)3 << 30)
 
@@ -23,7 +22,7 @@ static void LzInWindow_Free(CMatchFinder *p, ISzAlloc *alloc)
   }
 }
 
-/* keepSizeBefore + keepSizeAfter + keepSizeReserv must be < 4G) */
+
 
 static int LzInWindow_Create(CMatchFinder *p, UInt32 keepSizeReserv, ISzAlloc *alloc)
 {
@@ -101,7 +100,7 @@ int MatchFinder_NeedMove(CMatchFinder *p)
 {
   if (p->directInput)
     return 0;
-  /* if (p->streamEndWasReached) return 0; */
+  
   return ((size_t)(p->bufferBase + p->blockSize - p->buffer) <= p->keepSizeAfter);
 }
 
@@ -185,7 +184,7 @@ int MatchFinder_Create(CMatchFinder *p, UInt32 historySize,
 
   p->keepSizeBefore = historySize + keepAddBufferBefore + 1;
   p->keepSizeAfter = matchMaxLen + keepAddBufferAfter;
-  /* we need one additional byte, since we use MoveBlock after pos++ and before dictionary using */
+  
   if (LzInWindow_Create(p, sizeReserv, alloc))
   {
     UInt32 newCyclicBufferSize = historySize + 1;
@@ -203,7 +202,7 @@ int MatchFinder_Create(CMatchFinder *p, UInt32 historySize,
         hs |= (hs >> 4);
         hs |= (hs >> 8);
         hs >>= 1;
-        hs |= 0xFFFF; /* don't change it! It's required for Deflate */
+        hs |= 0xFFFF; 
         if (hs > (1 << 24))
         {
           if (p->numHashBytes == 3)

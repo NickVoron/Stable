@@ -1,11 +1,11 @@
-//
-// Copyright (C) 2004 Tanguy Fautré.
-// For conditions of distribution and use,
-// see copyright notice in tri_stripper.h
-//
-//////////////////////////////////////////////////////////////////////
-// SVN: $Id: graph_array.h 86 2005-06-08 17:47:27Z gpsnoopy $
-//////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
 
 #ifndef TRI_STRIPPER_HEADER_GUARD_GRAPH_ARRAY_H
 #define TRI_STRIPPER_HEADER_GUARD_GRAPH_ARRAY_H
@@ -26,7 +26,7 @@ namespace triangle_stripper {
 
 
 
-// graph_array main class
+
 template <class nodetype>
 class graph_array 
 {
@@ -35,7 +35,7 @@ public:
 	class arc;
 	class node;
 
-	// New types
+	
 	typedef size_t											nodeid;
 	typedef nodetype										value_type;
 	typedef std::vector<node>								node_vector;
@@ -47,7 +47,7 @@ public:
 	typedef graph_array<nodetype> graph_type;
 	
 
-	// graph_array::arc class
+	
 	class arc
 	{
 	public:
@@ -62,13 +62,13 @@ public:
 	};
 
 
-	// New types
+	
 	typedef std::vector<arc>					arc_list;
 	typedef typename arc_list::iterator			out_arc_iterator;
 	typedef typename arc_list::const_iterator	const_out_arc_iterator;
 
 
-	// graph_array::node class
+	
 	class node
 	{
 	public:
@@ -109,7 +109,7 @@ public:
 	graph_array();
 	explicit graph_array(size_t NbNodes);
 
-	// Node related member functions
+	
 	bool empty() const;
 	size_t size() const;
 
@@ -126,11 +126,11 @@ public:
 	const_node_reverse_iterator rbegin() const;
 	const_node_reverse_iterator rend() const;
 
-	// Arc related member functions
+	
 	out_arc_iterator insert_arc(nodeid Initial, nodeid Terminal);
 	out_arc_iterator insert_arc(node_iterator Initial, node_iterator Terminal);
 
-	// Optimized (overloaded) functions
+	
 	void swap(graph_type & Right);
 	friend void swap(graph_type & Left, graph_type & Right)										{ Left.swap(Right); }
 
@@ -144,7 +144,7 @@ protected:
 
 
 
-// Additional "low level", graph related, functions
+
 template <class nodetype>
 void unmark_nodes(graph_array<nodetype> & G);
 
@@ -152,9 +152,9 @@ void unmark_nodes(graph_array<nodetype> & G);
 
 
 
-//////////////////////////////////////////////////////////////////////////
-// graph_array::arc inline functions
-//////////////////////////////////////////////////////////////////////////
+
+
+
 
 template <class N>
 inline graph_array<N>::arc::arc(node_iterator Terminal)
@@ -169,9 +169,9 @@ inline typename graph_array<N>::node_iterator graph_array<N>::arc::terminal() co
 
 
 
-//////////////////////////////////////////////////////////////////////////
-// graph_array::node inline functions
-//////////////////////////////////////////////////////////////////////////
+
+
+
 
 template <class N>
 inline graph_array<N>::node::node(arc_list & Arcs)
@@ -283,9 +283,9 @@ inline N & graph_array<N>::node::operator = (const N & Elem)
 
 
 
-//////////////////////////////////////////////////////////////////////////
-// graph_array inline functions
-//////////////////////////////////////////////////////////////////////////
+
+
+
 
 template <class N>
 inline graph_array<N>::graph_array() { }
@@ -295,8 +295,8 @@ template <class N>
 inline graph_array<N>::graph_array(const size_t NbNodes)
 	: m_Nodes(NbNodes, node(m_Arcs))
 {
-	// optimisation: we consider that, averagely, a triangle may have at least 2 neighbours
-	// otherwise we are just wasting a bit of memory, but not that much
+	
+	
 	m_Arcs.reserve(NbNodes * 2);
 }
 
@@ -414,8 +414,8 @@ inline typename graph_array<N>::out_arc_iterator graph_array<N>::insert_arc(cons
 
 	} else {
 
-		// we optimise here for make_connectivity_graph()
-		// we know all the arcs for a given node are successively and sequentially added
+		
+		
 		assert(Node.m_End == m_Arcs.size());
 		
 		++(Node.m_End);
@@ -437,24 +437,24 @@ inline void graph_array<N>::swap(graph_type & Right)
 
 
 
-//////////////////////////////////////////////////////////////////////////
-// additional functions
-//////////////////////////////////////////////////////////////////////////
+
+
+
 
 template <class N>
 inline void unmark_nodes(graph_array<N> & G)
 {
-	std::for_each(G.begin(), G.end(), std::mem_fun_ref(&graph_array<N>::node::unmark));
+	std::for_each(G.begin(), G.end(), [&](auto& val){val.unmark();});
 }
 
 
 
 
-	} // namespace detail
+	} 
 
-} // namespace triangle_stripper
-
-
+} 
 
 
-#endif // TRI_STRIPPER_HEADER_GUARD_GRAPH_ARRAY_H
+
+
+#endif 

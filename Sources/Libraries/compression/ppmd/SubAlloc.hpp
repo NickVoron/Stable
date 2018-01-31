@@ -1,9 +1,4 @@
-/****************************************************************************
- *  This file is part of PPMd project                                       *
- *  Written and distributed to public domain by Dmitry Shkarin 1997,        *
- *  1999-2001, 2010                                                         *
- *  Contents: memory allocation routines                                    *
- ****************************************************************************/
+
 
 enum { UNIT_SIZE=12, N1=4, N2=4, N3=4, N4=(128+3-1*N1-2*N2-3*N3)/4,
         N_INDEXES=N1+N2+N3+N4 };
@@ -24,7 +19,7 @@ struct BLK_NODE {
 struct MEM_BLK: public BLK_NODE { DWORD NU; } _PACK_ATTR;
 #pragma pack()
 
-static BYTE Indx2Units[N_INDEXES], Units2Indx[128]; // constants
+static BYTE Indx2Units[N_INDEXES], Units2Indx[128]; 
 static DWORD GlueCount, SubAllocatorSize=0;
 static BYTE* HeapStart, * pText, * UnitsStart, * LoUnit, * HiUnit;
 
@@ -32,7 +27,7 @@ inline void PrefetchData(void* Addr)
 {
 #if defined(_USE_PREFETCHING)
     BYTE PrefetchByte = *(volatile BYTE*) Addr;
-#endif /* defined(_USE_PREFETCHING) */
+#endif 
 }
 inline void BLK_NODE::insert(void* pv,int NU) {
     MEM_BLK* p=(MEM_BLK*) pv;               link(p);

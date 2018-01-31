@@ -1,18 +1,26 @@
+// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
-//#include "../config.h"
+
 
 #pragma pack(push,1)
 
 namespace Base
 {
 
-//fpi - fixed-point int
-//fps - fixed-point short
-//fpc - fixed-point char
-//fpui - fixed-point unsigned int
-//fpus - fixed-point unsigned short
-//fpuc - fixed-point unsigned char
+
+
+
+
+
+
 
 template<typename T, int n> 
 struct fixed
@@ -25,7 +33,7 @@ struct fixed
 	explicit fixed(T v)	{ val = v << (num_bits-point_pos); }
 	explicit fixed(float v)	{ val = T(v*(1<<(num_bits-point_pos))); }
 
-	//assign operator with conversion position of fixed point
+	
 	template<int nn> 
 	fixed(const fixed<T, nn>& i)
 	{
@@ -51,7 +59,7 @@ struct fixed
 	}
 };
 
-//metaprogramming template for constructing int value to maximize range of fixed-point value as result of addition, multiplication and substraction
+
 template<int n1, int n2> struct MaxRangeMul { enum { val = n1 + n2 }; };
 template<int n1, int n2> struct MaxRangeAdd { enum { val = n1 > n2 ? n1 : n2 }; };
 template<int n1, int n2> struct MaxRangeSub { enum { val = n1 > n2 ? n1 : n2 }; };
@@ -87,7 +95,7 @@ template<class T1, class T2> fpus< MaxRangeSub< T1::point_pos, T2::point_pos >::
 
 template<int n, int prec, class T1, class T2> fpus<n> div(T1 t1, T2 t2)
 {
-	//static int lookup[2^prec];
+	
 	unsigned int nom = t1.val;
 	unsigned int den = t2.val;
 
@@ -108,6 +116,25 @@ template<int n, int prec, class T1, class T2> fpus<n> div(T1 t1, T2 t2)
 	return r;
 };
 
-};	//art
+};	
 
 #pragma pack(pop)
+
+
+
+
+// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

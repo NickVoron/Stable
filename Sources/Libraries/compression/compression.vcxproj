@@ -132,19 +132,11 @@
     <ClCompile Include="lz4\xxhash.c" />
     <ClCompile Include="lzma\Alloc.c" />
     <ClCompile Include="lzma\LzFind.c" />
-    <ClCompile Include="lzma\LzFindMt.c" />
     <ClCompile Include="lzma\LzmaDec.c" />
     <ClCompile Include="lzma\LzmaEnc.c" />
     <ClCompile Include="lzma\LzmaLib.c" />
-    <ClCompile Include="lzma\Threads.c" />
     <ClCompile Include="ppmd\Model.cpp" />
     <ClCompile Include="ppmd\PPMd.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bcm\bcm.h" />
@@ -156,18 +148,15 @@
     <ClInclude Include="lz4\xxhash.h" />
     <ClInclude Include="lzma\Alloc.h" />
     <ClInclude Include="lzma\LzFind.h" />
-    <ClInclude Include="lzma\LzFindMt.h" />
     <ClInclude Include="lzma\LzHash.h" />
     <ClInclude Include="lzma\LzmaDec.h" />
     <ClInclude Include="lzma\LzmaEnc.h" />
     <ClInclude Include="lzma\LzmaLib.h" />
-    <ClInclude Include="lzma\Threads.h" />
     <ClInclude Include="lzma\Types.h" />
     <ClInclude Include="ppmd\Coder.hpp" />
     <ClInclude Include="ppmd\PPMd.h" />
     <ClInclude Include="ppmd\PPMdType.h" />
     <ClInclude Include="ppmd\SubAlloc.hpp" />
-    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

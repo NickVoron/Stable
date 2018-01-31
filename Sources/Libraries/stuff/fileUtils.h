@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 #include "stuff/enforce.h"
 #include "defaultLogs/library.include.h"
@@ -13,12 +21,12 @@ namespace Base
 {
 namespace FileUtils 
 {
-	// сделать текущей папку с исполняемой программой
+	
 	void setModuleDirAsRoot();
 	std::string getModuleDir();
 	std::string getModuleName();
 
-	// изменить расширение файла (или добавить если нет) на другое
+	
 	std::string ChangeFileExt(const std::string& filename, const std::string& ext);
 
 	std::string GetDirectoryFrom(const std::string& fullFileName);
@@ -28,7 +36,7 @@ namespace FileUtils
 	std::string GetFileNameOnly(const std::string& fullFileName);
 	std::string GetLastExtention(const std::string& fullFileName);
 
-	// проверить что файл существует
+	
     bool FileExists(const std::string& filename);
 	std::size_t GetFileSize(const std::string& fileName);
 
@@ -39,7 +47,7 @@ namespace FileUtils
 	void copy_files_to_dir(const std::list<boost::filesystem::path>& src, const boost::filesystem::path& dir, bool overwrite);
 	boost::filesystem::path extract_dir(const boost::filesystem::path& fileName);
 	
-	// отрезать путь у файла (например "D:\program\levels\filename.ext" и "D:\program" - будет "levels\filename.ext")
+	
 	std::string CutPath(const char* filename, const char* path);
 	std::string CutPath(const std::string& filename, const std::string& path);
 
@@ -102,3 +110,21 @@ namespace FileUtils
 	std::vector<boost::filesystem::path> GetFileNamesByMask(const boost::filesystem::path& folder, const std::string& ext, bool recursive);
 }
 }
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

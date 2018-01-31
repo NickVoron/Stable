@@ -1,7 +1,4 @@
-/* LzmaLib.c -- LZMA library wrapper
-2008-08-05
-Igor Pavlov
-Public domain */
+
 
 #include "LzmaEnc.h"
 #include "LzmaDec.h"
@@ -14,13 +11,13 @@ static ISzAlloc g_Alloc = { SzAlloc, SzFree };
 
 MY_STDAPI LzmaCompress(unsigned char *dest, size_t  *destLen, const unsigned char *src, size_t  srcLen,
   unsigned char *outProps, size_t *outPropsSize,
-  int level, /* 0 <= level <= 9, default = 5 */
-  unsigned dictSize, /* use (1 << N) or (3 << N). 4 KB < dictSize <= 128 MB */
-  int lc, /* 0 <= lc <= 8, default = 3  */
-  int lp, /* 0 <= lp <= 4, default = 0  */
-  int pb, /* 0 <= pb <= 4, default = 2  */
-  int fb,  /* 5 <= fb <= 273, default = 32 */
-  int numThreads /* 1 or 2, default = 2 */
+  int level, 
+  unsigned dictSize, 
+  int lc, 
+  int lp, 
+  int pb, 
+  int fb,  
+  int numThreads 
 )
 {
   CLzmaEncProps props;

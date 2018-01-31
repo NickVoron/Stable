@@ -1,11 +1,11 @@
-//
-// Copyright (C) 2004 Tanguy Fautré.
-// For conditions of distribution and use,
-// see copyright notice in tri_stripper.h
-//
-//////////////////////////////////////////////////////////////////////
-// SVN: $Id: connectivity_graph.h 86 2005-06-08 17:47:27Z gpsnoopy $
-//////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
 
 #ifndef TRI_STRIPPER_HEADER_GUARD_CONNECTIVITY_GRAPH_H
 #define TRI_STRIPPER_HEADER_GUARD_CONNECTIVITY_GRAPH_H
@@ -33,4 +33,4 @@ namespace triangle_stripper
 
 
 
-#endif // TRI_STRIPPER_HEADER_GUARD_CONNECTIVITY_GRAPH_H
+#endif 

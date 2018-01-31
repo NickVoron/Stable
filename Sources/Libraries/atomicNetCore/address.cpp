@@ -1,5 +1,15 @@
+// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "address.h"
 #include "os_win_err.h"
+
+#include "common/stringize.h"
 
 #ifdef WIN32
 #include <ws2ipdef.h>
@@ -19,20 +29,19 @@
 #include <sys/utsname.h>
 #include <sys/ioctl.h>
 #include <netinet/in.h>
+#include <ifaddrs.h>
+#include <arpa/inet.h>
 #include <net/if.h>
 #include <unistd.h>
 #include <errno.h>
-#endif // WIN32
+#endif 
 
-
-
-#include "stuff/library.include.h"
 
 namespace net
 {
-	//
-	//
-	//
+	
+	
+	
 	address4::address4()
 	{ 
 		memset(&addrin, 0, sizeof(addrin));
@@ -46,6 +55,13 @@ namespace net
 		auto count = sscanf(addr, "%hhu.%hhu.%hhu.%hhu:%hu", &ip0, &ip1, &ip2, &ip3, &port);
 		return (count >= 4);
 	}
+    
+    bool address4::valid_str(const char *addr)
+    {
+        uint8_t ip0, ip1, ip2, ip3;
+        uint16_t port;
+        return parse(addr, ip0, ip1, ip2, ip3, port);
+    }
 
 	address4 address4::localhost(uint16_t port)
 	{
@@ -169,13 +185,13 @@ namespace net
 
 	host_info::host_info()
 	{
-		struct ifaddrs* myaddrs[128];
-		mem::memzero(myaddrs);
+        struct ::ifaddrs* myaddrs[128];
+        memset(myaddrs, 0, std::size(myaddrs));
 
-		struct ifaddrs *ifa = nullptr;
+        struct ::ifaddrs *ifa = nullptr;
 		void *in_addr;
 		
-		if (net::getifaddrs(&myaddrs[0]) == 0)
+        if (::getifaddrs(&myaddrs[0]) == 0)
 		{
 			for (ifa = myaddrs[0]; ifa != NULL; ifa = ifa->ifa_next)
 			{
@@ -234,3 +250,22 @@ namespace net
 }
 
 std::ostream& operator<<(std::ostream& os, const sockaddr_in& ip) { return os << net::address4(ip); }
+
+
+
+
+// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

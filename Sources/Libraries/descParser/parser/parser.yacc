@@ -87,6 +87,7 @@ namespace ObjectParser
 %token true_key 
 %token false_key
 %token LESS GREATER EQUAL NOT_EQUAL LESS_EQUAL  MORE_EQUAL
+%token FORWARD BACKWARD
 %token NOT AND OR XOR
 %token PLUS MINUS DIV MOD MUL
 %token QUERY COLON 
@@ -119,6 +120,7 @@ namespace ObjectParser
 %type <componentParam> component_param
 %type <componentParams> component_params
 %type <propertyAssignment> property_assignment
+%type <propertyAssignment> connection
 %type <propertyAssignment> instance_element
 %type <propertyAssignmentList> instance_body
 %type <expr> instance_def
@@ -133,7 +135,7 @@ namespace ObjectParser
 
 
 %glr-parser
-%expect 45
+%expect 46
 %expect-rr 6
 
 %%
@@ -203,6 +205,11 @@ property_assignment:
     literal '=' exp 													{ $$ = yylex.gc.newPropertyAssignment($1, $3);			}
 	;
 
+connection:
+	proxy BACKWARD exp													{ $$ = yylex.gc.newConnection($1, $3, Connection::Backward); }
+	| proxy FORWARD exp													{ $$ = yylex.gc.newConnection($1, $3, Connection::Forward); }
+	;
+
 component:	// Component
 	  component_def														{ $$ = yylex.gc.addComponent($1, nullptr); }
 	| component_def '{' '}' 											{ $$ = yylex.gc.addComponent($1, nullptr); }
@@ -268,11 +275,10 @@ instance_body:
 
 instance_element:
 	property_assignment													{ $$ = $1;											}
+	| connection														{ $$ = $1;											}
 	| instance_def														{ $$ = yylex.gc.newPropertyAssignment($1);			}		
 	| component															{ $$ = yylex.gc.newPropertyAssignment($1);			}		
 	;
-
-
 
 external_language:
 	  '#' literal literal												{ $$ = yylex.gc.addExternalExtension($2, $3 ); }

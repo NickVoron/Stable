@@ -1,5 +1,4 @@
-/* Types.h -- Basic types
-2010-10-09 : Igor Pavlov : Public domain */
+
 
 #ifndef __7Z_TYPES_H
 #define __7Z_TYPES_H
@@ -19,6 +18,8 @@
 #define EXTERN_C_END
 #endif
 #endif
+
+#define _7ZIP_ST
 
 EXTERN_C_BEGIN
 
@@ -66,8 +67,7 @@ typedef unsigned int UInt32;
 
 #ifdef _SZ_NO_INT_64
 
-/* define _SZ_NO_INT_64, if your compiler doesn't support 64-bit integers.
-   NOTES: Some code will work incorrectly in that case! */
+
 
 typedef long Int64;
 typedef unsigned long UInt64;
@@ -122,11 +122,11 @@ typedef int Bool;
 #endif
 
 
-/* The following interfaces use first parameter as pointer to structure */
+
 
 typedef struct
 {
-  Byte (*Read)(void *p); /* reads one byte, returns 0 in case of EOF or error */
+  Byte (*Read)(void *p); 
 } IByteIn;
 
 typedef struct
@@ -137,11 +137,10 @@ typedef struct
 typedef struct
 {
   SRes (*Read)(void *p, void *buf, size_t *size);
-    /* if (input(*size) != 0 && output(*size) == 0) means end_of_stream.
-       (output(*size) < input(*size)) is allowed */
+    
 } ISeqInStream;
 
-/* it can return SZ_ERROR_INPUT_EOF */
+
 SRes SeqInStream_Read(ISeqInStream *stream, void *buf, size_t size);
 SRes SeqInStream_Read2(ISeqInStream *stream, void *buf, size_t size, SRes errorType);
 SRes SeqInStream_ReadByte(ISeqInStream *stream, Byte *buf);
@@ -149,8 +148,7 @@ SRes SeqInStream_ReadByte(ISeqInStream *stream, Byte *buf);
 typedef struct
 {
   size_t (*Write)(void *p, const void *buf, size_t size);
-    /* Returns: result - the number of actually written bytes.
-       (result < size) means error */
+    
 } ISeqOutStream;
 
 typedef enum
@@ -162,28 +160,26 @@ typedef enum
 
 typedef struct
 {
-  SRes (*Read)(void *p, void *buf, size_t *size);  /* same as ISeqInStream::Read */
+  SRes (*Read)(void *p, void *buf, size_t *size);  
   SRes (*Seek)(void *p, Int64 *pos, ESzSeek origin);
 } ISeekInStream;
 
 typedef struct
 {
   SRes (*Look)(void *p, const void **buf, size_t *size);
-    /* if (input(*size) != 0 && output(*size) == 0) means end_of_stream.
-       (output(*size) > input(*size)) is not allowed
-       (output(*size) < input(*size)) is allowed */
+    
   SRes (*Skip)(void *p, size_t offset);
-    /* offset must be <= output(*size) of Look */
+    
 
   SRes (*Read)(void *p, void *buf, size_t *size);
-    /* reads directly (without buffer). It's same as ISeqInStream::Read */
+    
   SRes (*Seek)(void *p, Int64 *pos, ESzSeek origin);
 } ILookInStream;
 
 SRes LookInStream_LookRead(ILookInStream *stream, void *buf, size_t *size);
 SRes LookInStream_SeekTo(ILookInStream *stream, UInt64 offset);
 
-/* reads via ILookInStream::Read */
+
 SRes LookInStream_Read2(ILookInStream *stream, void *buf, size_t size, SRes errorType);
 SRes LookInStream_Read(ILookInStream *stream, void *buf, size_t size);
 
@@ -220,14 +216,13 @@ void SecToRead_CreateVTable(CSecToRead *p);
 typedef struct
 {
   SRes (*Progress)(void *p, UInt64 inSize, UInt64 outSize);
-    /* Returns: result. (result != SZ_OK) means break.
-       Value (UInt64)(Int64)-1 for size means unknown value. */
+    
 } ICompressProgress;
 
 typedef struct
 {
   void *(*Alloc)(void *p, size_t size);
-  void (*Free)(void *p, void *address); /* address can be 0 */
+  void (*Free)(void *p, void *address); 
 } ISzAlloc;
 
 #define IAlloc_Alloc(p, size) (p)->Alloc((p), size)

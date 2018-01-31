@@ -1,3 +1,11 @@
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "utp_impl.h"
 #include "defaultLogs/library.include.h"
 
@@ -59,10 +67,10 @@ namespace postal
 			sended = utp_write(sock, (void*)msgdata, msgsize);
  		}		
 
-		//if (sended == 0)
-		//{
-		//	utp::printSocketStats(sock);
-		//}
+		
+		
+		
+		
 
 		return sended;
 	}
@@ -71,10 +79,10 @@ namespace postal
 	{
 		std::unique_lock<std::mutex> lock(sockmtx);
 		std::size_t rs = 0;
-		//LOG_MSG("try get message for: " << sock);
+		
 		if (sock)
 		{
-			//utp::printSocketStats(sock);
+			
 			utp::socket_data* userData = (utp::socket_data*) utp_get_userdata(sock);
 			if (userData)
 			{
@@ -94,9 +102,9 @@ namespace postal
 	}
 
 
-	//
-	//
-	//
+	
+	
+	
 	UTPConnections::~UTPConnections()
 	{
 		close();
@@ -115,8 +123,8 @@ namespace postal
 
 	void UTPConnections::close()
 	{		
-		//std::unique_lock<std::mutex> lock(sockmtx);
-		//kernel = nullptr;
+		
+		
 		if (kernel)
 		{
 			kernel->incoming.cancel();
@@ -131,7 +139,7 @@ namespace postal
 
 	UTPConnection* UTPConnections::incoming()
 	{
-		//std::unique_lock<std::mutex> lock(sockmtx);
+		
 		if (kernel)
 		{
 			utp_socket* sock = 0;
@@ -146,3 +154,21 @@ namespace postal
 		return nullptr;
 	}
 }
+
+
+
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

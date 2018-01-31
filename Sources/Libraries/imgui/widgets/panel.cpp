@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "panel.h"
 #include "../drawing/drawing.h"
 #include "../layout/shift.h"
@@ -93,7 +101,7 @@ namespace imgui
 			float rShift = 5.0f;
 			float prShift = 20.0f;
 
-			//unigui::draw::linerect(rect, unigui::color(1,1,1,1));
+			
 
 			float ld = rect.left() - parentRect.left() - rShift;
    			Rect leftRect = rect;
@@ -139,7 +147,7 @@ namespace imgui
 	{
 		core::checked_begin();
 
-//		unigui::draw::linerect(rect, unigui::color(1.0f, 1.0f, 1.0f, 1.0f));
+
 		int h = unigui::draw::stringHeight(caption, detail::font) + 3;
 		int w = unigui::draw::stringWidth(caption, detail::font);
 		
@@ -234,30 +242,20 @@ namespace imgui
 				s.y += detail::mouse.wheelDelta;
 				s.y = nm::clamp(s.y, -ns.y, 0.0f);
 
-// 				const int w = 20;
-// 				if( ns.y > 0)
-// 				{
-// 					Rect sldr = area::rect();
-// 					sldr.pos.x += sldr.size.x;
-// 					sldr.size.x = w;
-// 
-// 					float y = s.y;
-// 					vslider(sldr, 0.0f, -(float)ns.y, y);
-// 					s.y = y;
-// 					shift::set(s);
-// 				}			
 
-				/*
-				if( ns.x > 0)
-				{
-				Rect sldr = area::rect();
-				sldr.pos.y += sldr.size.y;
-				sldr.size.y = w;
 
-				float x = s.x;
-				slider(sldr, 0.0f, -(float)ns.x, x);
-				s.x = x;
-				}	*/
+
+
+
+
+
+
+
+
+
+
+
+				
 
 
 				shift::set(s);
@@ -282,3 +280,22 @@ namespace imgui
 
 }
 
+
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

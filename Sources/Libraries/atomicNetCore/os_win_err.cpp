@@ -1,6 +1,12 @@
-#include "os_win_err.h"
+// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
 
-#include "defaultLogs/library.include.h"
+#include "os_win_err.h"
 
 #ifdef WIN32
 #include <WS2tcpip.h>
@@ -13,62 +19,62 @@ namespace net
 #ifdef WIN32
 		if(errCode == 0 || errCode == WSAEWOULDBLOCK) return true;
 
-		switch(errCode)
+		switch (errCode)
 		{
-		case WSAEINTR:				printf("Error at %s: WSAEINTR: A blocking operation was interrupted by a call to WSACancelBlockingCall\n", t);	return true;
-		case WSAEBADF:				printf("Error at %s: WSAEBADF: The file handle supplied is not valid\n", t);	return false;
-		case WSAEACCES:				printf("Error at %s: WSAEACCES: An attempt was made to access a socket in a way forbidden by its access permissions\n", t);	return false;
-		case WSAEFAULT:				printf("Error at %s: WSAEFAULT: The system detected an invalid pointer address in attempting to use a pointer argument in a call\n", t);	return false;
-		case WSAEINVAL:				printf("Error at %s: WSAEINVAL: An invalid argument was supplied\n", t);	return false;
-		case WSAEWOULDBLOCK:		printf("Error at %s: WSAEWOULDBLOCK: A non-blocking socket operation could not be completed immediately\n", t);	return true;
-		case WSAEINPROGRESS:		printf("Error at %s: WSAEINPROGRESS: A blocking operation is currently executing\n", t);	return true;
-		case WSAEALREADY:			printf("Error at %s: WSAEALREADY: An operation was attempted on a non-blocking socket that already had an operation in progress\n", t);	return true;
-		case WSAENOTSOCK:			printf("Error at %s: WSAENOTSOCK: An operation was attempted on something that is not a socket\n", t);	return false;
-		case WSAEDESTADDRREQ:		printf("Error at %s: WSAEDESTADDRREQ: A required address was omitted from an operation on a socket\n", t);	return false;
-		case WSAEMSGSIZE:			printf("Error at %s: WSAEMSGSIZE: A message sent on a datagram socket was larger than the internal message buffer or some other network limit, or the buffer used to receive a datagram into was smaller than the datagram itself\n", t);	return false;
-		case WSAEPROTOTYPE:			printf("Error at %s: WSAEPROTOTYPE: A protocol was specified in the socket function call that does not support the semantics of the socket type requested\n", t);	return false;
-		case WSAENOPROTOOPT:		printf("Error at %s: WSAENOPROTOOPT: An unknown, invalid, or unsupported option or level was specified in a getsockopt or setsockopt call\n", t);	return false;
-		case WSAEPROTONOSUPPORT:	printf("Error at %s: WSAEPROTONOSUPPORT: The requested protocol has not been configured into the system, or no implementation for it exists\n", t);	return false;
-		case WSAESOCKTNOSUPPORT:	printf("Error at %s: WSAESOCKTNOSUPPORT: The support for the specified socket type does not exist in this address family\n", t);	return false;
-		case WSAEOPNOTSUPP:			printf("Error at %s: WSAEOPNOTSUPP: The attempted operation is not supported for the type of object referenced\n", t);	return false;
-		case WSAEPFNOSUPPORT:		printf("Error at %s: WSAEPFNOSUPPORT: The protocol family has not been configured into the system or no implementation for it exists\n", t);	return false;
-		case WSAEAFNOSUPPORT:		printf("Error at %s: WSAEAFNOSUPPORT: An address incompatible with the requested protocol was used\n", t);	return false;
-		case WSAEADDRINUSE:			printf("Error at %s: WSAEADDRINUSE: Only one usage of each socket address (protocol/network address/port) is normally permitted\n", t);	return false;
-		case WSAEADDRNOTAVAIL:		printf("Error at %s: WSAEADDRNOTAVAIL: The requested address is not valid in its context\n", t);	return false;
-		case WSAENETDOWN:			printf("Error at %s: WSAENETDOWN: A socket operation encountered a dead network\n", t);	return false;
-		case WSAENETUNREACH:		printf("Error at %s: WSAENETUNREACH: A socket operation was attempted to an unreachable network\n", t);	return false;
-		case WSAENETRESET:			printf("Error at %s: WSAENETRESET: The connection has been broken due to keep-alive activity detecting a failure while the operation was in progress\n", t);	return false;
-		case WSAECONNABORTED:		printf("Error at %s: WSAECONNABORTED: An established connection was aborted by the software in your host machine\n", t);	return false;
-		case WSAECONNRESET:			printf("Error at %s: WSAECONNRESET: An existing connection was forcibly closed by the remote host\n", t);	return false;
-		case WSAENOBUFS:			printf("Error at %s: WSAENOBUFS: An operation on a socket could not be performed because the system lacked sufficient buffer space or because a queue was full\n", t);	return false;
-		case WSAEISCONN:			printf("Error at %s: WSAEISCONN: A connect request was made on an already connected socket\n", t);	return true;
-		case WSAENOTCONN:			printf("Error at %s: WSAENOTCONN: A request to send or receive data was disallowed because the socket is not connected and (when sending on a datagram socket using a sendto call) no address was supplied\n", t);	return false;
-		case WSAESHUTDOWN:			printf("Error at %s: WSAESHUTDOWN: A request to send or receive data was disallowed because the socket had already been shut down in that direction with a previous shutdown call\n", t);	return false;
-		case WSAETOOMANYREFS:		printf("Error at %s: WSAETOOMANYREFS: Too many references to some kernel object\n", t);	return false;
-		case WSAETIMEDOUT:			printf("Error at %s: WSAETIMEDOUT: No connection could be made because the target machine actively refused it\n", t);	return false;
-		case WSAELOOP:				printf("Error at %s: WSAELOOP: Cannot translate name\n", t);	return false;
-		case WSAENAMETOOLONG:		printf("Error at %s: WSAENAMETOOLONG: Name component or name was too long\n", t);	return false;
-		case WSAEHOSTDOWN:			printf("Error at %s: WSAEHOSTDOWN: A socket operation failed because the destination host was down\n", t);	return false;
-		case WSAEHOSTUNREACH:		printf("Error at %s: WSAEHOSTUNREACH: A socket operation was attempted to an unreachable host\n", t);	return false;
-		case WSAENOTEMPTY:			printf("Error at %s: WSAENOTEMPTY: Cannot remove a directory that is not empty\n", t);	return false;
-		case WSAEPROCLIM:			printf("Error at %s: WSAEPROCLIM: A Windows Sockets implementation may have a limit on the number of applications that may use it simultaneously\n", t);	return false;
-		case WSAEUSERS:				printf("Error at %s: WSAEUSERS: Ran out of quota\n", t);	return false;
-		case WSAEDQUOT:				printf("Error at %s: WSAEDQUOT: Ran out of disk quota\n", t);	return false;
-		case WSAESTALE:				printf("Error at %s: WSAESTALE: File handle reference is no longer available\n", t);	return false;
-		case WSAEREMOTE:			printf("Error at %s: WSAEREMOTE: Item is not available locally\n", t);	return false;
-		case WSASYSNOTREADY:		printf("Error at %s: WSASYSNOTREADY: WSAStartup cannot function at this time because the underlying system it uses to provide network services is currently unavailable\n", t);	return false;
-		case WSAVERNOTSUPPORTED:	printf("Error at %s: WSAVERNOTSUPPORTED: The Windows Sockets version requested is not supported\n", t);	return false;
-		case WSANOTINITIALISED:		printf("Error at %s: WSANOTINITIALISED: Either the application has not called WSAStartup, or WSAStartup failed\n", t);	return false;
-		case WSAEDISCON:			printf("Error at %s: WSAEDISCON: Returned by WSARecv or WSARecvFrom to indicate the remote party has initiated a graceful shutdown sequence\n", t);	return false;
-		case WSAENOMORE:			printf("Error at %s: WSAENOMORE: No more results can be returned by WSALookupServiceNext\n", t);	return false;
-		case WSAECANCELLED:			printf("Error at %s: WSAECANCELLED: A call to WSALookupServiceEnd was made while this call was still processing. The call has been canceled\n", t);	return false;
-		case WSAEINVALIDPROCTABLE:	printf("Error at %s: WSAEINVALIDPROCTABLE: The procedure call table is invalid\n", t);	return false;
-		case WSAEINVALIDPROVIDER:	printf("Error at %s: WSAEINVALIDPROVIDER: The requested service provider is invalid\n", t);	return false;
-		case WSAEPROVIDERFAILEDINIT:printf("Error at %s: WSAEPROVIDERFAILEDINIT: The requested service provider could not be loaded or initialized\n", t);	return false;
-		case WSASYSCALLFAILURE:		printf("Error at %s: WSASYSCALLFAILURE: A system call that should never fail has failed\n", t);	return false;
-		case WSASERVICE_NOT_FOUND:	printf("Error at %s: WSASERVICE_NOT_FOUND: No such service is known. The service cannot be found in the specified name space.\n", t);	return false;
-		case WSATYPE_NOT_FOUND:		printf("Error at %s: WSATYPE_NOT_FOUND: The specified class was not found\n", t);	return false;
-		default: 					printf("Error at %s: Unknown error\n", t);	return false;
+		case WSAEINTR:				LOG_ERROR("Error at" << t << ": WSAEINTR: A blocking operation was interrupted by a call to WSACancelBlockingCall");	return true;
+		case WSAEBADF:				LOG_ERROR("Error at" << t << ": WSAEBADF: The file handle supplied is not valid");	return false;
+		case WSAEACCES:				LOG_ERROR("Error at" << t << ": WSAEACCES: An attempt was made to access a socket in a way forbidden by its access permissions");	return false;
+		case WSAEFAULT:				LOG_ERROR("Error at" << t << ": WSAEFAULT: The system detected an invalid pointer address in attempting to use a pointer argument in a call");	return false;
+		case WSAEINVAL:				LOG_ERROR("Error at" << t << ": WSAEINVAL: An invalid argument was supplied");	return false;
+		case WSAEWOULDBLOCK:		LOG_ERROR("Error at" << t << ": WSAEWOULDBLOCK: A non-blocking socket operation could not be completed immediately");	return true;
+		case WSAEINPROGRESS:		LOG_ERROR("Error at" << t << ": WSAEINPROGRESS: A blocking operation is currently executing");	return true;
+		case WSAEALREADY:			LOG_ERROR("Error at" << t << ": WSAEALREADY: An operation was attempted on a non-blocking socket that already had an operation in progress");	return true;
+		case WSAENOTSOCK:			LOG_ERROR("Error at" << t << ": WSAENOTSOCK: An operation was attempted on something that is not a socket");	return false;
+		case WSAEDESTADDRREQ:		LOG_ERROR("Error at" << t << ": WSAEDESTADDRREQ: A required address was omitted from an operation on a socket");	return false;
+		case WSAEMSGSIZE:			LOG_ERROR("Error at" << t << ": WSAEMSGSIZE: A message sent on a datagram socket was larger than the internal message buffer or some other network limit, or the buffer used to receive a datagram into was smaller than the datagram itself");	return false;
+		case WSAEPROTOTYPE:			LOG_ERROR("Error at" << t << ": WSAEPROTOTYPE: A protocol was specified in the socket function call that does not support the semantics of the socket type requested");	return false;
+		case WSAENOPROTOOPT:		LOG_ERROR("Error at" << t << ": WSAENOPROTOOPT: An unknown, invalid, or unsupported option or level was specified in a getsockopt or setsockopt call");	return false;
+		case WSAEPROTONOSUPPORT:	LOG_ERROR("Error at" << t << ": WSAEPROTONOSUPPORT: The requested protocol has not been configured into the system, or no implementation for it exists");	return false;
+		case WSAESOCKTNOSUPPORT:	LOG_ERROR("Error at" << t << ": WSAESOCKTNOSUPPORT: The support for the specified socket type does not exist in this address family");	return false;
+		case WSAEOPNOTSUPP:			LOG_ERROR("Error at" << t << ": WSAEOPNOTSUPP: The attempted operation is not supported for the type of object referenced");	return false;
+		case WSAEPFNOSUPPORT:		LOG_ERROR("Error at" << t << ": WSAEPFNOSUPPORT: The protocol family has not been configured into the system or no implementation for it exists");	return false;
+		case WSAEAFNOSUPPORT:		LOG_ERROR("Error at" << t << ": WSAEAFNOSUPPORT: An address incompatible with the requested protocol was used");	return false;
+		case WSAEADDRINUSE:			LOG_ERROR("Error at" << t << ": WSAEADDRINUSE: Only one usage of each socket address (protocol/network address/port) is normally permitted");	return false;
+		case WSAEADDRNOTAVAIL:		LOG_ERROR("Error at" << t << ": WSAEADDRNOTAVAIL: The requested address is not valid in its context");	return false;
+		case WSAENETDOWN:			LOG_ERROR("Error at" << t << ": WSAENETDOWN: A socket operation encountered a dead network");	return false;
+		case WSAENETUNREACH:		LOG_ERROR("Error at" << t << ": WSAENETUNREACH: A socket operation was attempted to an unreachable network");	return false;
+		case WSAENETRESET:			LOG_ERROR("Error at" << t << ": WSAENETRESET: The connection has been broken due to keep-alive activity detecting a failure while the operation was in progress");	return false;
+		case WSAECONNABORTED:		LOG_ERROR("Error at" << t << ": WSAECONNABORTED: An established connection was aborted by the software in your host machine");	return false;
+		case WSAECONNRESET:			LOG_ERROR("Error at" << t << ": WSAECONNRESET: An existing connection was forcibly closed by the remote host");	return false;
+		case WSAENOBUFS:			LOG_ERROR("Error at" << t << ": WSAENOBUFS: An operation on a socket could not be performed because the system lacked sufficient buffer space or because a queue was full");	return false;
+		case WSAEISCONN:			LOG_ERROR("Error at" << t << ": WSAEISCONN: A connect request was made on an already connected socket");	return true;
+		case WSAENOTCONN:			LOG_ERROR("Error at" << t << ": WSAENOTCONN: A request to send or receive data was disallowed because the socket is not connected and (when sending on a datagram socket using a sendto call) no address was supplied");	return false;
+		case WSAESHUTDOWN:			LOG_ERROR("Error at" << t << ": WSAESHUTDOWN: A request to send or receive data was disallowed because the socket had already been shut down in that direction with a previous shutdown call");	return false;
+		case WSAETOOMANYREFS:		LOG_ERROR("Error at" << t << ": WSAETOOMANYREFS: Too many references to some kernel object");	return false;
+		case WSAETIMEDOUT:			LOG_ERROR("Error at" << t << ": WSAETIMEDOUT: No connection could be made because the target machine actively refused it");	return false;
+		case WSAELOOP:				LOG_ERROR("Error at" << t << ": WSAELOOP: Cannot translate name");	return false;
+		case WSAENAMETOOLONG:		LOG_ERROR("Error at" << t << ": WSAENAMETOOLONG: Name component or name was too long");	return false;
+		case WSAEHOSTDOWN:			LOG_ERROR("Error at" << t << ": WSAEHOSTDOWN: A socket operation failed because the destination host was down");	return false;
+		case WSAEHOSTUNREACH:		LOG_ERROR("Error at" << t << ": WSAEHOSTUNREACH: A socket operation was attempted to an unreachable host");	return false;
+		case WSAENOTEMPTY:			LOG_ERROR("Error at" << t << ": WSAENOTEMPTY: Cannot remove a directory that is not empty");	return false;
+		case WSAEPROCLIM:			LOG_ERROR("Error at" << t << ": WSAEPROCLIM: A Windows Sockets implementation may have a limit on the number of applications that may use it simultaneously");	return false;
+		case WSAEUSERS:				LOG_ERROR("Error at" << t << ": WSAEUSERS: Ran out of quota");	return false;
+		case WSAEDQUOT:				LOG_ERROR("Error at" << t << ": WSAEDQUOT: Ran out of disk quota");	return false;
+		case WSAESTALE:				LOG_ERROR("Error at" << t << ": WSAESTALE: File handle reference is no longer available");	return false;
+		case WSAEREMOTE:			LOG_ERROR("Error at" << t << ": WSAEREMOTE: Item is not available locally");	return false;
+		case WSASYSNOTREADY:		LOG_ERROR("Error at" << t << ": WSASYSNOTREADY: WSAStartup cannot function at this time because the underlying system it uses to provide network services is currently unavailable");	return false;
+		case WSAVERNOTSUPPORTED:	LOG_ERROR("Error at" << t << ": WSAVERNOTSUPPORTED: The Windows Sockets version requested is not supported");	return false;
+		case WSANOTINITIALISED:		LOG_ERROR("Error at" << t << ": WSANOTINITIALISED: Either the application has not called WSAStartup, or WSAStartup failed");	return false;
+		case WSAEDISCON:			LOG_ERROR("Error at" << t << ": WSAEDISCON: Returned by WSARecv or WSARecvFrom to indicate the remote party has initiated a graceful shutdown sequence");	return false;
+		case WSAENOMORE:			LOG_ERROR("Error at" << t << ": WSAENOMORE: No more results can be returned by WSALookupServiceNext");	return false;
+		case WSAECANCELLED:			LOG_ERROR("Error at" << t << ": WSAECANCELLED: A call to WSALookupServiceEnd was made while this call was still processing. The call has been canceled");	return false;
+		case WSAEINVALIDPROCTABLE:	LOG_ERROR("Error at" << t << ": WSAEINVALIDPROCTABLE: The procedure call table is invalid");	return false;
+		case WSAEINVALIDPROVIDER:	LOG_ERROR("Error at" << t << ": WSAEINVALIDPROVIDER: The requested service provider is invalid");	return false;
+		case WSAEPROVIDERFAILEDINIT:LOG_ERROR("Error at" << t << ": WSAEPROVIDERFAILEDINIT: The requested service provider could not be loaded or initialized");	return false;
+		case WSASYSCALLFAILURE:		LOG_ERROR("Error at" << t << ": WSASYSCALLFAILURE: A system call that should never fail has failed");	return false;
+		case WSASERVICE_NOT_FOUND:	LOG_ERROR("Error at" << t << ": WSASERVICE_NOT_FOUND: No such service is known. The service cannot be found in the specified name space.");	return false;
+		case WSATYPE_NOT_FOUND:		LOG_ERROR("Error at" << t << ": WSATYPE_NOT_FOUND: The specified class was not found");	return false;
+		default: 					LOG_ERROR("Error at" << t << ": Unknown error");	return false;
 		}
 #endif
         return false;
@@ -102,9 +108,9 @@ namespace net
 		return error_socket(s, "");
 	}
 
-	//
-	//
-	//
+	
+	
+	
 	bool error_getaddrinfo(int errCode)
 	{
 		if (errCode != 0)
@@ -148,3 +154,22 @@ namespace net
 	}
 
 }
+
+
+
+
+// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

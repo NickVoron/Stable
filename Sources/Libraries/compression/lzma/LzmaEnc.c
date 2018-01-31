@@ -1,10 +1,9 @@
-/* LzmaEnc.c -- LZMA Encoder
-2010-04-16 : Igor Pavlov : Public domain */
+
 
 #include <string.h>
 
-/* #define SHOW_STAT */
-/* #define SHOW_STAT2 */
+
+
 
 #if defined(SHOW_STAT) || defined(SHOW_STAT2)
 #include <stdio.h>
@@ -80,8 +79,8 @@ UInt32 LzmaEncProps_GetDictSize(const CLzmaEncProps *props2)
   return props.dictSize;
 }
 
-/* #define LZMA_LOG_BSR */
-/* Define it for Intel's CPU */
+
+
 
 
 #ifdef LZMA_LOG_BSR
@@ -122,11 +121,7 @@ void LzmaEnc_FastPosInit(Byte *g_FastPos)
 #define BSR2_RET(pos, res) { UInt32 i = 6 + ((kNumLogBits - 1) & \
   (0 - (((((UInt32)1 << (kNumLogBits + 6)) - 1) - pos) >> 31))); \
   res = p->g_FastPos[pos >> i] + (i * 2); }
-/*
-#define BSR2_RET(pos, res) { res = (pos < (1 << (kNumLogBits + 6))) ? \
-  p->g_FastPos[pos >> 6] + 12 : \
-  p->g_FastPos[pos >> (6 + kNumLogBits - 1)] + (6 + (kNumLogBits - 1)) * 2; }
-*/
+
 
 #define GetPosSlot1(pos) p->g_FastPos[pos]
 #define GetPosSlot2(pos, res) { BSR2_RET(pos, res); }
@@ -429,13 +424,7 @@ SRes LzmaEnc_SetProps(CLzmaEncHandle pp, const CLzmaEncProps *props2)
   p->writeEndMark = props.writeEndMark;
 
   #ifndef _7ZIP_ST
-  /*
-  if (newMultiThread != _multiThread)
-  {
-    ReleaseMatchFinder();
-    _multiThread = newMultiThread;
-  }
-  */
+  
   p->multiThread = (props.numThreads > 1);
   #endif
 
@@ -482,7 +471,7 @@ static void RangeEnc_Free(CRangeEnc *p, ISzAlloc *alloc)
 
 static void RangeEnc_Init(CRangeEnc *p)
 {
-  /* Stream.Init(); */
+  
   p->low = 0;
   p->range = 0xFFFFFFFF;
   p->cacheSize = 1;
@@ -1264,9 +1253,9 @@ static UInt32 GetOptimum(CLzmaEnc *p, UInt32 position, UInt32 *backRes)
       continue;
     numAvail = (numAvailFull <= p->numFastBytes ? numAvailFull : p->numFastBytes);
 
-    if (!nextIsChar && matchByte != curByte) /* speed optimization */
+    if (!nextIsChar && matchByte != curByte) 
     {
-      /* try Literal + rep0 */
+      
       UInt32 temp;
       UInt32 lenTest2;
       const Byte *data2 = data - (reps[0] + 1);
@@ -1283,7 +1272,7 @@ static UInt32 GetOptimum(CLzmaEnc *p, UInt32 position, UInt32 *backRes)
         UInt32 nextRepMatchPrice = curAnd1Price +
             GET_PRICE_1(p->isMatch[state2][posStateNext]) +
             GET_PRICE_1(p->isRep[state2]);
-        /* for (; lenTest2 >= 2; lenTest2--) */
+        
         {
           UInt32 curAndLenPrice;
           COptimal *opt;
@@ -1304,7 +1293,7 @@ static UInt32 GetOptimum(CLzmaEnc *p, UInt32 position, UInt32 *backRes)
       }
     }
     
-    startLen = 2; /* speed optimization */
+    startLen = 2; 
     {
     UInt32 repIndex;
     for (repIndex = 0; repIndex < LZMA_NUM_REPS; repIndex++)
@@ -1338,7 +1327,7 @@ static UInt32 GetOptimum(CLzmaEnc *p, UInt32 position, UInt32 *backRes)
       if (repIndex == 0)
         startLen = lenTest + 1;
         
-      /* if (_maxMode) */
+      
         {
           UInt32 lenTest2 = lenTest + 1;
           UInt32 limit = lenTest2 + p->numFastBytes;
@@ -1362,7 +1351,7 @@ static UInt32 GetOptimum(CLzmaEnc *p, UInt32 position, UInt32 *backRes)
                 GET_PRICE_1(p->isMatch[state2][posStateNext]) +
                 GET_PRICE_1(p->isRep[state2]);
             
-            /* for (; lenTest2 >= 2; lenTest2--) */
+            
             {
               UInt32 curAndLenPrice;
               COptimal *opt;
@@ -1386,7 +1375,7 @@ static UInt32 GetOptimum(CLzmaEnc *p, UInt32 position, UInt32 *backRes)
         }
     }
     }
-    /* for (UInt32 lenTest = 2; lenTest <= newLen; lenTest++) */
+    
     if (newLen > numAvail)
     {
       newLen = numAvail;
@@ -1407,7 +1396,7 @@ static UInt32 GetOptimum(CLzmaEnc *p, UInt32 position, UInt32 *backRes)
         offs += 2;
       curBack = matches[offs + 1];
       GetPosSlot2(curBack, posSlot);
-      for (lenTest = /*2*/ startLen; ; lenTest++)
+      for (lenTest =  startLen; ; lenTest++)
       {
         UInt32 curAndLenPrice = normalMatchPrice + p->lenEnc.prices[posState][lenTest - LZMA_MATCH_LEN_MIN];
         UInt32 lenToPosState = GetLenToPosState(lenTest);
@@ -1426,9 +1415,9 @@ static UInt32 GetOptimum(CLzmaEnc *p, UInt32 position, UInt32 *backRes)
           opt->prev1IsChar = False;
         }
 
-        if (/*_maxMode && */lenTest == matches[offs])
+        if (lenTest == matches[offs])
         {
-          /* Try Match + Literal + Rep0 */
+          
           const Byte *data2 = data - (curBack + 1);
           UInt32 lenTest2 = lenTest + 1;
           UInt32 limit = lenTest2 + p->numFastBytes;
@@ -1451,7 +1440,7 @@ static UInt32 GetOptimum(CLzmaEnc *p, UInt32 position, UInt32 *backRes)
                 GET_PRICE_1(p->isMatch[state2][posStateNext]) +
                 GET_PRICE_1(p->isRep[state2]);
             
-            /* for (; lenTest2 >= 2; lenTest2--) */
+            
             {
               UInt32 offset = cur + lenTest + 1 + lenTest2;
               UInt32 curAndLenPrice;
@@ -1537,7 +1526,7 @@ static UInt32 GetOptimumFast(CLzmaEnc *p, UInt32 *backRes)
     return mainLen;
   }
 
-  mainDist = 0; /* for GCC */
+  mainDist = 0; 
   if (mainLen >= 2)
   {
     mainDist = matches[numPairs - 1];
@@ -1622,7 +1611,7 @@ static SRes CheckErrors(CLzmaEnc *p)
 
 static SRes Flush(CLzmaEnc *p, UInt32 nowPos)
 {
-  /* ReleaseMFStream(); */
+  
   p->finished = True;
   if (p->writeEndMark)
     WriteEndMarker(p, nowPos & p->pbMask);

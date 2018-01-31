@@ -1,3 +1,11 @@
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "componentRefConverter.h"
 #include "../../unroll/componentHandle.h"
 #include "../component.h"
@@ -5,28 +13,27 @@
 
 namespace Expressions
 {
-	bool convert(Expressions::EvaluationUnit& expr, LinksDescList& client)
+	bool convert(EvaluationUnit& expr, LinksDescList& client)
 	{
-//		LOG_WARNING("references need check for compatible types");
+
 		std::vector<ObjectParser::ComponentHandle*> descriptions;
  		linearize(expr, descriptions);
- 		auto count = descriptions.size();
- 		if (count > 0)
+		if (auto count = descriptions.size();  count > 0)
  		{
  			client.resize(count);
  			for (std::size_t i = 0; i < count; ++i)
  			{
  				auto componentHandle = descriptions[i];
-				//LOG_EXPRESSION(componentHandle->string(), componentHandle->objectIndex.value(), componentHandle->componentIndex.value());
+				
  				auto& address = client[i].address; 
 				if(componentHandle->objectIndex)
 				{
-					address.objectIndex = componentHandle->objectIndex.value();
+					address.objectIndex = *componentHandle->objectIndex;
 				}  				
 
 				if(componentHandle->componentIndex)
 				{
-					address.componentIndices.push_back(componentHandle->componentIndex.value());
+					address.componentIndices.push_back(*componentHandle->componentIndex);
 				}				
  			}
  		}
@@ -34,32 +41,71 @@ namespace Expressions
 		return true;
 	}
 
-	//
-	//
-	//
-	bool convert(Expressions::EvaluationUnit& expr, LinkDesc& client)
+	
+	
+	
+	bool convert(EvaluationUnit& expr, LinkDesc& client)
 	{
-		LinksDescList list;
-		convertVar(expr, list);
-		if (list.size() > 0)
+		std::vector<ObjectParser::ComponentHandle*> descriptions;
+		linearize(expr, descriptions);
+		if (auto count = descriptions.size();  count > 0)
 		{
-			client = list[0];
+			auto componentHandle0 = descriptions[0];
+			for (std::size_t i = 0; i < count; ++i)
+			{
+				auto componentHandle = descriptions[i];
+				ENFORCE_EQUAL(*componentHandle->objectIndex, *componentHandle0->objectIndex);
+			}
+
+			auto& address = client.address;
+			if (componentHandle0->objectIndex)
+			{
+				address.objectIndex = *componentHandle0->objectIndex;
+			}
+
+			for (std::size_t i = 0; i < count; ++i)
+			{
+				if (auto componentHandle = descriptions[i]; componentHandle->componentIndex)
+				{
+					address.componentIndices.push_back(*componentHandle->componentIndex);
+				}
+			}
+
+			return address.objectIndex.operator bool() && (address.componentIndices.size() == descriptions.size());
 		}
 
-		return true;
+		return false;
 	}
 
-	bool convert(Expressions::EvaluationUnit& expr, ValueAddress& client)
+	bool convert(EvaluationUnit& expr, ValueAddress& client)
 	{
 		if (auto addrexpr = expr.cast<ObjectParser::ValueAddressDesc>())
 		{
 			if(addrexpr->componentHandle.componentIndex)
 			{
-				client.componentIndex = addrexpr->componentHandle.componentIndex.value();
+				client.componentIndex = *addrexpr->componentHandle.componentIndex;
 				client.componentShift = addrexpr->componentShift;
 			}			
 		}	
 
-		return client.componentIndex.has_value();
+		return client.componentIndex.operator bool();
 	}
 }
+
+
+
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

@@ -61,6 +61,7 @@
     <ClCompile Include="jni.cpp" />
     <ClCompile Include="qtlog.cpp" />
     <ClCompile Include="workDir.cpp" />
+    <ClCompile Include="ipc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3d9\direct3d9.h">
@@ -69,7 +70,6 @@
     <ClInclude Include="d3d11\direct3d11.h">
       <Filter>d3d11</Filter>
     </ClInclude>
-    <ClInclude Include="backgroundRender.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="commandProcessor.h" />
     <ClInclude Include="console.h" />
@@ -119,5 +119,6 @@
     <ClInclude Include="componentModelHelpers.h" />
     <ClInclude Include="jni.h" />
     <ClInclude Include="qtlog.h" />
+    <ClInclude Include="ipc.h" />
   </ItemGroup>
 </Project>

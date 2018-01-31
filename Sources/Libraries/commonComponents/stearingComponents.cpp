@@ -1,3 +1,11 @@
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "stearingComponents.h"
 
 namespace StearingComponents
@@ -10,14 +18,14 @@ SeekStearing::SeekStearing()
 
 void SeekStearing::update(float dt)
 {
-// 	if(searcher->target)
-// 	{
-// 		mover->velocity = (searcher->target->position->state.position - position->state.position);
-// 	}
-// 	else
-// 	{
-// 		mover->velocity = Vector3::zero;
-// 	}
+
+
+
+
+
+
+
+
 }
 
 void SeekStearing::linker()
@@ -28,9 +36,9 @@ void SeekStearing::linker()
 }
 
 
-//
-//
-//
+
+
+
 void StearingTarget::linker()
 {
 	link(position);
@@ -41,26 +49,13 @@ StearingTarget* StearingTargetsHolder::findNearest(const Vector3& position)
 	INCOMPLETE;
 	return 0;
 
-/*
-	float resDist = FLT_MAX;
-	StearingTarget* res = 0;
-	for(StearingTarget* c = first(); c != end(); c->iterate(c))
-	{	
-		float dist = (c->position->state.position - position).MagnitudeSquared();
-		if( dist < resDist )			
-		{
-			resDist = dist;
-			res = c;
-		}
-	}
 
-	return res;*/
 }
 
 
-//
-//
-//
+
+
+
 NearestTargetSearcher::NearestTargetSearcher()
 {
 
@@ -73,19 +68,38 @@ void NearestTargetSearcher::linker()
 
 void NearestTargetSearcher::update(float dt)					         
 {
-//	INCOMPLETE;
 
-// 	if(!target)
-// 	{
-// 		target = StearingTarget::manager().findNearest( position->state.position );
+
+
+
+
+
+
+
+
+
+
+}
+
+}
+
+
+
+
+
+
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
-// 		if(target)
-// 		{
-// 			LOG_ERROR( "target: " << target->position->state.position );	
-// 		}
-// 	}
-}
-
-}
-
-
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

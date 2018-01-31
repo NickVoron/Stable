@@ -1,3 +1,11 @@
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "componentModelConfigurator.h"
 #include "descParser/library.include.h"
 #include "resourceUtils/library.include.h"
@@ -125,7 +133,7 @@ namespace ComponentModel
 		int querySize = compDesc.query.entries.size();
 		std::vector<bool> links(querySize, false);
 
-		//проверяем все ли существующие в скрипте связи можно разрешить
+		
 		for (auto& param : component.links)
 		{
 			auto handle = param.second->cast<const ObjectParser::ComponentHandle>();
@@ -136,14 +144,14 @@ namespace ComponentModel
 				if (isGoodForQuery(descLink, compDesc.className, compDesc.query, instance, idx))
 				{
 					LOG_MSG("link resolved: " << handle->name << " : " << handle->type << idx);
-					//compDesc.addLink(descLink);
+					
 				}
 
 				links[idx] = (idx >= 0);
 			}
 		}
 
-		//добавляем не перечисленные в скрипте связи к связям описание компонент
+		
 		for (int k = 0; k < querySize; ++k)
 		{
 			if (!links[k])
@@ -153,7 +161,7 @@ namespace ComponentModel
 					if (ComponentsFactory::isInherited(compDesc.query.entries[k].clsId(), component.type))
 					{
 						LOG_MSG("ComponentsFactory::isInherited(compDesc.query.entries[k].clsId(), component.type)");
-						//compDesc.addLink(ComponentDesc::Link(type, component->name));
+						
 						links[k] = true;
 						break;
 					}
@@ -161,7 +169,7 @@ namespace ComponentModel
 			}
 		}
 
-		//проверяем все ли связи которые требует компонент возможно разрешить
+		
 		bool res = true;
 		for (int k = 0; k < querySize; ++k)
 		{
@@ -255,25 +263,25 @@ namespace ComponentModel
 					{
 						ENFORCE(a.second);
 
-						// пропускаем ссылки на компоненты внешних объектов из объекта-прототипа, они будут конфигурироваться внутри спавнера
-						if (auto handle = a.second->cast<ObjectParser::ComponentHandle>(); handle)
+						
+						if (auto handle = a.second->template cast<ObjectParser::ComponentHandle>(); handle)
 						{
 							auto ext_it = externalLinks.find(handle);
 							if (ext_it != externalLinks.end())
 							{
-								//LOG_MSG("extern reference: " << a.first);
+								
 								prop->evaluateExternalLink(ext_it->second, component, *a.second);
 								continue;
 							}
 						}
 						
-						//LOG_MSG("init component property: " << a.name << " value: " << a.expression->string());
+						
 						prop->convert(component, *a.second);
 						
 					}
 					else
 					{
-						//LOG_ERROR("component: " << ComponentsFactory::className(component) << " hasn't property: " << a.first);
+						
 					}
 				}
 				catch (std::exception& e)
@@ -292,7 +300,7 @@ namespace ComponentModel
 	EntitiesList& initializeEntities(const Expressions::EvaluatedScope& scope, EntitiesList& entities, ExternalComponentLinks& externalLinks)
 	{
 		auto objects = linearize(scope);
-		//print_objects(scope);
+		
 		
 		std::map<const ObjectParser::InstanceHandle*, ClassDesc*> objectToClassDesc;
 		ClassDescList classes;
@@ -302,11 +310,11 @@ namespace ComponentModel
 			objectToClassDesc[object.self] = &classDesc;
 			for (auto* componentHandle : object.self->components())
 			{
-				//LOG_EXPRESSION(object.self, componentHandle->type, componentHandle);
+				
 				classDesc.addComponent(componentHandle->type, componentHandle->name, "");
 			}
 		}
-		//LOG_MSG("======================================================================================");
+		
 
 		classes.finalize();
 		entities.classes.create(classes, entities.executionList);
@@ -326,7 +334,7 @@ namespace ComponentModel
 				std::string componentName = entity->getClass().getComponentName(i);
 				auto componentHandle = object.self->component(componentName);
 				ENFORCE(componentHandle);
-				//LOG_EXPRESSION(object.self, componentHandle->type, componentHandle);				
+				
 				componentHandles.push_back(const_cast<ObjectParser::ComponentHandle*>(componentHandle));
 				const_cast<ObjectParser::ComponentHandle*>(componentHandle)->objectIndex = objectIdx;
 				const_cast<ObjectParser::ComponentHandle*>(componentHandle)->componentIndex = i;
@@ -379,14 +387,14 @@ namespace ComponentModel
 		initializeEntities(*result.get(), entities);
 
 		
-		//LOG_EXPRESSION(entities.size());
+		
 		for (auto& entity : entities)
 		{
-			//entity.finalize();
+			
 			entity.getClass().bindToExecutionList(entity);
 		}
 
-		//LOG_EXPRESSION(timer.dt());
+		
 		return entities;
 	}
 
@@ -403,7 +411,7 @@ namespace ComponentModel
 
 		EntitiesList entities;
 		descriptionLoad(filename, entities).activate(true);
-		//entities.debugOutput();
+		
 
 		for (int i = 0; i < 3; ++i)
 		{
@@ -412,3 +420,22 @@ namespace ComponentModel
 	}
 }
 
+
+
+
+
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

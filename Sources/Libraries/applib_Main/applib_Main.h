@@ -1,3 +1,11 @@
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include <string>
@@ -13,7 +21,7 @@
 #endif
 
 
-
+#ifdef UNIT_TESTS_ENABLED
 inline boost::unit_test::test_suite* init_unit_test(int argc, char* argv[])
 {
 	boost::unit_test::framework::master_test_suite().argc = argc;
@@ -44,6 +52,7 @@ struct UnitTestEngine<false>
 {
 	static void run(int argc, char* argv []){}
 };
+#endif
 
 template<typename char_t> struct string_type;
 template<> struct string_type<char>		{ typedef std::string type; };
@@ -72,18 +81,22 @@ int appmain(SetupReturnType (*setup)(SetupParamsType&), int argc, char_t* argv[]
 			typedef typename AppModules::Modules<UniqueModules> Modules;
 			typedef typename Modules::Params Params;
 
+#ifdef UNIT_TESTS_ENABLED
 			{
 				Params internalParams;
 				setup_params(setup, internalParams, argc, argv);
 				AppModules::check_modules<iterationsCount, UniqueModules>(internalParams);
-			}			
+			}
+#endif
 
 			Params internalParams;
 			Modules modules(internalParams);
 			setup_params(setup, internalParams, argc, argv);
 
 			modules.init();
+#ifdef UNIT_TESTS_ENABLED
 			UnitTestEngine<unitTestsRun>::run(argc, argv);
+#endif
 			modules.process();
 			modules.release();
 		}
@@ -99,3 +112,21 @@ int appmain(SetupReturnType (*setup)(SetupParamsType&), int argc, char_t* argv[]
 
 	return 0;
 }
+
+
+
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

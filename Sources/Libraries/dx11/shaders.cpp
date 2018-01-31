@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "shaders.h"
 #include <d3dcompiler.h>
 #include <D3DX11.h>
@@ -21,8 +29,8 @@ namespace dx11
 	{
 		try
 		{	
-			//If pFileName is absolute: finalPath = pFileName.
-			//If pFileName is relative: finalPath = dir + "\\" + pFileName
+			
+			
 
 			boost::filesystem::path fp = Base::StrUtils::Convert(parentFileName);
 			fp.normalize();
@@ -30,7 +38,7 @@ namespace dx11
 			boost::filesystem::path finalPath;
 			switch (IncludeType)
 			{
-			case D3D_INCLUDE_LOCAL: // #include "FILE"
+			case D3D_INCLUDE_LOCAL: 
 			{
 				finalPath = fp.remove_filename();
 				finalPath /= fileName;
@@ -38,14 +46,14 @@ namespace dx11
 			}
 			case D3D_INCLUDE_SYSTEM:
 			{
-				finalPath = fileName; break; // #include <FILE>
+				finalPath = fileName; break; 
 			}
 			default: THROW("unknown include type");
 			}
 
 
 
-			//LOG_MSG(finalPath);
+			
 
 			std::ifstream fileStream;
 			fileStream.open(finalPath.c_str(), std::ios::binary);
@@ -77,7 +85,7 @@ namespace dx11
 
 	HRESULT __stdcall ShaderInclude::Close(LPCVOID pData)
 	{
-		// Here we must correctly free buffer created in Open.
+		
 		char* buf = (char*) pData;
 		delete[] buf;
 		return S_OK;
@@ -116,10 +124,10 @@ namespace dx11
 	{
 		DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
 #if defined( DEBUG ) || defined( _DEBUG )
-		// Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-		// Setting this flag improves the shader debugging experience, but still allows 
-		// the shaders to be optimized and to run exactly the way they will run in 
-		// the release configuration of this program.
+		
+		
+		
+		
 		dwShaderFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_PREFER_FLOW_CONTROL | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 		return dwShaderFlags;
@@ -133,7 +141,7 @@ namespace dx11
 		ID3DBlob* pBlobOut;
 		ID3DBlob* pErrorBlob;
 		HRESULT hr = D3DX11CompileFromFile(szFileName, NULL, &includeProcessor, szEntryPoint, szShaderModel, shaderFlags(), 0, NULL, &pBlobOut, &pErrorBlob, NULL);
-		//HRESULT hr = D3DX11CompileFromFile(szFileName, NULL, NULL, szEntryPoint, szShaderModel, shaderFlags(), 0, NULL, &pBlobOut, &pErrorBlob, NULL);
+		
 
 		return shaderCompilationErrorHandle(hr, pBlobOut, pErrorBlob, memblock);
 	}
@@ -157,9 +165,9 @@ namespace dx11
 		return SUCCEEDED( compileShader(shaderText.c_str(), shaderText.size(), szEntryPoint, szShaderModel, memblock) );
 	}
 
-	//
-	//
-	//
+	
+	
+	
 	void ShaderBase<gapi::GEOMETRY_STREAMOUT_SHADER>::createImpl() 
 	{
 		device->device->CreateGeometryShaderWithStreamOutput(memblock.data, memblock.len, data.entries, data.numEntries, data.strides, data.numStrides, data.rasterizedStream, NULL, &ptr);
@@ -248,3 +256,22 @@ namespace dx11
 
 
 
+
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

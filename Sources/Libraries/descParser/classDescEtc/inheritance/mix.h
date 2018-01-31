@@ -1,20 +1,28 @@
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 #include "expressions/library.include.h"
 #include "../propertyAssignment.h"
 
-// mix - означает что все содержимое класса надо вмешать в наследуемый, и компоненты и проперти и они станут свойствами наследника к ним можно будет получать жестки ссылки через link 
-// есть способ перезадать значения по умолчанию пропертей базового класса color = Color(1,1,1) перезадовать можно только константами( функция то же константа )
-// нельзя никак задавать значения по умолчанию которые будут выводится из пропертей наследника, они там не доступны
-//
-//class Object : mix DebugObserver(color = Color(1, 1, 1))	 // в скобках определяется новые значения по умолчанию для проперти родителя
-//{
-//
-//}
-//
-//class Object : mix DebugObserver(color = simpleColor) // ошибка, использование пропети класса(simpleColor) в качестве значения проперти родителя
-//{														// в момент переорпредения значений по умолчанию для пропертей родителя ещё не существуют проперти потомка
-//	property simpleColor = Color(1, 1, 1)
-//}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 namespace ObjectParser
 {
@@ -29,8 +37,26 @@ namespace ObjectParser
 
 		
 		std::string type;
-		PropertyAssignmentList params; // параметры инициализации родительского класса
+		PropertyAssignmentList params; 
 	};
 
 	typedef std::map<std::string, MixInheritance*> ParentsList;
 }//
+
+
+
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

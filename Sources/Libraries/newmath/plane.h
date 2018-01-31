@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2016 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "vector.h"
@@ -8,12 +16,12 @@ namespace nm
 	class plane
 	{
 	public:
-		Vector3 n;//нормаль плоскости
-		float d;//расстояние от плоскости до нуля координат
+		Vector3 n;
+		float d;
 
 		plane(){}
 
-		//конструктор с нормалью и расстоянием
+		
 		plane(const Vector3& pn, float pd) : n(pn), d(pd) {}
 
 		template<class Vec3T1, class Vec3T2, class Vec3T3>
@@ -30,14 +38,14 @@ namespace nm
 			d = -dot(p0, n);
 		}
 
-		//нахождение расстояния от точки до плоскости
+		
 		template<class Vec3Type>
 		float distance(const Vec3Type& v) const 
 		{	
 			return dot(n, v) + d;	
 		}
 
-		//нахождение точки пересечения луча и плоскости
+		
 		template<class Vec3Type1, class Vec3Type2, class Vec3Type3>
 		bool intersection(const Vec3Type1& org, const Vec3Type2& dir, Vec3Type3* pos = 0, float* alpha = 0) const
 		{	
@@ -73,8 +81,8 @@ namespace nm
 			float dc = dot(org, n) + d;
 			float dn = dot(-n, n);
 
-			//if(fabsf(dn) < 0.000001f);
-			//	return false;
+			
+			
 
 			float t = -dc / dn;
 
@@ -117,3 +125,21 @@ namespace nm
 	};
 
 }
+
+
+
+// Copyright (C) 2012-2016 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

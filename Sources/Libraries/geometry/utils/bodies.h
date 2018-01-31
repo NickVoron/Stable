@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "../mesh/mesh.h"
@@ -12,7 +20,7 @@ namespace Generation {
 		typedef Vertex<POS3, NORMAL, UV2<0>> BaseVertexType;
 		typedef Vertex<POS2> BaseVertexType2D;
 		typedef Vertex<POST> BaseVertexTypeScreen;
-		typedef unsigned int			 BaseIndexType;
+		typedef unsigned int BaseIndexType;
 
 		typedef VertexStream<BaseVertexType> BaseVertexStream;
 		typedef VertexStream<BaseVertexType2D> BaseVertex2DStream;
@@ -98,7 +106,7 @@ void generateGrid2D(VertexStream<VertexType>& vs, IndexStream<IndexType>& is, co
 {
 	Private::BaseVertex2DStream bvs;
 	Private::generateGrid2D(bvs, is, vertexCount, gridStep);
-	vs.assign<Loki::MakeTypelist<POS2>>(bvs);
+	vs.template assign<Loki::MakeTypelist<POS2>>(bvs);
 }
 
 template<class VertexType, class IndexType>
@@ -171,7 +179,7 @@ void generateQuad2D(VertexStream<VertexType>& vs, IndexStream<IndexType>& is, co
 {
 	Private::BaseVertex2DStream bvs;
 	Private::generateQuad2D(bvs, is, size);
-	vs.assign<Loki::MakeTypelist<POS2>>(bvs);
+	vs.template assign<Loki::MakeTypelist<POS2>>(bvs);
 }
 
 template<class VertexType, class IndexType>
@@ -187,14 +195,6 @@ void generateScreenQuad(VertexStream<VertexType>& vs, IndexStream<IndexType>& is
 {
 	Private::BaseVertexScreenStream bvs;
 	Private::generateScreenQuad(bvs, is, pos, size);
-	vs.maxAssign(bvs);
-}
-
-template<class VertexType, class IndexType>
-void generateWireLine(VertexStream<VertexType>& vs, IndexStream<IndexType>& is, const Vector3& start, const Vector3& end)
-{
-	Private::BaseVertexStream bvs;
-	Private::generateWireLine(bvs, is, start, end);
 	vs.maxAssign(bvs);
 }
 
@@ -243,7 +243,7 @@ template<class VertexType, class IndexType> void generateBox(Mesh<VertexType, In
 template<class VertexType, class IndexType> void generateDome(Mesh<VertexType, IndexType>& mesh, float radius, int rows, int columns)															{ generateDome(mesh.vertices(), mesh.indices(), radius, rows, columns); }
 template<class VertexType, class IndexType> void generateSphere(Mesh<VertexType, IndexType>& mesh, float radius, int subdiv)																	{ generateSphere(mesh.vertices(), mesh.indices(), radius, subdiv); }
 template<class VertexType, class IndexType> void generateGrid(Mesh<VertexType, IndexType>& mesh, const nm::index2& vertexCount, const Vector2& gridStep)										{ generateGrid(mesh.vertices(), mesh.indices(), vertexCount, gridStep); }
-template<class VertexType, class IndexType> void generateGrid2D(Mesh<VertexType, IndexType>& mesh, const nm::index2& vertexCount, const Vector2& gridStep)									{ generateGrid2D(mesh.vertices(), mesh.indices(), vertexCount, gridStep); }
+template<class VertexType, class IndexType> void generateGrid2D(Mesh<VertexType, IndexType>& mesh, const nm::index2& vertexCount, const Vector2& gridStep)										{ generateGrid2D(mesh.vertices(), mesh.indices(), vertexCount, gridStep); }
 template<class VertexType, class IndexType> void generateStar(Mesh<VertexType, IndexType>& mesh, float radius1, float radius2, unsigned int rays)												{ generateStar(mesh.vertices(), mesh.indices(), radius1, radius2, rays); }
 template<class VertexType, class IndexType> void generateQuadXY(Mesh<VertexType, IndexType>& mesh, const Vector2& size)																			{ generateQuadXY(mesh.vertices(), mesh.indices(), size); }
 template<class VertexType, class IndexType> void generateQuadXZ(Mesh<VertexType, IndexType>& mesh, const Vector2& size)																			{ generateQuadXZ(mesh.vertices(), mesh.indices(), size); }
@@ -265,10 +265,25 @@ template<class VertexType, class IndexType> void generateLine(Mesh<VertexType, I
 
 
 
-/*
-template<class VS, class IS>
-void generatePyramid();
-*/
+
 
 }
 }
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

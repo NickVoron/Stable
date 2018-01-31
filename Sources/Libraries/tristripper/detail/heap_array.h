@@ -1,11 +1,11 @@
-//
-// Copyright (C) 2004 Tanguy Fautré.
-// For conditions of distribution and use,
-// see copyright notice in tri_stripper.h
-//
-//////////////////////////////////////////////////////////////////////
-// SVN: $Id: heap_array.h 86 2005-06-08 17:47:27Z gpsnoopy $
-//////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
 
 #ifndef TRI_STRIPPER_HEADER_GUARD_HEAP_ARRAY_H
 #define TRI_STRIPPER_HEADER_GUARD_HEAP_ARRAY_H
@@ -22,39 +22,39 @@ namespace triangle_stripper {
 
 
 
-// mutable heap
-// can be interfaced pretty muck like an array
+
+
 template <class T, class CmpT = std::less<T> > 
 class heap_array
 {
 public:
 
-	// Pre = PreCondition, Post = PostCondition 
+	
 
-	heap_array() : m_Locked(false) { }		// Post: ((size() == 0) && ! locked())
+	heap_array() : m_Locked(false) { }		
 
-	void clear();							// Post: ((size() == 0) && ! locked())
+	void clear();							
 
 	void reserve(size_t Size);
 	size_t size() const;
 
 	bool empty() const;
 	bool locked() const;
-	bool removed(size_t i) const;			// Pre: (valid(i))
+	bool removed(size_t i) const;			
 	bool valid(size_t i) const;
 
-	size_t position(size_t i) const;		// Pre: (valid(i))
+	size_t position(size_t i) const;		
 
-	const T & top() const;					// Pre: (! empty())
-	const T & peek(size_t i) const;			// Pre: (! removed(i))
-	const T & operator [] (size_t i) const;	// Pre: (! removed(i))
+	const T & top() const;					
+	const T & peek(size_t i) const;			
+	const T & operator [] (size_t i) const;	
 
-	void lock();							// Pre: (! locked())   Post: (locked())
-	size_t push(const T & Elem);			// Pre: (! locked())
+	void lock();							
+	size_t push(const T & Elem);			
 
-	void pop();								// Pre: (locked() && ! empty())
-	void erase(size_t i);					// Pre: (locked() && ! removed(i))
-	void update(size_t i, const T & Elem);	// Pre: (locked() && ! removed(i))
+	void pop();								
+	void erase(size_t i);					
+	void update(size_t i, const T & Elem);	
 
 protected:
 
@@ -88,9 +88,9 @@ protected:
 
 
 
-//////////////////////////////////////////////////////////////////////////
-// heap_indexed inline functions
-//////////////////////////////////////////////////////////////////////////
+
+
+
 
 template <class T, class CmpT> 
 inline void heap_array<T, CmpT>::clear()
@@ -251,11 +251,11 @@ inline void heap_array<T, CmpT>::Adjust(size_t i)
 
 	size_t j;
 
-	// Check the upper part of the heap
+	
 	for (j = i; (j > 0) && (Less(m_Heap[(j - 1) / 2], m_Heap[j])); j = ((j - 1) / 2))
 		Swap(j, (j - 1) / 2);
 
-	// Check the lower part of the heap
+	
 	for (i = j; (j = 2 * i + 1) < size(); i = j) {
  		if ((j + 1 < size()) && (Less(m_Heap[j], m_Heap[j + 1])))
 			++j;
@@ -287,11 +287,11 @@ inline bool heap_array<T, CmpT>::Less(const linker & a, const linker & b) const
 
 
 
-	} // namespace detail
+	} 
 
-} // namespace triangle_stripper
-
-
+} 
 
 
-#endif // TRI_STRIPPER_HEADER_GUARD_HEAP_ARRAY_H
+
+
+#endif 

@@ -1,11 +1,11 @@
-//
-// Copyright (C) 2004 Tanguy Fautré.
-// For conditions of distribution and use,
-// see copyright notice in tri_stripper.h
-//
-//////////////////////////////////////////////////////////////////////
-// SVN: $Id: public_types.h 86 2005-06-08 17:47:27Z gpsnoopy $
-//////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
 
 #ifndef TRI_STRIPPER_HEADER_GUARD_PUBLIC_TYPES_H
 #define TRI_STRIPPER_HEADER_GUARD_PUBLIC_TYPES_H
@@ -23,8 +23,8 @@ namespace triangle_stripper
 
 	enum primitive_type
 	{
-		TRIANGLES		= 0x0004,	// = GL_TRIANGLES
-		TRIANGLE_STRIP	= 0x0005	// = GL_TRIANGLE_STRIP
+		TRIANGLES		= 0x0004,	
+		TRIANGLE_STRIP	= 0x0005	
 	};
 
 	struct primitive_group
@@ -40,4 +40,4 @@ namespace triangle_stripper
 
 
 
-#endif // TRI_STRIPPER_HEADER_GUARD_PUBLIC_TYPES_H
+#endif 

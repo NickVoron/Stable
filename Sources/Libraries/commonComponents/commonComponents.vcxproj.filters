@@ -5,15 +5,11 @@
     <ClInclude Include="library.include.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="destructor.h" />
-    <ClInclude Include="destructTimer.h" />
     <ClInclude Include="linearMover.h" />
     <ClInclude Include="position.h" />
     <ClInclude Include="spawner.h" />
-    <ClInclude Include="spawnTimer.h" />
     <ClInclude Include="swaper.h" />
-    <ClInclude Include="swapTimer.h" />
     <ClInclude Include="timer.h" />
-    <ClInclude Include="timerConfigurator.h" />
     <ClInclude Include="pointConstraint.h" />
     <ClInclude Include="coloredComponents.h" />
     <ClInclude Include="logCommonComponents.h" />
@@ -23,15 +19,11 @@
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="destructor.cpp" />
-    <ClCompile Include="destructTimer.cpp" />
     <ClCompile Include="linearMover.cpp" />
     <ClCompile Include="position.cpp" />
     <ClCompile Include="spawner.cpp" />
-    <ClCompile Include="spawnTimer.cpp" />
     <ClCompile Include="swaper.cpp" />
-    <ClCompile Include="swapTimer.cpp" />
     <ClCompile Include="timer.cpp" />
-    <ClCompile Include="timerConfigurator.cpp" />
     <ClCompile Include="pointConstraint.cpp" />
     <ClCompile Include="coloredComponents.cpp" />
     <ClCompile Include="logCommonComponents.cpp" />

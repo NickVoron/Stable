@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "bodies.h"
 #include "meshOperations.h"
 
@@ -24,7 +32,7 @@ namespace Private	{
 
 			static const int CACHE_SIZE = 240;
 			
-			// Sin/Cos caches
+			
 			float sinI[CACHE_SIZE];
 			float cosI[CACHE_SIZE];
 
@@ -32,14 +40,14 @@ namespace Private	{
 				sincosf(nm::TwoPI * i / slices, sinI + i, cosI + i);
 
 
-			// Compute side normal angle
+			
 			float fDeltaRadius = radius2 - radius1;
 			float fSideLength = sqrtf(fDeltaRadius * fDeltaRadius + fLength * fLength);
 
-			// Generate vertices
+			
 						
-			// Base cap (slices + 1)
-			//fZ = fLength * -0.5f;
+			
+			
 			float fZ = 0.0f;
 			float radius = radius1;
 			int vtx = 0;
@@ -52,7 +60,7 @@ namespace Private	{
 				vertices[vtx++].pos3(radius * -sinI[i], fZ, radius * cosI[i]);
 			}
 
-			// Stacks ((stacks + 1)*slices)
+			
 			for(unsigned int j = 0; j <= stacks; j++)
 			{
 				float f = (float) j / (float) stacks;
@@ -66,8 +74,8 @@ namespace Private	{
 				}
 			}
 
-			// Top cap (slices + 1)
-			//fZ = fLength * 0.5f;
+			
+			
 			fZ = fLength;
 			radius = radius2;
 
@@ -78,10 +86,10 @@ namespace Private	{
 
 			vertices[vtx++].pos3(0.0f, fZ, 0.0f);
 
-			// Generate indices
+			
 			unsigned int indexIdx = 0;
 			
-			// Z+ pole (slices)
+			
 			unsigned int rowA = 0;
 			unsigned int rowB = 1;
 
@@ -96,7 +104,7 @@ namespace Private	{
 			indices[indexIdx++] = rowB + slices - 1;
 			indices[indexIdx++] = rowA;
 
-			// Interior stacks (stacks * slices * 2)
+			
 			for(unsigned int j = 0; j < stacks; j++)
 			{
 				rowA = 1 + (j + 1) * slices;
@@ -123,7 +131,7 @@ namespace Private	{
 				indices[indexIdx++] = (rowB);
 			}
 
-			// Z- pole (slices)
+			
 			rowA = 1 + (stacks + 2) * slices;
 			rowB = rowA + slices;
 
@@ -189,3 +197,21 @@ void generateCone(BaseMesh& mesh, float radiusTop, float radiusBottom, float hei
 }
 }
 }
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

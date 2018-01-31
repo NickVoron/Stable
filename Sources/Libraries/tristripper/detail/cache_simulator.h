@@ -1,11 +1,11 @@
-//
-// Copyright (C) 2004 Tanguy Fautré.
-// For conditions of distribution and use,
-// see copyright notice in tri_stripper.h
-//
-//////////////////////////////////////////////////////////////////////
-// SVN: $Id: cache_simulator.h 86 2005-06-08 17:47:27Z gpsnoopy $
-//////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
 
 #ifndef TRI_STRIPPER_HEADER_GUARD_CACHE_SIMULATOR_H
 #define TRI_STRIPPER_HEADER_GUARD_CACHE_SIMULATOR_H
@@ -53,9 +53,9 @@ protected:
 
 
 
-//////////////////////////////////////////////////////////////////////////
-// cache_simulator inline functions
-//////////////////////////////////////////////////////////////////////////
+
+
+
 
 inline cache_simulator::cache_simulator()
 	: m_NbHits(0),
@@ -103,17 +103,17 @@ inline void cache_simulator::push(const index i, const bool CountCacheHit)
 
 		if (std::find(m_Cache.begin(), m_Cache.end(), i) != m_Cache.end()) {
 
-			// Should we count the cache hits?
+			
 			if (CountCacheHit)
 				++m_NbHits;
 			
-			// Should we not push the index into the cache if it's a cache hit?
+			
 			if (! m_PushHits)
 				return;
 		}
 	}
 	    
-	// Manage the indices cache as a FIFO structure
+	
 	m_Cache.push_front(i);
 	m_Cache.pop_back();
 }
@@ -144,11 +144,11 @@ inline size_t cache_simulator::hitcount() const
 
 
 
-	} // namespace detail
+	} 
 
-} // namespace triangle_stripper
-
-
+} 
 
 
-#endif // TRI_STRIPPER_HEADER_GUARD_CACHE_SIMULATOR_H
+
+
+#endif 

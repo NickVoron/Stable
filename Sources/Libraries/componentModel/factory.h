@@ -1,3 +1,11 @@
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "stuff/dependencyGraph.h"
@@ -9,18 +17,18 @@
 #include <memory>
 #include <type_traits>
 												
-//
-//
-//
+
+
+
 struct ExecutionListFilter : public std::vector<int>
 {
 	void debug();
 };
 
 
-//
-//
-//
+
+
+
 struct ExecutionList : public std::vector<std::unique_ptr<ExecutionUnitBase>>
 {
 	void create(const ExecutionListFilter& filter);
@@ -30,9 +38,9 @@ struct ExecutionList : public std::vector<std::unique_ptr<ExecutionUnitBase>>
 };
 
 
-//
-//
-//
+
+
+
 template<class C, bool hasExecutionUnit> struct ExecutionUnitExtractImpl;
 template<class C> struct ExecutionUnitExtractImpl<C, true>	{ template<class ExecutionUnitCreator>	static ExecutionUnitCreator extract() { return &C::Parameters::executionUnit; } };
 template<class C> struct ExecutionUnitExtractImpl<C, false> { template<class ExecutionUnitCreator>	static ExecutionUnitCreator extract() { return nullptr; } };
@@ -47,9 +55,9 @@ struct ExecutionUnitExtract
 	}
 };
 
-//
-//
-//
+
+
+
 template<class C, bool hasExecutionUnit> struct AddToExecutionDependenciesImpl;
 
 template<class C> struct AddToExecutionDependenciesImpl<C, true>
@@ -57,7 +65,7 @@ template<class C> struct AddToExecutionDependenciesImpl<C, true>
 	template<class ExecutionUnitCreator>
 	static void add(DependencyGraph<ExecutionUnitCreator>& dependencies, FinalizeQuery& query)
 	{
-		//			LOG_ERROR(className() << " : " << &C::Manager::executionUnit);
+		
 		dependencies.node(&C::Parameters::executionUnit);
 		for (std::size_t i = 0; i < query.executionUnitCreators.size(); ++i)
 		{
@@ -171,7 +179,7 @@ private:
 			template<class Component> 
 			void InitResourceTable(typename Component::Resource* res)
 			{
-				//LOG_MSG("NORMAL RESOURCE TABLE" << Component::ClassName() << " CLASS INDEX: " << Component::ClassIndex());
+				
 				Component component;
 				typename Component::Resource resource;
 				resource.table = &resourceTable;
@@ -184,9 +192,9 @@ private:
 
 			template<class Component> void InitResourceTable(...)
 			{
-				//LOG_MSG("EMPTY RESOURCE TABLE" << Component::ClassName());
-				//char data[sizeof(Component)];
-				//Component* component = (Component*)(&data[0]);
+				
+				
+				
 				Component component;
 				resourceTable.componentGlobalIndex = Component::ClassIndex();
 				resourceTable.component = &component;
@@ -239,7 +247,7 @@ private:
 		{
 			if (!isRegistred(C::ClassName()))
 			{
-				//LOG_WARNING(C::ClassName());
+				
 				C::ClassIndex() = data.size();
 				data.addEntry().init<C>(dependencies);
 			}													
@@ -262,7 +270,7 @@ struct ComponentsFactoryRegistrarImpl<ComponentsList, false>
 {
 	static inline void reg()
 	{
-		//LOG_MSG(typeid(typename ComponentsList::Head).name());
+		
 		ComponentsFactory::data.add<typename ComponentsList::Head>();
 		ComponentsFactoryRegistrarImpl<typename ComponentsList::Tail, std::is_abstract<typename ComponentsList::Tail::Head>::value >::reg();
 	}
@@ -274,7 +282,7 @@ struct ComponentsFactoryRegistrarImpl<ComponentsList, true>
 {
 	static inline void reg()
 	{
-		//LOG_MSG("abstract:" << typeid(typename ComponentsList::Head).name());
+		
 		ComponentsFactoryRegistrarImpl<typename ComponentsList::Tail, std::is_abstract<typename ComponentsList::Tail::Head>::value >::reg();
 	}
 };
@@ -301,3 +309,22 @@ void SerializerInterface::serialize_impl(ComponentLinkList<ComponentType...>& ln
 	link(lnk.parent);
 	ComponentsFactory::constructSerializer(classIndex()).add(*this, &lnk);
 }
+
+
+
+
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

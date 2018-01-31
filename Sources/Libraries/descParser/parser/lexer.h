@@ -29,7 +29,7 @@ namespace ObjectParser
 		GrammarComposition& gc;
 		Compiler& compiler;
 
-		//int location() { return yylloc; }
+		
 
 	private:
 		int yylex();

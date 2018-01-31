@@ -1,3 +1,11 @@
+// Copyright (C) 2013-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "interfaces.h"
@@ -5,9 +13,9 @@
 
 namespace dx11
 {
-	//
-	//
-	//
+	
+	
+	
 	struct Validator
 	{
 	protected:
@@ -15,9 +23,9 @@ namespace dx11
 		virtual bool validateBindFlag(D3D11_BIND_FLAG bindFlag) = 0;
 	};
 	
-	//
-	//
-	//
+	
+	
+	
 	template<class ResultType, class ViewType>
 	struct DevicePlainData : public Validator, public DeviceResource<ID3D11Texture2D, ResultType>
 	{
@@ -70,7 +78,7 @@ namespace dx11
 		ViewType* view;
 	};
 
-	//
+	
 	struct DeviceDefaultRenderTargets
 	{
 		DeviceDefaultRenderTargets();
@@ -106,7 +114,7 @@ namespace dx11
 	};
 
 
-	//
+	
 	struct DevicePlainTargetBackup : public DeviceResource<ID3D11RenderTargetView, DevicePlainTargetBackup>
 	{
 		void backup(unsigned int count);
@@ -119,14 +127,14 @@ namespace dx11
 		void texelSize(float& w, float&h) const;
 		
 
-	//private:
+	
 		D3D11_VIEWPORT viewport;
 		ID3D11RenderTargetView* targets[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
 		ID3D11DepthStencilView* depthStencilView;
 		unsigned int count;
 	};
 
-	//
+	
 	struct PlainTargetBackup : public DevicePlainTargetBackup::ResultBase
 	{
 		void backup(unsigned int count);
@@ -139,9 +147,9 @@ namespace dx11
 		DXGI_FORMAT format() const								{ return data[0].format(); }
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	struct DeviceDepthStencil : public DevicePlainData<DeviceDepthStencil, ID3D11DepthStencilView>
 	{
 		void create(DXGI_FORMAT format, int multisampleCount, int multisampleQuality);
@@ -158,9 +166,9 @@ namespace dx11
 		virtual bool validateBindFlag(D3D11_BIND_FLAG bindFlag);
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	struct DevicePlainTarget : public DevicePlainData<DevicePlainTarget, ID3D11RenderTargetView>
 	{
 		void create(DXGI_FORMAT format, int multisampleCount, int multisampleQuality);
@@ -194,7 +202,7 @@ namespace dx11
 		int multisampleQuality = 0;
 	};
 
-	//
+	
 	struct PlainTarget : public DevicePlainTarget::ResultBase
 	{
 		void create(DXGI_FORMAT format)										{ for (int i = 0; i < devices->count(); ++i)	{ data[i].create(format, multisampleCount, multisampleQuality); } }
@@ -214,3 +222,21 @@ namespace dx11
 	};
 
 }
+
+
+
+// Copyright (C) 2013-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

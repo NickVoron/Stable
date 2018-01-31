@@ -1,44 +1,52 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "random.h"
 #include "operations.h"
 #include "vector.h"
 
 namespace nm
 {
-	// Random - генератор псевдослучайных чисел. На практике показал отличное распределение и большую длинну последовательности.
-	// Например, утилита освещения может просчитать 1 миллиард фотонов, причём на каждый фотон генерируется более
-	// 20-ти случайных чисел. В таких условиях не было достигнуто зацикливание последовательности, тогда как другой
-	// генератор дал в освещении характерные полосы.
+	
+	
+	
+	
 	class Random
 	{
 	public:
-		// Генератор инициализируется случайным числом, полученным, к примеру, как время системы.
-		// такая мера позволяет не заботиться о псевдослучайности генератора.
-		// Генератор, инициализтрованный одним и тем же числом будет выдавать одинаковую последовательность чисел.
+		
+		
+		
 		inline Random();
 
-		// Инициализация генератора одним и тем-же числом позволяет получать одинаковую
-		// псевдослучайную последовательность.
-		// param seed новое значение генератора
+		
+		
+		
 		inline void seed(unsigned int seed) const;
 
-		// получить текущее внутреннее значение генератора
-		// Это значение может быть установлено новому генератору и он продолжит псевдослучайную последовательность.
-		// return текущее значение генератора
+		
+		
+		
 		inline unsigned int seed() const;
 
-		//генерирует беззнаковое целое 32 бита
+		
 		inline operator unsigned int() const;
 
-		//генерирует беззнаковое случайное число в диапазоне [0..1] включительно
+		
 		inline float urnd() const;
 
-		//генерирует знаковое случайное число в диапазоне [-1..1] включительно
+		
 		inline float srnd() const;
 
 	private:
-		#define MATRIX_A 0x9908b0dfUL   // constant vector a
-		#define UMASK 0x80000000UL // most significant w-r bits
-		#define LMASK 0x7fffffffUL // least significant r bits
+		#define MATRIX_A 0x9908b0dfUL   
+		#define UMASK 0x80000000UL 
+		#define LMASK 0x7fffffffUL 
 		#define MIXBITS(u,v) ( ((u) & UMASK) | ((v) & LMASK) )
 		#define TWIST(u,v) ((MIXBITS(u,v) >> 1) ^ ((v)&1UL ? MATRIX_A : 0UL))
 
@@ -53,8 +61,8 @@ namespace nm
 		{
 			unsigned int* p = (unsigned int*)state;
 
-			// if setSeed() has not been called, 
-			// a default initial seed is used         
+			
+			
 			if (initf == 0) seed(5489UL);
 
 			left = RANDN;
@@ -77,9 +85,9 @@ namespace nm
 #undef TWIST
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	inline Random::Random()
 	{
 		left = 1;
@@ -87,37 +95,37 @@ namespace nm
 		seed(0);
 	}
 
-	// Инициализация генератора одним и тем-же числом позволяет получать одинаковую
-	// псевдослучайную последовательность.
-	// param seed новое значение генератора
+	
+	
+	
 	inline void Random::seed(unsigned int s) const
 	{
 		state[0] = s & 0xffffffffUL;
 		for (int j = 1; j < RANDN; j++)
 		{
 			state[j] = (1812433253UL * (state[j - 1] ^ (state[j - 1] >> 30)) + j);
-			// See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier. 
-			// In the previous versions, MSBs of the seed affect   
-			// only MSBs of the array state[].                        
-			// 2002/01/09 modified by Makoto Matsumoto             
-			state[j] &= 0xffffffffUL;  // for >32 bit machines 
+			
+			
+			
+			
+			state[j] &= 0xffffffffUL;  
 		}
 		left = 1; initf = 1;
 
 	}
 
-	// получить текущее внутреннее значение генератора
-	// Это значение может быть установлено новому генератору и он продолжит псевдослучайную последовательность.
-	// return текущее значение генератора
+	
+	
+	
 	inline unsigned int Random::seed() const { return *this; }
 
-	//генерирует беззнаковое целое 32 бита
+	
 	inline Random::operator unsigned int() const
 	{
 		if (--left == 0) next_state();
 		unsigned int y = *next++;
 
-		// Tempering 
+		
 		y ^= (y >> 11);
 		y ^= (y << 7) & 0x9d2c5680UL;
 		y ^= (y << 15) & 0xefc60000UL;
@@ -126,7 +134,7 @@ namespace nm
 		return y;
 	}
 
-	//генерирует беззнаковое случайное число в диапазоне [0..1] включительно
+	
 	inline float Random::urnd() const
 	{
 		unsigned int a = static_cast<unsigned int>(*this) >> 5;
@@ -134,16 +142,16 @@ namespace nm
 		return(a*67108864.0f + b)*(1.0f / 9007199254740992.0f);
 	}
 
-	//генерирует знаковое случайное число в диапазоне [-1..1] включительно
+	
 	inline float Random::srnd() const
 	{
 		return urnd()*2.0f - 1.0f;
 	}
 
 
-	//
-	//
-	//
+	
+	
+	
 	namespace
 	{
 		static Random random_gen;
@@ -167,14 +175,14 @@ namespace nm
  
  	template<class T> T random(const T& v1, const T& v2);
 
-	//Генерирует отклонённый от первоначального вектор с распределением по 
-	//степени косинуса угла, т.е. чем выше показатель степени, тем более узкая
-	//диаграмма направленности получится. Значение 1.0f - минимальное значение
-	//степени, пр этом генерируются направления равномерно по полусфере.
-	//Значения степени более 100 000 даст практически параллельный исходному вектор.
-	//param v нормализованный вектор направления
-	//param cosPow значение степени при косинусе угла раствора конуса.
-	//return новое значение вектора
+	
+	
+	
+	
+	
+	
+	
+	
 	Vector3 hemisphereCosineRand(const Vector3& v, float cosPow);
 	void hemisphereCosineRandAngles(float& phi, float& theta, float cosPow);
 
@@ -184,3 +192,21 @@ namespace nm
 	void sphereUniformRand(Vector3 &v);
 
 }
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

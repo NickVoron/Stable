@@ -111,7 +111,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dateTime.cpp" />
-    <ClCompile Include="fileModifyObserver.cpp" />
     <ClCompile Include="fileUtils.cpp" />
     <ClCompile Include="namesGenerator.cpp" />
     <ClCompile Include="osprocess.cpp" />

@@ -1,10 +1,18 @@
+// Copyright (C) 2016-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
-// Scheme Interpreter in 90 lines of C++ (not counting lines after the first 90).
-// Inspired by Peter Norvig's Lis.py.
-// Made by Anthony C. Hay in 2010. See http://howtowriteaprogram.blogspot.co.uk/
-// This is free and unencumbered public domain software, see http://unlicense.org/
-// This code is known to have faults. E.g. it leaks memory. Use at your own risk.
+
+
+
+
+
 
 
 #include <cstdlib>
@@ -87,21 +95,21 @@ namespace scheme
 		virtual	cell call(cells& list)
 		{
 			stl::apply(procedure, init_tuple<P...>(list));
-			cell_type restype = typename CellType<decltype(apply(procedure, init_tuple<P...>(list)))>::type;
+			cell_type restype = CellType<decltype(apply(procedure, init_tuple<P...>(list)))>::type;
 			return cell(restype);
 		}
 
 		Procedure procedure;
 	};
 
-	// a dictionary that (a) associates symbols with cells, and (b) can chain to an "outer" dictionary
+	
 	struct environment
 	{
 		environment() {}
 		environment(const cells& params, const cells& args, const std::shared_ptr<environment>& outer);
 		~environment() {}
 
-		// return a reference to the innermost environment where 'var' appears
+		
 		environment* find(const std::string& var);
 		cell& operator[] (const std::string& var);
 
@@ -114,8 +122,8 @@ namespace scheme
 		}
 
 	private:
-		std::unordered_map<std::string, cell> env; // inner symbol->cell mapping
-		std::shared_ptr<environment> outer; // next adjacent outer env, or 0 if there are no further environments
+		std::unordered_map<std::string, cell> env; 
+		std::shared_ptr<environment> outer; 
 	};
 
 	typedef std::shared_ptr<environment> environment_ptr;
@@ -133,3 +141,21 @@ namespace scheme
 		global_env()->defun(name, proc);
 	}
 }
+
+
+
+// Copyright (C) 2016-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

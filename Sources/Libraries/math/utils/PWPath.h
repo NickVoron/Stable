@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2015 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include <vector>
@@ -7,29 +15,29 @@
 namespace Base {
 
            
-template < class T >  // T is vector
+template < class T >  
 class PWPath {
 public:
 	PWPath() : setted( false ) {}
 	~PWPath() {}
 
-	// selectors:
+	
 	inline T operator()( float thetha ) const;
 	inline T AdvancedInterpolation( float thetha, float smoothingStrength ) const;
 	inline float GetLength() const;
 	inline int GetFragmentCount() const { return static_cast<int>( fragments.size() ); }
 	inline bool IsEmpty() const { return fragments.empty(); }
 
-	// operations:
+	
 	inline void PushBackPoint( const T& newPoint );
 	inline void ValidateCashe() const;
-	//void SetOrigin( const T& ori ) { origin = ori; }
+	
 	void Clear();
 	void Test( std::ostream& s );
 	
 
 private:
-	// int. structures:
+	
 	template < class T >
 	struct Fragment {
 		T end;
@@ -38,7 +46,7 @@ private:
 		float endsThetha;
 	};
 
-	// int. utulities:
+	
 	inline T GetStartFor( int n ) const {
 		if ( n == 0 ) return origin;
 		else return fragments[ n-1 ].end;
@@ -54,8 +62,8 @@ private:
 
 
 
-////////////////////////////////////////////////////////////////////////
-// realization:
+
+
 
 template< class T >
 void
@@ -72,7 +80,7 @@ template < class T >
 void
 PWPath<T>::PushBackPoint( const T& newPoint )
 {
-	// if applied first time, setup origin
+	
 	int currCount = static_cast<int>( fragments.size() );
 
 	if ( ! setted )
@@ -88,7 +96,7 @@ PWPath<T>::PushBackPoint( const T& newPoint )
 		fragments.push_back( newFragment );
 	}
 
-	// tell, that cashe is invalid:
+	
 	casheIsValid = false;
 }
 
@@ -102,7 +110,7 @@ PWPath<T>::ValidateCashe() const
 	if ( fragmentCount <= 0 )
 		return;
 
-	// setup start thetha:
+	
 	fragments[0].beginsThetha = 0.0f;
 	for ( int xx = 1; xx < fragmentCount; xx++ )
 	{
@@ -145,13 +153,13 @@ PWPath<T>::operator()( float thetha ) const
 	if ( ! casheIsValid )
 		ValidateCashe();
 
-	// input parameter has only [0..1] range
+	
 	thetha = Base::Clamp( thetha, 0.0f, 1.0f );
 	if ( thetha <= 0.00001f ) return origin;
 
 	const int frCount = static_cast<int>( fragments.size() );
 	T result;
-	// locate segment:
+	
 	for ( int xx = frCount-1; xx >= 0 ; xx-- )
 	{
 		if ( fragments[xx].beginsThetha < thetha )
@@ -174,7 +182,7 @@ PWPath<T>::AdvancedInterpolation( float thetha, float sms ) const
 {
 	T clearResult = operator()( thetha );
 
-	// for exteremally low smoothing use simple interpolation:
+	
 	if ( sms <= 0.0001f )
 		return clearResult;
 
@@ -183,7 +191,7 @@ PWPath<T>::AdvancedInterpolation( float thetha, float sms ) const
 	
     T onSmoothing = ( operator()( thetha-sms ) + operator()( thetha+sms ) ) * 0.5f;
 
-	// result is between clear and interpolated:
+	
 	return onSmoothing * smoothEffect + clearResult * ( 1.0f - smoothEffect );
 }
 
@@ -192,7 +200,7 @@ template< class T >
 void
 PWPath< T >::Test( std::ostream& s )
 {
-	// report content to stream:
+	
 	s << "Testing path:" << std::endl;
 	if ( ! casheIsValid )
 	{
@@ -210,7 +218,7 @@ PWPath< T >::Test( std::ostream& s )
 			<< std::endl;
 	}
 
-	// use function on [0..1]:
+	
 	s << std::endl;
 	s << "Texting function" << std::endl;
 	for ( float a = 0.0f; a <= 1.0f; a += 0.05f )
@@ -222,3 +230,21 @@ PWPath< T >::Test( std::ostream& s )
 
 
 } // namespace Base
+
+
+
+// Copyright (C) 2012-2015 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

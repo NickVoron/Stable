@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2015 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "plane.h"
@@ -37,52 +45,30 @@ struct Volume
 };
 
 
-/*
-Растяжение с билинейной интерполяцией, небезопасно - нет анализа на границы изображения назначения
-Поддерживает тайлинг
-*/
-/*
-template<typename TfmtSrc, typename TfmtDest>
-void stretch(const TfmtSrc& src, const Base::RectPS& rectSrc,
-						 const TfmtDest& dest, const Base::RectPS& rectDest)
-{	//TODO: оптимизация деления на умножения, не вычислять каждый раз х-координату
-	float v = float(rectSrc.top()) / src.size.y;
-	float dv = float(rectSrc.size.y) / src.size.y / rectDest.size.y;
-	nm::index2 i;
-	for(i.y=rectDest.top(); i.y<rectDest.bottom(); i.y++)
-	{
-		float u = float(rectSrc.left()) / src.size.x;
-		float du = float(rectSrc.size.x) / src.size.x / rectDest.size.x;
-		for(i.x = rectDest.left(); i.x < rectDest.right(); i.x++)
-		{
-			dest[i] = src.interpolate(u, v);
-			u += du;
-		}
-		v += dv;
-	}
-}	*/
-
-						/*
-//небезопасный метод - не анализирует выход за границы, поддерживает тайлинг
-template<typename TfmtSrc, typename TfmtDest>
-void blit(const TfmtSrc& src, const Base::RectPS& rectSrc,
-						 const TfmtDest& dest, const Base::RectPS& rectDest)
-{
-	//TODO: оптимизация через обращение к строкам
-	nm::index2 s,d;
-	s.y = rectSrc.top();
-	for(d.y=rectDest.top(); d.y<rectDest.bottom(); d.y++, s.y++)
-	{
-		s.x = rectSrc.left();
-		for(d.x = rectDest.left(); d.x < rectDest.right(); d.x++, s.x++)
-			dest[d] = src[s];
-	}
-}
 
 
 
-					  */
+						
  #pragma pack(pop)
 
-};	//art
+};	
 
+
+
+
+
+// Copyright (C) 2012-2015 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

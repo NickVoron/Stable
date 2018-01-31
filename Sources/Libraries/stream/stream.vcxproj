@@ -110,10 +110,6 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="dataop\data_op.cpp" />
-    <ClCompile Include="dataop\errors.cpp" />
-    <ClCompile Include="dataop\rijndael_op.cpp" />
-    <ClCompile Include="dataop\zlib_op.cpp" />
     <ClCompile Include="stream\cfile.cpp" />
     <ClCompile Include="stream\fstream.cpp" />
     <ClCompile Include="stream\mstream.cpp" />
@@ -127,12 +123,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dataop\data_op.h" />
-    <ClInclude Include="dataop\dataop.h" />
     <ClInclude Include="dataop\errors.h" />
     <ClInclude Include="dataop\rijndael_op.h" />
     <ClInclude Include="dataop\zlib_op.h" />
     <ClInclude Include="operators\cfile.io.h" />
-    <ClInclude Include="operators\io.h" />
     <ClInclude Include="operators\std.io.h" />
     <ClInclude Include="operators\stl.io.h" />
     <ClInclude Include="stream\bufcrc.h" />

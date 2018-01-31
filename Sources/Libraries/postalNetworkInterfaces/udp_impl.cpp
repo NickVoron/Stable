@@ -1,3 +1,11 @@
+// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "udp_impl.h"
 #include "defaultLogs/library.include.h"
 
@@ -11,7 +19,7 @@ namespace postal
 	UDPConnection::UDPConnection(const sockaddr_in& insock)
 	{
 		address = net::address4(insock);
-		sock = std::make_unique<net::Socket>(net::ProtocolType::UDP, false);
+		sock = std::make_unique<net::Socket>(net::ProtocolType::UDP, false, false, false);
 	}
 
 	UDPConnection::~UDPConnection()
@@ -23,7 +31,7 @@ namespace postal
 	{
 		LOG_MSG("connect to:" << addr.address.string());
 		address = addr.address;
-		sock = std::make_unique<net::Socket>(net::ProtocolType::UDP, false);
+		sock = std::make_unique<net::Socket>(net::ProtocolType::UDP, false, false, false);
 		return true;
 	}
 
@@ -50,9 +58,9 @@ namespace postal
 	}
 
 
-	//
-	//
-	//
+	
+	
+	
 	UDPConnections::~UDPConnections()
 	{
 		close();
@@ -60,7 +68,7 @@ namespace postal
 
 	bool UDPConnections::start(uint16_t port)
 	{
-		serv = std::make_unique<net::Socket>(net::ProtocolType::UDP, port, true);
+		serv = std::make_unique<net::Socket>(net::ProtocolType::UDP, port, true, false, false);
 		return true;
 	}
 
@@ -93,3 +101,21 @@ namespace postal
 		return res;
 	}
 }
+
+
+
+// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

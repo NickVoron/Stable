@@ -1,7 +1,4 @@
-/* Alloc.c -- Memory allocation functions
-2008-09-24
-Igor Pavlov
-Public domain */
+
 
 #ifdef _WIN32
 #include <windows.h>
@@ -10,9 +7,9 @@ Public domain */
 
 #include "Alloc.h"
 
-/* #define _SZ_ALLOC_DEBUG */
 
-/* use _SZ_ALLOC_DEBUG to debug alloc/free operations */
+
+
 #ifdef _SZ_ALLOC_DEBUG
 #include <stdio.h>
 int g_allocCount = 0;

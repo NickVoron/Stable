@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "geometry/mesh/vertexStream.h"
@@ -7,7 +15,7 @@
 namespace dx9
 {
 
-// VertexBuffer
+
 class VertexBuffer : public BufferBase<VertexBuffer>
 {
 public:
@@ -46,9 +54,9 @@ private:
 	unsigned int verticesCount;
 };
 
-//
-//
-//
+
+
+
 
 inline VertexBuffer::VertexBuffer()
 :vb(0), sizeInBytes(0), sizeOfVertex(0), verticesCount(0)
@@ -92,7 +100,7 @@ template<int streamId>
 void VertexBuffer::set() const 
 { 
 	static LPDIRECT3DVERTEXBUFFER9 currentVB = 0;
-	//if(currentVB != vb)
+	
 	{
 		device->SetStreamSource( streamId, vb, 0, sizeOfVertex );
 		currentVB = vb;
@@ -115,7 +123,7 @@ void VertexBuffer::lock(int offsetInVertices, int verticesCount, Geometry::Verte
 	if(vb)
 	{
 		void* dataPtr;
-		DWORD flags = ((type == DYNAMIC) ? D3DLOCK_DISCARD : 0);// | D3DLOCK_NO_DIRTY_UPDATE | D3DLOCK_NOSYSLOCK;
+		DWORD flags = ((type == DYNAMIC) ? D3DLOCK_DISCARD : 0);
 
 		vb->Lock(offset, estimatedSize, &dataPtr, flags);
 		vsb = Geometry::VertexStreamBase<VertexType>(dataPtr, verticesCount);
@@ -151,7 +159,7 @@ inline void VertexBuffer::clear()
 {
 	if(sizeInBytes > 0)
 	{
-		//device->SetStreamSource( 0, 0, 0, sizeOfVertex );
+		
 		release();
 		sizeInBytes = 0;
 		sizeOfVertex = 0;
@@ -160,3 +168,21 @@ inline void VertexBuffer::clear()
 }
 
 }
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

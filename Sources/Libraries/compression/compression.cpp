@@ -19,18 +19,18 @@ namespace compression
 	int lzma_cq(int sourceSize) { return sourceSize * 3 + 5; }
 	int lzma_c(const unsigned char* source, unsigned char* dest, int sourceSize)
 	{
-		size_t outPropsSize = 5;
+		size_t outPropsSize = LZMA_PROPS_SIZE;
  		size_t destLen = lzma_cq(sourceSize);
 
-		LzmaCompress(&dest[5], &destLen, source, sourceSize,
-			&dest[0], &outPropsSize, /* *outPropsSize must be = 5 */
-			5,      /* 0 <= level <= 9, default = 5 */
-			1 << 24,  /* default = (1 << 24) */
-			3,        /* 0 <= lc <= 8, default = 3  */
-			0,        /* 0 <= lp <= 4, default = 0  */
-			2,        /* 0 <= pb <= 4, default = 2  */
-			32,        /* 5 <= fb <= 273, default = 32 */
-			1 /* 1 or 2, default = 2 */
+		LzmaCompress(&dest[LZMA_PROPS_SIZE], &destLen, source, sourceSize,
+			&dest[0], &outPropsSize, 
+			9,      
+			1 << 24,  
+			3,        
+			0,        
+			2,        
+			32,        
+			1 
 			);
 
 		return destLen;
@@ -41,9 +41,9 @@ namespace compression
 		size_t destLen1 = -1;
 		SizeT srcSize = compressedSize;
 
-		LzmaUncompress(dest, &destLen1, &source[5], &srcSize, &source[0], 5);
+		auto res = LzmaUncompress(dest, &destLen1, &source[LZMA_PROPS_SIZE], &srcSize, &source[0], LZMA_PROPS_SIZE);
 
-		return originalSize;
+		return destLen1;
 	}	  	
 
 
@@ -64,13 +64,14 @@ namespace compression
 	int lz4_c(const unsigned char* source, unsigned char* dest, int sourceSize) {	return LZ4_compress((const char*)source, (char*) dest, sourceSize); 	}
 	int lz4_dc(const unsigned char* source, unsigned char* dest, int compressedSize, int originalSize)
 	{	  
-		ENFORCE(LZ4_decompress_fast((char*) source, (char*) dest, originalSize) == compressedSize);
+		auto resultSz = LZ4_decompress_fast((char*) source, (char*) dest, originalSize);
+		ENFORCE(resultSz == compressedSize);
 		return originalSize;
 	}
 
 
 
-	//
+	
 	int lz4hc_cq(int sourceSize) { return LZ4_compressBound(sourceSize); }
 	int lz4hc_c(const unsigned char* source, unsigned char* dest, int sourceSize) { return LZ4_compressHC((char*) source, (char*) dest, sourceSize); }
 	int lz4hc_dc(const unsigned char* source, unsigned char* dest, int compressedSize, int originalSize)
@@ -81,7 +82,7 @@ namespace compression
 
 
 
-	//
+	
 	int ppmd_cq(int sourceSize) { return 0; }
 	
 	int ppmd_c(const unsigned char* source, unsigned char* dest, int sourceSize)
@@ -96,7 +97,7 @@ namespace compression
 	}
 
 
-	//
+	
 	int zlib_cq(int sourceSize) 
 	{ 
 		__int64 sz = sourceSize;
@@ -118,7 +119,7 @@ namespace compression
 		uLongf destLen = originalSize;
 		int res = uncompress((Bytef*) dest, (uLongf *) &destLen, (const Bytef*) source, compressedSize);
 		ENFORCE(res == Z_OK);
-		return originalSize;
+		return destLen;
 	}
 
 }

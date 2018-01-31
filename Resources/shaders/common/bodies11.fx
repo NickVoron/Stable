@@ -3,6 +3,7 @@ cbuffer cbPerCamera : register( b0 )
 	float4x4 View       : VIEW;
 	float4x4 Projection : PROJECTION;
 	float4 direction;
+	float4 lightDirection;
 }
 
 cbuffer cbPerObject : register( b1 )
@@ -43,5 +44,15 @@ VS_OUTPUT VS( VS_INPUT In )
 
 float4 PS(VS_OUTPUT In ) : SV_TARGET0
 {
-	return float4(In.Color.xyz, 1);
+	if (colorFromVertex[2] == 0)
+	{
+		return float4(In.Color.xyz, 1);
+	}
+	else if(colorFromVertex[2] == 0x0010)
+	{
+		float light = saturate(dot(In.Normal, lightDirection)) + 0.3f;
+		return float4(In.Color.xyz * light, 1);
+	}
+	
+	return float4(1, 1, 0, 1);
 }

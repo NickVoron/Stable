@@ -1,3 +1,11 @@
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "shaderResource.h"
 #include "device.h"
 #include "io.h"
@@ -6,50 +14,14 @@
 		   
 namespace dx11
 {  
-	//
-	//
-	//
-	/*
-	ID3D11ShaderResourceView* createShaderRes2D(ID3D11Device* device, ID3D11Texture2D* texture)
-	{
-		D3D11_TEXTURE2D_DESC desc;
-		texture->GetDesc(&desc);
+	
+	
+	
+	
 
-		ID3D11ShaderResourceView* srv = 0;	  
-		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-
-		srvDesc.Format = desc.Format;
-		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Texture2D.MostDetailedMip = 0;
-		srvDesc.Texture2D.MipLevels = desc.MipLevels;
-				
-		device->CreateShaderResourceView(texture, &srvDesc, &srv);		
-
-		return srv;
-	}	
-
-	ID3D11ShaderResourceView* createShaderResCUBE(ID3D11Device* device, ID3D11Texture2D* texture)
-	{
-		D3D11_TEXTURE2D_DESC desc;
-		texture->GetDesc(&desc);
-
-		ID3D11ShaderResourceView* srv = 0;
-		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-
-		srvDesc.Format = desc.Format;
-		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
-		srvDesc.Texture2D.MostDetailedMip = 0;
-		srvDesc.Texture2D.MipLevels = desc.MipLevels;
-		
-		device->CreateShaderResourceView(texture, &srvDesc, &srv);
-
-		return srv;
-	}
-	*/
-
-	//
-	//
-	//
+	
+	
+	
  	void DeviceTexture::save(stream::ostream& os) const
  	{
 		dx11::saveTexture(device, ptr, os);
@@ -69,9 +41,9 @@ namespace dx11
  	}
 
 
-	//
-	//
-	//
+	
+	
+	
 	void Texture::save(stream::ostream& os) const 
 	{
 		for (int i = 0; i < devices->count(); ++i)
@@ -93,9 +65,9 @@ namespace dx11
 		data[0].size(width, height);
 	}
 
-	//
-	//
-	//
+	
+	
+	
 	void DeviceShaderResource::create(DeviceTexture& texture, const D3D11_SHADER_RESOURCE_VIEW_DESC& desc)
 	{
 		HRESULT hr = device->device->CreateShaderResourceView(texture.ptr, &desc, &ptr);
@@ -115,7 +87,7 @@ namespace dx11
 		device->device->CreateShaderResourceView(depthStencil.ptr, &desc, &ptr);
 	}
 
-	//
+	
 	void ShaderResource::create(Texture& texture)
 	{
 		for (int i = 0; i < devices->count(); ++i)
@@ -160,13 +132,13 @@ namespace dx11
 		is >> desc;
 	}
 
-	//
-	//
-	//
+	
+	
+	
 
-	//
-	//
-	//
+	
+	
+	
 	void resetShaderResourceVS(int slot) { ID3D11ShaderResourceView* empty = 0; for (int i = 0; i < devices->count(); ++i)	(*devices)[i].context->VSSetShaderResources(slot, 1, &empty); }
 	void resetShaderResourcePS(int slot) { ID3D11ShaderResourceView* empty = 0; for (int i = 0; i < devices->count(); ++i)	(*devices)[i].context->PSSetShaderResources(slot, 1, &empty); }
 	void resetShaderResourceGS(int slot) { ID3D11ShaderResourceView* empty = 0; for (int i = 0; i < devices->count(); ++i)	(*devices)[i].context->GSSetShaderResources(slot, 1, &empty); }
@@ -175,3 +147,22 @@ namespace dx11
 	void resetShaderResourceCS(int slot) { ID3D11ShaderResourceView* empty = 0; for (int i = 0; i < devices->count(); ++i)	(*devices)[i].context->CSSetShaderResources(slot, 1, &empty); }
 }
 
+
+
+
+
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

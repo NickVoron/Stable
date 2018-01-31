@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "vertexDeclaration.h"
@@ -8,7 +16,7 @@
 
 namespace dx9{
 
-	// DynamicMesh
+	
 	template<class DrawerType>
 	class DynamicMeshT
 	{
@@ -83,78 +91,26 @@ namespace dx9{
 
 	class DynamicMeshStrip : public DynamicMeshT< IndexedDrawer<D3DPT_TRIANGLESTRIP> >{};
 	
-/*
-	// 
-	class InstancedMesh
-	{
-	public:
 
-		InstancedMesh(){}
-		~InstancedMesh(){release();}
-
-		void release()	{ ivb.clear(); vb.clear(); ib.clear(); }
-
-		template<class MeshVertex, class InstanceVertex>
-		void createVD(){ vd.create<TYPELIST_2(MeshVertex, InstanceVertex)>(); }
-
-		template<class InstanceVertex>
-		void uploadInstancesVB(const VertexStream<InstanceVertex>& vs)
-		{ 
-			ivb.upload(vs); 
-		}
-
-		template<class MeshVertex>
-		void uploadMeshVB(const VertexStream<MeshVertex>& vs)
-		{ 
-			vb.upload(vs); 
-			dip.setVerticesCount(vb.getVerticesCount());
-		}
-
-		template<class IndexStream>	 
-		void uploadMeshIB(const IndexStream& is) 
-		{ 
-			ib.upload(is);  
-			dip.setIndicesCount(ib.getIndicesCount());
-		}
-
-		void setDeclaration()	{ vd.set(); }
-		void setIndices()		{ ib.set(); }
-		void setMeshVertices()		{ vb.set<0>(); }
-		void setInstanceVertices()	{ vb.set<1>(); }
-		
-		int getInstancesCount() const { return ivb.getVerticesCount(); }
-
-		void draw()
-		{
-			vd.set();
-			ib.set();
-			vb.set<0>();
-			ivb.set<1>();
-
-			LPDIRECT3DDEVICE9 device = dx9::device;
-
-			device->SetStreamSourceFreq(0, (D3DSTREAMSOURCE_INDEXEDDATA | (UINT)ivb.getVerticesCount() ));
-			device->SetStreamSourceFreq(1, (D3DSTREAMSOURCE_INSTANCEDATA | 1));
-
-			dip.call();
-
-			device->SetStreamSourceFreq(0,1);
-			device->SetStreamSourceFreq(1,1);
-		}
-
-		void setType(Buffer::BufferType t)
-		{
-			vb.setType(t);
-			ib.setType(t);
-		}
-
-	private:
-		VertexBuffer vb;
-		VertexBuffer ivb;
-		IndexBuffer ib;
-		VertexDeclaration vd;
-		DrawIndexedPrimitive dip;
-	};*/
 
 }
 
+
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

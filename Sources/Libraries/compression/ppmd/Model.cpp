@@ -1,9 +1,4 @@
-/****************************************************************************
- *  This file is part of PPMd project                                       *
- *  Written and distributed to public domain by Dmitry Shkarin 1997,        *
- *  1999-2001, 2010                                                         *
- *  Contents: PPMII model description and encoding/decoding routines        *
- ****************************************************************************/
+
 #include <string.h>
 #include "PPMd.h"
 #pragma hdrstop
@@ -14,7 +9,7 @@ enum { UP_FREQ=5, INT_BITS=7, PERIOD_BITS=7, TOT_BITS=INT_BITS+PERIOD_BITS,
     INTERVAL=1 << INT_BITS, BIN_SCALE=1 << TOT_BITS, MAX_FREQ=124, O_BOUND=9 };
 
 #pragma pack(1)
-static struct SEE2_CONTEXT { // SEE-contexts for PPM-contexts with masked symbols
+static struct SEE2_CONTEXT { 
     WORD Summ;
     BYTE Shift, Count;
     void init(UINT InitVal) { Summ=InitVal << (Shift=PERIOD_BITS-4); Count=7; }
@@ -28,19 +23,19 @@ static struct SEE2_CONTEXT { // SEE-contexts for PPM-contexts with masked symbol
         }
     }
 } _PACK_ATTR SEE2Cont[24][32], DummySEE2Cont;
-static struct PPM_CONTEXT {                 // Notes:
-    BYTE NumStats, Flags;                   // 1. NumStats & NumMasked contain
-    WORD SummFreq;                          //  number of symbols minus 1
-    struct STATE {                          // 2. sizeof(WORD) > sizeof(BYTE)
-        BYTE Symbol, Freq;                  // 3. contexts example:
-        PPM_CONTEXT* Successor;             // MaxOrder:
-    } _PACK_ATTR * Stats;                   //  ABCD    context
-    PPM_CONTEXT* Suffix;                    //   BCD    suffix
-    inline void encodeBinSymbol(int symbol);//   BCDE   successor
-    inline void   encodeSymbol1(int symbol);// other orders:
-    inline void   encodeSymbol2(int symbol);//   BCD    context
-    inline void           decodeBinSymbol();//    CD    suffix
-    inline void             decodeSymbol1();//   BCDE   successor
+static struct PPM_CONTEXT {                 
+    BYTE NumStats, Flags;                   
+    WORD SummFreq;                          
+    struct STATE {                          
+        BYTE Symbol, Freq;                  
+        PPM_CONTEXT* Successor;             
+    } _PACK_ATTR * Stats;                   
+    PPM_CONTEXT* Suffix;                    
+    inline void encodeBinSymbol(int symbol);
+    inline void   encodeSymbol1(int symbol);
+    inline void   encodeSymbol2(int symbol);
+    inline void           decodeBinSymbol();
+    inline void             decodeSymbol1();
     inline void             decodeSymbol2();
     inline void           update1(STATE* p);
     inline void           update2(STATE* p);
@@ -53,11 +48,11 @@ static struct PPM_CONTEXT {                 // Notes:
 } _PACK_ATTR* MaxContext;
 #pragma pack()
 
-static BYTE NS2BSIndx[256], QTable[260];    // constants
-static PPM_CONTEXT::STATE* FoundState;      // found next state transition
+static BYTE NS2BSIndx[256], QTable[260];    
+static PPM_CONTEXT::STATE* FoundState;      
 static int  InitEsc, OrderFall, RunLength, InitRL, MaxOrder;
 static BYTE CharMask[256], NumMasked, PrevSuccess, EscCount, PrintCount;
-static WORD BinSumm[25][64];                // binary SEE-contexts
+static WORD BinSumm[25][64];                
 static MR_METHOD MRMethod;
 
 inline void SWAP(PPM_CONTEXT::STATE& s1,PPM_CONTEXT::STATE& s2)
@@ -71,7 +66,7 @@ inline void StateCpy(PPM_CONTEXT::STATE& s1,const PPM_CONTEXT::STATE& s2)
     (WORD&) s1=(WORD&) s2;                  s1.Successor=s2.Successor;
 }
 struct PPMD_STARTUP { inline PPMD_STARTUP(); } PPMd_StartUp;
-inline PPMD_STARTUP::PPMD_STARTUP()         // constants initialization
+inline PPMD_STARTUP::PPMD_STARTUP()         
 {
     UINT i, k, m, Step;
     for (i=0,k=1;i < N1     ;i++,k += 1)    Indx2Units[i]=k;
@@ -94,7 +89,7 @@ static void _STDCALL StartModelRare(int MaxOrder,MR_METHOD MRMethod)
 {
     UINT i, k, m;
     memset(CharMask,0,sizeof(CharMask));    EscCount=PrintCount=1;
-    if (MaxOrder < 2) {                     // we are in solid mode
+    if (MaxOrder < 2) {                     
         OrderFall=::MaxOrder;
         for (PPM_CONTEXT* pc=MaxContext;pc->Suffix != NULL;pc=pc->Suffix)
                 OrderFall--;
@@ -429,7 +424,7 @@ static inline void UpdateModel(PPM_CONTEXT* MinContext)
 RESTART_MODEL:
     RestoreModelRare(pc1,MinContext,FSuccessor);
 }
-// Tabulated escapes for exponential symbol distribution
+
 static const BYTE ExpEscape[16]={ 25,14, 9, 7, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
 #define GET_MEAN(SUMM,SHIFT,ROUND) ((SUMM+(1 << (SHIFT-ROUND))) >> (SHIFT))
 inline void PPM_CONTEXT::encodeBinSymbol(int symbol)

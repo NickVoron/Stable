@@ -1,17 +1,41 @@
+// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 #include <string>
-#include <unordered_map>
-#include <optional>
+#include <map>
+#include <set>
+#include <algorithm>
+#include <atomic>
 
+#if !defined(USE_APPLE) && !defined(__APPLE__)
+#include <optional>
+#else
+#include <experimental/optional>
+namespace std
+{
+	template<class T>
+	using optional = std::experimental::optional<T>;
+
+	using nullopt_t = std::experimental::nullopt_t;
+}
+#endif
+
+#include "stuff/library.include.h"
 
 namespace Expressions
 {
-	// это собственное пространство имен переменной, к примеру у струтуры все дочерние свойства будут храниться здесь
-	// такая же штука есть у класса. У ProxyExpression собственное отсутвует вместо него пространство имен класса
-	// Если Epxression является массивом то все ссылки на дочерние элементы тут то же будут храниться 
-	// Это все нужно что что бы Path могло раскручивать адресации вида var.property[1],
-	// в данном случае нужно найти var у него в пространстве имен найти property а у него найди [1], 
-	// то есть первый элемент массива
+	
+	
+	
+	
+	
+	
 
 	enum class InsertMethod
 	{
@@ -168,15 +192,34 @@ namespace Expressions
 			return found->first;
 		}
 
-		return std::nullopt;
+		return {};
 	}
 
 	template<typename ExpressionType>
 	void NameScope<ExpressionType>::remove(const std::string& name)
 	{
-		auto iter = find(name);
-		ENFORCE(iter != end());
-		erase(iter);
+		auto iter = this->find(name);
+		ENFORCE(iter != this->end());
+		this->erase(iter);
 	}  	
 }
 	
+
+
+
+
+// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

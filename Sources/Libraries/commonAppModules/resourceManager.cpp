@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "resourceManager.h"
 #include "resourceManager/library.include.h"
 #include "resourceUtils/library.include.h"
@@ -48,9 +56,9 @@ namespace AppModules
 		{
 			Resources::Store& store = Resources::Store::get();
 
-// 			imgui::button_if(store.isServer() || store.isClient(), "StopNetwok", [&store]() { store.stop(); });
-// 			imgui::button_if(!store.isClient() && !store.isServer(), "ResourceClient", [&store]() { store.connectToResourcesServer(resourceServerAddr); });
-// 			imgui::button_if(store.isClient(), "Sync Resources", [&store]() { store.loadedResourcesSync(); });
+
+
+
 
 			for (auto& s : store)
 			{
@@ -60,25 +68,7 @@ namespace AppModules
 					{
 						for (auto& res : s.resources())
 						{
-/*
-							auto help = res->help();
 
-							if (!help.empty())
-							{
-								if (imgui::button("help"))
-								{
-									{
-										std::ofstream hos("help.txt");
-
-										for (auto& h : help)
-										{
-											hos << h << std::endl;
-										}
-									}
-
-									Resources::edit("help.txt");
-								}
-							}*/
 					
 							imgui::button(Base::FileUtils::GetFileNameOnly(res.c_str()), [res]() { Resources::edit(res.c_str()); });
 						}
@@ -119,9 +109,9 @@ namespace AppModules
 	void ResourcesManager::init_impl()
 	{
 		Resources::Store& store = Resources::Store::get();
-		//if (!store.startResourcesServer(resourceServerPort))
+		
 		{
-			//store.connectToResourcesServer(resourceServerAddr);
+			
 		}
 
 		scheme::defun("always-recompile", &always_recompile);
@@ -136,7 +126,7 @@ namespace AppModules
 
 		if(cleanCompiledResources)
 		{
-//			Resources::cleanCompiledLocalResources();
+
 		}
 
 		if (exitAfterInit)
@@ -151,9 +141,9 @@ namespace AppModules
 		Resources::Store::Destroy();
 	}
 
-	//
-	//
-	//
+	
+	
+	
 	void ResourceWatcher::process()
 	{
 		if(!Streaming::Streamer::active())
@@ -175,3 +165,21 @@ namespace AppModules
 
 
 }
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

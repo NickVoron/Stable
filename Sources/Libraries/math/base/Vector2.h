@@ -1,14 +1,12 @@
-/*********************************************************************
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
 
-	SiGMan / iO UpG  -  Copyright (C) 2000-2001
 
-	Author: SiGMan
-	  Date: 20.07.2001
-	  Time: 5:10:04
-
-	Abstract:	Standard 2x1 column vector class
-
-*********************************************************************/
 #pragma once
 
 #include <math.h>
@@ -19,16 +17,16 @@
 #undef SDot
 #undef SCross
 
-// The Vector2 class implements a 2x1 column vector or 1x2 row vector
-// ( dep on the context )
-// This class and the associated MatrixN and Quaternion classes are
-// provided to simplify vector and math in code.
+
+
+
+
 
 class Vector2
 {
 public:
 
-	// Public data
+	
 	float x, y;
 
 	static const Vector2 zero;
@@ -38,26 +36,26 @@ public:
 	static const Vector2 xNegAxis;
 	static const Vector2 yNegAxis;
 
-	// Ctor / dtor
+	
 	inline Vector2();
 	inline Vector2( float x, float y );
 	inline Vector2( const float vector[] );
 
-	// Load / save
+	
 	inline void Load( const float vector[] );
 	inline void Save( float vector[] ) const;
 
-	// Reset to zero
+	
 	inline void Zero();
 	static inline Vector2 GetZero();
 
-	// Access
+	
 	inline float& operator[]( size_t index );
 	inline const float& operator [] (size_t index ) const;
 
-	// Scalar
+	
 
-	// infix
+	
 	inline Vector2& operator += ( float scalar );
 	inline Vector2& operator -= ( float scalar );
 	inline Vector2& operator *= ( float scalar );
@@ -72,41 +70,41 @@ public:
 	friend Vector2 operator - ( float scalar, const Vector2& vector );
 	friend Vector2 operator * ( float scalar, const Vector2& vector );
 
-	// Vector ops
+	
 
-	// SDot product
+	
 	inline float SDot( const Vector2& vector ) const;
 
-	// Returns length of given vector projected onto this
+	
 	inline float Projection( const Vector2& vector ) const;
 
-	// Exact magnitude with the square root
+	
 	inline float Magnitude() const;
 	inline float MagnitudeSquared() const;
 
-	// Exact inverse magnitude
+	
 	inline float InvMagnitude() const;
 	inline float InvMagnitudeSquared() const;
 
-	// Returns normalized vector
+	
 	inline Vector2 GetNormalized() const;
 	inline Vector2& Normalize();
 
-	// Faster magnitude approx
+	
 	inline float ApproxMagnitude() const;
 
-	// Faster inverse magnitude approximation
+	
 	inline float ApproxInvMagnitude() const;
 
-	// Returns normalized version of this vector using approximate magnitude
+	
 	inline Vector2 GetApproxNormalized() const;
 	inline Vector2& ApproxNormalized();
 
-	// Unary
+	
 	friend Vector2 operator + ( const Vector2& vector );
 	friend Vector2 operator - ( const Vector2& vector );
 
-	// Infix
+	
 	inline Vector2& operator += ( const Vector2& vector );
 	inline Vector2& operator -= ( const Vector2& vector );
 
@@ -115,25 +113,25 @@ public:
 
 	inline Vector2& mul( const Vector2& vector );
 
-	// vector logical compare
-	// ! with an given tolerance!
+	
+	
 	inline bool Equal( const Vector2& vector, float tolerance = 0.000001f) const;
 	inline bool NotEqual( const Vector2& vector, float tolerance = 0.000001f) const;
 	
-	// Vector binary compare
+	
 	inline bool operator == ( const Vector2& vector ) const;
 	inline bool operator != ( const Vector2& vector ) const;
 
 protected:
-	// Approximate the magnitude of a 2d vector using Taylor series 
-	// expansion. Accuracy of result is between 0.99946 and 1.0 dependin'
-	// on the length of the different components
+	
+	
+	
 	inline float ApproximateMagnitude( float x1, float y1 ) const;
 };
 
 
-///////////////////////////////////////////////////////////////////
-/// Implementation
+
+
 
 Vector2::Vector2()
 {}
@@ -149,7 +147,7 @@ Vector2::Vector2( const float vector[] )
 	y = vector[1];
 }
 
-//
+
 
 void Vector2::Load( const float vector[] )
 {
@@ -163,7 +161,7 @@ void Vector2::Save( float vector[] ) const
 	vector[1] = y;
 }
 
-//
+
 
 void Vector2::Zero()
 {
@@ -176,7 +174,7 @@ Vector2 Vector2::GetZero()
 	return Vector2( 0.0f, 0.0f );
 }
 
-//
+
 
 float& Vector2::operator [] (size_t index )
 {
@@ -188,7 +186,7 @@ const float& Vector2::operator [] (size_t index ) const
 	return *((&x) + index );
 }
 
-// 
+
 
 Vector2& Vector2::operator += ( float scalar )
 {
@@ -246,7 +244,7 @@ Vector2 Vector2::operator / ( float scalar ) const
 	return Vector2( *this ) /= scalar;
 }
 
-//
+
 
 inline Vector2 operator + ( float scalar, const Vector2& vector )
 {
@@ -263,7 +261,7 @@ inline Vector2 operator * ( float scalar, const Vector2& vector )
 	return vector * scalar;
 }
 
-// 
+
 
 float Vector2::SDot( const Vector2& vector ) const
 {
@@ -313,7 +311,7 @@ Vector2& Vector2::Normalize()
 	return *this;
 }
 
-//
+
 
 float Vector2::ApproximateMagnitude( float x1, float y1 ) const
 {
@@ -323,7 +321,7 @@ float Vector2::ApproximateMagnitude( float x1, float y1 ) const
 	if ( x1 < 0.414213f * y1 ) return y1 + 0.483608f * x1 * x1 / y1;
 	if ( y1 < 0.414213f * x1 ) return x1 + 0.483608f * y1 * y1 / x1;
 
-	// function returns infinite float then zero length used
+	
 	float sum = x1 + y1;
 	if ( sum ) return 1.04907f * sum - 1.36785f * x1 * y1 / sum;
 	else 
@@ -362,7 +360,7 @@ Vector2& Vector2::ApproxNormalized()
 	return *this;
 }
 
-// unary
+
 
 inline Vector2 operator - ( const Vector2& vector )
 {
@@ -374,7 +372,7 @@ inline Vector2 operator + ( const Vector2& vector )
 	return vector;
 }
 
-//
+
 Vector2& Vector2::operator += ( const Vector2& vector )
 {
 	x += vector.x;
@@ -399,7 +397,7 @@ Vector2 Vector2::operator - ( const Vector2& vector ) const
 	return Vector2( *this ) -= vector;
 }
 
-//
+
 
 bool Vector2::Equal( const Vector2& vector, float tolerance ) const
 {
@@ -412,7 +410,7 @@ bool Vector2::NotEqual( const Vector2& vector, float tolerance ) const
 	return !Equal( vector, tolerance );
 }
 
-//
+
 
 bool Vector2::operator == ( const Vector2& vector ) const
 {
@@ -423,3 +421,22 @@ bool Vector2::operator != ( const Vector2& vector ) const
 {
 	return ! operator == ( vector );
 }
+
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

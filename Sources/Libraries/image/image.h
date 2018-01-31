@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2015 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "color.h"
@@ -20,29 +28,7 @@
 
 namespace image
 {
-/*
-	template<class SrcChannelType, class DstChannelType, int numChannels>
-	inline void accumulate(const Plane< Color<SrcChannelType, numChannels> >& img, Color<DstChannelType, numChannels>& res)
-	{
-		typedef accumulation_type<SrcChannelType>::result SummChT;
-		typedef Color<SummChT, numChannels> SummColor;
-		typedef Color<SrcChannelType, numChannels> IColor;
-		
-		SummColor summ; summ.zero();
-		nm::index2 i;
-		for(i.y=0; i.y < img.sizeY; ++i.y)
-		{
-			for(i.x=0; i.x < img.sizeX; ++i.x)
-			{
-				for (int j = 0; j < numChannels; ++j)
-				{
-					summ.plane[j] += img(i.x, i.y).plane[j];
-				}
-			}
-		}
 
-		res = summ;
-	}*/
 
 
 	template<class CT0, class CT1>
@@ -128,7 +114,7 @@ namespace image
 	void blend_replace(const ColorType0& dest, const ColorType1& src, ColorType2& result)
 	{
 		result = src;
-//		image::rgba(src.a(), src.a(), src.a(), src.a(), result);
+
 	}
 
 	template<class ColorType0, class ColorType1, class ColorType2>
@@ -137,7 +123,7 @@ namespace image
 		image::Color<image::RGBA32F> fdst = dst;
 		image::Color<image::RGBA32F> fsrc = src;
 		result = nm::lerp(fdst, fsrc, (float)fsrc.a());
-		//result = fsrcfsrc
+		
 	}
 
 	template<class ColorType0, class ColorType1, class ColorType2, class PointType, class RectType, class BlendFunc>
@@ -290,3 +276,21 @@ namespace image
 		return false;
 	}
 }
+
+
+
+// Copyright (C) 2012-2015 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

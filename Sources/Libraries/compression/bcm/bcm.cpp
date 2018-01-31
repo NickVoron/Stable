@@ -1,5 +1,5 @@
-// bcm.cpp is written and placed in the public domain by Ilya Muravyov
-//
+
+
 
 #ifdef __GNUC__
 #define _FILE_OFFSET_BITS 64
@@ -7,9 +7,9 @@
 #define _ftelli64 ftello64
 #endif
 
-//#define _CRT_SECURE_NO_WARNINGS
-//#define _CRT_DISABLE_PERFCRIT_LOCKS
-#include "divsufsort.h" // libdivsufsort-lite
+
+
+#include "divsufsort.h" 
 
 #include "stream/library.include.h"
 
@@ -246,7 +246,7 @@ void compress(int b, stream::istream& is, stream::ostream& os)
 			break;
 	}
 
-	cm.Put(0, os); // EOF
+	cm.Put(0, os); 
 	cm.Put(0, os);
 	cm.Put(0, os);
 	cm.Put(0, os);
@@ -302,7 +302,7 @@ void decompress(stream::istream& is, stream::ostream& os)
 			fprintf(stderr, "File corrupted\n");
 			exit(1);
 		}
-		// Inverse BWT
+		
 		int t[257]={0};
 		for (int i=0; i<n; ++i)
 			++t[(buf[i]=cm.Get(is))+1];
@@ -337,7 +337,7 @@ mem::mem_desc load_file(const char* fname)
 
 int impl_bcm_c(const unsigned char* source, unsigned char* dest, int sourceSize)
 {	
-	int block_size = 20 << 20; // 20 MB
+	int block_size = 20 << 20; 
 
 	stream::dmemstream is; is.write(source, sourceSize);
 	stream::dmemstream os;

@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include <algorithm>
@@ -60,7 +68,7 @@ public:
 	IndexStream<Type>& operator=(const IndexStream<Type>& is)
 	{
 		resize(is.size());
-		mem::memcpy( indices, is.indices, memory());
+		memcpy( indices, is.indices, memory());
 		maxIndexValue = is.maxIndexValue;
 		return *this;
 	}
@@ -138,29 +146,15 @@ public:
 	std::size_t memory() const {return sizeof(Type) * size();}
 
 	void optimize()
-	{		 /*
-		// convert 32 bits indices from the submesh into the type used by Tri Stripper
-		triangle_stripper::indices Indices(indices, indices + size);
+	{		 
 
-		triangle_stripper::primitive_vector PrimitivesVector;
-		
-		{ // we want to time the tri_stripper object destruction as well
-			triangle_stripper::tri_stripper TriStripper(Indices);
 
-			TriStripper.SetMinStripSize(2);
-			TriStripper.SetCacheSize(16);
-			TriStripper.SetBackwardSearch(false);
 
-			TriStripper.Strip(&PrimitivesVector);
-		}  */
-// 		SetCacheSize(CACHESIZE_GEFORCE3);
-// 		SetListsOnly(true);
-// 
-// 		PrimitiveGroup* primitives = 0;
-// 		unsigned short numGroups;
-// 		GenerateStrips((unsigned short*)indices, size, &primitives, &numGroups);
-// 		mem::memcpy(indices, primitives[0].indices, primitives[0].numIndices * sizeof(Type));
-// 		delete [] primitives;
+
+
+
+
+
 	}
 
 
@@ -171,3 +165,21 @@ private:
 };
 
 }
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

@@ -1,3 +1,11 @@
+// Copyright (C) 2015 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "half.h"
 
 
@@ -11,16 +19,16 @@ half_float::half_to_float::mantissa::mantissa()
 
 unsigned int half_float::half_to_float::mantissa::convert(unsigned int i)
 {
-	unsigned int m=i<<13; // Zero pad mantissa bits
-	unsigned int e=0; // Zero exponent
-	while(!(m&0x00800000))// While not normalized
+	unsigned int m=i<<13; 
+	unsigned int e=0; 
+	while(!(m&0x00800000))
 	{ 
-		e-=0x00800000; // Decrement exponent (1<<23)
-		m<<=1; // Shift mantissa
+		e-=0x00800000; 
+		m<<=1; 
 	}
-	m&=~0x00800000; // Clear leading 1 bit
-	e+=0x38800000; // Adjust bias ((127-14)<<23)
-	return m | e; // Return combined number
+	m&=~0x00800000; 
+	e+=0x38800000; 
+	return m | e; 
 }
 
 
@@ -50,35 +58,35 @@ half_float::float_to_half::tables::tables()
 	{
 		e=i-127;
 		if(e<-24)
-		{                  // Very small numb
+		{                  
 			base[i|0x000]=0x0000;
 			base[i|0x100]=0x8000;
 			shift[i|0x000]=24;
 			shift[i|0x100]=24;
 		}
 		else if(e<-14)
-		{             // Small numbers m
+		{             
 			base[i|0x000]=(0x0400>>(18-e));
 			base[i|0x100]=(0x0400>>(18-e)) | 0x8000;
 				shift[i|0x000]=-e-1;
 			shift[i|0x100]=-e-1;
 		}
 		else if(e<=15)
-		{             // Normal numbers 
+		{             
 			base[i|0x000]=((e+15)<<10);
 			base[i|0x100]=((e+15)<<10) | 0x8000;
 			shift[i|0x000]=13;
 			shift[i|0x100]=13;
 		}
 		else if(e<128)
-		{             // Large numbers m
+		{             
 			base[i|0x000]=0x7C00;
 			base[i|0x100]=0xFC00;
 			shift[i|0x000]=24;
 			shift[i|0x100]=24;
 		}
 		else
-		{                       // Infinity and Na
+		{                       
 			base[i|0x000]=0x7C00;
 			base[i|0x100]=0xFC00;
 			shift[i|0x000]=13;
@@ -105,3 +113,22 @@ unsigned short half_float::float_to_half::convert(float f_)
 } 
 
 	
+
+
+
+
+// Copyright (C) 2015 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

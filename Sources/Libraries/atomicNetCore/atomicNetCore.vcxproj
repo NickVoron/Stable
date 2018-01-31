@@ -112,7 +112,7 @@
   <ItemGroup>
     <ClCompile Include="address.cpp" />
     <ClCompile Include="atomicNetCore.cpp" />
-    <ClCompile Include="ifaddrs.cpp" />
+    <ClCompile Include="getifaddrs.cpp" />
     <ClCompile Include="lanDiscover.cpp" />
     <ClCompile Include="os_win.cpp" />
     <ClCompile Include="os_win_err.cpp" />
@@ -126,7 +126,7 @@
   <ItemGroup>
     <ClInclude Include="address.h" />
     <ClInclude Include="atomicNetCore.h" />
-    <ClInclude Include="ifaddrs.h" />
+    <ClInclude Include="getifaddrs.h" />
     <ClInclude Include="lanDiscover.h" />
     <ClInclude Include="library.include.h" />
     <ClInclude Include="os.h" />

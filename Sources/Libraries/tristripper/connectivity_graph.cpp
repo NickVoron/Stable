@@ -1,11 +1,11 @@
-//
-// Copyright (C) 2004 Tanguy Fautré.
-// For conditions of distribution and use,
-// see copyright notice in tri_stripper.h
-//
-//////////////////////////////////////////////////////////////////////
-// SVN: $Id: connectivity_graph.cpp 86 2005-06-08 17:47:27Z gpsnoopy $
-//////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
 
 #include "detail/connectivity_graph.h"
 
@@ -58,11 +58,11 @@ void make_connectivity_graph(graph_array<triangle> & Triangles, const indices & 
 {
 	assert(Triangles.size() == (Indices.size() / 3));
 
-	// Fill the triangle data
+	
 	for (size_t i = 0; i < Triangles.size(); ++i)
 		Triangles[i] = triangle(Indices[i * 3 + 0], Indices[i * 3 + 1], Indices[i * 3 + 2]);
 
-	// Build an edge lookup table
+	
 	edge_map EdgeMap;
 	EdgeMap.reserve(Triangles.size() * 3);
 
@@ -77,7 +77,7 @@ void make_connectivity_graph(graph_array<triangle> & Triangles, const indices & 
 
 	std::sort(EdgeMap.begin(), EdgeMap.end(), cmp_tri_edge_lt());
 
-	// Link neighbour triangles together using the lookup table
+	
 	for (size_t i = 0; i < Triangles.size(); ++i) {
 
 		const triangle & Tri = * Triangles[i];
@@ -109,16 +109,16 @@ namespace
 
 	void LinkNeighbours(graph_array<triangle> & Triangles, const edge_map & EdgeMap, const tri_edge Edge)
 	{
-		// Find the first edge equal to Edge
+		
 		edge_map::const_iterator it = std::lower_bound(EdgeMap.begin(), EdgeMap.end(), Edge, cmp_tri_edge_lt());
 
-		// See if there are any other edges that are equal
-		// (if so, it means that more than 2 triangles are sharing the same edge,
-		//  which is unlikely but not impossible)
+		
+		
+		
 		for (; (it != EdgeMap.end()) && (Edge == (* it)); ++it)
 			Triangles.insert_arc(Edge.TriPos(), it->TriPos());
 
-		// Note: degenerated triangles will also point themselves as neighbour triangles
+		
 	}
 
 }
@@ -126,7 +126,7 @@ namespace
 
 
 
-	} // namespace detail
+	} 
 
-} // namespace detail
+} 
 

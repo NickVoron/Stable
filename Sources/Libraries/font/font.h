@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include <vector>
@@ -143,15 +151,15 @@ namespace font{
 		static bool isSplitChar(int charCode);
 		static bool isSpaceChar(int charCode);
 
-		//	void getGlyphs(const StringUTF32::iterator& b, const StringUTF32::iterator& e, GlyphsList::iterator& beg, GlyphsList::iterator& end) const;
-		//	void measureGlyphs(const StringUTF32::iterator& b, const StringUTF32::iterator& e, GlyphsList::iterator& beg, GlyphsList::iterator& end) const;
+		
+		
 		void align(TextAlign align, const math::Rect<float>& rect, int spacesCount, const UTF32* b, const UTF32* e, GlyphInfo* beg, GlyphInfo* end) const;
-		//int getKerning(const CharacterDesc& char1, const CharacterDesc& char2) const;
-		//
-		//вырезает из строки все невалидные символы заменяя их на служебный
-		//std::wstring validateString(const std::wstring& str) const;
+		
+		
+		
+		
 	};
-	//typedef std::vector<Style> StylesList;
+	
 
 	template<class StrType>
 	void Face::glyphs(const StrType& str, GlyphsQuery& query) const
@@ -162,55 +170,55 @@ namespace font{
 
 
 
-	// struct FontDesc
-	// {
-	// 	typedef stream::ofstream<> DefaultOStream;
-	// 	typedef stream::ifstream<> DefaultIStream;
-	// 
-	// 	std::string name;
-	// 	std::string sysFontName;
-	// 	std::string textureFileName;
-	// 	int fontSize;
-	// 	
-	// 	StylesList styles;
-	// 
-	// 	const Style& getStyle(const std::string& str);
-	// };
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 
-	//
-	// struct Strings
-	// {
-	// 	typedef std::vector<std::wstring> DataList;
-	// 	DataList data;
-	// 
-	// 	void countSymbols();
-	// 	unsigned int symbolsCount;
-	// };
-	// 
-	// class StringProcessor
-	// {
-	// public:
-	// 	
-	// 	struct GlyphInfo
-	// 	{
-	// 		CharRect rect;
-	// 		CharRect texRect;
-	// 	};
-	// 
-	// 	typedef std::vector<GlyphInfo> GlyphsList;
-	// 	
-	// 	static void getGlyphs(const Style& style, const Strings& text, GlyphsList::iterator& beg, GlyphsList::iterator& end);
-	// 	static void getGlyphs(const Style& style, const std::wstring& str, GlyphsList::iterator& beg, GlyphsList::iterator& end);
-	// 	
-	// 	
-	// 	static void loadUnicodeTextFromFile(const char* fileName, Strings& text);
-	// 
-	// private:
-	// 
-	// 	static void reserveBuffer(int count);
-	// 	static GlyphsList tempGlyphs;
-	// };
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	stream::ostream& operator<<(stream::ostream& s, const CharacterDesc& face);
 	stream::istream& operator>>(stream::istream& s, CharacterDesc& face);
@@ -219,3 +227,22 @@ namespace font{
 
 }}
 
+
+
+
+
+// Copyright (C) 2012-2016 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

@@ -1,10 +1,4 @@
-/****************************************************************************
- *  This file is part of PPMd project                                       *
- *  Written and distributed to public domain by Dmitry Shkarin 1997,        *
- *  1999-2001, 2010                                                         *
- *  Contents: main routine                                                  *
- *  Comments: system & compiler dependent file                              *
- ****************************************************************************/
+
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,7 +11,7 @@ static const char* pFName;
 static DWORD StartFilePosition;
 static BOOL EncodeFlag;
 static clock_t StartClock;
-static struct ARC_INFO { // FileLength & CRC? Hmm, maybe in another times...
+static struct ARC_INFO { 
     DWORD signature,attrib;
     WORD  info,FNLen,time,date;
 } _PACK_ATTR ai;
@@ -68,7 +62,7 @@ struct ENV_FILE_FINDER {
 #define BACKSLASH '/'
 char **__crt0_glob_function (char *arg) { return 0; }
 void   __crt0_load_environment_file (char *progname) { }
-#endif /* defined(__DJGPP__) */
+#endif 
 
 inline void EnvSetNormAttr(const char* FName) { _dos_setfileattr(FName,_A_NORMAL); }
 inline int                         EnvGetCh() { return getch(); }
@@ -112,7 +106,7 @@ struct ENV_FILE_FINDER {
 #include <crt0.h>
 char **__crt0_glob_function (char *arg) { return 0; }
 void   __crt0_load_environment_file (char *progname) { }
-#endif /* defined(__DJGPP__) */
+#endif 
 
 inline void EnvSetNormAttr(const char* FName) { chmod(FName,S_IWUSR); }
 inline int                         EnvGetCh() { return getchar(); }
@@ -155,7 +149,7 @@ struct ENV_FILE_FINDER {
     void findStop() { closedir(dir); }
 };
 
-#else /* _UNKNOWN_ENVIRONMENT_ */
+#else 
 #pragma message ("unknown environment:")
 #pragma message ("    1. _fastcall and _stdcall keywords are disabled")
 #pragma message ("    2. wildcards and file attributes are disabled")
@@ -184,7 +178,7 @@ struct ENV_FILE_FINDER {
     BOOL         findNext() { return FALSE; }
     void findStop() {}
 };
-#endif /* defined(__WIN32_ENVIRONMENT) */
+#endif 
 
 static const char* const MTxt[] = { "Can`t open file %s\n",
     "read/write error for files %s/%s\n", "Out of memory!\n",
@@ -350,52 +344,3 @@ struct FILE_LIST_NODE {
     }
 };
 
-/*
-int main(int argc, char *argv[])
-{
-    char ArcName[260];
-    BOOL DeleteFile=FALSE;
-    int i, MaxOrder=4, SASize=10;
-    MR_METHOD MRMethod=MRM_RESTART;
-    printf("Fast PPMII compressor for textual data, variant %c, \n",char(Variant));
-    if (argc < 3) { printf(MTxt[6],SASize,MAX_O,MaxOrder);      return -1; }
-    switch ( toupper(argv[1][0]) ) {
-        case 'E': EncodeFlag=TRUE;                              break;
-        case 'D': EncodeFlag=FALSE;                             break;
-        default : printf(MTxt[4],argv[1]);                      return -1;
-    }
-    for (ArcName[0]=0,i=2;i < argc && (argv[i][0] == '-' || argv[i][0] == '/');i++)
-        switch ( toupper(argv[i][1]) ) {
-            case 'D': DeleteFile=TRUE;                          break;
-            case 'F': TestArchive(ArcName,argv[i]+2);           break;
-            case 'M': SASize=CLAMP(atoi(argv[i]+2),1,256);      break;
-            case 'O': MaxOrder=CLAMP(atoi(argv[i]+2),2,MAX_O);  break;
-            case 'R': MRMethod=MR_METHOD(CLAMP(atoi(argv[i]+2),0,2));
-                        break;
-            default : printf(MTxt[5],argv[i]);   				return -1;
-        }
-    FILE_LIST_NODE* pNode, * pFirstNode=NULL, ** ppNode=&pFirstNode;
-    for (ENV_FILE_FINDER eff;i < argc;i++) {
-        if ( eff.findFirst(argv[i]) )
-            do {
-                if ( eff.isFileValid() ) {
-                    pNode = new FILE_LIST_NODE(eff.getResult(),ppNode);
-                    if ( !pNode ) {
-                        printf(MTxt[2]);    return -1;
-                    }
-                    ppNode=&(pNode->next);
-                }
-            } while ( eff.findNext() );
-        eff.findStop();
-    }
-    while ((pNode=pFirstNode) != NULL) {
-        ENV_FIND_RESULT& efr=pNode->efr;
-        if ( EncodeFlag )                   EncodeFile(efr,MaxOrder,SASize,MRMethod,ArcName);
-        else                                DecodeFile(efr);
-        if ( DeleteFile )                   remove(efr.getFName());
-        pNode->destroy(&pFirstNode);
-    }
-    StopSubAllocator();
-    return 0;
-}
-*/

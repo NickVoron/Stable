@@ -1,3 +1,11 @@
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include <type_traits>
@@ -29,9 +37,9 @@ namespace stl
 	template <class T>	struct has_hasher : decltype(has_hasher_d<T>(nullptr)) {};
 
 
-	//
-	//
-	//
+	
+	
+	
 	template <typename C, bool B = has_value_type<C>::value>
 	struct is_std_vector;
 
@@ -47,9 +55,9 @@ namespace stl
 		constexpr static bool value = std::is_base_of<std::vector<typename C::value_type, typename C::allocator_type>, C>::value;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template <typename C, std::size_t Size, bool B = has_value_type<C>::value>
 	struct is_std_array;
 
@@ -65,9 +73,9 @@ namespace stl
 		constexpr static bool value = std::is_base_of<std::array<typename C::value_type, Size>, C>::value;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template <typename C, bool B = has_value_type<C>::value>
 	struct is_std_list;
 
@@ -83,9 +91,9 @@ namespace stl
 		constexpr static bool value = std::is_base_of<std::list<typename C::value_type, typename C::allocator_type>, C>::value;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template <typename C, bool B = has_value_type<C>::value>
 	struct is_std_deque;
 
@@ -101,9 +109,9 @@ namespace stl
 		constexpr static bool value = std::is_base_of<std::deque<typename C::value_type, typename C::allocator_type>, C>::value;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template <typename C, bool B = std::conjunction_v<has_value_type<C>, has_key_compare<C>>>
 	struct is_std_set;
 
@@ -119,9 +127,9 @@ namespace stl
 		constexpr static bool value = std::is_base_of<std::set<typename C::value_type, typename C::key_compare, typename C::allocator_type>, C>::value;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template <typename C, bool B = std::conjunction_v<has_key_type<C>, has_key_compare<C>, has_mapped_type<C> >>
 	struct is_std_map;
 
@@ -137,9 +145,9 @@ namespace stl
 		constexpr static bool value = std::is_base_of<std::map<typename C::key_type, typename C::mapped_type, typename C::key_compare, typename C::allocator_type>, C>::value;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template <typename C, bool B = std::conjunction_v<has_value_type<C>, has_hasher<C>, has_key_equal<C>>>
 	struct is_std_unordered_set;
 
@@ -155,9 +163,9 @@ namespace stl
 		constexpr static bool value = std::is_base_of<std::unordered_set<typename C::value_type, typename C::hasher, typename C::key_equal, typename C::allocator_type>, C>::value;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template <typename C, bool B = std::conjunction_v<has_key_type<C>, has_mapped_type<C>, has_hasher<C>, has_key_equal<C>>>
 	struct is_std_unordered_map;
 
@@ -174,9 +182,9 @@ namespace stl
 	};
 
 
-	//
-	//
-	//
+	
+	
+	
 	template <typename P>
 	struct is_std_pair
 	{
@@ -209,23 +217,41 @@ namespace stl
 
 	template<class T> struct IsContainer
 	{
-		static const bool value = std::disjunction_v<
-			is_std_vector<T>
+		static const bool value = std::disjunction<
+			  is_std_vector<T>
 			, is_std_list<T>
 			, is_std_deque<T>
 			, is_std_set<T>
 			, is_std_map<T>
 			, is_std_unordered_map<T>
 			, is_std_unordered_set<T>
-		>;
+		>::value;
 	};
 
 	template<class T> struct IsStructure
 	{
 		static const bool value = (
-			!IsContainer<T>::value
+			   !IsContainer<T>::value
 			&& !IsConstant<T>::value
 			&& !is_std_pair<T>::value
 			&& !is_std_tuple<T>::value);
 	};
 }
+
+
+
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "drawers.h"
 #include "geometry/library.include.h"
 
@@ -48,12 +56,12 @@ namespace unigui
 
 	namespace draw{
 
-		//
-		//
-		//
-		//
-		//
-		//
+		
+		
+		
+		
+		
+		
 		void init()
 		{
 			if(gapi::initialized(gapi::DX9))
@@ -66,9 +74,9 @@ namespace unigui
 			}
 		}
 
-		//
-		//
-		//
+		
+		
+		
 		void begin(Viewports::Viewport* viewport)
 		{
 			if(gapi::initialized(gapi::DX9))
@@ -118,24 +126,24 @@ namespace unigui
 		}
 
 
-		//
-		//
-		//
-		//
+		
+		
+		
+		
 		template<class P0, class P1>
 		void universal_impl(const P0& p0, const P1& p1, const Color& color, RendererUsingInterface& state)
 		{
 			state.add(p0, p1, color);
 		}
 
-		//
+		
 		template<class Key, class P0, class P1>
 		void universal(const P0& p0, const P1& p1, const Color& color, Key key)
 		{
 			universal_impl(p0, p1, color, renderer(key));
 		}
 
-		//
+		
 		template<class P0>
 		void universal(const P0& p0, const Color& color, RendererUsingInterface& state)
 		{
@@ -143,14 +151,14 @@ namespace unigui
 		}
 
 		
-		//
-		//
-		//
+		
+		
+		
 		void lines( const Point2* vertices, int count, const Color& color, float thickness, bool antialiased )
 		{
 			if(gapi::initialized(gapi::DX9))
 			{
-				//draw::dx9::lines(vertices, count, color, thickness, antialiased);
+				
 			}
 			else if (gapi::initialized(gapi::DX11))
 			{
@@ -171,17 +179,17 @@ namespace unigui
 			lines(v, 2, color, thickness, p0.x != p1.x && p0.y != p1.y);
 		}
 
-		//
-		//
-		//
+		
+		
+		
 		void line(const Point2& p0, const Point2& p1, const Color& color)
 		{
 			line(p0, p1, 1.0f, color);
 		}
 
-		//
-		//
-		//
+		
+		
+		
 		void linerect(const Rect& rect, const Color& color)
 		{
 			line(rect.leftTop(), rect.rightTop(), color);
@@ -232,8 +240,8 @@ namespace unigui
 		{
 			line( rect.rightTop(), rect.rightBottom(), thickness, color );
  			line( rect.leftTop(), rect.leftBottom(), thickness, color );
-//  			line(rect.leftTop(), rect.rightTop(), thickness, color);
-//  			line(rect.rightBottom(), rect.leftBottom(), thickness, color);
+
+
 		}
 
 		template<class AddData>
@@ -294,13 +302,13 @@ namespace unigui
 			delete [] points;
 		}
 
-		//
-		//
-		//
+		
+		
+		
 		template<class TexType>
 		void texrectT(const Rect& rect, const Rect& texrect, TexType texture, const Color& clr)
 		{
-			//делаем поправку на пол пикселя чтобы попасть точно
+			
 			Rect trect = texrect;
  			trect.pos.x += 0.5f;
  			trect.pos.y += 0.5f;
@@ -473,25 +481,25 @@ namespace unigui
 		}
 
 
-		//
-		//
-		//
+		
+		
+		
 		void rect(const Rect& rect, const Color& color)
 		{
 			universal(rect, color, renderer<SolidRect>() );
 		}
 
-		//
-		//
-		//
+		
+		
+		
 		void character(const Rect& rect, const Rect& texrect, Resources::Font* font, const Color& c, bool stroked)
 		{
 			universal(rect, texrect, c, font);
 		}
 
-		//
-		//
-		//
+		
+		
+		
 		void print(const char* text, const Rect& rect, Resources::Font* font, const Color& color, bool stroked)
 		{
 			font->resource([text, &rect, &color, stroked](auto& f)
@@ -533,9 +541,9 @@ namespace unigui
 			return stringWidth(str, font);
 		}
 
-		//
-		//
-		//
+		
+		
+		
 		void textureSize(float& w, float& h, LPDIRECT3DTEXTURE9 texture)
 		{
 			nm::index2 s = texutils::dx9::GetTextureSize(texture);
@@ -593,3 +601,22 @@ namespace unigui
 
 }
 }
+
+
+
+
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

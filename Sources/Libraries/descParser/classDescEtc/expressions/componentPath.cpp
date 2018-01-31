@@ -1,3 +1,11 @@
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "componentPath.h"
 #include "instanceExpression.h"
 #include "stuff/enforce.h"
@@ -8,52 +16,9 @@ namespace ObjectParser
 {
 	using namespace Expressions;
 
-	//
-	// это небольшое нарушение инкапсуляции 
-	/*
-	Expressions::EvaluationUnit* ComponentPath:: evaluate(Expressions::EvaluationUnit* input, const Expressions::EvaluatedScope& context) const
-	{
-		Expressions::EvaluationUnit* result = 0;
-
-		if (input)
-		{
-			if (const InstanceHandle* instace = input->cast<InstanceHandle>() )
-			{
-				// значит тут не массив, а инстанс
-				 result = const_cast<Expressions::EvaluationUnit*>(getComponent(instace, componentType));
-			}
-			else
-			{
-				//у нас массив инстансов 
-				const Expressions::EvaluatedArray* array = input->cast<const Expressions::EvaluatedArray>();
-				ENFORCE_POINTER(array);
-
-				Expressions::EvaluatedArray* resultArr = Expressions::add<Expressions::EvaluatedArray>(input->protoexpr, array->count(), EvaluationUnit::commonParent);
-				result = resultArr;
-
-				for (std::size_t i = 0; i < array->count(); ++i)
-				{
-					const InstanceHandle* instanceHandle = array->element(i)->cast<const InstanceHandle>();
-					ENFORCE_MSG(instanceHandle, "");
-
-					const Expressions::EvaluationUnit* foundComponent = getComponent(instanceHandle, componentType);
-					if (!foundComponent)
-					{
-						//если хотя бы один не нашли - то значит не можем вообще ничего выбрать и надо возрващать нуль
-						result = 0;
-						break;
-					}
-					resultArr->add(foundComponent);
-				}
-			}
-		}
-		else
-		{
-			LOG_ERROR("context: input is nullptr");
-		}
-
-		return result;
-	}*/
+	
+	
+	
 
 	Expressions::EvaluationUnit* ComponentPathElement::evaluated(Expressions::EvaluatedScope& namescope) const
 	{
@@ -70,12 +35,12 @@ namespace ObjectParser
 		return add<ComponentTypeSamplerUnit>(namescope, *this);
 	}
 
-	//
-	//
-	//
-	//
-	//
-	//
+	
+	
+	
+	
+	
+	
 	ComponentTypeSamplerUnit::ComponentTypeSamplerUnit(Expressions::EvaluatedScope& parent, const ComponentPathElement& proto) :
 		Expressions::BaseSamplerUnit(parent, proto), element(proto)
 	{
@@ -89,3 +54,21 @@ namespace ObjectParser
 		return instanceHandle->scope().getByType(element.componentType);
 	}
 }//
+
+
+
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

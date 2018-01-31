@@ -1,5 +1,4 @@
-/* LzHash.h -- HASH functions for LZ algorithms
-2009-02-07 : Igor Pavlov : Public domain */
+
 
 #ifndef __LZ_HASH_H
 #define __LZ_HASH_H
@@ -33,7 +32,7 @@
   hashValue = (hash4Value ^ (p->crc[cur[4]] << 3)) & p->hashMask; \
   hash4Value &= (kHash4Size - 1); }
 
-/* #define HASH_ZIP_CALC hashValue = ((cur[0] | ((UInt32)cur[1] << 8)) ^ p->crc[cur[2]]) & 0xFFFF; */
+
 #define HASH_ZIP_CALC hashValue = ((cur[2] | ((UInt32)cur[0] << 8)) ^ p->crc[cur[1]]) & 0xFFFF;
 
 

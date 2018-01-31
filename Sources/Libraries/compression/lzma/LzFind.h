@@ -1,5 +1,4 @@
-/* LzFind.h -- Match finder for LZ algorithms
-2009-04-22 : Igor Pavlov : Public domain */
+
 
 #ifndef __LZ_FIND_H
 #define __LZ_FIND_H
@@ -21,7 +20,7 @@ typedef struct _CMatchFinder
   UInt32 lenLimit;
 
   UInt32 cyclicBufferPos;
-  UInt32 cyclicBufferSize; /* it must be = (historySize + 1) */
+  UInt32 cyclicBufferSize; 
 
   UInt32 matchMaxLen;
   CLzRef *hash;
@@ -62,10 +61,7 @@ void MatchFinder_ReadIfRequired(CMatchFinder *p);
 
 void MatchFinder_Construct(CMatchFinder *p);
 
-/* Conditions:
-     historySize <= 3 GB
-     keepAddBufferBefore + matchMaxLen + keepAddBufferAfter < 511MB
-*/
+
 int MatchFinder_Create(CMatchFinder *p, UInt32 historySize,
     UInt32 keepAddBufferBefore, UInt32 matchMaxLen, UInt32 keepAddBufferAfter,
     ISzAlloc *alloc);
@@ -77,11 +73,7 @@ UInt32 * GetMatchesSpec1(UInt32 lenLimit, UInt32 curMatch, UInt32 pos, const Byt
     UInt32 _cyclicBufferPos, UInt32 _cyclicBufferSize, UInt32 _cutValue,
     UInt32 *distances, UInt32 maxLen);
 
-/*
-Conditions:
-  Mf_GetNumAvailableBytes_Func must be called before each Mf_GetMatchLen_Func.
-  Mf_GetPointerToCurrentPos_Func's result must be used only before any other function
-*/
+
 
 typedef void (*Mf_Init_Func)(void *object);
 typedef Byte (*Mf_GetIndexByte_Func)(void *object, Int32 index);

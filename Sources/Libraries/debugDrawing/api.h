@@ -1,11 +1,23 @@
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "gapi/library.include.h"
 #include "immediateDraw/library.include.h"
 #include "resourceShader/library.include.h"
 #include "dxmath/library.include.h"
+#include "viewports/library.include.h"
+#include "common/clearPtrContainer.h"
 
 #include "types.h"
+
+#include <array>
 
 namespace DebugDrawing
 {
@@ -15,6 +27,7 @@ namespace DebugDrawing
 		nm::matrix4 view;
 		nm::matrix4 projection;
 		Vector4 direction;
+		Vector4 lightDirection;
 	};
 
 	struct ShaderDataPerObject
@@ -24,12 +37,14 @@ namespace DebugDrawing
 		template<class ScaleType>
 		void setWorld(const State& s, const ScaleType& scale)
 		{
+#if defined(USE_WINDOWS)
 			dxmath::FillDXMatrix(world, s, scale);
+#endif
 		}
 
-		D3DXMATRIX world;
+		nm::matrix4 world;
 		Vector4 color;
-		int colorFromVertex[4];
+		int32_t colorFromVertex[4];
 	};
 	#pragma pack(pop)
 
@@ -38,6 +53,7 @@ namespace DebugDrawing
 	{
 		template<gapi::Id id, bool t, bool i> struct impl;
 
+#if defined(USE_WINDOWS)
 		template<> struct impl<gapi::DX9, true, true>		{ template<class DrawData> static void draw(Viewports::Viewport& viewport, const DrawData& dd) { dx9::im::DrawTriangleListIndexed(dd); } };
 		template<> struct impl<gapi::DX9, true, false>		{ template<class DrawData> static void draw(Viewports::Viewport& viewport, const DrawData& dd) { dx9::im::DrawTriangleList(dd); } };
 		template<> struct impl<gapi::DX9, false, true>		{ template<class DrawData> static void draw(Viewports::Viewport& viewport, const DrawData& dd) { dx9::im::DrawLineListIndexed(dd); } };
@@ -47,7 +63,7 @@ namespace DebugDrawing
 		template<> struct impl<gapi::DX11, true, false>		{ template<class DrawData> static void draw(Viewports::Viewport& viewport, const DrawData& dd) { dx11::im::DrawTriangleList(viewport, dd); } };
 		template<> struct impl<gapi::DX11, false, true>		{ template<class DrawData> static void draw(Viewports::Viewport& viewport, const DrawData& dd) { dx11::im::DrawLineListIndexed(viewport, dd); } };
 		template<> struct impl<gapi::DX11, false, false>	{ template<class DrawData> static void draw(Viewports::Viewport& viewport, const DrawData& dd) { dx11::im::DrawLineList(viewport, dd); } };
-
+#endif
 		template<class DrawData> static void draw(Viewports::Viewport& viewport, const DrawData& dd) { impl<api, triangles, DrawData::INDEXED_DATA>::draw(viewport, dd); }
 	};
 
@@ -111,14 +127,16 @@ namespace DebugDrawing
 	template<class DrawData>
 	struct RendererDeterminator
 	{
+#if defined(USE_WINDOWS)
 		template<bool indexed>	struct impl
 		{
-			typedef dx11::Renderer<typename DrawData::Vertex, typename DrawData::IndexType> Renderer;
+			typedef dx11::Renderer<typename DrawData::Vertex, typename DrawData::Index> Renderer;
 		};
 
 		template<>	struct impl<false>	{ typedef dx11::VerticesRenderer<typename DrawData::Vertex> Renderer; };
 
 		typedef typename impl<DrawData::INDEXED_DATA>::Renderer Renderer;
+#endif
 	};
 
 	template<class DrawData, bool triangles, gapi::Id api> struct DrawableObjectAPI;
@@ -167,6 +185,7 @@ namespace DebugDrawing
 
 		virtual void drawImpl(Viewports::Viewport& viewport)
 		{
+#if defined(USE_WINDOWS)
  			dx11::DrawableObjectsList drawables;
 
 			dx11::SetPrimitiveTopology<triangles ? gapi::TRIANGLELIST : gapi::LINELIST> topology;
@@ -175,6 +194,7 @@ namespace DebugDrawing
  			renderer->append(drawables);
  									
  			dx11::execute(viewport, drawables);
+#endif
 		}		
 		
 		 Renderer* renderer;
@@ -195,30 +215,8 @@ namespace DebugDrawing
 
 		DrawData drawData;
 	};
+#if defined(USE_WINDOWS)
 
-/*
-	struct ToolDX9 : public ToolAPI
-	{
-		static const gapi::Id api = gapi::DX9;
-
-		Resources::Effect* effect;
-
-		virtual void init(const char* fxFileName);
-		virtual void uploadPerCamera(Viewports::Viewport& viewport, const ShaderDataPerCamera& data);
-		virtual void uploadPerObject(Viewports::Viewport& viewport, const ShaderDataPerObject& data);
-		virtual void begin(Viewports::Viewport& viewport, ShaderMode mode);
-		virtual void end();
-
-		template<bool triangles, class DrawData>
-		DrawableObject* object(const DrawData& dd, ShaderDataPerObject& shaderData, bool updateDataBuffer)
-		{
-			DrawableObjectAPI<DrawData, triangles, gapi::DX9>* obj = new DrawableObjectAPI<DrawData, triangles, gapi::DX9>();
-			obj->prepare(dd, updateDataBuffer);
-			obj->shaderData = shaderData;
-			obj->tool = this;
-			return obj;
-		}
-	};*/
 
 	struct ToolDX11 : public ToolAPI
 	{
@@ -226,7 +224,8 @@ namespace DebugDrawing
 		static const int shaderType = gapi::VERTEX_SHADER | gapi::PIXEL_SHADER;
 
 		ShaderMode currentShaderMode;
-		Resources::Shader<shaderType>* shader[INTERNAL_SHADERS_COUNT];
+		std::array<Resources::Shader<shaderType>::Handle, INTERNAL_SHADERS_COUNT> shader;
+		std::array<dx11::RasterizerState, INTERNAL_SHADERS_COUNT> rasterizerStates;
 
 		virtual void init(const char* fxFileName);
 		virtual void uploadPerCamera(Viewports::Viewport& viewport, const ShaderDataPerCamera& data);
@@ -246,9 +245,7 @@ namespace DebugDrawing
 
 		dx11::ConstantBuffer cb0;
 		dx11::ConstantBuffer cb1;
-		dx11::RasterizerState rasterizerState;
-
-		::dx11::DrawableObjectsList drawables;
+		dx11::DrawableObjectsList drawables;
 	};
 
 
@@ -266,16 +263,17 @@ namespace DebugDrawing
 
 			switch (api)
 			{
-			//case gapi::DX9:		obj = toolDX9.object<triangles>(dd, shaderData, updateDataBuffer); break;
+			
 			case gapi::DX11:	obj = toolDX11.object<triangles>(dd, shaderData, updateDataBuffer); break;
 			}
 
 			return obj;
 		}
 
-		//ToolDX9 toolDX9;
+		
 		ToolDX11 toolDX11;
 	};
+#endif
 
 }
 
@@ -283,3 +281,22 @@ namespace DebugDrawing
 
 
 
+
+
+
+
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

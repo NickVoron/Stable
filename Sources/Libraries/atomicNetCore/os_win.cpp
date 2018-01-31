@@ -1,13 +1,22 @@
+// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "os_win.h"
 #include "os_win_err.h"
 
-#include "memory/library.include.h"
-#include "defaultLogs/library.include.h"
-#include "stuff/enforce.h"
-#include "stuff/library.include.h"
-
 #ifdef WIN32
 #include <WS2tcpip.h>
+#else
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
 #endif
 
 namespace net
@@ -54,14 +63,14 @@ namespace net
 #ifdef WIN32
 		::closesocket(s);
 #else
-		close(s);
+		
 #endif
 	}
 	
-	//
-	//
-	//
-	Socket::Socket(ProtocolType pt, bool blocked) : blocked(blocked)
+	
+	
+	
+	Socket::Socket(ProtocolType pt, bool blocked, bool broadcast, bool localhost) : blocked(blocked), localhost(localhost)
 	{
 		sock = socket(pt);
 		error_socket(sock);
@@ -81,9 +90,9 @@ namespace net
 		closesocket(sock);
 	}
 
-	//
-	//
-	Socket::Socket(ProtocolType protocol, uint16_t port, bool blocked) : Socket(protocol, blocked)
+	
+	
+	Socket::Socket(ProtocolType protocol, uint16_t port, bool blocked, bool broadcast, bool localhost) : Socket(protocol, blocked, broadcast, localhost)
 	{
 		for (uint16_t p = 0; p < 16; ++p)
 		{
@@ -95,25 +104,20 @@ namespace net
 	bool Socket::bindToPort(uint16_t port)
 	{
 		host_info hostInfo;
-		auto lanaddr = hostInfo.getLAN();
-		if (lanaddr.first)
+		auto addr = net::address4::localhost(port);
+		if(auto lanaddr = hostInfo.getLAN(); lanaddr.first && !localhost)
 		{
-			auto addr = net::address4(lanaddr.second, port);
-	
-			LOG_MSG("Socket::bindToPort: " << addr.string());
-		
-			auto bindres = bind(sock, (struct sockaddr*)&addr.address(), sizeof(addr.address()));
-			if (SOCKET_ERROR == bindres)
-			{
-				error_socket(bindres);
-				return false;
-			}
+			addr = net::address4(lanaddr.second, port);
 		}
-		else
+
+		LOG_MSG("Socket::bindToPort: " << addr.string());
+
+		auto bindres = bind(sock, (struct sockaddr*)&addr.address(), sizeof(addr.address()));
+		if (SOCKET_ERROR == bindres)
 		{
-			LOG_MSG("Socket::bindToPort: incorrect network address");
+			error_socket(bindres);
 			return false;
-		}
+		}		
 
 		return true;
 	}
@@ -153,13 +157,52 @@ namespace net
 
 	uint16_t Socket::port() const
 	{
+		return address().port();
+	}
+
+	address4 Socket::address() const
+	{
 		struct sockaddr_in sin;
 		socklen_t addrlen = sizeof(sin);
 		if (getsockname(sock, (struct sockaddr *)&sin, &addrlen) == 0 && sin.sin_family == AF_INET && addrlen == sizeof(sin))
 		{
-			return ntohs(sin.sin_port);
+			return address4(sin);
 		}
 
-		return 0;
+		return address4();
+	}
+
+	std::string Socket::addr_str() const
+	{
+		return address().addr_str();
+	}
+
+	std::string Socket::port_str() const
+	{
+		return address().port_str();
+	}
+
+	std::string Socket::string() const
+	{
+		return address().string();
 	}
 }
+
+
+
+
+// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

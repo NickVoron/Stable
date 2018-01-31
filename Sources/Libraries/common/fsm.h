@@ -1,239 +1,217 @@
+// Copyright (C) 2013-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
-#include "Loki/library.include.h"
-#include "stuff/enforce.h"
+#include <tuple>
+#include <type_traits>
+
+template < typename... Types >
+struct typelist {};
+
+template < typename TElement, typename TList >
+struct exists_in  : public std::false_type
+{
+};
+
+template < typename Type, typename... List >
+struct exists_in < Type, typelist < Type, List... > > : public std::true_type
+{
+};
+
+template < typename Type, typename ListHead, typename... ListTail >
+struct exists_in < Type, typelist <ListHead, ListTail... > > : public exists_in < Type, typelist < ListTail... > >
+{
+};
+
+template < typename Type, typename List, bool is_duplicate = exists_in < Type, List >::type::value>
+struct add_unique;
+
+template < typename Type, typename... List >
+struct add_unique < Type, typelist < List... >, true >
+{
+	typedef typelist < List... > type;
+};
+
+template < typename Type, typename... List >
+struct add_unique < Type, typelist < List... >, false >
+{
+	typedef typelist < Type, List... > type;
+};
+
+
+template < typename... Args >
+struct process_arguments;
+
+template < >
+struct process_arguments < >
+{
+	typedef typelist < > type;
+};
+
+template < typename THead, typename... TTail >
+struct process_arguments < THead, TTail... >
+{
+	typedef typename add_unique < THead, typename process_arguments < TTail... >::type>::type type;
+};
+
+
+
+template<class... T> 
+struct make_uniue_tuple : make_uniue_tuple<typename process_arguments<T...>::type>
+{
+};
+
+template<class... T>
+struct make_uniue_tuple<typelist<T...>>
+{
+	typedef std::tuple<T...> tuple;
+};
 
 namespace fsm
 {
-	template<class EnumType, EnumType val>
-	struct Enum2Type
-	{
-		static const EnumType value = val;
-	};
-
-	template<class State0T, class State1T, class EventType, EventType transitionEvent>
+	template<class State0T, class State1T, class EventT>
 	struct Transition 
 	{
-		static const EventType event = transitionEvent;
-		typedef State0T			State0;
-		typedef State1T			State1;
-		typedef EventType		Event;
-	};
-
-	template<class InputResultList, class TransitionsList, class InputEventsList>
-	struct ExtractStatesExtractor
-	{
-		typedef typename TransitionsList::Head Transition;
-		typedef typename Transition::Event  Event;
-
-		typedef Loki::MakeTypelist<typename Transition::State0, typename Transition::State1> TransitionStates;
-		typedef typename Loki::TL::Append<InputResultList, TransitionStates>::Result ResultList;
-		typedef typename Loki::TL::Append<InputEventsList, Enum2Type<Event, Transition::event> >::Result ResultEventsList;
-
-
-		typedef ExtractStatesExtractor<ResultList, typename TransitionsList::Tail, ResultEventsList> ResultData;
-
-		typedef typename ResultData::Result Result;
-		typedef typename ResultData::Events Events;
-
-	};
-
-	template<class InputResultList, class InputEventsList>
-	struct ExtractStatesExtractor<InputResultList, Loki::NullType, InputEventsList>
-	{
-		typedef typename Loki::TL::NoDuplicates<InputResultList>::Result Result;
-		typedef typename Loki::TL::NoDuplicates<InputEventsList>::Result Events;
-	};
-
-	template<class TransitionsList>
-	struct ExtractStates
-	{
-		typedef typename TransitionsList::Head::Event Event;
-
-		typedef ExtractStatesExtractor<Loki::NullType, TransitionsList, Loki::NullType> ResultData;
-
-		typedef typename ResultData::Result Result;
-		typedef typename ResultData::Events Events;
-	};
-
-	//
-	//
-	//
-	template<class TransitionsList, class TransList>
-	struct TransitionsTableInitializer
-	{
-		typedef typename ExtractStates<TransitionsList>::Result	States;
-		typedef typename ExtractStates<TransitionsList>::Events	Events;
-
-		typedef typename TransList::Head Transition;
-		typedef typename Transition::State0 State0;
-		typedef typename Transition::State1 State1;
-		typedef typename Transition::Event  Event;
-
-		template<class Table>
-		inline static void init(Table& table)
+		typedef State0T	State0;
+		typedef State1T	State1;
+		typedef EventT	Event;
+		
+		template<class Adapter, class FSM, class BaseState>
+		static BaseState* try_execute(FSM& fsm, BaseState*& current, State1& newstate, const Event& event)
 		{
-			int s0 = Loki::TL::IndexOf<States, State0>::value;
-			int s1 = Loki::TL::IndexOf<States, State1>::value;
-			int e = Loki::TL::IndexOf<Events, Enum2Type<Event, Transition::event> >::value;
+			static_assert(std::is_base_of<BaseState, State0>::value);
+			static_assert(std::is_base_of<BaseState, State1>::value);
+			
+			if(auto state = dynamic_cast<State0*>(current))
+			{
+                current = &newstate;
+				Adapter::transition(fsm, *state, newstate, event);
+				return &newstate;
+			}
 
-			//LOG_MSG(str::stringize(typeid(State0).name(), "[", s0, "]", "->", Transition::event, "(", e, ")", "->", typeid(State1).name(), "[", s1, "]").str());
-						
-			ENFORCE(s0 >= 0 && s0 < Table::statesCount && e >= 0 && e < Table::eventsCount);
-
-			auto& state = table.data[s0][e];
-			state = table.template state<State1>();
-
-			TransitionsTableInitializer<TransitionsList, typename TransList::Tail>::init(table);
+			return nullptr;			
 		}
 	};
 
-	template<class TransitionsList>
-	struct TransitionsTableInitializer<TransitionsList, Loki::NullType>
-	{
-		template<class Table>
-		inline static void init(Table&) {}
-	};
+	template<class Event, bool acceptThisEvent, class Transition, class... TransitionsList>
+	struct TransitionWalkerImpl;
 
-	template<class EventList, class EventListIter>
-	struct TransitionsTableEventIndex
+	template<class Event, class Transition>
+	struct TransitionWalkerImpl<Event, true, Transition>
 	{
-		template<class Event>
-		inline static int get(Event eventRV)
+		template<class Adapter, class FSM, class BaseState, class... PossibleStates>
+		static BaseState* try_execute(FSM& fsm, BaseState*& current, std::tuple<PossibleStates...>& states, const Event& event)
 		{
-			return (EventListIter::Head::value == eventRV) ? Loki::TL::IndexOf<EventList, Enum2Type<Event, EventListIter::Head::value> >::value : TransitionsTableEventIndex<EventList, typename EventListIter::Tail>::get(eventRV);
+			return Transition::template try_execute<Adapter>(fsm, current, std::get<typename Transition::State1>(states), event);
 		}
 	};
 
-	template<class EventList>
-	struct TransitionsTableEventIndex<EventList, Loki::NullType>
+	template<class Event, class Transition>
+	struct TransitionWalkerImpl<Event, false, Transition>
 	{
-		template<class Event>
-		inline static int get(Event eventRV) { return -1; }
+		template<class Adapter, class FSM, class BaseState, class... PossibleStates>
+		static BaseState* try_execute(FSM& fsm, BaseState*& current, std::tuple<PossibleStates...>& states, const Event& event)
+		{
+			return nullptr;
+		}
 	};
 
-	template<class BaseStateType, class TransitionsList>
+	template<class Event, class Transition, class... TransitionsList>
+	struct TransitionWalker;
+
+	template<class Event, class Transition, class... TransitionsList>
+	struct TransitionWalkerImpl<Event, true, Transition, TransitionsList...>
+	{		
+		template<class Adapter, class FSM, class BaseState, class... PossibleStates>
+		static BaseState* try_execute(FSM& fsm, BaseState*& current, std::tuple<PossibleStates...>& states, const Event& event)
+		{ 
+			auto result = Transition::template try_execute<Adapter>(fsm, current, std::get<typename Transition::State1>(states), event);
+			if(!result)
+			{
+				return TransitionWalker<Event, TransitionsList...>::template try_execute<Adapter>(fsm, current, states, event);
+			}
+
+			return result;
+		}
+	};
+
+	template<class Event, class Transition, class... TransitionsList>
+	struct TransitionWalkerImpl<Event, false, Transition, TransitionsList...>
+	{
+		template<class Adapter, class EventT, class FSM, class BaseState, class... PossibleStates>
+		static BaseState* try_execute(FSM& fsm, BaseState*& current, std::tuple<PossibleStates...>& states, const EventT& event)
+		{
+			return TransitionWalker<Event, TransitionsList...>::template try_execute<Adapter>(fsm, current, states, event);
+		}
+	};
+
+	template<class Event, class Transition, class... TransitionsList>
+    struct TransitionWalker : TransitionWalkerImpl<Event, std::is_same<Event, typename Transition::Event>::value, Transition, TransitionsList...>
+	{
+	};
+
+	template<class... TransitionsList>
 	struct TransitionsTable 
 	{
-		typedef typename TransitionsList::Head::Event			Event;
-		typedef TransitionsList									Transitions;
-		typedef typename ExtractStates<Transitions>::Result		States;
-		typedef typename ExtractStates<Transitions>::Events		Events;
-		typedef Loki::TypeTuple<States>							StatesTuple;
-		typedef Loki::TypeTuple<Events>							EventsTuple;
-		typedef BaseStateType									BaseState;
+		typename make_uniue_tuple<typename TransitionsList::State0..., typename TransitionsList::State1...>::tuple states;
 
-		struct StateExt
+		template<class Adapter, class FSM, class BaseState, class Event>
+		BaseState* try_transition(FSM& fsm, BaseState*& current, const Event& event)
 		{
-			inline StateExt():index(-1), state(0){}
-
-			int index;
-			BaseStateType* state;
-		};
-
-		struct Table
-		{
-			template<class State>
-			StateExt state() const
-			{
-				StateExt res;
-				res.index = Loki::TL::IndexOf<States, State>::value;
-				res.state = (BaseStateType*)(&states.template get<State>());
-				return res;
-			}
-
-			StateExt initial() const
-			{
-				StateExt res = state<typename TransitionsList::Head::State0>();
-				ENFORCE(res.index == 0);
-				return res;
-			}
-
-			static const int statesCount = StatesTuple::size;
-			static const int eventsCount = EventsTuple::size;
-			
-			StatesTuple	states;
-			StateExt data[statesCount][eventsCount];
-		};
-
-		TransitionsTable()
-		{
-			TransitionsTableInitializer<Transitions, Transitions>::init(transitions);
+			return TransitionWalker<Event, TransitionsList...>::template try_execute<Adapter>(fsm, current, states, event);
 		}
-
-
-		StateExt transition(int stateIndex, Event event) const
-		{
-			int e = TransitionsTableEventIndex<Events, Events>::get(event);
-			//LOG_MSG("transition" << stateIndex << "->" << event);
-			//ENFORCE(stateIndex >= 0 && stateIndex < StatesTuple::size && e >= 0 && e < EventsTuple::size);
-			return e >= 0 ? transitions.data[stateIndex][e] : StateExt();
-		}
-
-		StateExt initial() const
-		{
-			return transitions.initial();
-		}
-
-		Table transitions;	
 	};
 
-	template<class ClientFSM, class BaseStateType, class BaseStateAdapter, class TransitionsList>
+	template<class ClientFSM, class BaseState, class Adapter, class... TransitionsList>
 	struct FSM
 	{
-		typedef TransitionsTable<BaseStateType, TransitionsList> Transitions;
-		typedef typename Transitions::Event Event;
-		Transitions transitions;
+		using FSMType = FSM;
 
-		inline FSM()
-		{		
-			defaults();
-		}
-
-		virtual ~FSM() {}
-
-		inline void defaults()
-		{
-			current = transitions.initial();
-		}
-
-		inline bool isInInitialState() const
-		{
-			return current.state == initial();
-		}
-
-		inline bool post(Event event)
-		{
-			auto stateExt = transitions.transition(current.index, event);
-			if(stateExt.state)
-			{
-				auto& refthis = *(ClientFSM*)this;
-								
-				ENFORCE(current.state);
-				BaseStateAdapter::exit(refthis, *current.state);
-				
-				current = stateExt;
-				ENFORCE(current.state);
-				BaseStateAdapter::enter(refthis, *current.state);
-				
-				return true;
-			}
-
-			return false;
-		}
+		TransitionsTable<TransitionsList...>  transitions;
 		
-		inline BaseStateType* next(Event event) const
+		FSM()
 		{
-			return transitions.transition(current.index, event).state;
+			current = &std::get<std::tuple_size_v<decltype(transitions.states)> - 1>(transitions.states);
 		}
 
-		inline BaseStateType* initial() const
+		template<class Event>
+		bool post(const Event& event)
 		{
-			return transitions.initial().state;
+			auto result = transitions.template try_transition<Adapter>(static_cast<ClientFSM&>(*this), current, event);
+			return result != nullptr;
 		}
 
-		typename Transitions::StateExt current;
+		template<class State>
+		decltype(auto) get()
+		{
+			return std::get<State>(transitions.states);
+		}
+
+		BaseState* current = nullptr;
 	};
 }
 
-#define FSM_TRANSITION(SOURCE_0, SOURCE_1, EVENT_VALUE) fsm::Transition<SOURCE_0, SOURCE_1, decltype(EVENT_VALUE), EVENT_VALUE>
+
+
+
+// Copyright (C) 2013-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

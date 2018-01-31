@@ -1,3 +1,11 @@
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "opengles/library.include.h"
@@ -7,45 +15,25 @@
 namespace AppModules
 {
 
-/*
-class OpenGLES : public ModuleBase<OpenGLES, Loki::MakeTypelist<Window>>
-{
-public:
-	struct Params
-	{
-		WindowsGAPI::WindowsGLES windows;
-	};
 
-	template<class Params>  void init(Params& p)	 { create(p, p);	}
-	template<class Params>  void release(Params& p) { release();		}
-
-	void create(Window::Params& windowParams, Params& params);
-	void release();
-};
-
-class OpenGLESFrameEnd;
-class OpenGLESFrameBegin : public ModuleBase<OpenGLESFrameBegin, Loki::MakeTypelist<OpenGLES>, Loki::MakeTypelist<OpenGLESFrameEnd>>
-{
-public:
-	struct Params : public WindowsGAPI::ClearBuffersData
-	{
-		Params();
-	};
-
-	template<class Params>  void init(Params& p)		{	create(p);				}
-	template<class Params>  void process(Params& p)	{	update(p, p.windows);	}
-
-	void create(Params& params);
-	void update(Params& params, WindowsGAPI::WindowsGLES& windows);
-};
-
-class OpenGLESFrameEnd : public ModuleBase<OpenGLESFrameEnd, Loki::MakeTypelist<OpenGLESFrameBegin>>
-{
-public:
-	template<class Params>  void process(Params& p) { process(p.windows); }
-
-	void process(WindowsGAPI::WindowsGLES& windows);
-};
-*/
 
 }
+
+
+
+
+// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

@@ -111,23 +111,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="affector.cpp" />
-    <ClCompile Include="affectors\animator.cpp" />
-    <ClCompile Include="affectors\around.cpp" />
-    <ClCompile Include="affectors\boxConstraint.cpp" />
-    <ClCompile Include="affectors\distanceConstraint.cpp" />
-    <ClCompile Include="affectors\forward.cpp" />
-    <ClCompile Include="affectors\freeRotator.cpp" />
-    <ClCompile Include="affectors\heightMapConstraint.cpp" />
-    <ClCompile Include="affectors\horizVert.cpp" />
-    <ClCompile Include="affectors\null.cpp" />
-    <ClCompile Include="affectors\thirdPerson.cpp" />
-    <ClCompile Include="affectors\toTargetConstraint.cpp" />
+    <ClCompile Include="Animator.cpp" />
+    <ClCompile Include="Around.cpp" />
+    <ClCompile Include="BoxConstraint.cpp" />
     <ClCompile Include="constraint.cpp" />
+    <ClCompile Include="DistanceConstraint.cpp" />
+    <ClCompile Include="Forward.cpp" />
+    <ClCompile Include="FreeRotator.cpp" />
+    <ClCompile Include="heightMapConstraint.cpp" />
+    <ClCompile Include="HorizVert.cpp" />
     <ClCompile Include="inputCollector.cpp" />
     <ClCompile Include="manager.cpp" />
-    <ClCompile Include="affectors\oneAxis.cpp" />
+    <ClCompile Include="Null.cpp" />
+    <ClCompile Include="oneAxis.cpp" />
     <ClCompile Include="params.cpp" />
-    <ClCompile Include="affectors\plane.cpp" />
+    <ClCompile Include="plane.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -135,33 +133,36 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="target.cpp" />
+    <ClCompile Include="ThirdPerson.cpp" />
+    <ClCompile Include="ToTargetConstraint.cpp" />
     <ClCompile Include="utils.cpp" />
-    <ClCompile Include="affectors\vehicleView.cpp" />
+    <ClCompile Include="vehicleView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="affector.h" />
-    <ClInclude Include="affectors\animator.h" />
-    <ClInclude Include="affectors\around.h" />
-    <ClInclude Include="affectors\boxConstraint.h" />
-    <ClInclude Include="affectors\distanceConstraint.h" />
-    <ClInclude Include="affectors\forward.h" />
-    <ClInclude Include="affectors\freeRotator.h" />
-    <ClInclude Include="affectors\heightMapConstraint.h" />
-    <ClInclude Include="affectors\horizVert.h" />
-    <ClInclude Include="affectors\null.h" />
-    <ClInclude Include="affectors\thirdPerson.h" />
-    <ClInclude Include="affectors\toTargetConstraint.h" />
+    <ClInclude Include="Animator.h" />
+    <ClInclude Include="Around.h" />
+    <ClInclude Include="BoxConstraint.h" />
     <ClInclude Include="constraint.h" />
+    <ClInclude Include="DistanceConstraint.h" />
+    <ClInclude Include="Forward.h" />
+    <ClInclude Include="FreeRotator.h" />
+    <ClInclude Include="heightMapConstraint.h" />
+    <ClInclude Include="HorizVert.h" />
     <ClInclude Include="inputCollector.h" />
     <ClInclude Include="library.include.h" />
     <ClInclude Include="manager.h" />
     <ClInclude Include="affectors\oneAxis.h" />
+    <ClInclude Include="Null.h" />
+    <ClInclude Include="oneAxis.h" />
     <ClInclude Include="params.h" />
-    <ClInclude Include="affectors\plane.h" />
+    <ClInclude Include="plane.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="target.h" />
+    <ClInclude Include="ThirdPerson.h" />
+    <ClInclude Include="ToTargetConstraint.h" />
     <ClInclude Include="utils.h" />
-    <ClInclude Include="affectors\vehicleView.h" />
+    <ClInclude Include="vehicleView.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

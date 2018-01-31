@@ -1,9 +1,17 @@
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "entity.h"
 #include "desc.h"
 #include "factory.h"
-#include "spawner.h"
+
 
 
 class Class;
@@ -52,7 +60,7 @@ friend class SystemSpawner;
 friend class EntitiesList;
 friend class ClassResources;
 public:
-	// структуры описывающие то, какие классы у дочерних объектов объекта какого либо класса
+	
 	struct LocalObject 
 	{
 		void save(stream::ostream& os) const;
@@ -157,7 +165,7 @@ private:
 									
 	void initGlobalMapping();
 
-	//таблица связей между компонентами в пределах одного объекта, хранящая смещения
+	
 	LinksTable linksTable;
 	EntityPointersInComponentsTable entityPointersTable; 	
 
@@ -166,12 +174,12 @@ private:
 
 	std::size_t index;
 
-	mutable SystemSpawner spawner;
+	
 	
 	std::string className;
-	std::vector<std::string> names; // имена компонент
-	cm_array<std::size_t> components; //смещения компонент от начала буффера
-	cm_array<std::size_t> componentClasses; // глобальные индексы классов
+	std::vector<std::string> names; 
+	cm_array<std::size_t> components; 
+	cm_array<std::size_t> componentClasses; 
 	std::vector<ExecutionUnitBase*> executionUnits;
 	std::size_t instanceSize = 0;
 };
@@ -180,3 +188,21 @@ std::ostream& operator<<(std::ostream& os, const Class& cls);
 
 stream::ostream& operator<<(stream::ostream& os, const Class& cls);
 stream::istream& operator>>(stream::istream& os, Class& cls);
+
+
+
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

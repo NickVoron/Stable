@@ -1,11 +1,11 @@
-//
-// Copyright (C) 2004 Tanguy Fautré.
-// For conditions of distribution and use,
-// see copyright notice in tri_stripper.h
-//
-//////////////////////////////////////////////////////////////////////
-// SVN: $Id: policy.h 86 2005-06-08 17:47:27Z gpsnoopy $
-//////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
 
 #ifndef TRI_STRIPPER_HEADER_GUARD_POLICY_H
 #define TRI_STRIPPER_HEADER_GUARD_POLICY_H
@@ -56,11 +56,11 @@ inline strip policy::BestStrip() const
 
 
 
-	} // namespace detail
+	} 
 
-} // namespace triangle_stripper
-
-
+} 
 
 
-#endif // TRI_STRIPPER_HEADER_GUARD_POLICY_H
+
+
+#endif 

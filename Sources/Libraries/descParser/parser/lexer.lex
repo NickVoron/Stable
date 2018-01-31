@@ -72,6 +72,8 @@ return		{	return Parser::token::RETURN;		}
 [!][=]	return Parser::token::NOT_EQUAL;
 [<][=]	return Parser::token::LESS_EQUAL;
 [>][=]	return Parser::token::MORE_EQUAL;
+[<][-]	return Parser::token::BACKWARD;
+[-][>]	return Parser::token::FORWARD;
 [+]		return Parser::token::PLUS;
 [-]		return Parser::token::MINUS;
 [%]		return Parser::token::MOD;

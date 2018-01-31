@@ -1,3 +1,11 @@
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "reference.h"
 #include "array.h"
 #include "holder.h"
@@ -54,7 +62,7 @@ std::string Reference::string() const
 	return str::spaced("proxy:", path.string());
 }
 
-//Path
+
 void Reference::Path::add(PathElement* element)
 {
 	emplace_back(element);
@@ -97,9 +105,9 @@ std::string Reference::Path::root() const
 	return rootProperty->name;
 }
 
-//
-//
-//
+
+
+
 ReferenceUnit::ReferenceUnit(EvaluatedScope& parent, const Reference& reference_) : 
 	EvaluationUnit("reference_unit", reference_, parent)
 	, reference(reference_)
@@ -226,9 +234,9 @@ void ReferenceUnit::extract(EvaluationSet& result)
 	}
 }
 
-//
-//
-//
+
+
+
 ArrayContainer* linearize_array(ArrayContainer& unit)
 {
 	auto array = add<Array>()->evaluated(unit.scope())->cast<ArrayContainer>();
@@ -321,24 +329,24 @@ void evaluate(EvaluatedScope& scope, ReferenceUnit::PathElement& prev, const Ref
 {
 	ENFORCE_POINTER(prev.element);
 
-	// вычисляем текущий элемент пути
+	
 	if (auto result = prev.element->evaluate(); result != Complete)
 		return;
 	
-	// преобразуем в массив при необходимости, для единообразия
+	
 	ArrayContainer* head = to_array(prev.element);
 
-	//вычисляем индексатор
+	
 	if (auto result = array_indexer(scope, *head, prevProto, prev.indexer); result != Complete || !prev.indexer->cast<ArrayContainer>())
 		return;
 
-	// вычисляем семплер
+	
 	if (auto result = array_sampler(*head, prevProto, prev.sampler); result != Complete)
 		return;
 
-	//++ сюда должны попадать единожды
-	// создаём результат 
-	//LOG_EXPRESSION(head->string());
+	
+	
+	
 	auto output = add<Array>()->evaluated(scope)->cast<ArrayContainer>();
 	std::vector<int> indices;
 	linearize(*prev.indexer, indices);
@@ -362,18 +370,18 @@ void evaluate(EvaluatedScope& scope, ReferenceUnit::PathElement& prev, const Ref
 	next.element = linearize_array(*output);
 }
 
-//
-//
-//
+
+
+
 SimpleSamplerUnit::SimpleSamplerUnit(EvaluatedScope& parent, const Expression& proto) :
 	BaseSamplerUnit(parent, proto) 
 {
 
 }
 
-//
-//
-//
+
+
+
 NameSamplerUnit::NameSamplerUnit(EvaluatedScope& parent, const PropertyPathElement& proto) : 
 	BaseSamplerUnit(parent, proto), element(proto) 
 {
@@ -386,9 +394,9 @@ EvaluationUnit* NameSamplerUnit::sample(EvaluationUnit* source) const
 	return scope.get(element.name);
 }
 
-//
-//
-//
+
+
+
 BaseIndexerUnit::BaseIndexerUnit(EvaluatedScope& parent, const Expression& proto) :
 	EvaluationUnit("indexer", proto, parent)
 {
@@ -419,17 +427,17 @@ void BaseIndexerUnit::extract(EvaluationSet& result)
 	params->extract(result);
 }
 
-//
-//
-//
+
+
+
 SimpleIndexerUnit::SimpleIndexerUnit(EvaluatedScope& parent, const Expression& proto) : 
 	BaseIndexerUnit(parent, proto)
 {
 }
 
-//
-//
-//
+
+
+
 ArrayIndexerUnit::ArrayIndexerUnit(EvaluatedScope& parent, const Expression& proto, const ConstExprList& inparams) : 
 	BaseIndexerUnit(parent, proto) 
 {
@@ -437,9 +445,9 @@ ArrayIndexerUnit::ArrayIndexerUnit(EvaluatedScope& parent, const Expression& pro
 }
 
 						  
-//
-//
-//
+
+
+
 EvaluationUnit* PropertyPathElement::evaluated(EvaluatedScope& namescope) const
 {
 	return add<PropertyPathElementUnit>(namescope, *this);
@@ -460,9 +468,9 @@ std::string PropertyPathElement::string() const
 	return name;
 }
 
-//
-//
-//
+
+
+
 EvaluationUnit* ArrayPathElement::evaluated(EvaluatedScope& namescope) const
 {
 	return add<ArrayPathElementUnit>(namescope, *this);
@@ -478,9 +486,9 @@ BaseSamplerUnit* ArrayPathElement::createSampler(EvaluatedScope& namescope) cons
 	return add<SimpleSamplerUnit>(namescope, *this);
 }
 
-//
-//
-//
+
+
+
 std::string CallablePathElement::string() const
 {
 	return callable.string();
@@ -501,9 +509,9 @@ BaseSamplerUnit* CallablePathElement::createSampler(EvaluatedScope& namescope) c
 	return add<SimpleSamplerUnit>(namescope, *this);
 }
 
-//
-//
-//
+
+
+
 std::string BasePathElementUnit::string() const
 {
 	return str::stringize(scope().scopeName, ":", element.string());
@@ -520,9 +528,9 @@ EvaluationInfo PropertyPathElementUnit::evaluate()
 	}
 	else
 	{
-		//std::string trace;
-		//scope().trace(ref->name, trace);
-		//LOG_ERROR(trace);
+		
+		
+		
 		result.impossible();
 	}
 
@@ -530,3 +538,21 @@ EvaluationInfo PropertyPathElementUnit::evaluate()
 }
 
 }//
+
+
+
+// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

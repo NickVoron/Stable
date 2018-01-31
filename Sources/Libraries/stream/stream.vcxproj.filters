@@ -12,18 +12,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dataop\data_op.cpp">
-      <Filter>dataop</Filter>
-    </ClCompile>
-    <ClCompile Include="dataop\errors.cpp">
-      <Filter>dataop</Filter>
-    </ClCompile>
-    <ClCompile Include="dataop\rijndael_op.cpp">
-      <Filter>dataop</Filter>
-    </ClCompile>
-    <ClCompile Include="dataop\zlib_op.cpp">
-      <Filter>dataop</Filter>
-    </ClCompile>
     <ClCompile Include="stream\cfile.cpp">
       <Filter>stream</Filter>
     </ClCompile>
@@ -42,9 +30,6 @@
     <ClInclude Include="dataop\data_op.h">
       <Filter>dataop</Filter>
     </ClInclude>
-    <ClInclude Include="dataop\dataop.h">
-      <Filter>dataop</Filter>
-    </ClInclude>
     <ClInclude Include="dataop\errors.h">
       <Filter>dataop</Filter>
     </ClInclude>
@@ -55,9 +40,6 @@
       <Filter>dataop</Filter>
     </ClInclude>
     <ClInclude Include="operators\cfile.io.h">
-      <Filter>operators</Filter>
-    </ClInclude>
-    <ClInclude Include="operators\io.h">
       <Filter>operators</Filter>
     </ClInclude>
     <ClInclude Include="operators\std.io.h">

@@ -1,5 +1,14 @@
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "camera.h"
 #include "debugDrawing/library.include.h"
+#include "newmath/quaternion.h"
 
 namespace Viewports
 {
@@ -25,7 +34,7 @@ namespace Viewports
 		return out;
 	}
 
-	nm::matrix4& MatrixAffineTransformation(nm::matrix4& out, float scaling, const nm::Vector3* rotationcenter, const D3DXQUATERNION* rotation, const nm::Vector3 *translation)
+	nm::matrix4& MatrixAffineTransformation(nm::matrix4& out, float scaling, const nm::Vector3* rotationcenter, const nm::Quaternion* rotation, const nm::Vector3 *translation)
 	{
 		out.identity();
 
@@ -33,15 +42,15 @@ namespace Viewports
 		{
 			float temp00, temp01, temp02, temp10, temp11, temp12, temp20, temp21, temp22;
 
-			temp00 = 1.0f - 2.0f * (rotation->y * rotation->y + rotation->z * rotation->z);
-			temp01 = 2.0f * (rotation->x * rotation->y + rotation->z * rotation->w);
-			temp02 = 2.0f * (rotation->x * rotation->z - rotation->y * rotation->w);
-			temp10 = 2.0f * (rotation->x * rotation->y - rotation->z * rotation->w);
-			temp11 = 1.0f - 2.0f * (rotation->x * rotation->x + rotation->z * rotation->z);
-			temp12 = 2.0f * (rotation->y * rotation->z + rotation->x * rotation->w);
-			temp20 = 2.0f * (rotation->x * rotation->z + rotation->y * rotation->w);
-			temp21 = 2.0f * (rotation->y * rotation->z - rotation->x * rotation->w);
-			temp22 = 1.0f - 2.0f * (rotation->x * rotation->x + rotation->y * rotation->y);
+			temp00 = 1.0f - 2.0f * (rotation->v.y * rotation->v.y + rotation->v.z * rotation->v.z);
+			temp01 = 2.0f * (rotation->v.x * rotation->v.y + rotation->v.z * rotation->w);
+			temp02 = 2.0f * (rotation->v.x * rotation->v.z - rotation->v.y * rotation->w);
+			temp10 = 2.0f * (rotation->v.x * rotation->v.y - rotation->v.z * rotation->w);
+			temp11 = 1.0f - 2.0f * (rotation->v.x * rotation->v.x + rotation->v.z * rotation->v.z);
+			temp12 = 2.0f * (rotation->v.y * rotation->v.z + rotation->v.x * rotation->w);
+			temp20 = 2.0f * (rotation->v.x * rotation->v.z + rotation->v.y * rotation->w);
+			temp21 = 2.0f * (rotation->v.y * rotation->v.z - rotation->v.x * rotation->w);
+			temp22 = 1.0f - 2.0f * (rotation->v.x * rotation->v.x + rotation->v.y * rotation->v.y);
 
 			out.m[0][0] = scaling * temp00;
 			out.m[0][1] = scaling * temp01;
@@ -153,13 +162,12 @@ namespace Viewports
 	nm::Vector3* Vec3TransformCoord(nm::Vector3 *pout, const nm::Vector3 *pv, const nm::matrix4 *pm)
 	{
 		nm::Vector3 out;
-		float norm;
+		
+		float norm = 1.0f / (pm->m[0][3] * pv->x + pm->m[1][3] * pv->y + pm->m[2][3] * pv->z + pm->m[3][3]);
 
-		norm = pm->m[0][3] * pv->x + pm->m[1][3] * pv->y + pm->m[2][3] * pv->z + pm->m[3][3];
-
-		out.x = (pm->m[0][0] * pv->x + pm->m[1][0] * pv->y + pm->m[2][0] * pv->z + pm->m[3][0]) / norm;
-		out.y = (pm->m[0][1] * pv->x + pm->m[1][1] * pv->y + pm->m[2][1] * pv->z + pm->m[3][1]) / norm;
-		out.z = (pm->m[0][2] * pv->x + pm->m[1][2] * pv->y + pm->m[2][2] * pv->z + pm->m[3][2]) / norm;
+		out.x = (pm->m[0][0] * pv->x + pm->m[1][0] * pv->y + pm->m[2][0] * pv->z + pm->m[3][0]) * norm;
+		out.y = (pm->m[0][1] * pv->x + pm->m[1][1] * pv->y + pm->m[2][1] * pv->z + pm->m[3][1]) * norm;
+		out.z = (pm->m[0][2] * pv->x + pm->m[1][2] * pv->y + pm->m[2][2] * pv->z + pm->m[3][2]) * norm;
 
 		*pout = out;
 
@@ -182,20 +190,20 @@ namespace Viewports
 		}
 
 
-		// получаем матрицу камеры
+		
 		MatrixAffineTransformation(invView,
-			1.0f,	// scale
-			0,		// rotate center
-			(const D3DXQUATERNION*) (&s.orientation),	// dir
-			(const nm::Vector3*) (&s.position) // translate
+			1.0f,	 
+			nullptr, 
+			(const nm::Quaternion*) (&s.orientation),	
+			(const nm::Vector3*) (&s.position) 
 		);
 
 		MatrixInverse(view, 0, invView);
 	}
 
-	//
-	//
-	//
+	
+	
+	
 	CalculatedCamera::CalculatedCamera() :state(params.getStateRef()), position((nm::Vector3&)params.getStateRef().position)
 	{
 		calculate();
@@ -265,13 +273,13 @@ namespace Viewports
 	inline float WorldRay(float vx, float vy, float nearPlaneDist, const nm::matrix4& invView, Vector3T& pos, Vector3T& dir)
 	{
 		const nm::matrix4& m = invView;
-		//nearPlaneDist +=0.1;
+		
 		dir.x = vx*m._11 + vy*m._21 + m._31;
 		dir.y = vx*m._12 + vy*m._22 + m._32;
 		dir.z = vx*m._13 + vy*m._23 + m._33;
 		nm::normalize(dir);
 
-		Vector3T normal;  // нормаль к near/far плоскостям и плоскости экрана в мире
+		Vector3T normal;  
 		normal.x = m._31;
 		normal.y = m._32;
 		normal.z = m._33;
@@ -366,25 +374,25 @@ namespace Viewports
 		t = WorldRay(fnRight, fnBottom, nearDist, (nm::matrix4&)invView, points[2], dir);		points[6] = points[2] + dir * (farDist - nearDist)*t;
 		t = WorldRay(fnLeft, fnBottom, nearDist, (nm::matrix4&)invView, points[3], dir);		points[7] = points[3] + dir * (farDist - nearDist)*t;
 
-		frustum.planes[0].build(points[0], points[4], points[3]);// left
-		frustum.planes[1].build(points[1], points[2], points[5]);// right
+		frustum.planes[0].build(points[0], points[4], points[3]);
+		frustum.planes[1].build(points[1], points[2], points[5]);
 
-		frustum.planes[2].build(points[0], points[1], points[5]);// top
-		frustum.planes[3].build(points[3], points[6], points[2]);// bottom
+		frustum.planes[2].build(points[0], points[1], points[5]);
+		frustum.planes[3].build(points[3], points[6], points[2]);
 
-		frustum.planes[4].build(points[0], points[2], points[1]);// near
-		frustum.planes[5].build(points[4], points[5], points[6]);// far
+		frustum.planes[4].build(points[0], points[2], points[1]);
+		frustum.planes[5].build(points[4], points[5], points[6]);
 
 		for (int i = 0; i < 6; ++i)
 		{
 			frustum.planes[i].normalize();
 		}
 
-		//for (int i=0; i<8; i++ )
-		//{
-		//	DebugDrawing::sphere(points[i], 0.5f);
+		
+		
+		
 
-		//}
+		
 	}
 
 	intersections::Frustum CalculatedCamera::worldFrustum(const unigui::Rect& screenRect) const
@@ -418,3 +426,22 @@ namespace Viewports
 		return result;
 	}
 }
+
+
+
+
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

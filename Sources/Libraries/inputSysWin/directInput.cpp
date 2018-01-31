@@ -1,3 +1,11 @@
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #ifdef WIN32
 
 #define DIRECTINPUT_VERSION 0x0800
@@ -44,7 +52,7 @@ namespace Input
 	LPDIRECTINPUT8          g_pDI = NULL;
 	LPDIRECTINPUTDEVICE8    g_pJoystick = NULL;
 
-	// Called once for each enumerated joystick. If we find one, create a device interface on it so we can play with it.
+	
 	BOOL CALLBACK EnumJoysticksCallback( const DIDEVICEINSTANCE* pdidInstance, VOID* pContext )
 	{
 		DI_ENUM_CONTEXT* pEnumContext = ( DI_ENUM_CONTEXT* )pContext;
@@ -53,32 +61,32 @@ namespace Input
 		if( g_bFilterOutXinputDevices && IsXInputDevice( &pdidInstance->guidProduct ) )
 			return DIENUM_CONTINUE;
 
-		// Skip anything other than the perferred joystick device as defined by the control panel.  
-		// Instead you could store all the enumerated joysticks and let the user pick.
+		
+		
 		if( pEnumContext->bPreferredJoyCfgValid &&  IsEqualGUID( pdidInstance->guidInstance, pEnumContext->pPreferredJoyCfg->guidInstance ) )
 			return DIENUM_CONTINUE;
 
-		// Obtain an interface to the enumerated joystick.
-		hr = g_pDI->CreateDevice( pdidInstance->guidInstance, &g_pJoystick, NULL );	 		// If it failed, then we can't use this joystick. (Maybe the user unplugged
-		// it while we were in the middle of enumerating it.)
+		
+		hr = g_pDI->CreateDevice( pdidInstance->guidInstance, &g_pJoystick, NULL );	 		
+		
 		if( FAILED( hr ) )
 			return DIENUM_CONTINUE;
 
-		// Stop enumeration. Note: we're just taking the first joystick we get. You
-		// could store all the enumerated joysticks and let the user pick.
+		
+		
 		return DIENUM_STOP;
 	}
 
-	// Initialize the DirectInput variables.
+	
 	HRESULT InitDirectInput()
 	{
-		//return S_FALSE;
+		
 
 		HRESULT hr;
 
-		// Register with the DirectInput subsystem and get a pointer
-		// to a IDirectInput interface we can use.
-		// Create a DInput object
+		
+		
+		
 		if( FAILED( hr = DirectInput8Create( GetModuleHandle( NULL ), DIRECTINPUT_VERSION, IID_IDirectInput8, ( VOID** )&g_pDI, NULL ) ) )
 			return hr;
 
@@ -96,18 +104,18 @@ namespace Input
 			return hr;
 
 		PreferredJoyCfg.dwSize = sizeof( PreferredJoyCfg );
-		if( SUCCEEDED( pJoyConfig->GetConfig( 0, &PreferredJoyCfg, DIJC_GUIDINSTANCE ) ) ) // This function is expected to fail if no joystick is attached
+		if( SUCCEEDED( pJoyConfig->GetConfig( 0, &PreferredJoyCfg, DIJC_GUIDINSTANCE ) ) ) 
 			enumContext.bPreferredJoyCfgValid = false;
 		SAFE_RELEASE( pJoyConfig );
 
-		// Look for a simple joystick we can use for this sample program.
+		
 		if( FAILED( hr = g_pDI->EnumDevices( DI8DEVCLASS_GAMECTRL, EnumJoysticksCallback, &enumContext, DIEDFL_ATTACHEDONLY ) ) )
 			return hr;
 
 		if( g_bFilterOutXinputDevices )
 			CleanupForIsXInputDevice();
 
-		// Make sure we got a joystick
+		
 		if( NULL == g_pJoystick )
 		{
 			return S_OK;
@@ -115,35 +123,35 @@ namespace Input
 
 		LOG_MSG("Joystick found.");
 
-		// Set the data format to "simple joystick" - a predefined data format 
-		//
-		// A data format specifies which controls on a device we are interested in,
-		// and how they should be reported. This tells DInput that we will be
-		// passing a DIJOYSTATE2 structure to IDirectInputDevice::GetDeviceState().
+		
+		
+		
+		
+		
 		if( FAILED( hr = g_pJoystick->SetDataFormat( &c_dfDIJoystick2 ) ) )
 			return hr;
 
-		// Set the cooperative level to let DInput know how this device should
-		// interact with the system and with other DInput applications.
-// 		if( FAILED( hr = g_pJoystick->SetCooperativeLevel( hDlg, DISCL_EXCLUSIVE | DISCL_FOREGROUND ) ) )
-// 			return hr;
+		
+		
 
-		// Enumerate the joystick objects. The callback function enabled user
-		// interface elements for objects that are found, and sets the min/max
-		// values property for discovered axes.
+
+
+		
+		
+		
 		if( FAILED( hr = g_pJoystick->EnumObjects( EnumObjectsCallback, 0, DIDFT_ALL ) ) )
 			return hr;
 
 		return S_OK;
 	}
 
-	// Enum each PNP device using WMI and check each device ID to see if it contains 
-	// "IG_" (ex. "VID_045E&PID_028E&IG_00").  If it does, then it’s an XInput device
-	// Unfortunately this information can not be found by just using DirectInput.
-	// Checking against a VID/PID of 0x028E/0x045E won't find 3rd party or future 
-	// XInput devices.
-	// This function stores the list of xinput devices in a linked list 
-	// at g_pXInputDeviceList, and IsXInputDevice() searchs that linked list
+	
+	
+	
+	
+	
+	
+	
 	HRESULT SetupForIsXInputDevice()
 	{
 		IWbemServices* pIWbemServices = NULL;
@@ -159,11 +167,11 @@ namespace Input
 		VARIANT var;
 		HRESULT hr;
 
-		// CoInit if needed
+		
 		hr = CoInitialize( NULL );
 		bCleanupCOM = SUCCEEDED( hr );
 
-		// Create WMI
+		
 		hr = CoCreateInstance( __uuidof( WbemLocator ),
 			NULL,
 			CLSCTX_INPROC_SERVER,
@@ -172,28 +180,28 @@ namespace Input
 		if( FAILED( hr ) || pIWbemLocator == NULL )
 			goto LCleanup;
 
-		// Create BSTRs for WMI
+		
 		bstrNamespace = SysAllocString( L"\\\\.\\root\\cimv2" ); if( bstrNamespace == NULL ) goto LCleanup;
 		bstrDeviceID = SysAllocString( L"DeviceID" );           if( bstrDeviceID == NULL )  goto LCleanup;
 		bstrClassName = SysAllocString( L"Win32_PNPEntity" );    if( bstrClassName == NULL ) goto LCleanup;
 
-		// Connect to WMI 
+		
 		hr = pIWbemLocator->ConnectServer( bstrNamespace, NULL, NULL, 0L, 0L, NULL, NULL, &pIWbemServices );
 		if( FAILED( hr ) || pIWbemServices == NULL )
 			goto LCleanup;
 
-		// Switch security level to IMPERSONATE
+		
 		CoSetProxyBlanket( pIWbemServices, RPC_C_AUTHN_WINNT, RPC_C_AUTHZ_NONE, NULL, RPC_C_AUTHN_LEVEL_CALL, RPC_C_IMP_LEVEL_IMPERSONATE, NULL, 0 );
 
-		// Get list of Win32_PNPEntity devices
+		
 		hr = pIWbemServices->CreateInstanceEnum( bstrClassName, 0, NULL, &pEnumDevices );
 		if( FAILED( hr ) || pEnumDevices == NULL )
 			goto LCleanup;
 
-		// Loop over all devices
+		
 		for(; ; )
 		{
-			// Get 20 at a time
+			
 			hr = pEnumDevices->Next( 10000, 20, pDevices, &uReturned );
 			if( FAILED( hr ) )
 				goto LCleanup;
@@ -202,15 +210,15 @@ namespace Input
 
 			for( iDevice = 0; iDevice < uReturned; iDevice++ )
 			{
-				// For each device, get its device ID
+				
 				hr = pDevices[iDevice]->Get( bstrDeviceID, 0L, &var, NULL, NULL );
 				if( SUCCEEDED( hr ) && var.vt == VT_BSTR && var.bstrVal != NULL )
 				{
-					// Check if the device ID contains "IG_".  If it does, then it’s an XInput device
-					// Unfortunately this information can not be found by just using DirectInput 
+					
+					
 					if( wcsstr( var.bstrVal, L"IG_" ) )
 					{
-						// If it does, then get the VID/PID from var.bstrVal
+						
 						DWORD dwPid = 0, dwVid = 0;
 						WCHAR* strVid = wcsstr( var.bstrVal, L"VID_" );
 						if( strVid && swscanf( strVid, L"VID_%4X", &dwVid ) != 1 )
@@ -221,7 +229,7 @@ namespace Input
 
 						DWORD dwVidPid = MAKELONG( dwVid, dwPid );
 
-						// Add the VID/PID to a linked list
+						
 						XINPUT_DEVICE_NODE* pNewNode = new XINPUT_DEVICE_NODE;
 						if( pNewNode )
 						{
@@ -251,56 +259,56 @@ LCleanup:
 		return hr;
 	}
 
-	//Get the input device's state and display it.
+	
 	HRESULT UpdateInputState(WinInput::DirectInput2Buffer& buffer)
 	{
 		HRESULT hr;
-		TCHAR strText[512] = {0}; // Device state text
-		DIJOYSTATE2 js;           // DInput joystick state 
+		TCHAR strText[512] = {0}; 
+		DIJOYSTATE2 js;           
 
 		if( NULL == g_pJoystick )
 			return S_OK;
 
-		// Poll the device to read the current state
+		
 		hr = g_pJoystick->Poll();
 		if( FAILED( hr ) )
 		{
-			// DInput is telling us that the input stream has been
-			// interrupted. We aren't tracking any state between polls, so
-			// we don't have any special reset that needs to be done. We
-			// just re-acquire and try again.
+			
+			
+			
+			
 			hr = g_pJoystick->Acquire();
 			while( hr == DIERR_INPUTLOST )
 				hr = g_pJoystick->Acquire();
 
-			// hr may be DIERR_OTHERAPPHASPRIO or other errors.  This
-			// may occur when the app is minimized or in the process of 
-			// switching, so just try again later 
+			
+			
+			
 			return S_OK;
 		}
 
-		// Get the input's device state
+		
 		if( FAILED( hr = g_pJoystick->GetDeviceState( sizeof( DIJOYSTATE2 ), &js ) ) )
-			return hr; // The device should have been acquired during the Poll()
+			return hr; 
 
-		// Display joystick state to dialog
+		
 
-		// Axes
-		//LOG_REPORT("axis_X" << js.lX);
-		//LOG_REPORT("axis_Y" << js.lY);
-		//LOG_REPORT("axis_Z" << js.lZ);
+		
+		
+		
+		
 
-		//LOG_REPORT("rot_X" << js.lRx);
-		//LOG_REPORT("rot_Y" << js.lRy);
-		//LOG_REPORT("rot_Z" << js.lRz);
+		
+		
+		
 
-		//LOG_REPORT("slider_0" << js.rglSlider[0]);
-		//LOG_REPORT("slider_1" << js.rglSlider[1]);
-		//
-		//LOG_REPORT("point_of_view_0" << js.rgdwPOV[0]);
-		//LOG_REPORT("point_of_view_1" << js.rgdwPOV[1]);
-		//LOG_REPORT("point_of_view_2" << js.rgdwPOV[2]);
-		//LOG_REPORT("point_of_view_3" << js.rgdwPOV[3]);
+		
+		
+		
+		
+		
+		
+		
 
 		buffer.data[0][DIRECT_PAD2_X_POSITION] = (float)js.lX;
 		buffer.data[0][DIRECT_PAD2_Y_POSITION] = (float)js.lY;
@@ -319,7 +327,7 @@ LCleanup:
 		buffer.data[0][DIRECT_PAD2_POINT_OF_VIEW3] = (float) js.rgdwPOV[3];
 		
 
-		// Fill up text with which buttons are pressed
+		
 		for( int i = 0; i < 128; i++ )
 		{
 			if(i == 12)	buffer.data[0][DIRECT_PAD2_BUTTON12] = 0.0f;
@@ -336,27 +344,27 @@ LCleanup:
 		return S_OK;
 	}
 
-	// Callback function for enumerating objects (axes, buttons, POVs) on a joystick. This function enables user interface elements for objects that are found to exist, and scales axes min/max values.
+	
 	BOOL CALLBACK EnumObjectsCallback( const DIDEVICEOBJECTINSTANCE* pdidoi, VOID* pContext )
 	{
 		HWND hDlg = ( HWND )pContext;
 
-		static int nSliderCount = 0;  // Number of returned slider controls
-		static int nPOVCount = 0;     // Number of returned POV controls
+		static int nSliderCount = 0;  
+		static int nPOVCount = 0;     
 
-		// For axes that are returned, set the DIPROP_RANGE property for the
-		// enumerated axis in order to scale min/max values.
+		
+		
 		if( pdidoi->dwType & DIDFT_AXIS )
 		{
 			DIPROPRANGE diprg;
 			diprg.diph.dwSize = sizeof( DIPROPRANGE );
 			diprg.diph.dwHeaderSize = sizeof( DIPROPHEADER );
 			diprg.diph.dwHow = DIPH_BYID;
-			diprg.diph.dwObj = pdidoi->dwType; // Specify the enumerated axis
+			diprg.diph.dwObj = pdidoi->dwType; 
 			diprg.lMin = -1000;
 			diprg.lMax = +1000;
 
-			// Set the range for the axis
+			
 			if( FAILED( g_pJoystick->SetProperty( DIPROP_RANGE, &diprg.diph ) ) )
 				return DIENUM_STOP;
 
@@ -365,10 +373,10 @@ LCleanup:
 		return DIENUM_CONTINUE;
 	}
 
-	// Returns true if the DirectInput device is also an XInput device. Call SetupForIsXInputDevice() before, and CleanupForIsXInputDevice() after
+	
 	bool IsXInputDevice( const GUID* pGuidProductFromDirectInput )
 	{
-		// Check each xinput device to see if this device's vid/pid matches
+		
 		XINPUT_DEVICE_NODE* pNode = g_pXInputDeviceList;
 		while( pNode )
 		{
@@ -381,10 +389,10 @@ LCleanup:
 	}
 
 
-	// Cleanup needed for IsXInputDevice()
+	
 	void CleanupForIsXInputDevice()
 	{
-		// Cleanup linked list
+		
 		XINPUT_DEVICE_NODE* pNode = g_pXInputDeviceList;
 		while( pNode )
 		{
@@ -399,3 +407,21 @@ LCleanup:
 
 
 #endif
+
+
+
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

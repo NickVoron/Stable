@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include <array>
@@ -11,7 +19,7 @@
 
 namespace AppModules
 {
-	//
+	
 	template<class ML, class Prologue>
 	struct ExtractPrologueImpl
 	{
@@ -46,9 +54,9 @@ namespace AppModules
 		typedef typename ExtractPrologueIteration<InModulesList>::Result Result;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template<class ML, class Epilogue>
 	struct ExtractEpilogueImpl
 	{
@@ -83,7 +91,7 @@ namespace AppModules
 		typedef typename ExtractEpilogueIteration<InModulesList>::Result Result;
 	};	  
 
-	//
+	
 	template<class BaseModule, class DependenciesT>
 	struct ModuleUtil
 	{
@@ -153,9 +161,9 @@ namespace AppModules
 		typedef typename FindInModuleUtilsListImpl<ModuleUtilsList, Module, std::is_same<typename ModuleUtilsList::Head::Module, Module>::value>::Result Result;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template<class InMUL, class ML, class MUL>
 	struct ExtractDependencies_cvt
 	{
@@ -205,9 +213,9 @@ namespace AppModules
 		typedef typename ModulesUtilsToList<typename ExtractDependenciesIteration<InMUL, InMUL>::Result>::Result Result;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 
 	template<class M, class Dep, class MUL>
 	struct ConvertModuleUtilsList_cvt
@@ -288,9 +296,9 @@ namespace AppModules
 	HAS_MEMBER(process);
 	HAS_MEMBER(release);
 
-	//
-	//
-	//
+	
+	
+	
 	struct Module
 	{
 		struct Params {};
@@ -384,9 +392,9 @@ namespace AppModules
 		}
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template<class Module, class Result, bool exists>
 	struct ChainedActionAccumImpl;
 
@@ -421,9 +429,9 @@ namespace AppModules
 		static const int count = Loki::TL::Length<Result>::value;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template<class ModulesList, class Params, class ML, template <class> class Action, int index, int count>
 	struct ChainedActionCallImpl
 	{
@@ -448,7 +456,7 @@ namespace AppModules
 	template<class ModulesList> struct OrderedModules<ModulesList, false> { typedef ModulesList Result;	};
 	template<class ModulesList>	struct OrderedModules<ModulesList, true>  {	typedef typename Loki::TL::Reverse<ModulesList>::Result Result;	};
 
-	//
+	
 	template<class ModulesList, template <class> class Action, bool reverse>
 	struct ChainedActionCall
 	{
@@ -482,9 +490,9 @@ namespace AppModules
 	template<class ModulesList> struct BeforeInitialize	: public ChainedActionCall<ModulesList, BeforeInitCaller, false>{ };
 
 
-	//
-	//
-	//
+	
+	
+	
   	template<class ModulesList>
 	struct ParametersExtractor
 	{
@@ -499,9 +507,9 @@ namespace AppModules
 	template<class Tail>												 struct GenLinearInheritance<Loki::NullType, Tail> {};
 
 
-	//
-	//
-	//
+	
+	
+	
 	template<class InModulesList>
 	struct UniqueModules
 	{
@@ -509,9 +517,9 @@ namespace AppModules
 		typedef typename ConvertModuleUtilsList<RModulesList>::Result ModulesList;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template<class InModulesList>
 	struct Modules
 	{
@@ -571,9 +579,9 @@ namespace AppModules
 		BeforeInitialize<ModulesList> chain_before_init;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template<class ML>
 	struct stringize_types_impl
 	{
@@ -586,7 +594,7 @@ namespace AppModules
 				int status;
 				name = abi::__cxa_demangle(name.c_str(), 0, 0, &status);
 			}			
-#endif // __GNUC__
+#endif 
 
 
 			auto d0 = name.find_last_of(":");
@@ -629,9 +637,9 @@ namespace AppModules
 		static std::string string() { return "<" + stringize_types_impl<TL>::string() + ">"; }
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template<class ML>
 	struct InitRelease_TesterImpl
 	{
@@ -714,3 +722,22 @@ namespace AppModules
 	}
 	
 }
+
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

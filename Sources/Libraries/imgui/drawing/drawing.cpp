@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "drawing.h"
 
 #include "../types.h"
@@ -14,17 +22,17 @@ namespace imgui
 {
 	namespace detail
 	{
-// 		using namespace Geometry;
-// 		typedef Vertex<TYPELIST_2(POST, UV2<0>)> Vtx;
-// 		typedef VertexStream<Vtx> VS;
-// 		typedef IndexStream<unsigned int> IS;
-// 		typedef Mesh<Vtx, unsigned int> MS;
-// 
-// 		MS mesh;
-// 		dx9::DynamicMesh drawer;
-// 
-// 		Resources::Effect* effectFX;
-// 
+
+
+
+
+
+
+
+
+
+
+
 		extern Resources::Font* font;
 	}
 
@@ -35,61 +43,74 @@ namespace drawing{
 	void drawRect(const Rect& rect, const Color& color)
 	{
 		unigui::draw::rect(rect, color);
-// 		Resources::Effect::ClientResource e = effectFX->GetResource();
-// 		if(e)
-// 		{
-// 			Geometry::Generation::generateScreenQuad(detail::mesh, Vector2(rect.pos.x, rect.pos.y), Vector2(rect.size.x, rect.size.y));
-// 			detail::drawer.uploadMesh(detail::mesh);
-// 
-// 			e->SetValue("color", &color, sizeof(color));
-// 			e->Begin(0,0);
-// 			e->BeginPass(0);
-// 			detail::drawer.draw();
-// 			e->EndPass();
-// 			e->End();
-// 		}		
+
+
+
+
+
+
+
+
+
+
+
+
+
 	}
 
-	//void drawLine(const types::Point2& start, const types::Point2& end, const types::Color& color)
-	//{
-	//	//DebugDrawing::color( Vector3(color.r, color.g, color.b) );
-	//	DebugDrawing::color( Vector3(1, 0,0) );
-	//	//DebugDrawing::line(nm::index2(start.x, start.y), nm::index2(end.x, end.y) );
-	//	DebugDrawing::line(nm::index2(0,0), nm::index2(1000, 1000) );
-	//}
-
-/*
-	void drawText(const char* text, const Point2& pos, const Color& color)
-	{
-		font.print()
-		//DebugDrawing::color( Vector3(color.r, color.g, color.b) );
-		//DebugDrawing::text(nm::index2(pos.x, pos.y), text);
-	}*/
+	
+	
+	
+	
+	
+	
+	
 
 
-// 	void drawText(const wchar_t* text, const Rect& rect, const Color& color)
-// 	{
-// 		if (font->GetResource())
-// 		{
-// 			font->GetResource()->print(text, rect, color);
-// 		}
-// 		
-// 	}
-// 
-// 	void drawText(const char* text, const Rect& rect, const Color& color)
-// 	{
-// 		drawText( Base::StrUtils::Convert(text).c_str(), rect, color );
-// 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	void drawLineRect(const Rect& rect, const Color& color)
 	{
 		unigui::draw::linerect(rect, color);
-// 		drawRect( Rect(rect.pos, Point2(2, rect.size.y)), color);
-// 		drawRect( Rect(rect.pos, Point2(rect.size.x, 2)), color);
-// 
-// 		drawRect( Rect(Point2(rect.pos.x, rect.pos.y + rect.size.y-2), Point2(rect.size.x, 2)), color);
-// 		drawRect( Rect(Point2(rect.pos.x+ rect.size.x-2, rect.pos.y),  Point2(2, rect.size.y)), color);
+
+
+
+
+
 	}
 }
 }
+
+
+
+
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

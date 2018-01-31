@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="compression.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="lz4\lz4.c">
       <Filter>lz4</Filter>
     </ClCompile>
@@ -18,9 +17,6 @@
     <ClCompile Include="lzma\LzFind.c">
       <Filter>lzma</Filter>
     </ClCompile>
-    <ClCompile Include="lzma\LzFindMt.c">
-      <Filter>lzma</Filter>
-    </ClCompile>
     <ClCompile Include="lzma\LzmaDec.c">
       <Filter>lzma</Filter>
     </ClCompile>
@@ -28,9 +24,6 @@
       <Filter>lzma</Filter>
     </ClCompile>
     <ClCompile Include="lzma\LzmaLib.c">
-      <Filter>lzma</Filter>
-    </ClCompile>
-    <ClCompile Include="lzma\Threads.c">
       <Filter>lzma</Filter>
     </ClCompile>
     <ClCompile Include="bcm\bcm.cpp">
@@ -52,7 +45,6 @@
   <ItemGroup>
     <ClInclude Include="compression.h" />
     <ClInclude Include="library.include.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="lz4\lz4.h">
       <Filter>lz4</Filter>
     </ClInclude>
@@ -68,9 +60,6 @@
     <ClInclude Include="lzma\LzFind.h">
       <Filter>lzma</Filter>
     </ClInclude>
-    <ClInclude Include="lzma\LzFindMt.h">
-      <Filter>lzma</Filter>
-    </ClInclude>
     <ClInclude Include="lzma\LzHash.h">
       <Filter>lzma</Filter>
     </ClInclude>
@@ -81,9 +70,6 @@
       <Filter>lzma</Filter>
     </ClInclude>
     <ClInclude Include="lzma\LzmaLib.h">
-      <Filter>lzma</Filter>
-    </ClInclude>
-    <ClInclude Include="lzma\Threads.h">
       <Filter>lzma</Filter>
     </ClInclude>
     <ClInclude Include="lzma\Types.h">

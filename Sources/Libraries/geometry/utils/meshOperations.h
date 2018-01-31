@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "../mesh/mesh.h"
@@ -19,15 +27,15 @@ enum BoundCylinderType
 template<class VertexType, class IndexType>
 void evaluateAABB(intersections::AABB& res, const VertexStream<VertexType>& vs, IndexType i)
 {
-	const POS3& pos = vs[i].pos3();
+	auto& pos = vs[i].pos3();
 
-	res.minCorner.x = std::min(pos.x, res.minCorner.x);
-	res.minCorner.y = std::min(pos.y, res.minCorner.y);
-	res.minCorner.z = std::min(pos.z, res.minCorner.z);
+	res.bmin.x = std::min(pos.x, res.bmin.x);
+	res.bmin.y = std::min(pos.y, res.bmin.y);
+	res.bmin.z = std::min(pos.z, res.bmin.z);
 
-	res.maxCorner.x = std::max(pos.x, res.maxCorner.x);
-	res.maxCorner.y = std::max(pos.y, res.maxCorner.y);
-	res.maxCorner.z = std::max(pos.z, res.maxCorner.z);
+	res.bmax.x = std::max(pos.x, res.bmax.x);
+	res.bmax.y = std::max(pos.y, res.bmax.y);
+	res.bmax.z = std::max(pos.z, res.bmax.z);
 }
 
 template<class VertexType, class IndexType>
@@ -48,11 +56,11 @@ struct BottomAlignedBoundCylinder
 	float radius;
 };
 
-// struct BoundSphere
-// {
-// 	Vector3 center;
-// 	float radius;
-// };
+
+
+
+
+
 
 inline void maxBoundCylinder(const BottomAlignedBoundCylinder& c1, const BottomAlignedBoundCylinder& c2, BottomAlignedBoundCylinder& res)
 {
@@ -78,9 +86,9 @@ template<class VertexType, class VertexComponent>
 void getInterpolatedTrg(VertexComponent& val, const TrianglePtr<VertexType>& t, float u, float v)
 {
 	static_assert( (IsVertexHas<VertexType, VertexComponent>::value), "IsVertexHas<VertexType, VertexComponent>::value" );
-	const VertexComponent& v0 = t.v[0]->get<VertexComponent>();
-	const VertexComponent& v1 = t.v[1]->get<VertexComponent>();
-	const VertexComponent& v2 = t.v[2]->get<VertexComponent>();
+	const VertexComponent& v0 = t.v[0]->template get<VertexComponent>();
+	const VertexComponent& v1 = t.v[1]->template get<VertexComponent>();
+	const VertexComponent& v2 = t.v[2]->template get<VertexComponent>();
 	val = v0 + (v1 - v0)*u + (v2 - v0)*v;
 }
 
@@ -97,7 +105,7 @@ void getInterpolatedVertex(VertexType& res, const VertexType& v1, const VertexTy
 
 }
 
-// Объединение вершин которые достаточно близки друг к другу
+
 template<class VertexType, class IndexType>
 unsigned int mergeVertices(Mesh<VertexType, IndexType>& mesh)
 {
@@ -134,7 +142,7 @@ unsigned int mergeVertices(Mesh<VertexType, IndexType>& mesh)
 	}
 
 	oldIs = is;
-	std::vector<Mesh::Vertex> newVs;
+	std::vector<typename Mesh::Vertex> newVs;
 	std::vector<bool> added( vs.getSize() );
 	for(int i = 0; i < is.getSize(); ++i)
 	{
@@ -189,7 +197,7 @@ std::vector<std::vector<VertexType*>> equalVertices(Mesh<VertexType, IndexType>&
 	return result;
 }
 
-// Объединение вершин которые достаточно близки друг к другу
+
 template<class BasisVectorType, class VertexType, class IndexType>
 void smoothBasis(Mesh<VertexType, IndexType>& mesh)
 {
@@ -200,14 +208,14 @@ void smoothBasis(Mesh<VertexType, IndexType>& mesh)
 			BasisVectorType result(0.0f, 0.0f, 0.0f);
 			for (auto& vtx : vertices)
 			{
-				result += vtx->get<BasisVectorType>();
+				result += vtx->template get<BasisVectorType>();
 			}
 
 			result.normalize();
 
 			for (auto& vtx : vertices)
 			{
-				vtx->get<BasisVectorType>() = result;
+				vtx->template get<BasisVectorType>() = result;
 			}
 		}
 	}
@@ -217,14 +225,14 @@ template<class VertexType, class IndexType>
 void optimize(VertexStream<VertexType>& vs, IndexStream<IndexType>& is)
 {
 	int trgCount = is.getSize() / 3;
-	//vertex FIFO optimizing
+	
 	VertexCache<16> vc;
 	for(int tt = 0; tt < trgCount; ++tt)
 	{
 		int best_hit = 0, best_trg = tt;
 		int maxtr = trgCount - tt;
 		if(maxtr>16384)	maxtr = 16384;
-		//if(maxtr>1024)	maxtr = 1024;
+		
 		maxtr += tt;
 		for(int t = tt; t < maxtr; ++t)
 		{
@@ -242,7 +250,7 @@ void optimize(VertexStream<VertexType>& vs, IndexStream<IndexType>& is)
 			}
 		}
 
-		//add vertices
+		
 		Face<IndexType> bestTrg = is.getFace(best_trg);
 
 		if(!vc.inCache(bestTrg.a))	vc.addEntry(bestTrg.a);
@@ -252,7 +260,7 @@ void optimize(VertexStream<VertexType>& vs, IndexStream<IndexType>& is)
 		is.swapFaces(best_trg, tt);
 	}
 
-	//vertex cache optimizing
+	
 
 	int isize = is.getSize();
 	IndexStream<IndexType> xl;
@@ -261,7 +269,7 @@ void optimize(VertexStream<VertexType>& vs, IndexStream<IndexType>& is)
 	for(int v = 0; v < isize; ++v)
 		xl[v] = -1;
 
-	//create relink table
+	
 	int curv=0;
 	for(int t = 0; t < trgCount; ++t)
 	{
@@ -271,7 +279,7 @@ void optimize(VertexStream<VertexType>& vs, IndexStream<IndexType>& is)
 		if(xl[trg.c] == -1)	xl[trg.c] = curv++;
 	}
 
-	//sort vertices
+	
 	int vsize = vs.getSize();
 	VertexStream<VertexType> xvs;
 	xvs.setSize(vsize);
@@ -286,7 +294,7 @@ void optimize(VertexStream<VertexType>& vs, IndexStream<IndexType>& is)
 		vs[v] = xvs[v];
 	}
 
-	//relink vertices
+	
 	for(int t = 0; t < trgCount; ++t)
 	{
 		FaceRef<IndexType>& f0 = is.getFaceRef(t);
@@ -321,7 +329,7 @@ void generateNormals(VertexStream<VertexType>& vs, IndexStream<IndexType>& is)
 		VertexType& a = vs[f.a];
 		VertexType& b = vs[f.b];
 		VertexType& c = vs[f.c];
-		NORMAL n = calculateNormal(a, b, c);// + a.normal();
+		NORMAL n = calculateNormal(a, b, c);
 		a.normal() += n;
 		b.normal() += n;
 		c.normal() += n;
@@ -347,11 +355,12 @@ void generateNormals(Mesh& mesh)
 	generateNormals(mesh.vertices(), mesh.indices());
 }
 
-template<class Mesh>
-void fillNormals(Mesh& mesh, const NORMAL& n)
+template<class VertexType, class IndexType>
+void fillNormals(Mesh<VertexType, IndexType>& mesh, const NORMAL& n)
 {
 	NORMAL norm = n;
-	std::size_t verticesCount = mesh.getVerticesCount();
+	auto verticesCount = mesh.getVerticesCount();
+	auto& vs = mesh.vertices();
 	for(std::size_t i = 0; i < verticesCount; ++i)
 	{
 		vs[i].normal() = norm;	
@@ -361,26 +370,27 @@ void fillNormals(Mesh& mesh, const NORMAL& n)
 template<int uvIndex, class VertexType, class UV2Type>
 bool uvInTriangle(const UV2Type& uv, const Geometry::TrianglePtr<VertexType>& t)
 {
-	float s1 = Base::MathUtils::point2ToLineSegmentDistance(uv, t[0].uv2<uvIndex>(), t[1].uv2<uvIndex>());	
-	float s2 = Base::MathUtils::point2ToLineSegmentDistance(uv, t[1].uv2<uvIndex>(), t[2].uv2<uvIndex>());
+	float s1 = nm::point2ToLineSegmentDistance(uv, t[0].template uv2<uvIndex>(), t[1].template uv2<uvIndex>());
+	float s2 = nm::point2ToLineSegmentDistance(uv, t[1].template uv2<uvIndex>(), t[2].template uv2<uvIndex>());
 	if(s2*s1 <= 0) return false;
-	float s3 = Base::MathUtils::point2ToLineSegmentDistance(uv, t[2].uv2<uvIndex>(), t[0].uv2<uvIndex>());
+	float s3 = nm::point2ToLineSegmentDistance(uv, t[2].template uv2<uvIndex>(), t[0].template uv2<uvIndex>());
 	if(s3*s2 <= 0) return false;
 
 	return true;
 }
 
-template<class Mesh>
-void generateDoubleSided(Mesh& mesh)
+template<class VertexType, class IndexType>
+void generateDoubleSided(Mesh<VertexType, IndexType>& mesh)
 {
 	mesh.mergeVertices(0.001f);
-	unsigned int fc = mesh.getFacesCount();
+	auto fc = mesh.getFacesCount();
+	auto& vs = mesh.vertices();
 
 	IndexStream<IndexType> shuffledIs;
 
 	for(unsigned int i = 0; i < fc; ++i)
 	{
-		Face<IndexType> face = getFace(i);
+		auto face = mesh.getTriangle(i);
 		shuffledIs.addIndex( vs.addVertex( vs[face.a] ) );
 		shuffledIs.addIndex( vs.addVertex( vs[face.b] ) );
 		shuffledIs.addIndex( vs.addVertex( vs[face.c] ) );
@@ -424,67 +434,67 @@ void computeBoundCylinder(const VertexStream& vertices, const IndexStream& is, B
 	}
 }
 
-// template<class VertexStream, class IndexStream>
-// void computeBoundBox(const VertexStream& vertices, const IndexStream& is, AABB& bb)
-// {
-// 	unsigned int newSize = is.getSize();
-// 
-// 	if(newSize > 0)
-// 	{
-// 		POS3 min = vertices[ is[0] ].pos3();
-// 		POS3 max = vertices[ is[0] ].pos3();
-// 
-// 		for (unsigned int i = 1; i < newSize; ++i)
-// 		{
-// 			const POS3& pos = vertices[ is[i] ].pos3();
-// 
-// 			min.x = std::min(min.x, pos.x);
-// 			min.y = std::min(min.y, pos.y);
-// 			min.z = std::min(min.z, pos.z);
-// 
-// 
-// 			max.x = std::max(max.x, pos.x);
-// 			max.y = std::max(max.y, pos.y);
-// 			max.z = std::max(max.z, pos.z);
-// 		}
-// 		Base::MathUtils::ConvertVectors3(bb.minCorner, min);
-// 		Base::MathUtils::ConvertVectors3(bb.maxCorner, max);
-// 	}
-// }
 
-// template<class VertexStream, class IndexStream>
-// void computeBoundSphere(const VertexStream& vertices, const IndexStream& is, Base::Sphere& bs)
-// {
-// // 	AABB aabb;
-// // 	computeBoundBox(vertices, is, aabb);
-// // 	bs.position = aabb.center();
-// // 	bs.radius = aabb.size().Magnitude() * 0.5f;
-// 	float distSq = -1.0;
-// 	nm::index2 indices = nm::index2::oneIndex;
-// 	unsigned int size = is.getSize();
-// 	for (unsigned int i = 0; i < size; ++i)
-// 	{
-// 		const POS3& posI = vertices[ is[i] ].pos3();
-// 
-// 		for (unsigned int j = i + 1; j < size; ++j)
-// 		{
-// 			const POS3& posJ = vertices[ is[j] ].pos3();
-// 			
-// 			float dSq = Base::MathUtils::magnitudeSq( posI - posJ );
-// 			if(dSq > distSq)
-// 			{
-// 				indices.x = i;
-// 				indices.y = j;
-// 				distSq = dSq;
-// 			}
-// 		}
-// 	}
-// 
-// 	const POS3& posI = vertices[ is[indices.x] ].pos3();
-// 	const POS3& posJ = vertices[ is[indices.y] ].pos3();
-// 	Base::MathUtils::ConvertVectors3(bs.position, Base::Lerp(posI, posJ, 0.5f) );
-// 	bs.radius = sqrtf(distSq) * 0.5f;
-// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 template<class VertexType, class IndexType>
@@ -512,9 +522,9 @@ void mergeMeshes(Mesh<VertexType, IndexType>& resMesh, const Mesh<VertexType, In
 	mergeMeshes(resMesh.vertices(), resMesh.indices(), addMesh.vertices(), addMesh.indices() );
 }
 
-//
-// 
-// Построить новые вершинные и индексные массивы убрав неиспользуемые части исходного вершинного массива
+
+
+
 template<class VertexType, class IndexType>
 void compact(const VertexStream<VertexType>& srcv, const IndexStream<IndexType>& srci, VertexStream<VertexType>& dstv, IndexStream<IndexType>& dsti)
 {
@@ -555,9 +565,9 @@ void compact(const VertexStream<VertexType>& srcv, const IndexStream<IndexType>&
 	}
 }
 
-//
-//
-//
+
+
+
 template<class IndexType>
 void extract(const IndexStream<IndexType>& source, const std::vector<int>& triangles0, IndexStream<IndexType>& res)
 {
@@ -632,15 +642,15 @@ void split(const Mesh<VertexType, IndexType>& srcm, const std::vector<int>& tria
 }
 
 
-//
-//
-//
+
+
+
 template<class VertexType>
 struct defaultUV2Extractor
 {
 	UV2<0> operator()(const VertexType& vtx) const
 	{
-		return vtx.uv2<0>();
+		return vtx.template uv2<0>();
 	}
 };
 
@@ -701,11 +711,11 @@ struct computeTangentsC
 		for(std::size_t a = 0; a < vstr.size(); ++a)
 		{
 			Vector3 n(vstr[a].normal().x, vstr[a].normal().y, vstr[a].normal().z);
-			// Gram-Schmidt orthogonalize
+			
 
 
-			// Calculate handedness
-			//tangent[a].w = (n % t * tan2[a] < 0.0f) ? -1.0f : 1.0f;
+			
+			
 			float sign = n.SCross(tan1[a]).SDot(tan2[a]) < 0.0f ? 1.0f : -1.0f;
 
 			vstr[a].tangent() = sign*(tan1[a] - n * n.SDot(tan1[a]) ).GetNormalized();
@@ -744,29 +754,27 @@ template<class VertexType, class IndexType>
 void removeDegenerates(VertexStream<VertexType>& vs, IndexStream<IndexType>& is)
 {
 	INCOMPLETE;
-/*
-	IndexStream<IndexType> newIs;
-	newIs.reserve( is.size() );
 
-	unsigned int facesCount = is.size() / 3;
-	for(unsigned int i = 0; i < facesCount; ++i)
-	{
-		Face<IndexType> f = is.getFace(i);
-		VertexType& a = vs[f.a];
-		VertexType& b = vs[f.b];
-		VertexType& c = vs[f.c];
-		
-		if(!isDegenerate(TrianglePtr<VertexType>(a, b, c)))
-		{
-			newIs.push_back(f.a);
-			newIs.push_back(f.b);
-			newIs.push_back(f.c);
-		}
-	}
-
-	is = newIs;*/
 }
 
 
 
 }
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

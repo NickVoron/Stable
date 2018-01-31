@@ -1,3 +1,11 @@
+// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include <string>
@@ -18,13 +26,13 @@ namespace Expressions
 	typedef NameScope<const Expression> ExpressionScope;
 	typedef NameScope<EvaluationUnit> EvaluatedScope;
 
-	//expression
+	
 	enum EvaluationState
 	{
-		Empty,			// значение при инициализации
-		Impossible,		// на текущем шаге не было ни одного раскрученного
-		Reject,			// часть была раскрученна, но ещё остались 
-		Complete,		// все обьекты раскрученны
+		Empty,			
+		Impossible,		
+		Reject,			
+		Complete,		
 	};
 
 	class EvaluationInfo
@@ -72,11 +80,11 @@ namespace Expressions
 
 		virtual std::string string() const { return "unknown Expression"; }
 
-		// тип, применяется для оладочных условий сравнения типов и что бы знать как интерпретировать данное выражение
+		
 		virtual std::string typeName() const { return "unknown operand type"; }
 
-		// интерфейс необходимый для расскрутки
-		// начало раскрутки, отдает evaluationUnit, который дальше будет раскручиваться итеративно( и хранить в себе состойние раскрутки
+		
+		
 		virtual EvaluationUnit* evaluated(EvaluatedScope& namescope) const = 0;
 
 		std::string location_str() const;
@@ -84,7 +92,7 @@ namespace Expressions
 		location loc;
 	};
 
-	//
+	
 	class EvaluationUnit : public multimethods2::ClientT<EvaluationUnit>
 	{
 	public: 
@@ -103,7 +111,7 @@ namespace Expressions
 
 		virtual std::unique_ptr<mirror::runtime::Type> reflectedType() const { return nullptr; }
 				
-		// шаг раскрутки
+		
 		virtual std::string string() const { return "unknown evaluation unit"; }
 		virtual std::string typeName() const { return "unknown evaluation unit type"; }
 
@@ -128,10 +136,10 @@ namespace Expressions
 	void extractDependencies(EvaluatedScope& scope, EvaluationUnit::EvaluationSet& result);
 	EvaluationUnit* unrollExpression(const Expression& expression, EvaluatedScope& namescope, bool debugLog);
 
-	//
-	template<class ValueType> static std::string stringize(ValueType value);
-	template<> static std::string stringize<std::string>(std::string value) { return value; };
-	template<> static std::string stringize<const Expressions::Expression*>(const Expressions::Expression* value) { return value ? value->string() : "#nullptr"; };
+	
+	template<class ValueType> std::string stringize(ValueType value);
+	template<> std::string stringize<std::string>(std::string value);
+	template<> std::string stringize<const Expressions::Expression*>(const Expressions::Expression* value);
 
 	enum TypeSelector
 	{
@@ -144,3 +152,22 @@ namespace Expressions
 }
 
 
+
+
+
+
+// Copyright (C) 2014-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

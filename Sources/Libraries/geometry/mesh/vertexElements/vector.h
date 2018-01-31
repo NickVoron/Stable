@@ -1,4 +1,14 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
+
+#include <math.h>
 
 namespace Geometry
 {
@@ -72,13 +82,13 @@ struct VectorDataContainer_N
 	scalar data[elementsCount];
 };
 
-template<int count>	
+template<unsigned int count>	struct dot_evaluator	{ template<typename scalar> static inline float eval(const scalar* data0, const scalar* data1) { return data0[0] * data1[0] + dot_evaluator<count - 1>::eval(&data0[1], &data1[1]); } };
+template<>						struct dot_evaluator<1> { template<typename scalar> static inline float eval(const scalar* data0, const scalar* data1) { return data0[0] * data1[0]; } };
+
+template<unsigned int count>
 struct dotEval
 {
-	template<int count>	struct evaluator	{	template<typename scalar> static inline float eval(const scalar* data0, const scalar* data1) { return data0[0]*data1[0] + evaluator<count-1>::eval(&data0[1], &data1[1]);	}	};
-	template<>			struct evaluator<1>	{	template<typename scalar> static inline float eval(const scalar* data0, const scalar* data1) { return data0[0]*data1[0]; }	};	
-
-	template<typename scalar> static inline float eval(const scalar* data0, const scalar* data1) { return evaluator<count>::eval(data0, data1);	}
+	template<typename scalar> static inline float eval(const scalar* data0, const scalar* data1) { return dot_evaluator<count>::eval(data0, data1);	}
 };
 
 template<int count>	
@@ -114,7 +124,7 @@ struct magnitudeEval
 #define DEFINE_VECTOR_COMMON_INTERFACE(VECTOR, SCALAR, SEMANTIC_NAME, SEMANTIC_INDEX) \
 	typedef SCALAR ScalarType; \
 	inline VECTOR()										{}\
-	inline VECTOR	operator-(const VECTOR& p) const		{ VECTOR res(*this); res -= p; return res;	}\
+	inline VECTOR	operator-(const VECTOR& p) const	{ VECTOR res(*this); res -= p; return res;	}\
 	inline VECTOR	operator+(const VECTOR& p) const	{ VECTOR res(*this); res += p; return res;	}\
 	inline VECTOR	operator/(float d) const			{ VECTOR res(*this); res /= d; return res;	}\
 	inline VECTOR	operator*(float d) const			{ VECTOR res(*this); res *= d; return res;	}\
@@ -123,7 +133,7 @@ struct magnitudeEval
 	inline SCALAR&	operator[](int idx)					{ return data[idx];}\
 	static const char* name()							{ return #VECTOR; }\
 	static const char* semanticName()					{ return #SEMANTIC_NAME; }\
-	static const wchar_t* semanticNameW()				{ return L#SEMANTIC_NAME; }\
+	static const wchar_t* semanticNameW()				{ return L"" #SEMANTIC_NAME; }\
 	static const unsigned int semanticIndex()			{ return SEMANTIC_INDEX; }
 
 #define DEFINE_VECTOR_1_INTERFACE(VECTOR, SCALAR, SEMANTIC_NAME, SEMANTIC_INDEX) \
@@ -186,10 +196,10 @@ struct magnitudeEval
 
 #define BASIS_COMPONENT_TYPE(VCTYPE, SEMANTIC_NAME, SCALAR, EQ_ANGLE)	struct VCTYPE : public VectorDataContainer_3<SCALAR>{ DEFINE_VECTOR_3_INTERFACE(VCTYPE, SCALAR, SEMANTIC_NAME, 0); DEFINE_NORMALIZE_OPERATION; DEFINE_MAGNITUDE_OPERATIONS; DEFINE_EQUAL_BY_DIR(VCTYPE, EQ_ANGLE);};
 
-#define COLOR1_COMPONENT_TYPE(VCTYPE, SEMANTIC_NAME, SCALAR, EQUAL_DISTANCE)		struct VCTYPE : public VectorDataContainer_1<SCALAR>{ DEFINE_VECTOR_1_INTERFACE(VCTYPE, SCALAR, SEMANTIC_NAME, 0); DEFINE_MAGNITUDE_OPERATIONS; };//DEFINE_EQUAL_BY_DIST(VCTYPE, SCALAR, EQUAL_DISTANCE);};
-#define COLOR2_COMPONENT_TYPE(VCTYPE, SEMANTIC_NAME, SCALAR, EQUAL_DISTANCE)		struct VCTYPE : public VectorDataContainer_2<SCALAR>{ DEFINE_VECTOR_2_INTERFACE(VCTYPE, SCALAR, SEMANTIC_NAME, 0); DEFINE_MAGNITUDE_OPERATIONS; };//DEFINE_EQUAL_BY_DIST(VCTYPE, SCALAR, EQUAL_DISTANCE);};
-#define COLOR3_COMPONENT_TYPE(VCTYPE, SEMANTIC_NAME, SCALAR, EQUAL_DISTANCE)		struct VCTYPE : public VectorDataContainer_3<SCALAR>{ DEFINE_VECTOR_3_INTERFACE(VCTYPE, SCALAR, SEMANTIC_NAME, 0); DEFINE_MAGNITUDE_OPERATIONS; };//DEFINE_EQUAL_BY_DIST(VCTYPE, SCALAR, EQUAL_DISTANCE);};
-#define COLOR4_COMPONENT_TYPE(VCTYPE, SEMANTIC_NAME, SCALAR, EQUAL_DISTANCE)		struct VCTYPE : public VectorDataContainer_4<SCALAR>{ DEFINE_VECTOR_4_INTERFACE(VCTYPE, SCALAR, SEMANTIC_NAME, 0); DEFINE_MAGNITUDE_OPERATIONS; };//DEFINE_EQUAL_BY_DIST(VCTYPE, SCALAR, EQUAL_DISTANCE);};
+#define COLOR1_COMPONENT_TYPE(VCTYPE, SEMANTIC_NAME, SCALAR, EQUAL_DISTANCE)		struct VCTYPE : public VectorDataContainer_1<SCALAR>{ DEFINE_VECTOR_1_INTERFACE(VCTYPE, SCALAR, SEMANTIC_NAME, 0); DEFINE_MAGNITUDE_OPERATIONS; };
+#define COLOR2_COMPONENT_TYPE(VCTYPE, SEMANTIC_NAME, SCALAR, EQUAL_DISTANCE)		struct VCTYPE : public VectorDataContainer_2<SCALAR>{ DEFINE_VECTOR_2_INTERFACE(VCTYPE, SCALAR, SEMANTIC_NAME, 0); DEFINE_MAGNITUDE_OPERATIONS; };
+#define COLOR3_COMPONENT_TYPE(VCTYPE, SEMANTIC_NAME, SCALAR, EQUAL_DISTANCE)		struct VCTYPE : public VectorDataContainer_3<SCALAR>{ DEFINE_VECTOR_3_INTERFACE(VCTYPE, SCALAR, SEMANTIC_NAME, 0); DEFINE_MAGNITUDE_OPERATIONS; };
+#define COLOR4_COMPONENT_TYPE(VCTYPE, SEMANTIC_NAME, SCALAR, EQUAL_DISTANCE)		struct VCTYPE : public VectorDataContainer_4<SCALAR>{ DEFINE_VECTOR_4_INTERFACE(VCTYPE, SCALAR, SEMANTIC_NAME, 0); DEFINE_MAGNITUDE_OPERATIONS; };
 
 #define UV1_COMPONENT_TYPE(VCTYPE, SEMANTIC_NAME, SCALAR, EQUAL_DISTANCE)	template<int usageIndex_>	struct VCTYPE : public VectorDataContainer_1<SCALAR>{ static const int usageIndex = usageIndex_; DEFINE_VECTOR_1_INTERFACE(VCTYPE, SCALAR, SEMANTIC_NAME, usageIndex); DEFINE_MAGNITUDE_OPERATIONS; DEFINE_EQUAL_BY_DIST(VCTYPE, SCALAR, EQUAL_DISTANCE);};
 #define UV2_COMPONENT_TYPE(VCTYPE, SEMANTIC_NAME, SCALAR, EQUAL_DISTANCE)	template<int usageIndex_>	struct VCTYPE : public VectorDataContainer_2<SCALAR>{ static const int usageIndex = usageIndex_; DEFINE_VECTOR_2_INTERFACE(VCTYPE, SCALAR, SEMANTIC_NAME, usageIndex); DEFINE_MAGNITUDE_OPERATIONS; DEFINE_EQUAL_BY_DIST(VCTYPE, SCALAR, EQUAL_DISTANCE);};
@@ -198,10 +208,28 @@ struct magnitudeEval
 
 
 template<class VectorType>
-inline bool vectorEqual(const VectorType& v1, const VectorType& v2, float thresholdSq = STDMATH_TOLERANCE)
+inline bool vectorEqual(const VectorType& v1, const VectorType& v2, float thresholdSq = 0.0000001f)
 {
 	float magSq = (v1-v2).magnitudeSq();
 	return thresholdSq >= magSq;
 }
 
 }
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

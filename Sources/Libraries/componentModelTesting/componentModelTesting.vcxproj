@@ -112,6 +112,7 @@
   <ItemGroup>
     <ClCompile Include="bugs\bug0005.cpp" />
     <ClCompile Include="bugs\bug0006.cpp" />
+    <ClCompile Include="tests\034.signalConnection.cpp" />
     <ClCompile Include="tests\000.bugs.cpp" />
     <ClCompile Include="tests\008.1.objectArrayEmbeddedScopename.cpp" />
     <ClCompile Include="tests\016.lambda.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="tests\031.nestedObjectsInitialized.cpp" />
     <ClCompile Include="tests\032.spawnerPrototypeInternalLinks.cpp" />
     <ClCompile Include="tests\033.namedSpawners.cpp" />
+    <ClCompile Include="tests\035.complexLinks.cpp" />
     <ClCompile Include="tests\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +159,7 @@
     <ClInclude Include="bugs\bug0006.h" />
     <ClInclude Include="bugs\bug0008.h" />
     <ClInclude Include="config.h" />
+    <ClInclude Include="tests\034.signalConnection.h" />
     <ClInclude Include="tests\000.bugs.h" />
     <ClInclude Include="tests\008.1.objectArrayEmbeddedScopename.h" />
     <ClInclude Include="tests\016.lambda.h" />
@@ -174,6 +177,7 @@
     <ClInclude Include="tests\031.nestedObjectsInitialized.h" />
     <ClInclude Include="tests\032.spawnerPrototypeInternalLinks.h" />
     <ClInclude Include="tests\033.namedSpawners.h" />
+    <ClInclude Include="tests\035.complexLinks.h" />
     <ClInclude Include="unit_test.h" />
     <ClInclude Include="tests\020.circlePoints.h" />
     <ClInclude Include="tests\019.crossReference.h" />

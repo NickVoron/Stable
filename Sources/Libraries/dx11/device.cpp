@@ -1,3 +1,11 @@
+// Copyright (C) 2013-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "device.h"
 #include "common/clearPtrContainer.h"
 #include "common/delete.h"
@@ -40,9 +48,9 @@ namespace dx11
 		SAFE_RELEASE(adapter);
 	}
 
-	//
-	//
-	//
+	
+	
+	
 	Adapters::Adapters() : count(0)
 	{
 		IDXGIFactory1* factory = 0; 
@@ -63,9 +71,9 @@ namespace dx11
 	}
 	
 
-	//
-	//
-	//
+	
+	
+	
 	Device::Device() : device(0), context(0)
 	{
 
@@ -81,11 +89,11 @@ namespace dx11
 		D3D_FEATURE_LEVEL flOut;
 		const D3D_FEATURE_LEVEL flvl[] = { D3D_FEATURE_LEVEL_11_0 };
 		
-		ENFORCE(SUCCEEDED(D3D11CreateDevice(adapter.adapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, 0, flvl, sizeof(flvl) / sizeof(*flvl), D3D11_SDK_VERSION, &device, &flOut, &context))); // рабочий
-		//ENFORCE(SUCCEEDED(D3D11CreateDevice(adapter.adapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, D3D11_CREATE_DEVICE_DEBUG, flvl, sizeof(flvl) / sizeof(*flvl), D3D11_SDK_VERSION, &device, &flOut, &context))); //отладочный
+		ENFORCE(SUCCEEDED(D3D11CreateDevice(adapter.adapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, 0, flvl, sizeof(flvl) / sizeof(*flvl), D3D11_SDK_VERSION, &device, &flOut, &context))); 
 		
-		//ENFORCE(SUCCEEDED(D3D11CreateDevice(adapter.adapter, D3D_DRIVER_TYPE_REFERENCE, NULL, 0, flvl, sizeof(flvl) / sizeof(*flvl), D3D11_SDK_VERSION, &device, &flOut, &context)));
-		//ENFORCE(SUCCEEDED(D3D11CreateDevice(0, D3D_DRIVER_TYPE_WARP, NULL, 0, flvl, sizeof(flvl) / sizeof(*flvl), D3D11_SDK_VERSION, &device, &flOut, &context)));
+		
+		
+		
 
 		DXGI_ADAPTER_DESC1 desc;
 		adapter.adapter->GetDesc1(&desc);
@@ -98,9 +106,9 @@ namespace dx11
 		SAFE_RELEASE(device);
 	}
 
-	//
-	//
-	//
+	
+	
+	
 	Devices::Devices(CreationMode mode)
 	{
 		if(mode == FOR_EACH_ADAPTER)
@@ -126,9 +134,9 @@ namespace dx11
 		}
 	}
 
-	//
-	//
-	//
+	
+	
+	
 
 	ID3D11Texture2D* CreateDepthStencilTexture(ID3D11Device* dev, DXGI_FORMAT format, UINT width, UINT height, bool isShaderResource)
 	{
@@ -169,9 +177,9 @@ namespace dx11
 		return result;
 	}
 
-	//
-	//
-	//
+	
+	
+	
 	OutputSurfaceBase::OutputSurfaceBase() : renderTargetView(0), depthStencilView(0), parent(0), width(0), height(0)
 	{
 
@@ -184,7 +192,7 @@ namespace dx11
 
 	void OutputSurfaceBase::set()
 	{
-		//ENFORCE(parent);
+		
 
 		if (parent)
 		{
@@ -203,7 +211,7 @@ namespace dx11
 
 	void OutputSurfaceBase::clearColor(const Vector4& color)
 	{
-		//ENFORCE(parent);
+		
 
 		if (parent)
 		{
@@ -213,7 +221,7 @@ namespace dx11
 
 	void OutputSurfaceBase::clearDepthStencil(UINT flags, float zValue, UINT8 stencil)
 	{
-		//ENFORCE(parent);
+		
 
 		if (parent && depthStencilView)
 		{
@@ -236,9 +244,9 @@ namespace dx11
 		return depthStencilView && renderTargetView && parent;
 	}
 
-	//
-	//
-	//
+	
+	
+	
 	OutputSurfaceClone::OutputSurfaceClone() :buffer(0), shaderResViewRT(0)
 	{
 
@@ -301,9 +309,9 @@ namespace dx11
 		}
 	}
 
-	//
-	//
-	//
+	
+	
+	
 	OutputSurface::OutputSurface() : swapChain(0)
 	{	
 
@@ -335,12 +343,12 @@ namespace dx11
 		ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
 		scd.BufferDesc.Width = width;
 		scd.BufferDesc.Height = height;
-		scd.BufferCount = 1;                                    // one back buffer
-		scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;     // use 32-bit color
-		scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // how swap chain is to be used
-		scd.OutputWindow = hwnd;                                // the window to be used
-		scd.SampleDesc.Count = 1;                               // how many multisamples
-		scd.Windowed = !fullscreen;                             // windowed/full-screen mode
+		scd.BufferCount = 1;                                    
+		scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;     
+		scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      
+		scd.OutputWindow = hwnd;                                
+		scd.SampleDesc.Count = 1;                               
+		scd.Windowed = !fullscreen;                             
 
 		ID3D11Texture2D* pBuffer = 0;
 		ENFORCE( SUCCEEDED( pIDXGIFactory->CreateSwapChain(parent->device, &scd, &swapChain) ) );				
@@ -390,14 +398,14 @@ namespace dx11
 		swapChain->Present(0, 0);
 	}
 
-	//
-	//
-	//
+	
+	
+	
 
 
-	//
-	//
-	//
+	
+	
+	
 	Viewport::Viewport() : surface(0)
 	{
 	
@@ -475,3 +483,21 @@ namespace dx11
 		return secondary.shaderResViewRT;
 	}
 }
+
+
+
+// Copyright (C) 2013-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

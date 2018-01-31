@@ -1,56 +1,64 @@
+// Copyright (C) 2012-2015 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
-// ограничение, можно применять к значению, можно ограничивать значение зацикленно
+
 
 #include <limits>
 
-// LOCAL:
+
 #include "interval.h"
 
 template<class T>
 class Range	: public Base::Interval<T> {
 public:
-	// ctor/dtor
+	
 	inline Range(){};
 	inline Range(const T& min, const T& max);
 	
-	// получить минимальный предел
+	
 	inline const T& GetMin() const;
 
-	// установить минимальный уровень
+	
 	inline void SetMin(const T& value);
 
-	// получить максимальный пределе
+	
 	inline const T& GetMax() const;
 
-	// установить максимальный уровень
+	
 	inline void SetMax(const T& value);
 
-	// оператор прибавление другого промежутка, получаем расширенный промежуток, включающи оба
+	
 	inline Range<T>& operator+=(const Range<T>& other);
 
-	// инициализировать минимум для встроенного типа минимальным значением 
+	
 	inline bool InitDefaultMin();
 
-	// иниицализировать абсолютный (положительный минимум)
+	
 	inline bool InitAbsDefaultMin();
 
-	// инициализировать максимум для встроенного типа максимальным значением
+	
 	inline bool InitDefaultMax();
 
-	// проверить на валидность, min < max
+	
 	inline bool IsValid() const;
 
-	// нормализировать промежуток
+	
 	inline void Normalize();
 
-	// лежит ли значение в промежутке?
+	
 	inline bool IsInRange(const T& value) const;
 
-	// ограничить значение промежутком
+	
 
 	inline T& RangeIt(T& value) const;
 
-	// зацикленно ограничить значение промежутком, возвращает кол-во циклов для привода значение в нормальное, знак показывает направление
+	
 	inline int CycleRangeIt(T& value) const;
 
 	inline float GetInterpolationCoef(const T& value) const;
@@ -65,14 +73,14 @@ inline Range<T>::Range(const T& min, const T& max) : Base::Interval<T>( min, max
 	Normalize();
 }
 
-// получить минимальный предел
+
 template<class T>
 inline const T& Range<T>::GetMin() const
 {
 	return Base::Interval<T>::minValue;
 }
 
-// установить минимальный уровень
+
 template<class T>
 inline void Range<T>::SetMin(const T& value)
 {
@@ -80,14 +88,14 @@ inline void Range<T>::SetMin(const T& value)
 	Normalize();
 }
 
-// получить максимальный пределе
+
 template<class T>
 inline const T& Range<T>::GetMax() const
 {
 	return Base::Interval<T>::maxValue;
 }
 
-// установить максимальный уровень
+
 template<class T>
 inline void Range<T>::SetMax(const T& value)
 {
@@ -96,7 +104,7 @@ inline void Range<T>::SetMax(const T& value)
 }
 
 
-// оператор прибавление другого промежутка, получаем расширенный промежуток, включающи оба
+
 template<class T>
 inline Range<T>& Range<T>::operator+=(const Range<T>& other)
 {
@@ -112,7 +120,7 @@ inline Range<T>& Range<T>::operator+=(const Range<T>& other)
 	return *this;
 }
 
-// инициализировать минимум для встроенного типа минимальным значением 
+
 template<class T>
 inline bool Range<T>::InitDefaultMin()
 {
@@ -124,7 +132,7 @@ inline bool Range<T>::InitDefaultMin()
 	return false;
 }
 
-// инициализировать максимум для встроенного типа максимальным значением
+
 template<class T>
 inline bool Range<T>::InitDefaultMax()
 {
@@ -136,7 +144,7 @@ inline bool Range<T>::InitDefaultMax()
 	return false;
 }
 
-// иниицализировать абсолютный (положительный минимум)
+
 template<class T>
 inline bool Range<T>::InitAbsDefaultMin()
 {
@@ -149,14 +157,14 @@ inline bool Range<T>::InitAbsDefaultMin()
 }
 
 
-// проверить на валидность, min < max
+
 template<class T>
 inline bool Range<T>::IsValid() const
 {
 	return Base::Interval<T>::maxValue > Base::Interval<T>::minValue;
 }
 
-// нормализировать промежуток
+
 template<class T>
 inline void Range<T>::Normalize()
 {
@@ -168,14 +176,14 @@ inline void Range<T>::Normalize()
 	}
 }
 
-// лежит ли значение в промежутке?
+
 template<class T>
 inline bool Range<T>::IsInRange(const T& value) const
 {
 	return (value >= Base::Interval<T>::minValue) && (value <= Base::Interval<T>::maxValue);
 }
 
-// ограничить значение промежутком
+
 template<class T>
 inline T& Range<T>::RangeIt(T& value) const
 {
@@ -195,11 +203,11 @@ template<class T>
 inline float Range<T>::GetInterpolationCoef(const T& value) const
 {
 	T val = value;
-	//RangeIt(val);
+	
 	return (val - Base::Interval<T>::minValue) / (Base::Interval<T>::maxValue - Base::Interval<T>::minValue);
 }
 
-	// зацикленно ограничить значение промежутком, возвращает кол-во циклов для привода значение в нормальное, знак показывает направление
+	
 template<class T>
 inline int Range<T>::CycleRangeIt(T& value) const
 {
@@ -238,3 +246,22 @@ std::ostream& operator<<(std::ostream& os, const Range<T>& range)
 {
 	return os << "{" << range.minValue << ", " << range.maxValue << "}";
 }
+
+
+
+
+// Copyright (C) 2012-2015 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

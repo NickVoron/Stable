@@ -115,12 +115,14 @@
     <ClInclude Include="clearPtrContainer.h" />
     <ClInclude Include="delete.h" />
     <ClInclude Include="environment.h" />
+    <ClInclude Include="exception_codes.h" />
     <ClInclude Include="exception_safety.h" />
     <ClInclude Include="fsm.h" />
     <ClInclude Include="function_traits.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="preprocessor_helpers.h" />
     <ClInclude Include="ptr_utils.h" />
+    <ClInclude Include="stringize.h" />
     <ClInclude Include="thread_utils.h" />
     <ClInclude Include="typelist.h" />
     <ClInclude Include="type_traits.h" />

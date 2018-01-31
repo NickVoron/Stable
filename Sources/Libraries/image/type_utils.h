@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "newmath/library.include.h"
@@ -20,22 +28,22 @@ namespace image
 	template<typename T> struct max_value { static inline float value() { return (float)std::numeric_limits<T>::max();}	static inline signed int tvalue() { return std::numeric_limits<T>::max();} };
 	template<typename T> struct min_value { static inline float value() { return (float)std::numeric_limits<T>::min();}	static inline signed int tvalue() { return std::numeric_limits<T>::min();} };
 
-// 	template<> struct max_value<signed int>		{ static inline float value() { return 32767.0f;}	static inline signed int		tvalue() { return 32767;}	};
-// 	template<> struct max_value<signed short>	{ static inline float value() { return 32767.0f;}	static inline signed short		tvalue() { return 32767;}	};
-// 	template<> struct max_value<signed char>	{ static inline float value() { return 127.0f;}		static inline signed char		tvalue() { return 127;}		};
-// 
-// 	template<> struct max_value<unsigned int>	{ static inline float value() { return 65535.0f;}	static inline unsigned int		tvalue() { return 65535;}	};
-// 	template<> struct max_value<unsigned short> { static inline float value() { return 65535.0f;}	static inline unsigned short	tvalue() { return 65535;}	};
-// 	template<> struct max_value<unsigned char>	{ static inline float value() { return 255.0f;}		static inline unsigned char		tvalue() { return 255;}		};
-// 
-// 	
-// 	template<> struct min_value<signed int>		{ static inline float value() { return -32767.0f;}	static inline signed int		tvalue() { return -32767;}	};
-// 	template<> struct min_value<signed short>	{ static inline float value() { return -32767.0f;}	static inline signed short		tvalue() { return -32767;}	};
-// 	template<> struct min_value<signed char>	{ static inline float value() { return -127.0f;}	static inline signed char		tvalue() { return -127;}	};
-// 
-// 	template<> struct min_value<unsigned int>	{ static inline float value() { return 0.0f;}		static inline unsigned int		tvalue() { return 0;}		};
-// 	template<> struct min_value<unsigned short> { static inline float value() { return 0.0f;}		static inline unsigned short	tvalue() { return 0;}		};
-// 	template<> struct min_value<unsigned char>	{ static inline float value() { return 0.0f;}		static inline unsigned char		tvalue() { return 0;}		};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	template<> struct max_value<char> : public max_value<signed char> {};
 	template<> struct min_value<char> : public min_value<signed char> {};
@@ -123,9 +131,9 @@ namespace image
 		float& val;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template<typename T> struct is_float	{ static const bool value = false; };
 	template<> struct is_float<half_float>	{ static const bool value = true; };
 	template<> struct is_float<float>		{ static const bool value = true; };
@@ -135,3 +143,22 @@ namespace image
 	template<typename T> void saturate(ChannelAccessor<T>& val) { val.val = max_value<T>::tvalue(); };
 	
 }
+
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

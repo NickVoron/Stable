@@ -1,3 +1,11 @@
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "renderTargets.h"
 
 #include "common/delete.h"
@@ -5,9 +13,9 @@
 namespace dx11
 {
 
-//
-//
-//
+
+
+
 DeviceDefaultRenderTargets::DeviceDefaultRenderTargets()
 {
 	device = nullptr;
@@ -52,9 +60,9 @@ void DeviceDefaultRenderTargets::texelSize(float& w, float&h) const
 	h = 1.0f / ih;
 }
 
-//
-//
-//
+
+
+
 DeviceDefaultRenderTargets DefaultRenderTargets::data[Devices::MAX_COUNT];
 
 void DefaultRenderTargets::create()							
@@ -102,9 +110,9 @@ void DefaultRenderTargets::clearDepthStencil(UINT flags, float zValue, UINT8 ste
 	}
 }
 
-//
-//
-//
+
+
+
 void DevicePlainTarget::create(DXGI_FORMAT format, int multisampleCount, int multisampleQuality)
 {
 	UINT numViewports = 1;
@@ -121,7 +129,7 @@ void DevicePlainTarget::create(int sX, int sY, DXGI_FORMAT fmt, int multisampleC
 		DevicePlainData::create(sX, sY, fmt, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE, multisampleCount, multisampleQuality);
 
 		ENFORCE(SUCCEEDED(device->device->CreateRenderTargetView(ptr, 0, &view)));
-// 		ENFORCE(SUCCEEDED(device->device->CreateShaderResourceView(ptr, srv, &shaderResourceView)));
+
 
 		viewport.Width = sX;
 		viewport.Height = sY;
@@ -177,9 +185,9 @@ bool DevicePlainTarget::validateBindFlag(D3D11_BIND_FLAG bindFlag)
 }				 
 
 
-//
-//
-//
+
+
+
 bool IsDepthStencilFormat(DXGI_FORMAT fmt)
 {
 	switch(fmt)
@@ -271,9 +279,9 @@ void DeviceDepthStencil::zero()
 	device->context->OMSetRenderTargets(0, 0, 0);
 }
 
-//
-//
-//
+
+
+
 void DevicePlainTargetBackup::backup(unsigned int cnt)
 {
 	count = cnt;
@@ -327,9 +335,9 @@ void DevicePlainTargetBackup::texelSize(float& w, float&h) const
 }
 
 
-//
-//
-//
+
+
+
 void PlainTargetBackup::backup(unsigned int count)
 {
 	for (int i = 0; i < devices->count(); ++i)	{ data[i].backup(count); }
@@ -341,3 +349,21 @@ void PlainTargetBackup::restore(bool setViewport)
 }
 
 }
+
+
+
+// Copyright (C) 2013-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

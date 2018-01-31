@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "newmath/index3.h"
@@ -13,7 +21,7 @@ public:
 	void Clear();
 	void ZeroMem();
 
-	// operations:
+	
 	void Generate( const nm::index3& newSize );
 	T& operator[]( const nm::index3& i ) 
 	{
@@ -24,8 +32,8 @@ public:
 		return data[ i.x % size.x + ( i.y % size.y ) * size.x + ( i.z % size.z )*size.x*size.y ];
 	}
 	
-	// selectors:
-	void IsEmpty() const { return size == nm::index3::outIndex; }
+	
+	bool IsEmpty() const { return size == nm::index3::outIndex; }
 	const T& operator[]( const nm::index3& i ) const 
 	{ 
 		return data[ i.x + i.y * size.x + i.z*size.x*size.y]; 
@@ -43,7 +51,7 @@ public:
 	T* GetData() const { return data; }
 	int GetBinarySize() const { return sizeof(T) * size.x * size.y * size.z; }
 
-	// utility:
+	
 	void CopyFrom( const Array3<T>& sourceArray );
 	void SetAllElements( const T& value );
 	void TrowIfNotContains( const nm::index3& i ) { if ( ! IsContain( i ) ) throw Base::Errors::Simple("Array3: out of range"); }
@@ -123,3 +131,21 @@ void Array3<T>::SetAllElements( const T& value )
 
 
 } // namespace Base`
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

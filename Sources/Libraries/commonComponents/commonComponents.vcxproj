@@ -113,7 +113,6 @@
     <ClInclude Include="coloredComponents.h" />
     <ClInclude Include="commonComponents.h" />
     <ClInclude Include="destructor.h" />
-    <ClInclude Include="destructTimer.h" />
     <ClInclude Include="library.include.h" />
     <ClInclude Include="linearMover.h" />
     <ClInclude Include="logCommonComponents.h" />
@@ -121,25 +120,20 @@
     <ClInclude Include="position.h" />
     <ClInclude Include="referencedComponents.h" />
     <ClInclude Include="spawner.h" />
-    <ClInclude Include="spawnTimer.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="stearingComponents.h" />
     <ClInclude Include="swaper.h" />
-    <ClInclude Include="swapTimer.h" />
     <ClInclude Include="timer.h" />
-    <ClInclude Include="timerConfigurator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="coloredComponents.cpp" />
     <ClCompile Include="destructor.cpp" />
-    <ClCompile Include="destructTimer.cpp" />
     <ClCompile Include="linearMover.cpp" />
     <ClCompile Include="logCommonComponents.cpp" />
     <ClCompile Include="pointConstraint.cpp" />
     <ClCompile Include="position.cpp" />
     <ClCompile Include="referencedComponents.cpp" />
     <ClCompile Include="spawner.cpp" />
-    <ClCompile Include="spawnTimer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -148,9 +142,7 @@
     </ClCompile>
     <ClCompile Include="stearingComponents.cpp" />
     <ClCompile Include="swaper.cpp" />
-    <ClCompile Include="swapTimer.cpp" />
     <ClCompile Include="timer.cpp" />
-    <ClCompile Include="timerConfigurator.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

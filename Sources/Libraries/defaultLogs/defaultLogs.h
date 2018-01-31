@@ -1,3 +1,11 @@
+// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 #include <exception>
 #include <sstream>
@@ -62,12 +70,12 @@ namespace logs
 		return ls;
 	}
 
-#if defined(__ANDROID__) || defined(__APPLE__)
+#if defined(USE_ANDROID) || defined(USE_APPLE) || defined(USE_LINUX)
 
 	std::string accumulated_log();
 	void accumulate_log(const std::string& value);
 	void clear_log();
-#if defined(__ANDROID__)
+#if defined(USE_ANDROID)
 #define LOGE(message)  do { __android_log_write(ANDROID_LOG_ERROR, "SharedTec", message); } while(false);
 #define LOGD(message)  do { __android_log_write(ANDROID_LOG_DEBUG, "SharedTec", message); } while(false);
 #define LOGV(message)  do { __android_log_write(ANDROID_LOG_VERBOSE, "SharedTec", message); } while(false);
@@ -86,6 +94,12 @@ namespace logs
 #define LOG_INFO(messages)		do { LOG_SYSTEM_THREAD_SAFE; ::logs::logstream os; os << messages << logs::endl; std::string res = os.str(); LOGI(res.c_str());	::logs::accumulate_log(res); } while(false);
 #define LOG_WARNING(messages)	do { LOG_SYSTEM_THREAD_SAFE; ::logs::logstream os; os << messages << logs::endl; std::string res = os.str(); LOGW(res.c_str());	::logs::accumulate_log(res); } while(false);
 #define LOG_REPORT(messages)	do { LOG_SYSTEM_THREAD_SAFE; ::logs::logstream os; os << messages << logs::endl; std::string res = os.str(); ::logs::report() << res;	} while(false);
+
+#define LOG_ERROR_UNDECORATED(messages)		LOG_ERROR(messages);
+#define LOG_MSG_UNDECORATED(messages)		LOG_MSG(messages);
+#define LOG_REPORT_UNDECORATED(messages)	LOG_REPORT(messages);
+#define LOG_INFO_UNDECORATED(messages)		LOG_INFO(messages);
+#define LOG_WARNING_UNDECORATED(messages)	LOG_WARNING(messages);
 
 #else
 
@@ -114,15 +128,39 @@ namespace logs
 #define LOG_INFO_ENDL		OUTPUT_TO_LOG(logs::info(),		logs::endl, true);
 #define LOG_WARNING_ENDL	OUTPUT_TO_LOG(logs::warning(),	logs::endl, true);
 
-#endif
-
 #define LOG_ERROR_EX(messages)	 LOG_ERROR	("function: " << __FUNCTION__ << " line: " << __LINE__ << " " << messages);
 #define LOG_MSG_EX(messages)	 LOG_MSG	("function: " << __FUNCTION__ << " line: " << __LINE__ << " " << messages);
 #define LOG_WARNING_EX(messages) LOG_WARNING("function: " << __FUNCTION__ << " line: " << __LINE__ << " " << messages);
 
+#define TLOG_ERROR(messages)	LOG_ERROR("pid: " << GetCurrentProcessId() << " tid: " << std::this_thread::get_id() << " : " << messages);
+#define TLOG_MSG(messages)		LOG_MSG("pid: " << GetCurrentProcessId() << " tid: " << std::this_thread::get_id() << " : " << messages);
+#define TLOG_WARNING(messages)  LOG_WARNING("pid: " << GetCurrentProcessId() << " tid: " << std::this_thread::get_id() << " : " << messages);
+
+#endif
+
 #define LOG_REPORT_CLEAR	{ LOG_SYSTEM_THREAD_SAFE; logs::report().clear(); };
 
+#define TLOG_EXPRESSION(...) do { TLOG_MSG(STPP_STRINGIZE_VALUES(__VA_ARGS__)); } while (false);
 #define LOG_EXPRESSION(...) do { LOG_MSG(STPP_STRINGIZE_VALUES(__VA_ARGS__)); } while (false);
+#define ERROR_EXPRESSION(...) do { LOG_ERROR(STPP_STRINGIZE_VALUES(__VA_ARGS__)); } while (false);
 
 
 }
+
+
+
+// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

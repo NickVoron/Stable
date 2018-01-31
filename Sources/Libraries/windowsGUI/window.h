@@ -1,10 +1,20 @@
+// Copyright (C) 2013-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 #include "unigui/library.include.h"
 #include "containers/library.include.h"
-
-#include <Windows.h>
+#include "image/library.include.h"
 #include <functional>
 #include <array>
+
+#ifdef USE_WINDOWS
+#include <Windows.h>
 
 namespace WindowsGUI
 {
@@ -27,9 +37,9 @@ namespace WindowsGUI
 		std::size_t cursor = 0;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	struct Rect : public unigui::math::Rect<int>
 	{
 		typedef unigui::math::Rect<int> UniRect;
@@ -38,13 +48,14 @@ namespace WindowsGUI
 		inline Rect(const RECT& rect):UniRect(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top){}
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	struct WindowParams
 	{
 	public:
 		WindowParams();
+		WindowParams(int x, int y, int w, int h);
 
 		std::wstring name;
 		Rect rect;
@@ -66,9 +77,9 @@ namespace WindowsGUI
 		friend stream::istream& operator>>(stream::istream& is, WindowsRegistry& params);
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	class Window;
 	class WindowClass
 	{
@@ -83,9 +94,9 @@ namespace WindowsGUI
 		WNDCLASSEX wndclass;
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	class Window
 	{
 	friend class WindowClass;
@@ -105,6 +116,7 @@ namespace WindowsGUI
 		void show(int cmd);
 		void fullscreen(bool enabled, bool windowed);
 		void toggeleFullscreen();
+		void repaint() const;
 
 		void defaultStyle();
 		void noborderStyle();
@@ -116,12 +128,16 @@ namespace WindowsGUI
 		Rect clientRect() const;
 		const std::wstring& name() const { return wndName; }
 		void caption(const std::wstring& text) const;
+		
+		auto deviceHandle() const { return hdc; }
+		auto handle() const { return hwnd; }
+
+		Functions<LRESULT(HWND, UINT, WPARAM, LPARAM), 16> windowProcs;
+
 	protected:
 		WINDOWPLACEMENT placement() const;
 		void placement(const WINDOWPLACEMENT& place);
-
-		Functions<LRESULT (HWND, UINT, WPARAM, LPARAM), 16>* windowProcs;
-
+		
 		std::wstring wndName;
 		HWND hwnd;
 		HDC hdc;
@@ -152,23 +168,26 @@ namespace WindowsGUI
 		}
 	};
 
-	//
-	//
-	//
+	
+	
+	
 	template<class WindowType>
 	class Windows : public Base::IntrusiveList<WindowType>
 	{
 	public:		
 		template<class FunctionType, int maxCount>
-		WindowType* add(const WindowParams& params, Functions<FunctionType, maxCount>* funcs = 0)
+		WindowType* add(const WindowParams& params, Functions<FunctionType, maxCount>* funcs = nullptr)
 		{
 			WindowType* window = create();
 			window->create(wndclass, params);
 			window->load();
 			window->activate();
 			window->init();			
-			//window->show(SW_SHOWDEFAULT);
-			window->windowProcs = funcs;
+			
+			if(funcs)
+			{
+				window->windowProcs = *funcs;
+			}			
 
 			this->push_back(*window);
 
@@ -205,3 +224,22 @@ namespace WindowsGUI
 		WindowClass wndclass;
 	};
 }
+#endif
+
+
+
+// Copyright (C) 2013-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

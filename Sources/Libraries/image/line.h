@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #pragma once
 
 #include "color.h"
@@ -27,67 +35,80 @@ struct Line
 
 	ColorType& operator ()(int x)	const { return data[x]; }
 
-// 	ColorType interpolate(float u)	const
-// 	{
-// 		float dx = u * width - 0.5f;
-// 		float xf = float(int(dx)); dx -= xf;
-// 		int x = int(xf);
-// 		int x1 = x + 1;
-// 		if (x < 0) x += int(width);  if (x1 >= int(width))  x1 -= width;
-// 
-// 		return Base::Lerp(line[x], line[x1], dx);
-// 	}
+
+
+
+
+
+
+
+
+
+
 
 };
 
 
-// struct ColorBlock
-// {
-// 	unsigned short color[2];
-// 	unsigned int bmp;
-// };
 
 
-/*
-Тип, в котором хранится изображение отделён от типа, в котором возвращаются значения,
-что позволяет сохранить синтаксис для работы с блочными изображениями и оптимизировать
-возвращаемые значения в более простом формате, нежели битово упакованные форматы
-например, R5G6B5 исходный формат возвращает значения цвета в формате R8G8B8, для
-последующего отображения без перекомпрессии и потери качества интерполяции
-*/
-// template<> 
-// class ImageLine<ColorBlock, Color<unsigned char,4> >
-// {
-// public:
-// 	typedef Color<unsigned char,4> TOp;
-// 	ColorBlock* line;
-// 	unsigned int width, row;
-// 
-// 	ImageLine(ColorBlock* b, unsigned int w, unsigned int r) : line(b), width(w), row(r) {}
-// 
-// 	//возвращает тип
-// 	TOp operator ()(unsigned int x) const
-// 	{
-// 		return TOp();
-// 	}
-// 
-// 	//
-// 	TOp interpolate(float u)	const
-// 	{
-// 		float dx = u * width - 0.5f;
-// 		float xf = float(int(dx)); dx -= xf;
-// 		int x = int(xf);
-// 		int x1 = x + 1;
-// 		if (x < 0) x += int(width);  if (x1 >= int(width))  x1 -= width;
-// 
-// 		TOp c;
-// 		c =  TOp(operator()(x)) * (1.0f-dx);
-// 		c += TOp(operator()(x1)) * dx;
-// 		return c;
-// 	}
-// };
 
 
-};	//art
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+};	
 
 #pragma pack(pop)
+
+
+
+
+// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "commandProcessor.h"
 #include "stdCommands.h"
 #include "defaultLogs/library.include.h"
@@ -9,9 +17,9 @@
 namespace CmdProc
 {
 
-//
-//
-//
+
+
+
 void StringProcessor::process(const std::string& str)
 {
 	if(str.empty())
@@ -46,9 +54,9 @@ StringList::const_iterator StringProcessor::getArgsEnd() const
 	return strList.end();
 }
 
-//
-//
-//
+
+
+
 Command::~Command()
 {
 	Base::clearPtrContainer(arguments);
@@ -80,8 +88,6 @@ void Command::afterExecClear()
 
 void Command::outHelp() const
 {
-	LOG_INFO_ENDL;
-
 	LOG_INFO("command name: " << getName());
 	LOG_INFO("command desc: " << getDesc());
 	
@@ -107,8 +113,6 @@ void Command::outHelp() const
 			LOG_INFO("\t" <<arg->getName() << " - " << arg->getDesc());
 		}
 	}
-
-	LOG_INFO_ENDL;
 }
 
 void Command::validateArumentsSequence() const
@@ -123,15 +127,15 @@ void Command::validateArumentsSequence() const
 }
 
 
-//
-//
-//
+
+
+
 CommandProcessor::~CommandProcessor()
 {
 	
 }
 
-//
+
 void CommandProcessor::executeCommand(const std::string& cmdName, StringList::const_iterator argsBeg, StringList::const_iterator argsEnd)
 {
 	Command* cmd = findCommand(cmdName);
@@ -161,7 +165,7 @@ void CommandProcessor::executeCommand(const std::string& cmdName, StringList::co
 	}
 }
 
-//
+
 void CommandProcessor::executeCommand(const std::string& cmdString)
 {
 	if(!cmdString.empty())
@@ -171,7 +175,7 @@ void CommandProcessor::executeCommand(const std::string& cmdString)
 	}
 }
 
-//
+
 void CommandProcessor::outHelp(const std::string& cmdName)
 {
 	Command* cmd = findCommand(cmdName);
@@ -186,7 +190,7 @@ void CommandProcessor::outHelp(const std::string& cmdName)
 
 }
 
-//
+
 void CommandProcessor::registerCommand(Command* command)
 {
 	std::string cmdName = command->getName();
@@ -198,18 +202,16 @@ void CommandProcessor::registerCommand(Command* command)
 }
 
 
-//
+
 Command* CommandProcessor::findCommand(const std::string& cmdName)
 {
 	CommandsMap::iterator it = commands.find(cmdName);
 	return it == commands.end() ? 0 : it->second.get();
 }
 
-//
+
 void CommandProcessor::commandsList(const std::string& filter)
 {
-	LOG_INFO_ENDL;
-
 	CommandsMap::iterator it  = commands.begin();
 	CommandsMap::iterator end =	commands.end();
 
@@ -217,8 +219,6 @@ void CommandProcessor::commandsList(const std::string& filter)
 	{
 		for(; it != end; ++it)
 			LOG_INFO(it->first);
-
-		LOG_INFO_ENDL;
 	}
 	else
 	{
@@ -237,15 +237,13 @@ void CommandProcessor::commandsList(const std::string& filter)
 				LOG_INFO(cmdName);
 			}
 		}
-
-		LOG_INFO_ENDL;
 	}	
 }
 
 
-//
-//
-//
+
+
+
 void CommandsManager::init()
 {
 	CmdProc::CommandProcessor::create();
@@ -259,9 +257,6 @@ void CommandsManager::release()
 
 void CommandsManager::process()
 {
-	std::string consoleCommand = Base::Console::command();
-	if(!consoleCommand.empty())
-		executeCommand(consoleCommand);
 }
 
 void CommandsManager::executeCommand(const std::string& cmd)
@@ -280,3 +275,22 @@ void CommandsManager::executeCommand(const std::string& cmd)
 
 
 }
+
+
+
+
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

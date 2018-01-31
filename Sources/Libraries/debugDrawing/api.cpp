@@ -1,18 +1,28 @@
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "api.h"
 
 namespace DebugDrawing
 {
-	//
-	//
-	//
+	
+	
+	
 	ShaderDataPerObject::ShaderDataPerObject()
 	{
 		mem::memzero(colorFromVertex);
 	}
 
-	//
-	//
-	//
+#if defined(USE_WINDOWS)
+
+	
+	
+	
 	void initRasterizerState(dx11::RasterizerState& rasterizerState, ShaderMode shaderMode)
 	{
 		gapi::RasterizerState rs;
@@ -36,43 +46,14 @@ namespace DebugDrawing
 		rasterizerState.create(rs);
 	}
 
-	//
-	//
-	//
-/*
-	void ToolDX9::init(const char* fxFileName)
-	{
-		Resources::load(effect, fxFileName);
-		Streaming::Streamer::commit();
-	}
-
-	void ToolDX9::uploadPerObject(Viewports::Viewport& viewport, const ShaderDataPerObject& data)
-	{
-		effect->SetValue("World", data.world);
-		effect->SetValue("currentColor", data.color);
-	}
-
-	void ToolDX9::uploadPerCamera(Viewports::Viewport& viewport, const ShaderDataPerCamera& data)
-	{
-		effect->SetValue("View", data.view);
-		effect->SetValue("Projection", data.projection);
-	}
-
-	void ToolDX9::begin(Viewports::Viewport& viewport, ShaderMode mode)
-	{ 
-		effect->Begin();	
-	}
-
-	void ToolDX9::end()
-	{
-		effect->End();	
-	}
 	
-*/
+	
+	
 
-	//
-	//
-	//
+
+	
+	
+	
 	void ToolDX11::init(const char* fxFileName)
 	{
 		currentShaderMode = INTERNAL_DEFAULT_SHADER;
@@ -85,12 +66,13 @@ namespace DebugDrawing
 
 		for (int i = 0; i < INTERNAL_SHADERS_COUNT; ++i)
 		{
-			Resources::load(shader[i], shaderNames[i]);
+			shader[i].load(shaderNames[i]);
 		}
 		
 		Streaming::Streamer::commit();
 
-		initRasterizerState(rasterizerState, INTERNAL_DEFAULT_SHADER);
+		initRasterizerState(rasterizerStates[INTERNAL_DEFAULT_SHADER], INTERNAL_DEFAULT_SHADER);
+		initRasterizerState(rasterizerStates[INTERNAL_SOLID_SHADER], INTERNAL_SOLID_SHADER);
 
 		cb0.vertex(0);
 		cb0.pixel(0);
@@ -100,7 +82,6 @@ namespace DebugDrawing
 
 		drawables.add(cb1);
 		drawables.add(cb0);
-		drawables.add(rasterizerState);
 	}
 
 	void ToolDX11::uploadPerObject(Viewports::Viewport& viewport, const ShaderDataPerObject& data)
@@ -115,11 +96,12 @@ namespace DebugDrawing
 
 	void ToolDX11::begin(Viewports::Viewport& viewport, ShaderMode mode)
 	{
-		shader[mode]->resource([&viewport, this](auto& shaders)
+		shader[mode]([&viewport, this, mode](auto& shaders)
 		{				
 			dx11::execute(viewport, drawables);
 			dx11::DrawableObjectsList shd;
 			shd.add(shaders);
+			shd.add(rasterizerStates[mode]);
 			dx11::execute(viewport, shd);
 		});
 	}
@@ -134,7 +116,7 @@ namespace DebugDrawing
 		api = api_;
 		switch (api)
 		{
-//		case gapi::DX9: toolDX9.init(fxFileName); break;
+
 		case gapi::DX11: toolDX11.init(fxFileName); break;
 		}
 	}
@@ -143,44 +125,36 @@ namespace DebugDrawing
 	{
 		switch (api)
 		{
-//		case gapi::DX9: toolDX9.uploadPerCamera(viewport, data); break;
+
 		case gapi::DX11: toolDX11.uploadPerCamera(viewport, data); break;
 		}
 	}
 
-/*
 
 
-	void ToolSwitcher::uploadPerObject(Viewports::Viewport& viewport, const ShaderDataPerObject& data)
-	{
-		switch (api)
-		{
-		case gapi::DX9: toolDX9.uploadPerObject(viewport, data); break;
-		case gapi::DX11: toolDX11.uploadPerObject(viewport, data); break;
-		}
-	}
-
-	void ToolSwitcher::begin(Viewports::Viewport& viewport, ShaderMode mode)
-	{
-		switch (api)
-		{
-		case gapi::DX9: toolDX9.begin(viewport, mode); break;
-		case gapi::DX11: toolDX11.begin(viewport, mode); break;
-		}
-	}
-
-	void ToolSwitcher::end()
-	{
-		switch (api)
-		{
-		case gapi::DX9: toolDX9.end(); break;
-		case gapi::DX11: toolDX11.end(); break;
-		}
-	}*/
-
+#endif
 
 }
 
 
 
 
+
+
+
+
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

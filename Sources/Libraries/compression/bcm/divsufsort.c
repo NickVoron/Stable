@@ -1,28 +1,4 @@
-/*
- * divsufsort.c for libdivsufsort-lite
- * Copyright (c) 2003-2008 Yuta Mori All Rights Reserved.
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use,
- * copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following
- * conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
- */
+
 
 #include <assert.h>
 #include <stdio.h>
@@ -33,7 +9,7 @@
 #include "divsufsort.h"
 
 
-/*- Constants -*/
+
 #define INLINE __inline
 #if defined(ALPHABET_SIZE) && (ALPHABET_SIZE < 1)
 # undef ALPHABET_SIZE
@@ -62,7 +38,7 @@
 #else
 # define SS_BLOCKSIZE (1024)
 #endif
-/* minstacksize = log(SS_BLOCKSIZE) / log(3) * 2 */
+
 #if SS_BLOCKSIZE == 0
 # define SS_MISORT_STACKSIZE (96)
 #elif SS_BLOCKSIZE <= 4096
@@ -75,16 +51,16 @@
 #define TR_STACKSIZE (64)
 
 
-/*- Macros -*/
+
 #ifndef SWAP
 # define SWAP(_a, _b) do { t = (_a); (_a) = (_b); (_b) = t; } while(0)
-#endif /* SWAP */
+#endif 
 #ifndef MIN
 # define MIN(_a, _b) (((_a) < (_b)) ? (_a) : (_b))
-#endif /* MIN */
+#endif 
 #ifndef MAX
 # define MAX(_a, _b) (((_a) > (_b)) ? (_a) : (_b))
-#endif /* MAX */
+#endif 
 #define STACK_PUSH(_a, _b, _c, _d)\
   do {\
     assert(ssize < STACK_SIZE);\
@@ -121,7 +97,7 @@
 #endif
 
 
-/*- Private Functions -*/
+
 
 static const int lg_table[256]= {
  -1,0,1,1,2,2,2,2,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
@@ -156,7 +132,7 @@ ss_ilg(int n) {
 #endif
 }
 
-#endif /* (SS_BLOCKSIZE == 0) || (SS_INSERTIONSORT_THRESHOLD < SS_BLOCKSIZE) */
+#endif 
 
 #if SS_BLOCKSIZE != 0
 
@@ -206,12 +182,12 @@ ss_isqrt(int x) {
   return (x < (y * y)) ? y - 1 : y;
 }
 
-#endif /* SS_BLOCKSIZE != 0 */
+#endif 
 
 
-/*---------------------------------------------------------------------------*/
 
-/* Compares two suffixes. */
+
+
 static INLINE
 int
 ss_compare(const unsigned char *T,
@@ -233,11 +209,11 @@ ss_compare(const unsigned char *T,
 }
 
 
-/*---------------------------------------------------------------------------*/
+
 
 #if (SS_BLOCKSIZE != 1) && (SS_INSERTIONSORT_THRESHOLD != 1)
 
-/* Insertionsort for small size groups */
+
 static
 void
 ss_insertionsort(const unsigned char *T, const int *PA,
@@ -256,10 +232,10 @@ ss_insertionsort(const unsigned char *T, const int *PA,
   }
 }
 
-#endif /* (SS_BLOCKSIZE != 1) && (SS_INSERTIONSORT_THRESHOLD != 1) */
+#endif 
 
 
-/*---------------------------------------------------------------------------*/
+
 
 #if (SS_BLOCKSIZE == 0) || (SS_INSERTIONSORT_THRESHOLD < SS_BLOCKSIZE)
 
@@ -279,7 +255,7 @@ ss_fixdown(const unsigned char *Td, const int *PA,
   SA[i] = v;
 }
 
-/* Simple top-down heapsort. */
+
 static
 void
 ss_heapsort(const unsigned char *Td, const int *PA, int *SA, int size) {
@@ -302,9 +278,9 @@ ss_heapsort(const unsigned char *Td, const int *PA, int *SA, int size) {
 }
 
 
-/*---------------------------------------------------------------------------*/
 
-/* Returns the median of three elements. */
+
+
 static INLINE
 int *
 ss_median3(const unsigned char *Td, const int *PA,
@@ -318,7 +294,7 @@ ss_median3(const unsigned char *Td, const int *PA,
   return v2;
 }
 
-/* Returns the median of five elements. */
+
 static INLINE
 int *
 ss_median5(const unsigned char *Td, const int *PA,
@@ -333,7 +309,7 @@ ss_median5(const unsigned char *Td, const int *PA,
   return v3;
 }
 
-/* Returns the pivot element. */
+
 static INLINE
 int *
 ss_pivot(const unsigned char *Td, const int *PA, int *first, int *last) {
@@ -359,9 +335,9 @@ ss_pivot(const unsigned char *Td, const int *PA, int *first, int *last) {
 }
 
 
-/*---------------------------------------------------------------------------*/
 
-/* Binary partition for substrings. */
+
+
 static INLINE
 int *
 ss_partition(const int *PA,
@@ -380,7 +356,7 @@ ss_partition(const int *PA,
   return a;
 }
 
-/* Multikey introsort for medium size groups. */
+
 static
 void
 ss_mintrosort(const unsigned char *T, const int *PA,
@@ -436,12 +412,12 @@ ss_mintrosort(const unsigned char *T, const int *PA,
       continue;
     }
 
-    /* choose pivot */
+    
     a = ss_pivot(Td, PA, first, last);
     v = Td[PA[*a]];
     SWAP(*first, *a);
 
-    /* partition */
+    
     for(b = first; (++b < last) && ((x = Td[PA[*b]]) == v);) { }
     if(((a = b) < last) && (x < v)) {
       for(; (++b < last) && ((x = Td[PA[*b]]) <= v);) {
@@ -516,10 +492,10 @@ ss_mintrosort(const unsigned char *T, const int *PA,
 #undef STACK_SIZE
 }
 
-#endif /* (SS_BLOCKSIZE == 0) || (SS_INSERTIONSORT_THRESHOLD < SS_BLOCKSIZE) */
+#endif 
 
 
-/*---------------------------------------------------------------------------*/
+
 
 #if SS_BLOCKSIZE != 0
 
@@ -571,7 +547,7 @@ ss_rotate(int *first, int *middle, int *last) {
 }
 
 
-/*---------------------------------------------------------------------------*/
+
 
 static
 void
@@ -613,9 +589,9 @@ ss_inplacemerge(const unsigned char *T, const int *PA,
 }
 
 
-/*---------------------------------------------------------------------------*/
 
-/* Merge-forward with internal buffer. */
+
+
 static
 void
 ss_mergeforward(const unsigned char *T, const int *PA,
@@ -665,7 +641,7 @@ ss_mergeforward(const unsigned char *T, const int *PA,
   }
 }
 
-/* Merge-backward with internal buffer. */
+
 static
 void
 ss_mergebackward(const unsigned char *T, const int *PA,
@@ -724,7 +700,7 @@ ss_mergebackward(const unsigned char *T, const int *PA,
   }
 }
 
-/* D&C based merge. */
+
 static
 void
 ss_swapmerge(const unsigned char *T, const int *PA,
@@ -811,12 +787,12 @@ ss_swapmerge(const unsigned char *T, const int *PA,
 #undef STACK_SIZE
 }
 
-#endif /* SS_BLOCKSIZE != 0 */
+#endif 
 
 
-/*---------------------------------------------------------------------------*/
 
-/* Substring sort */
+
+
 static
 void
 sssort(const unsigned char *T, const int *PA,
@@ -878,7 +854,7 @@ sssort(const unsigned char *T, const int *PA,
 #endif
 
   if(lastsuffix != 0) {
-    /* Insert last type B* suffix. */
+    
     int PAi[2]; PAi[0] = PA[*(first - 1)], PAi[1] = n - 2;
     for(a = first, i = *(first - 1);
         (a < last) && ((*a < 0) || (0 < ss_compare(T, &(PAi[0]), PA + *a, depth)));
@@ -890,7 +866,7 @@ sssort(const unsigned char *T, const int *PA,
 }
 
 
-/*---------------------------------------------------------------------------*/
+
 
 static INLINE
 int
@@ -905,9 +881,9 @@ tr_ilg(int n) {
 }
 
 
-/*---------------------------------------------------------------------------*/
 
-/* Simple insertionsort for small size groups. */
+
+
 static
 void
 tr_insertionsort(const int *ISAd, int *first, int *last) {
@@ -925,7 +901,7 @@ tr_insertionsort(const int *ISAd, int *first, int *last) {
 }
 
 
-/*---------------------------------------------------------------------------*/
+
 
 static INLINE
 void
@@ -942,7 +918,7 @@ tr_fixdown(const int *ISAd, int *SA, int i, int size) {
   SA[i] = v;
 }
 
-/* Simple top-down heapsort. */
+
 static
 void
 tr_heapsort(const int *ISAd, int *SA, int size) {
@@ -965,9 +941,9 @@ tr_heapsort(const int *ISAd, int *SA, int size) {
 }
 
 
-/*---------------------------------------------------------------------------*/
 
-/* Returns the median of three elements. */
+
+
 static INLINE
 int *
 tr_median3(const int *ISAd, int *v1, int *v2, int *v3) {
@@ -980,7 +956,7 @@ tr_median3(const int *ISAd, int *v1, int *v2, int *v3) {
   return v2;
 }
 
-/* Returns the median of five elements. */
+
 static INLINE
 int *
 tr_median5(const int *ISAd,
@@ -995,7 +971,7 @@ tr_median5(const int *ISAd,
   return v3;
 }
 
-/* Returns the pivot element. */
+
 static INLINE
 int *
 tr_pivot(const int *ISAd, int *first, int *last) {
@@ -1021,7 +997,7 @@ tr_pivot(const int *ISAd, int *first, int *last) {
 }
 
 
-/*---------------------------------------------------------------------------*/
+
 
 typedef struct _trbudget_t trbudget_t;
 struct _trbudget_t {
@@ -1049,7 +1025,7 @@ trbudget_check(trbudget_t *budget, int size) {
 }
 
 
-/*---------------------------------------------------------------------------*/
+
 
 static INLINE
 void
@@ -1098,8 +1074,7 @@ void
 tr_copy(int *ISA, const int *SA,
         int *first, int *a, int *b, int *last,
         int depth) {
-  /* sort suffixes of middle partition
-     by using sorted order of suffixes of left and right partition. */
+  
   int *c, *d, *e;
   int s, v;
 
@@ -1174,10 +1149,10 @@ tr_introsort(int *ISA, const int *ISAd,
 
     if(limit < 0) {
       if(limit == -1) {
-        /* tandem repeat partition */
+        
         tr_partition(ISAd - incr, first, first, last, &a, &b, last - SA - 1);
 
-        /* update ranks */
+        
         if(a < last) {
           for(c = first, v = a - SA - 1; c < a; ++c) { ISA[*c] = v; }
         }
@@ -1185,7 +1160,7 @@ tr_introsort(int *ISA, const int *ISAd,
           for(c = a, v = b - SA - 1; c < b; ++c) { ISA[*c] = v; }
         }
 
-        /* push */
+        
         if(1 < (b - a)) {
           STACK_PUSH5(NULL, a, b, 0, 0);
           STACK_PUSH5(ISAd - incr, first, last, -2, trlink);
@@ -1211,7 +1186,7 @@ tr_introsort(int *ISA, const int *ISAd,
           }
         }
       } else if(limit == -2) {
-        /* tandem repeat copy */
+        
         a = stack[--ssize].b, b = stack[ssize].c;
         if(stack[ssize].d == 0) {
           tr_copy(ISA, SA, first, a, b, last, ISAd - ISA);
@@ -1221,7 +1196,7 @@ tr_introsort(int *ISA, const int *ISAd,
         }
         STACK_POP5(ISAd, first, last, limit, trlink);
       } else {
-        /* sorted partition */
+        
         if(0 <= *first) {
           a = first;
           do { ISA[*a] = a - SA; } while((++a < last) && (0 <= *a));
@@ -1232,7 +1207,7 @@ tr_introsort(int *ISA, const int *ISAd,
           next = (ISA[*a] != ISAd[*a]) ? tr_ilg(a - first + 1) : -1;
           if(++a < last) { for(b = first, v = a - SA - 1; b < a; ++b) { ISA[*b] = v; } }
 
-          /* push */
+          
           if(trbudget_check(budget, a - first)) {
             if((a - first) <= (last - a)) {
               STACK_PUSH5(ISAd, a, last, -3, trlink);
@@ -1275,21 +1250,21 @@ tr_introsort(int *ISA, const int *ISAd,
       continue;
     }
 
-    /* choose pivot */
+    
     a = tr_pivot(ISAd, first, last);
     SWAP(*first, *a);
     v = ISAd[*first];
 
-    /* partition */
+    
     tr_partition(ISAd, first, first + 1, last, &a, &b, v);
     if((last - first) != (b - a)) {
       next = (ISA[*a] != v) ? tr_ilg(b - a) : -1;
 
-      /* update ranks */
+      
       for(c = first, v = a - SA - 1; c < a; ++c) { ISA[*c] = v; }
       if(b < last) { for(c = a, v = b - SA - 1; c < b; ++c) { ISA[*c] = v; } }
 
-      /* push */
+      
       if((1 < (b - a)) && (trbudget_check(budget, b - a))) {
         if((a - first) <= (last - b)) {
           if((last - b) <= (b - a)) {
@@ -1380,9 +1355,9 @@ tr_introsort(int *ISA, const int *ISAd,
 
 
 
-/*---------------------------------------------------------------------------*/
 
-/* Tandem repeat sort */
+
+
 static
 void
 trsort(int *ISA, int *SA, int n, int depth) {
@@ -1392,7 +1367,7 @@ trsort(int *ISA, int *SA, int n, int depth) {
   int t, skip, unsorted;
 
   trbudget_init(&budget, tr_ilg(n) * 2 / 3, n);
-/*  trbudget_init(&budget, tr_ilg(n) * 3 / 4, n); */
+
   for(ISAd = ISA + depth; -n < *SA; ISAd += ISAd - ISA) {
     first = SA;
     skip = 0;
@@ -1419,9 +1394,9 @@ trsort(int *ISA, int *SA, int n, int depth) {
 }
 
 
-/*---------------------------------------------------------------------------*/
 
-/* Sorts suffixes of type B*. */
+
+
 static
 int
 sort_typeBstar(const unsigned char *T, int *SA,
@@ -1439,47 +1414,41 @@ sort_typeBstar(const unsigned char *T, int *SA,
   int tmp;
 #endif
 
-  /* Initialize bucket arrays. */
+  
   for(i = 0; i < BUCKET_A_SIZE; ++i) { bucket_A[i] = 0; }
   for(i = 0; i < BUCKET_B_SIZE; ++i) { bucket_B[i] = 0; }
 
-  /* Count the number of occurrences of the first one or two characters of each
-     type A, B and B* suffix. Moreover, store the beginning position of all
-     type B* suffixes into the array SA. */
+  
   for(i = n - 1, m = n, c0 = T[n - 1]; 0 <= i;) {
-    /* type A suffix. */
+    
     do { ++BUCKET_A(c1 = c0); } while((0 <= --i) && ((c0 = T[i]) >= c1));
     if(0 <= i) {
-      /* type B* suffix. */
+      
       ++BUCKET_BSTAR(c0, c1);
       SA[--m] = i;
-      /* type B suffix. */
+      
       for(--i, c1 = c0; (0 <= i) && ((c0 = T[i]) <= c1); --i, c1 = c0) {
         ++BUCKET_B(c0, c1);
       }
     }
   }
   m = n - m;
-/*
-note:
-  A type B* suffix is lexicographically smaller than a type B suffix that
-  begins with the same first two characters.
-*/
 
-  /* Calculate the index of start/end point of each bucket. */
+
+  
   for(c0 = 0, i = 0, j = 0; c0 < ALPHABET_SIZE; ++c0) {
     t = i + BUCKET_A(c0);
-    BUCKET_A(c0) = i + j; /* start point */
+    BUCKET_A(c0) = i + j; 
     i = t + BUCKET_B(c0, c0);
     for(c1 = c0 + 1; c1 < ALPHABET_SIZE; ++c1) {
       j += BUCKET_BSTAR(c0, c1);
-      BUCKET_BSTAR(c0, c1) = j; /* end point */
+      BUCKET_BSTAR(c0, c1) = j; 
       i += BUCKET_B(c0, c1);
     }
   }
 
   if(0 < m) {
-    /* Sort the type B* suffixes by their first two characters. */
+    
     PAb = SA + n - m; ISAb = SA + m;
     for(i = m - 2; 0 <= i; --i) {
       t = PAb[i], c0 = T[t], c1 = T[t + 1];
@@ -1488,7 +1457,7 @@ note:
     t = PAb[m - 1], c0 = T[t], c1 = T[t + 1];
     SA[--BUCKET_BSTAR(c0, c1)] = m - 1;
 
-    /* Sort the type B* substrings using sssort. */
+    
 #ifdef _OPENMP
     tmp = omp_get_max_threads();
     buf = SA + m, bufsize = (n - (2 * m)) / tmp;
@@ -1531,7 +1500,7 @@ note:
     }
 #endif
 
-    /* Compute ranks of type B* substrings. */
+    
     for(i = m - 1; 0 <= i; --i) {
       if(0 <= SA[i]) {
         j = i;
@@ -1544,10 +1513,10 @@ note:
       ISAb[SA[i]] = j;
     }
 
-    /* Construct the inverse suffix array of type B* suffixes using trsort. */
+    
     trsort(ISAb, SA, m, 1);
 
-    /* Set the sorted order of tyoe B* suffixes. */
+    
     for(i = n - 1, j = m, c0 = T[n - 1]; 0 <= i;) {
       for(--i, c1 = c0; (0 <= i) && ((c0 = T[i]) >= c1); --i, c1 = c0) { }
       if(0 <= i) {
@@ -1557,28 +1526,28 @@ note:
       }
     }
 
-    /* Calculate the index of start/end point of each bucket. */
-    BUCKET_B(ALPHABET_SIZE - 1, ALPHABET_SIZE - 1) = n; /* end point */
+    
+    BUCKET_B(ALPHABET_SIZE - 1, ALPHABET_SIZE - 1) = n; 
     for(c0 = ALPHABET_SIZE - 2, k = m - 1; 0 <= c0; --c0) {
       i = BUCKET_A(c0 + 1) - 1;
       for(c1 = ALPHABET_SIZE - 1; c0 < c1; --c1) {
         t = i - BUCKET_B(c0, c1);
-        BUCKET_B(c0, c1) = i; /* end point */
+        BUCKET_B(c0, c1) = i; 
 
-        /* Move all type B* suffixes to the correct position. */
+        
         for(i = t, j = BUCKET_BSTAR(c0, c1);
             j <= k;
             --i, --k) { SA[i] = SA[k]; }
       }
-      BUCKET_BSTAR(c0, c0 + 1) = i - BUCKET_B(c0, c0) + 1; /* start point */
-      BUCKET_B(c0, c0) = i; /* end point */
+      BUCKET_BSTAR(c0, c0 + 1) = i - BUCKET_B(c0, c0) + 1; 
+      BUCKET_B(c0, c0) = i; 
     }
   }
 
   return m;
 }
 
-/* Constructs the suffix array by using the sorted order of type B* suffixes. */
+
 static
 void
 construct_SA(const unsigned char *T, int *SA,
@@ -1589,10 +1558,9 @@ construct_SA(const unsigned char *T, int *SA,
   int c0, c1, c2;
 
   if(0 < m) {
-    /* Construct the sorted order of type B suffixes by using
-       the sorted order of type B* suffixes. */
+    
     for(c1 = ALPHABET_SIZE - 2; 0 <= c1; --c1) {
-      /* Scan the suffix array from right to left. */
+      
       for(i = SA + BUCKET_BSTAR(c1, c1 + 1),
           j = SA + BUCKET_A(c1 + 1) - 1, k = NULL, c2 = -1;
           i <= j;
@@ -1618,11 +1586,10 @@ construct_SA(const unsigned char *T, int *SA,
     }
   }
 
-  /* Construct the suffix array by using
-     the sorted order of type B suffixes. */
+  
   k = SA + BUCKET_A(c2 = T[n - 1]);
   *k++ = (T[n - 2] < c2) ? ~(n - 1) : (n - 1);
-  /* Scan the suffix array from left to right. */
+  
   for(i = SA, j = SA + n; i < j; ++i) {
     if(0 < (s = *i)) {
       assert(T[s - 1] >= T[s]);
@@ -1641,8 +1608,7 @@ construct_SA(const unsigned char *T, int *SA,
   }
 }
 
-/* Constructs the burrows-wheeler transformed string directly
-   by using the sorted order of type B* suffixes. */
+
 static
 int
 construct_BWT(const unsigned char *T, int *SA,
@@ -1653,10 +1619,9 @@ construct_BWT(const unsigned char *T, int *SA,
   int c0, c1, c2;
 
   if(0 < m) {
-    /* Construct the sorted order of type B suffixes by using
-       the sorted order of type B* suffixes. */
+    
     for(c1 = ALPHABET_SIZE - 2; 0 <= c1; --c1) {
-      /* Scan the suffix array from right to left. */
+      
       for(i = SA + BUCKET_BSTAR(c1, c1 + 1),
           j = SA + BUCKET_A(c1 + 1) - 1, k = NULL, c2 = -1;
           i <= j;
@@ -1685,11 +1650,10 @@ construct_BWT(const unsigned char *T, int *SA,
     }
   }
 
-  /* Construct the BWTed string by using
-     the sorted order of type B suffixes. */
+  
   k = SA + BUCKET_A(c2 = T[n - 1]);
   *k++ = (T[n - 2] < c2) ? ~((int)T[n - 2]) : (n - 1);
-  /* Scan the suffix array from left to right. */
+  
   for(i = SA, j = SA + n, orig = SA; i < j; ++i) {
     if(0 < (s = *i)) {
       assert(T[s - 1] >= T[s]);
@@ -1713,9 +1677,9 @@ construct_BWT(const unsigned char *T, int *SA,
 }
 
 
-/*---------------------------------------------------------------------------*/
 
-/*- Function -*/
+
+
 
 int
 divsufsort(const unsigned char *T, int *SA, int n) {
@@ -1723,7 +1687,7 @@ divsufsort(const unsigned char *T, int *SA, int n) {
   int m;
   int err = 0;
 
-  /* Check arguments. */
+  
   if((T == NULL) || (SA == NULL) || (n < 0)) { return -1; }
   else if(n == 0) { return 0; }
   else if(n == 1) { SA[0] = 0; return 0; }
@@ -1732,7 +1696,7 @@ divsufsort(const unsigned char *T, int *SA, int n) {
   bucket_A = (int *)malloc(BUCKET_A_SIZE * sizeof(int));
   bucket_B = (int *)malloc(BUCKET_B_SIZE * sizeof(int));
 
-  /* Suffixsort. */
+  
   if((bucket_A != NULL) && (bucket_B != NULL)) {
     m = sort_typeBstar(T, SA, bucket_A, bucket_B, n);
     construct_SA(T, SA, bucket_A, bucket_B, n, m);
@@ -1752,7 +1716,7 @@ divbwt(const unsigned char *T, unsigned char *U, int *A, int n) {
   int *bucket_A, *bucket_B;
   int m, pidx, i;
 
-  /* Check arguments. */
+  
   if((T == NULL) || (U == NULL) || (n < 0)) { return -1; }
   else if(n <= 1) { if(n == 1) { U[0] = T[0]; } return n; }
 
@@ -1760,12 +1724,12 @@ divbwt(const unsigned char *T, unsigned char *U, int *A, int n) {
   bucket_A = (int *)malloc(BUCKET_A_SIZE * sizeof(int));
   bucket_B = (int *)malloc(BUCKET_B_SIZE * sizeof(int));
 
-  /* Burrows-Wheeler Transform. */
+  
   if((B != NULL) && (bucket_A != NULL) && (bucket_B != NULL)) {
     m = sort_typeBstar(T, B, bucket_A, bucket_B, n);
     pidx = construct_BWT(T, B, bucket_A, bucket_B, n, m);
 
-    /* Copy to output string. */
+    
     U[0] = T[n - 1];
     for(i = 0; i < pidx; ++i) { U[i + 1] = (unsigned char)B[i]; }
     for(i += 1; i < n; ++i) { U[i] = (unsigned char)B[i]; }

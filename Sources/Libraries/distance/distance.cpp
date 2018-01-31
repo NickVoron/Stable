@@ -1,3 +1,11 @@
+// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "distance.h"
 
 namespace intersections
@@ -86,14 +94,14 @@ namespace intersections
 
 	float distanceSq( const nm::Vector3& point, const Segment3& segment, Segment3& res, DistParams<Vector3, Segment3>& params)
 	{
-		nm::Vector3 c = point - segment.p0;	// Vector from a to Point
-		nm::Vector3 v = segment.direction(); // Unit Vector from a to b
-		float d = nm::magnitude(v);	// Length of the line segment
+		nm::Vector3 c = point - segment.p0;	
+		nm::Vector3 v = segment.direction(); 
+		float d = nm::magnitude(v);	
 		v /= d;
-		float t = nm::dot(v, c);	// Intersection point Distance from a
+		float t = nm::dot(v, c);	
 
-		// Check to see if the point is on the line
-		// if not then return the endpoint else move from point segment.p0 to the nearest point on the segment
+		
+		
 		res.p0 = point;
 		res.p1 = (t <= 0) ? segment.p0 : ( (t >= d) ? segment.p1 : segment.p0 + v * t);
 
@@ -121,7 +129,7 @@ namespace intersections
 		{
 			if (fS < 0.0f)
 			{
-				if (fT < 0.0f)  // region 4
+				if (fT < 0.0f)  
 				{
 					if (fB0 < 0.0f)
 					{
@@ -157,7 +165,7 @@ namespace intersections
 						}
 					}
 				}
-				else  // region 3
+				else  
 				{
 					fS = 0.0f;
 					if (fB1 >= 0.0f)
@@ -177,7 +185,7 @@ namespace intersections
 					}
 				}
 			}
-			else if (fT < 0.0f)  // region 5
+			else if (fT < 0.0f)  
 			{
 				fT = 0.0f;
 				if (fB0 >= 0.0f)
@@ -196,9 +204,9 @@ namespace intersections
 					fSqrDistance = fB0*fS+fC;
 				}
 			}
-			else  // region 0
+			else  
 			{
-				// minimum at interior point
+				
 				float fInvDet = (1.0f)/fDet;
 				fS *= fInvDet;
 				fT *= fInvDet;
@@ -209,7 +217,7 @@ namespace intersections
 		{
 			float fTmp0, fTmp1, fNumer, fDenom;
 
-			if (fS < 0.0f)  // region 2
+			if (fS < 0.0f)  
 			{
 				fTmp0 = fA01 + fB0;
 				fTmp1 = fA11 + fB1;
@@ -250,7 +258,7 @@ namespace intersections
 					}
 				}
 			}
-			else if (fT < 0.0f)  // region 6
+			else if (fT < 0.0f)  
 			{
 				fTmp0 = fA01 + fB1;
 				fTmp1 = fA00 + fB0;
@@ -291,7 +299,7 @@ namespace intersections
 					}
 				}
 			}
-			else  // region 1
+			else  
 			{
 				fNumer = fA11 + fB1 - fA01 - fB0;
 				if (fNumer <= 0.0f)
@@ -319,7 +327,7 @@ namespace intersections
 			}
 		}
 
-		// account for numerical round-off error
+		
 		if (fSqrDistance < 0.0f)
 		{
 			fSqrDistance = 0.0f;
@@ -330,9 +338,9 @@ namespace intersections
 		params.info1.barycentric[0] = 1.0f - fS - fT;
 		params.info1.barycentric[1] = fS;
 		params.info1.barycentric[2] = fT;
-		// 	m_afTriangleBary[1] = fS;
-		// 	m_afTriangleBary[2] = fT;
-		// 	m_afTriangleBary[0] = 1.0 - fS - fT;
+		
+		
+		
 		return fSqrDistance;
 	};
 
@@ -357,7 +365,7 @@ namespace intersections
 
 		if (det >= ZERO_TOLERANCE)
 		{
-			// The line and segment are not parallel.
+			
 			b1 = nm::dot(-diff, direction);
 			s1 = a01*b0 - b1;
 			extDet = extLen*det;
@@ -366,8 +374,8 @@ namespace intersections
 			{
 				if (s1 <= extDet)
 				{
-					// Two interior points are closest, one on the line and one
-					// on the segment.
+					
+					
 					float invDet = 1.0f / det;
 					s0 = (a01*b1 - b0)*invDet;
 					s1 *= invDet;
@@ -375,8 +383,8 @@ namespace intersections
 				}
 				else
 				{
-					// The endpoint e1 of the segment and an interior point of
-					// the line are closest.
+					
+					
 					s1 = extLen;
 					s0 = -(a01*s1 + b0);
 					sqrDist = -s0*s0 + s1*(s1 + 2.0f*b1) + c;
@@ -384,8 +392,8 @@ namespace intersections
 			}
 			else
 			{
-				// The end point e0 of the segment and an interior point of the
-				// line are closest.
+				
+				
 				s1 = -extLen;
 				s0 = -(a01*s1 + b0);
 				sqrDist = -s0*s0 + s1*(s1 + 2.0f*b1) + c;
@@ -393,8 +401,8 @@ namespace intersections
 		}
 		else
 		{
-			// The line and segment are parallel.  Choose the closest pair so that
-			// one point is at segment center.
+			
+			
 			s1 = 0.0f;
 			s0 = -b0;
 			sqrDist = b0*s0 + c;
@@ -405,10 +413,10 @@ namespace intersections
 
 		params.info0.lineParam = s0;
 		params.info1.segmentParam = s1;
-// 		mLineParameter = s0;
-// 		mSegmentParameter = s1;
 
-		// Account for numerical round-off errors.
+
+
+		
 		return sqrDist > 0 ? sqrDist : 0.0f;
 	}
 
@@ -419,7 +427,7 @@ namespace intersections
 		
 		if (fabsf(w.x) >= fabsf(w.y))
 		{
-			// W.x or W.z is the largest magnitude component, swap them
+			
 			invLength = 1.0f / sqrtf(w.x*w.x + w.z*w.z);
 			u.x = -w.z*invLength;
 			u.y = 0.0f;
@@ -430,7 +438,7 @@ namespace intersections
 		}
 		else
 		{
-			// W.y or W.z is the largest magnitude component, swap them
+			
 			invLength = 1.0f / sqrtf(w.y*w.y + w.z*w.z);
 			u.x = 0.0f;
 			u.y = +w.z*invLength;
@@ -444,7 +452,7 @@ namespace intersections
 
 	float distanceSq(const Line& line, const Triangle& triangle, Segment3& res, DistParams<Line, Triangle>&	params)
 	{
-		// Test if line intersects triangle.  If so, the squared distance is zero.
+		
 		Vector3 edge0 = triangle.ab();
 		Vector3 edge1 = triangle.ac();
 		Vector3 normal;
@@ -456,8 +464,8 @@ namespace intersections
 		float NdD = fabsf( nm::dot(lineDirection, normal) );
 		if (NdD > ZERO_TOLERANCE)
 		{
-			// The line and triangle are not parallel, so the line intersects
-			// the plane of the triangle.
+			
+			
 			Vector3 diff = line.origin - triangle.vertices[0];
 			Vector3 U, V;
 			complementBasis(U, V, lineDirection);
@@ -469,27 +477,27 @@ namespace intersections
 			float VdDiff = nm::dot(V, diff);
 			float invDet = 1.0f/(UdE0*VdE1 - UdE1*VdE0);
 
-			// Barycentric coordinates for the point of intersection.
+			
 			float b1 = (VdE1*UdDiff - UdE1*VdDiff)*invDet;
 			float b2 = (UdE0*VdDiff - VdE0*UdDiff)*invDet;
 			float b0 = 1.0f - b1 - b2;
 
 			if (b0 >= 0.0f && b1 >= 0.0f && b2 >= 0.0f)
 			{
-				// Line parameter for the point of intersection.
+				
 				float DdE0 = nm::dot(line.direction, edge0);
 				float DdE1 = nm::dot(line.direction, edge1);
 				float DdDiff = nm::dot(line.direction, diff);
 				float mLineParameter = b1*DdE0 + b2*DdE1 - DdDiff;
 
-				// Barycentric coordinates for the point of intersection.
-// 				mTriangleBary[0] = b0;
-// 				mTriangleBary[1] = b1;
-// 				mTriangleBary[2] = b2;
+				
+
+
+
 
 				res.p0 = line.origin + mLineParameter * lineDirection;
 
-				// The intersection point is inside or on the triangle.
+				
 				res.p1 = triangle.vertices[0] + b1*edge0 + b2*edge1;
 
 				params.info0.lineParam = mLineParameter;
@@ -501,11 +509,11 @@ namespace intersections
 			}
 		}
 
-		// Either (1) the line is not parallel to the triangle and the point of
-		// intersection of the line and the plane of the triangle is outside the
-		// triangle or (2) the line and triangle are parallel.  Regardless, the
-		// closest point on the triangle is on an edge of the triangle.  Compare
-		// the line to all three edges of the triangle.
+		
+		
+		
+		
+		
 		float dist = FLT_MAX;
 		for (int i0 = 2, i1 = 0; i1 < 3; i0 = i1++)
 		{
@@ -513,26 +521,26 @@ namespace intersections
 			segment.p0 = triangle.vertices[i0];
 			segment.p1 = triangle.vertices[i1];
 
-// 			segment.Center = 0.5f*( + triangle.vertices[i1]);
-// 			segment.Direction = triangle.vertices[i1] - triangle.vertices[i0];
-// 			segment.Extent = ((Real)0.5)*segment.Direction.Normalize();
-// 			segment.ComputeEndPoints();
+
+
+
+
 
 			DistParams<Line, Segment3> tparams;
 			Segment3 lres;
 			float distTmp = distanceSq(line, segment, lres, tparams);
 			if (distTmp < dist)
 			{
-//				mClosestPoint0 = queryLS.GetClosestPoint0();
-//				mClosestPoint1 = queryLS.GetClosestPoint1();
+
+
 				dist = distTmp;
 				res = lres;
-// 
-// 				mLineParameter = queryLS.GetLineParameter();
-// 				Real ratio = queryLS.GetSegmentParameter()/segment.Extent;
-// 				mTriangleBary[i0] = ((Real)0.5)*((Real)1 - ratio);
-// 				mTriangleBary[i1] = (Real)1 - mTriangleBary[i0];
-// 				mTriangleBary[3-i0-i1] = (Real)0;
+
+
+
+
+
+
 
 				float ratio = tparams.info1.segmentParam / ( nm::magnitude(segment.direction())*0.5f );
 				params.info0.lineParam = tparams.info0.lineParam;
@@ -566,13 +574,13 @@ namespace intersections
 				params.info0.segmentParam = mSegmentParameter;
 				params.info1 = ltParams.info1;
 				
-// 				mTriangleBary[0] = queryLT.GetTriangleBary(0);
-// 				mTriangleBary[1] = queryLT.GetTriangleBary(1);
-// 				mTriangleBary[2] = queryLT.GetTriangleBary(2);
+
+
+
 			}
 			else
 			{
-				//mClosestPoint0 = mSegment->P1;
+				
 				res.p0 = s0.p1;
 				
 				Segment3 ptRes;
@@ -582,14 +590,14 @@ namespace intersections
 				mSegmentParameter = extent;
 				params.info0.segmentParam = mSegmentParameter;
 				params.info1 = ptParams.info1;
-// 				mTriangleBary[0] = queryPT.GetTriangleBary(0);
-// 				mTriangleBary[1] = queryPT.GetTriangleBary(1);
-// 				mTriangleBary[2] = queryPT.GetTriangleBary(2);
+
+
+
 			}
 		}
 		else
 		{
-			//mClosestPoint0 = mSegment->P0;
+			
 			res.p0 = s0.p1;
 
 			Segment3 ptRes;
@@ -597,13 +605,13 @@ namespace intersections
 			sqrDist = distanceSq(res.p0, triangle, ptRes, ptParams);
 			res.p1 = ptRes.p1;
 
-			//mClosestPoint1 = queryPT.GetClosestPoint1();
+			
 			mSegmentParameter = -extent;
 			params.info0.segmentParam = mSegmentParameter;
 			params.info1 = ptParams.info1;
-// 			mTriangleBary[0] = queryPT.GetTriangleBary(0);
-// 			mTriangleBary[1] = queryPT.GetTriangleBary(1);
-// 			mTriangleBary[2] = queryPT.GetTriangleBary(2);
+
+
+
 		}
 
 		return sqrDist;
@@ -611,22 +619,22 @@ namespace intersections
 
 	float distanceSq(const Triangle& t0, const Triangle& t1, Segment3& res, DistParams<Triangle, Triangle>& params)
 	{
-		// Compare edges of triangle0 to the interior of triangle1.
+		
 		float sqrDist = FLT_MAX; 
 		float sqrDistTmp;
 
 		Segment3 edge;
-		//float ratio;
+		
 		int i0, i1;
 		for (i0 = 2, i1 = 0; i1 < 3; i0 = i1++)
 		{
 			edge.p0 = t0.vertices[i0];
 			edge.p1 = t0.vertices[i1];
 
-// 			edge.Center = ((Real)0.5)*(mTriangle0->V[i0] + mTriangle0->V[i1]);
-// 			edge.Direction = mTriangle0->V[i1] - mTriangle0->V[i0];
-// 			edge.Extent = ((Real)0.5)*edge.Direction.Normalize();
-// 			edge.ComputeEndPoints();
+
+
+
+
 
 
 			Segment3 stRes;
@@ -636,17 +644,17 @@ namespace intersections
 			{
 				res = stRes;
 				sqrDist = sqrDistTmp;
-// 				mClosestPoint0 = queryST.GetClosestPoint0();
-// 				mClosestPoint1 = queryST.GetClosestPoint1();
+
+
 				
 
-// 				ratio = queryST.GetSegmentParameter()/edge.Extent;
-// 				mTriangleBary0[i0] = ((Real)0.5)*((Real)1 - ratio);
-// 				mTriangleBary0[i1] = (Real)1 - mTriangleBary0[i0];
-// 				mTriangleBary0[3-i0-i1] = (Real)0;
-// 				mTriangleBary1[0] = queryST.GetTriangleBary(0);
-// 				mTriangleBary1[1] = queryST.GetTriangleBary(1);
-// 				mTriangleBary1[2] = queryST.GetTriangleBary(2);
+
+
+
+
+
+
+
 
 				if (sqrDist <= ZERO_TOLERANCE)
 				{
@@ -655,15 +663,15 @@ namespace intersections
 			}
 		}
 
-		// Compare edges of triangle1 to the interior of triangle0.
+		
 		for (i0 = 2, i1 = 0; i1 < 3; i0 = i1++)
 		{
 			edge.p0 = t1.vertices[i0];
 			edge.p1 = t1.vertices[i1];
-// 			edge.Center = ((Real)0.5)*(mTriangle1->V[i0] + mTriangle1->V[i1]);
-// 			edge.Direction = mTriangle1->V[i1] - mTriangle1->V[i0];
-// 			edge.Extent = ((Real)0.5)*edge.Direction.Normalize();
-// 			edge.ComputeEndPoints();
+
+
+
+
 
 			Segment3 stRes;
 			DistParams<Segment3, Triangle> stParams;
@@ -672,16 +680,16 @@ namespace intersections
 			{
 				res = stRes;
 				sqrDist = sqrDistTmp;
-// 				mClosestPoint0 = queryST.GetClosestPoint0();
-// 				mClosestPoint1 = queryST.GetClosestPoint1();
 
-// 				ratio = queryST.GetSegmentParameter()/edge.Extent;
-// 				mTriangleBary1[i0] = ((Real)0.5)*((Real)1 - ratio);
-// 				mTriangleBary1[i1] = (Real)1 - mTriangleBary1[i0];
-// 				mTriangleBary1[3-i0-i1] = (Real)0;
-// 				mTriangleBary0[0] = queryST.GetTriangleBary(0);
-// 				mTriangleBary0[1] = queryST.GetTriangleBary(1);
-// 				mTriangleBary0[2] = queryST.GetTriangleBary(2);
+
+
+
+
+
+
+
+
+
 
 				if (sqrDist <= ZERO_TOLERANCE)
 				{
@@ -693,3 +701,22 @@ namespace intersections
 		return sqrDist;
 	}
 }
+
+
+
+
+// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

@@ -124,6 +124,7 @@
     <ClCompile Include="dragNDrop.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="imguiApp.cpp" />
+    <ClCompile Include="ipc.cpp" />
     <ClCompile Include="jni.cpp" />
     <ClCompile Include="lightSources.cpp" />
     <ClCompile Include="manipulators3d.cpp" />
@@ -161,7 +162,6 @@
     <ClInclude Include="componentModelHelpers.h" />
     <ClInclude Include="d3d9\direct3d9.h" />
     <ClInclude Include="d3d11\direct3d11.h" />
-    <ClInclude Include="backgroundRender.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="commandProcessor.h" />
     <ClInclude Include="console.h" />
@@ -173,6 +173,7 @@
     <ClInclude Include="freeimage.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imguiApp.h" />
+    <ClInclude Include="ipc.h" />
     <ClInclude Include="jni.h" />
     <ClInclude Include="library.include.h" />
     <ClInclude Include="lightSources.h" />

@@ -1,6 +1,14 @@
+// Copyright (C) 2016-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+//
+// This library is distributed under the MIT License. See notice at the end
+// of this file.
+//
+// This work is based on the RedStar project
+//
+
 #include "scheme.h"
 
-#include "stuff/stringUtils.h"
+#include "common/stringize.h"
 
 #include <fstream>
 #include <streambuf>
@@ -9,10 +17,10 @@
 namespace scheme
 {
 	const cell false_sym(SYMBOL, "#f");
-	const cell true_sym(SYMBOL, "#t"); // anything that isn't false_sym is true
+	const cell true_sym(SYMBOL, "#t"); 
 	const cell nil(SYMBOL, "nil");
 
-	// built-in primitive procedures
+	
 	cell proc_add(const cells & c)
 	{
 		long n(atol(c[0].val.c_str()));
@@ -127,7 +135,7 @@ namespace scheme
 		return cell(LIST, c);
 	}
 
-	// define the bare minimum set of primintives necessary to pass the unit tests
+	
 	void add_globals(environment& env)
 	{
 		env["nil"] = nil;
@@ -161,19 +169,19 @@ namespace scheme
 			env[p.val] = *(a++);
 	}
 
-	// return a reference to the innermost environment where 'var' appears
+	
 	environment* environment::find(const std::string& var)
 	{
 		if (env.find(var) != env.end())
 		{
-			return this; // the symbol exists in this environment
+			return this; 
 		}			
 
-		// attempt to find the symbol in some "outer" env
+		
 		return outer ? outer->find(var) : nullptr;
 	}
 
-	// return a reference to the cell associated with the given symbol 'var'
+	
 	cell& environment::operator[] (const std::string & var) 
 	{ 
 		return env[var]; 
@@ -185,7 +193,7 @@ namespace scheme
 	}
 
 
-	//
+	
 	cell eval(cell x, const std::shared_ptr<environment>& env)
 	{
 		if (x.type == SYMBOL)
@@ -207,27 +215,27 @@ namespace scheme
 		{
 			const auto& value = x.list[0].val;
 
-			if (value == "quote")	return x.list[1];     // (quote exp)
-			if (value == "if")		return eval(eval(x.list[1], env).val == "#f" ? (x.list.size() < 4 ? nil : x.list[3]) : x.list[2], env);         // (if test conseq [alt])
-			//if (value == "set!")	return env->find(x.list[1].val)[x.list[1].val] = eval(x.list[2], env);        // (set! var exp)
-			if (value == "define")	return (*env)[x.list[1].val] = eval(x.list[2], env);     // (define var exp)
+			if (value == "quote")	return x.list[1];     
+			if (value == "if")		return eval(eval(x.list[1], env).val == "#f" ? (x.list.size() < 4 ? nil : x.list[3]) : x.list[2], env);         
+			
+			if (value == "define")	return (*env)[x.list[1].val] = eval(x.list[2], env);     
 
 			if (value == "lambda")
-			{    // (lambda (var*) exp)
+			{    
 				x.type = LAMBDA;
-				// keep a reference to the environment that exists now (when the lambda is being defined) because that's the outer environment
-				// we'll need to use when the lambda is executed
+				
+				
 				x.env = env;
 				return x;
 			}
 			if (value == "begin")
-			{     // (begin exp*)
+			{     
 				for (size_t i = 1; i < x.list.size() - 1; ++i)
 					eval(x.list[i], env);
 				return eval(x.list[x.list.size() - 1], env);
 			}
 		}
-		// (proc exp*)
+		
 		cell proc(eval(x.list[0], env));
 		cells exps;
 		for (auto exp = x.list.begin() + 1; exp != x.list.end(); ++exp)
@@ -235,14 +243,14 @@ namespace scheme
 
 		if (proc.type == LAMBDA)
 		{
-			// Create an environment for the execution of this lambda function
-			// where the outer environment is the one that existed* at the time
-			// the lambda was defined and the new inner associations are the
-			// parameter names with the given arguments.
-			// *Although the environmet existed at the time the lambda was defined
-			// it wasn't nec essarily complete - it may have subsequently had
-			// more symbols defined in that environment.
-			return eval(/*body*/proc.list[2], std::make_shared<environment>(/*parms*/proc.list[1].list, /*args*/exps, proc.env));
+			
+			
+			
+			
+			
+			
+			
+			return eval(proc.list[2], std::make_shared<environment>(proc.list[1].list, exps, proc.env));
 		}
 		else if (proc.type == PROCEDURE)
 		{
@@ -253,7 +261,7 @@ namespace scheme
 		return nil;
 	}
 
-	// convert given string to list of tokens
+	
 	std::list<std::string> tokenize(const std::string & str)
 	{
 		std::list<std::string> tokens;
@@ -279,14 +287,14 @@ namespace scheme
 		return tokens;
 	}
 
-	// numbers become Numbers; every other token is a Symbol
+	
 	cell atom(const std::string& token)
 	{
 		auto type = (isdigit(token[0]) || (token[0] == '-' && isdigit(token[1]))) ? NUMBER : SYMBOL;
 		return cell(type, token);
 	}
 
-	// return the Lisp expression in the given tokens
+	
 	cell read_from(std::list<std::string> & tokens)
 	{
 		if (!tokens.empty())
@@ -313,14 +321,14 @@ namespace scheme
 		return nil;
 	}
 
-	// return the Lisp expression represented by the given string
+	
 	cell read(const std::string& s)
 	{
 		auto tokens = tokenize(s);
 		return read_from(tokens);
 	}
 
-	// convert given cell to a Lisp-readable string
+	
 	std::string to_string(const cell& exp)
 	{
 		switch (exp.type)
@@ -348,7 +356,7 @@ namespace scheme
 		return exp.val;
 	}
 
-	// the default read-eval-print-loop
+	
 	void repl(const std::string & prompt, const std::shared_ptr<environment>& env)
 	{
 		while (true)
@@ -378,7 +386,7 @@ namespace scheme
 	}
 
 
-	// unit tests
+	
 	template <typename T1, typename T2>
 	bool test_equal(const T1& value, const T2& expected_value)
 	{
@@ -423,3 +431,22 @@ namespace scheme
 	}
 }
 
+
+
+
+
+// Copyright (C) 2016-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, 
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.

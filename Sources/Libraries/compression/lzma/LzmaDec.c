@@ -1,5 +1,4 @@
-/* LzmaDec.c -- LZMA Decoder
-2009-09-20 : Igor Pavlov : Public domain */
+
 
 #include "LzmaDec.h"
 
@@ -28,7 +27,7 @@
 #define TREE_DECODE(probs, limit, i) \
   { i = 1; do { TREE_GET_BIT(probs, i); } while (i < limit); i -= limit; }
 
-/* #define _LZMA_SIZE_OPT */
+
 
 #ifdef _LZMA_SIZE_OPT
 #define TREE_6_DECODE(probs, i) TREE_DECODE(probs, (1 << 6), i)
@@ -115,18 +114,7 @@ StopCompilingDueBUG
 
 #define LZMA_DIC_MIN (1 << 12)
 
-/* First LZMA-symbol is always decoded.
-And it decodes new LZMA-symbols while (buf < bufLimit), but "buf" is without last normalization
-Out:
-  Result:
-    SZ_OK - OK
-    SZ_ERROR_DATA - Error
-  p->remainLen:
-    < kMatchSpecLenStart : normal remain
-    = kMatchSpecLenStart : finished
-    = kMatchSpecLenStart + 1 : Flush marker
-    = kMatchSpecLenStart + 2 : State Init Marker
-*/
+
 
 static int MY_FAST_CALL LzmaDec_DecodeReal(CLzmaDec *p, SizeT limit, const Byte *bufLimit)
 {
@@ -328,18 +316,11 @@ static int MY_FAST_CALL LzmaDec_DecodeReal(CLzmaDec *p, SizeT limit, const Byte 
               {
                 UInt32 t;
                 code -= range;
-                t = (0 - ((UInt32)code >> 31)); /* (UInt32)((Int32)code >> 31) */
+                t = (0 - ((UInt32)code >> 31)); 
                 distance = (distance << 1) + (t + 1);
                 code += range & t;
               }
-              /*
-              distance <<= 1;
-              if (code >= range)
-              {
-                code -= range;
-                distance |= 1;
-              }
-              */
+              
             }
             while (--numDirectBits != 0);
             prob = probs + Align;
@@ -478,7 +459,7 @@ static int MY_FAST_CALL LzmaDec_DecodeReal2(CLzmaDec *p, SizeT limit, const Byte
 
 typedef enum
 {
-  DUMMY_ERROR, /* unexpected end of input stream */
+  DUMMY_ERROR, 
   DUMMY_LIT,
   DUMMY_MATCH,
   DUMMY_REP
@@ -504,7 +485,7 @@ static ELzmaDummy LzmaDec_TryDummy(const CLzmaDec *p, const Byte *buf, SizeT inS
     {
       UPDATE_0_CHECK
 
-      /* if (bufLimit - buf >= 7) return DUMMY_LIT; */
+      
 
       prob = probs + Literal;
       if (p->checkDicSize != 0 || p->processedPos != 0)
@@ -638,7 +619,7 @@ static ELzmaDummy LzmaDec_TryDummy(const CLzmaDec *p, const Byte *buf, SizeT inS
         {
           int numDirectBits = ((posSlot >> 1) - 1);
 
-          /* if (bufLimit - buf >= 8) return DUMMY_MATCH; */
+          
 
           if (posSlot < kEndPosModelIndex)
           {
@@ -652,7 +633,7 @@ static ELzmaDummy LzmaDec_TryDummy(const CLzmaDec *p, const Byte *buf, SizeT inS
               NORMALIZE_CHECK
               range >>= 1;
               code -= range & (((code - range) >> 31) - 1);
-              /* if (code >= range) code -= range; */
+              
             }
             while (--numDirectBits != 0);
             prob = probs + Align;
