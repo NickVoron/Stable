@@ -46,8 +46,8 @@ namespace
 		UTPNet,
 		ProcessTerminator,
 		AppModules::ComponentModel,
-		
-		
+		ResourcesManager,
+		ResourceWatcher,
 		Application
 	> Prologue;
 

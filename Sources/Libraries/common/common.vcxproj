@@ -120,6 +120,8 @@
     <ClInclude Include="fsm.h" />
     <ClInclude Include="function_traits.h" />
     <ClInclude Include="includes.h" />
+    <ClInclude Include="json.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="preprocessor_helpers.h" />
     <ClInclude Include="ptr_utils.h" />
     <ClInclude Include="stringize.h" />

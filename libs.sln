@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "resources", "resources", "{9326E0B7-BA11-4284-AB38-E079F0A3EB98}"
 EndProject
@@ -290,8 +290,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "compression", "Sources\Libraries\compression\compression.vcxproj", "{6459FE25-879B-4B2B-BCFD-67CABB0B00FD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "inputSys", "Sources\Libraries\inputSys\InputLib.vcxproj", "{E97797D8-119B-4E25-8320-7FFB59BAB5BC}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ipc_test", "..\ipc_test\Sources\Libraries\ipc_test\ipc_test.vcxproj", "{077CB7F8-D5C5-11E7-A02F-001A7DDA7111}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1393,14 +1391,6 @@ Global
 		{E97797D8-119B-4E25-8320-7FFB59BAB5BC}.Release|Win32.Build.0 = Release|Win32
 		{E97797D8-119B-4E25-8320-7FFB59BAB5BC}.Release|x64.ActiveCfg = Release|x64
 		{E97797D8-119B-4E25-8320-7FFB59BAB5BC}.Release|x64.Build.0 = Release|x64
-		{077CB7F8-D5C5-11E7-A02F-001A7DDA7111}.Debug|Win32.ActiveCfg = Debug|Win32
-		{077CB7F8-D5C5-11E7-A02F-001A7DDA7111}.Debug|Win32.Build.0 = Debug|Win32
-		{077CB7F8-D5C5-11E7-A02F-001A7DDA7111}.Debug|x64.ActiveCfg = Debug|x64
-		{077CB7F8-D5C5-11E7-A02F-001A7DDA7111}.Debug|x64.Build.0 = Debug|x64
-		{077CB7F8-D5C5-11E7-A02F-001A7DDA7111}.Release|Win32.ActiveCfg = Release|Win32
-		{077CB7F8-D5C5-11E7-A02F-001A7DDA7111}.Release|Win32.Build.0 = Release|Win32
-		{077CB7F8-D5C5-11E7-A02F-001A7DDA7111}.Release|x64.ActiveCfg = Release|x64
-		{077CB7F8-D5C5-11E7-A02F-001A7DDA7111}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,7 +5,8 @@
 //
 // This work is based on the RedStar project
 //
-#include "prototypesHolder.h"
+
+﻿#include "prototypesHolder.h"
 
 EntitiesLoadStream* PrototypeHolder::find(void* id) const
 {

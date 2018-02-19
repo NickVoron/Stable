@@ -18,6 +18,10 @@
 #include "stuff/library.include.h"
 #include "strings/library.include.h"
 
+#ifdef WIN32
+#include <Windows.h>
+#endif
+
 
 
 

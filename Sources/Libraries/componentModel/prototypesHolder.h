@@ -6,7 +6,7 @@
 // This work is based on the RedStar project
 //
 
-#pragma once
+﻿#pragma once
 
 #include <string>
 #include <map>
