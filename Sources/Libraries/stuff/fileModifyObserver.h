@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -22,13 +22,13 @@ inline bool operator!=(const timespec& lref, const timespec& rref) { return !(lr
 struct file_time
 {
 	file_time() = default;
-#ifdef USE_WINDOWS
+
 	file_time(struct ::stat& st) : value(st.st_mtime){}
 	time_t value;
-#else
-	file_time(struct ::stat& st) : value(st.st_mtim) {}
-	timespec value;
-#endif
+
+
+
+
 };
 
 inline bool operator==(const file_time& lref, const file_time& rref) { return lref.value == rref.value; }
@@ -107,7 +107,8 @@ void ModifyObserver::SetFileName(const std::string& fn)
 
 
 
-// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

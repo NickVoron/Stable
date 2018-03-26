@@ -24,7 +24,6 @@
     <ClCompile Include="stream\stream.cpp">
       <Filter>stream</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dataop\data_op.h">
@@ -73,7 +72,6 @@
       <Filter>stream</Filter>
     </ClInclude>
     <ClInclude Include="library.include.h" />
-    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="memblock.io.h">

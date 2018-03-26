@@ -9,27 +9,10 @@
     <ClCompile Include="reports\log.cpp">
       <Filter>reports</Filter>
     </ClCompile>
-    <ClCompile Include="reports\logQueue.cpp">
-      <Filter>reports</Filter>
-    </ClCompile>
-    <ClCompile Include="reports\timedLogQueue.cpp">
-      <Filter>reports</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="defaultLogs.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="reports\log.h">
-      <Filter>reports</Filter>
-    </ClInclude>
-    <ClInclude Include="reports\logQueue.h">
-      <Filter>reports</Filter>
-    </ClInclude>
-    <ClInclude Include="reports\timedLogQueue.h">
-      <Filter>reports</Filter>
-    </ClInclude>
     <ClInclude Include="library.include.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="defaultLogs.h" />
   </ItemGroup>
 </Project>

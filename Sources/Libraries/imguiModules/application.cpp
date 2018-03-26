@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -7,10 +7,13 @@
 //
 
 #include "application.h"
-#include "uniguidraw/library.include.h"
+
 #include "settingsRegistry/library.include.h"
 #include "inputSys/library.include.h"
+#ifdef USE_WINDOWS
 #include "imgui/library.include.h"
+#include "uniguidraw/library.include.h"
+#endif
 
 
 namespace imgui
@@ -46,15 +49,18 @@ void Module::processInternal()
 		
 		
 		
-
+        #ifdef USE_WINDOWS
 		imgui::checkbox(str::stringize(name(), hotkeyText ).c_str(), active);
+        #endif
 	}
 	
 	if(active)
 	{
+        #ifdef USE_WINDOWS
 		imgui::vertical_separator(3.0f);
 		process();
 		imgui::vertical_separator(15.0f);
+        #endif
 	}
 }
 
@@ -65,6 +71,7 @@ void Modules::process()
 {
 	if(!empty())
 	{
+        #ifdef USE_WINDOWS
 		struct ScopedViewport
 		{
 			ScopedViewport(Viewports::Viewport* vp_) : vp(vp_)	{ imgui::vertical_panel_begin((float)vp->width() - 200.0f, 0.0f, (float)vp->width(), (float)vp->height(), false);	}
@@ -94,6 +101,7 @@ void Modules::process()
  			}
  			imgui::core::end();
  		}
+        #endif
 	}
 }
 
@@ -161,8 +169,9 @@ void Application::process()
 			app.uiModules.process();
 		}
 	}	
-
+    #ifdef USE_WINDOWS
 	Input::inputProcessed( imgui::core::mouseProcessed() );
+    #endif
 }
 
 void Application::release() 
@@ -231,7 +240,8 @@ const char* Editor::name() const
 
 
 
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

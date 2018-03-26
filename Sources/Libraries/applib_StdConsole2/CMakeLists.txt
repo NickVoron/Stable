@@ -1,5 +1,7 @@
+if(USE_WINDOWS)
+
 file(GLOB_RECURSE allSourceFiles
-    "*.h"
+	    "*.h"
     "*.hpp"
     "*.hxx"
     "*.cpp"
@@ -13,3 +15,5 @@ add_compile_options("-FIstdafx.h")
 add_library(${LibraryId} ${allSourceFiles})
 set_target_precompiled_header(${LibraryId} stdafx.h stdafx.cpp)
 set_target_properties(${LibraryId} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${SharedTecINT})
+
+endif()

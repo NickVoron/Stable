@@ -10,139 +10,183 @@
 #include <exception>
 #include <sstream>
 #include <mutex>
+#include <array>
 #include <stdio.h> 
 
-#ifdef __ANDROID__
-#include <android/log.h>
-#endif
-
-#include "reports/log.h"
-#include "reports/logQueue.h"
-#include "reports/timedLogQueue.h"
-
+#include "common/stringize.h"
 #include "common/preprocessor_helpers.h"
 #include "containers/circular_buffer.h"
 
 namespace std
 {
-	::std::ostream& operator<<(::std::ostream& s, const ::std::exception& error);
+	ostream& operator<<(ostream& s, const exception& error);
 }
 
 namespace logs
 {
-	namespace implementation 
-	{
-		extern std::recursive_mutex cs; 
-	}
-	#define LOG_SYSTEM_THREAD_SAFE std::lock_guard<std::recursive_mutex> logs_mutex_lock(::logs::implementation::cs);
-	
-	void update(float dt);
-	
 	struct repeat
 	{
-		inline repeat(char s, std::size_t c):count(c), str(s){}
+		inline repeat(char s, std::size_t c) :count(c), str(s) {}
 		std::size_t count;
 		char str;
 	};
 
-	struct tabs		: public repeat { inline tabs(std::size_t c) : repeat('\t', c){} };
-	struct spaces	: public repeat { inline spaces(std::size_t c) : repeat(' ', c){} };
+	struct tabs : public repeat { inline tabs(std::size_t c) : repeat('\t', c) {} };
+	struct spaces : public repeat { inline spaces(std::size_t c) : repeat(' ', c) {} };
 
 	std::ostream& operator <<(std::ostream& s, const repeat& t);
-	
-	implementation::Log& log();
-	implementation::Err& err();
-	implementation::Info& info();
-	implementation::Warning& warning();
-	implementation::LogQueue& report(); 
-	implementation::LogQueue& timeReport();
 
-	extern const char* endl;
+	namespace impl
+	{
+		struct logstream : public std::stringstream { };
+
+		template<class T>
+		logstream& operator<<(logstream& ls, const T& value)
+		{
+			auto& ss = static_cast<std::stringstream&>(ls);
+
+			if (ls.gcount() > 0)
+			{
+				ss << " ";
+			}
+
+			ss << value;
+
+			return ls;
+		}
+
+		enum class Severity : uint8_t
+		{
+			LOG_SEVERITY_NONE,
+			LOG_SEVERITY_ERROR,
+			LOG_SEVERITY_WARNING,
+			LOG_SEVERITY_INFO,
+			LOG_SEVERITY_VERBOSE,
+
+			LOG_SEVERITY_ALL,
+		};
+
+		const char* severity_str(Severity severity);
+
+		struct EntryInformation
+		{
+			std::string severity;
+			std::string source_location;
+		};
+
+		struct Flusher
+		{
+			void flush(const EntryInformation& information, const char* entry);
+			std::vector<std::function<void(const char*)>> handlers;
+			std::vector<std::function<std::string(const EntryInformation& information, const std::string&)>> filters;
+		};
+
+		extern std::array<Flusher, static_cast<uint8_t>(Severity::LOG_SEVERITY_ALL)> flushers;
+
+		struct BaseLogger
+		{
+			static Severity global_severity;
+		};
+
+		template<Severity severity>
+		class Logger : BaseLogger
+		{
+		public:
+			static_assert(severity < Severity::LOG_SEVERITY_ALL);
+
+			Logger(const EntryInformation& info_) : info(info_) {}
+			~Logger()
+			{
+				if (severity <= global_severity)
+				{
+					flushers[static_cast<uint8_t>(severity)].flush(info, os.str().c_str());
+				}
+			}
+
+			template<class T>
+			Logger& operator<<(const T& obj)
+			{
+				if (severity <= global_severity)
+				{
+					operator<<(str::spaced(obj).c_str());
+				}
+
+				return *this;
+			}
+
+			Logger& operator<<(const char* entry)
+			{
+				if (severity <= global_severity)
+				{
+					os << entry;
+				}
+
+				return *this;
+			}
+
+		private:
+			EntryInformation info;
+			logstream os;
+		};
+
+		template<Severity severity, class F>	void add_severity_handler(F&& handler)	{ flushers[static_cast<uint8_t>(severity)].handlers.emplace_back(std::forward<F>(handler)); }
+		template<Severity severity, class F>	void add_severity_filter(F&& filter)	{ flushers[static_cast<uint8_t>(severity)].filters.emplace_back(std::forward<F>(filter)); }
+	}
+
+	void severity_none();
+	void severity_error();
+	void severity_warning();
+	void severity_info();
+	void severity_all();
+
+	template<class F> void add_error_severity_handler(F&& handler)		{ impl::add_severity_handler<impl::Severity::LOG_SEVERITY_ERROR>(std::forward<F>(handler)); }
+	template<class F> void add_warning_severity_handler(F&& handler)	{ impl::add_severity_handler<impl::Severity::LOG_SEVERITY_WARNING>(std::forward<F>(handler)); }
+	template<class F> void add_info_severity_handler(F&& handler)		{ impl::add_severity_handler<impl::Severity::LOG_SEVERITY_INFO>(std::forward<F>(handler)); }
+	template<class F> void add_verbose_severity_handler(F&& handler)	{ impl::add_severity_handler<impl::Severity::LOG_SEVERITY_VERBOSE>(std::forward<F>(handler)); }
+
+	template<class F> void add_error_severity_filter(F&& filter) { impl::add_severity_filter<impl::Severity::LOG_SEVERITY_ERROR>(std::forward<F>(filter)); }
+	template<class F> void add_warning_severity_filter(F&& filter) { impl::add_severity_filter<impl::Severity::LOG_SEVERITY_WARNING>(std::forward<F>(filter)); }
+	template<class F> void add_info_severity_filter(F&& filter) { impl::add_severity_filter<impl::Severity::LOG_SEVERITY_INFO>(std::forward<F>(filter)); }
+	template<class F> void add_verbose_severity_filter(F&& filter) { impl::add_severity_filter<impl::Severity::LOG_SEVERITY_VERBOSE>(std::forward<F>(filter)); }
+
+
+	template<class F> void add_handler(F&& handler)
+	{
+		add_error_severity_handler(std::forward<F>(handler));
+		add_warning_severity_handler(std::forward<F>(handler));
+		add_info_severity_handler(std::forward<F>(handler));
+		add_verbose_severity_handler(std::forward<F>(handler));
+	}
+
+	template<class F> void add_filter(F&& filter)
+	{
+		add_error_severity_filter(std::forward<F>(filter));
+		add_warning_severity_filter(std::forward<F>(filter));
+		add_info_severity_filter(std::forward<F>(filter));
+		add_verbose_severity_filter(std::forward<F>(filter));
+	}
 
 	void default_color();
 
-	struct logstream : public std::stringstream {};
+#define OUTPUT_TO_LOG(SEVERITY_TAG, messages) do { if(SEVERITY_TAG <= ::logs::impl::BaseLogger::global_severity) { ::logs::impl::Logger<SEVERITY_TAG> logger({ severity_str(SEVERITY_TAG), SOURCE_LOCATION}); logger << messages << "\n"; } } while(false);
 
-	template<class T>
-	logstream& operator<<(logstream& ls, const T& value)
-	{
-		((std::stringstream&)ls) << value << " ";
-		return ls;
-	}
-
-#if defined(USE_ANDROID) || defined(USE_APPLE) || defined(USE_LINUX)
-
-	std::string accumulated_log();
-	void accumulate_log(const std::string& value);
-	void clear_log();
-#if defined(USE_ANDROID)
-#define LOGE(message)  do { __android_log_write(ANDROID_LOG_ERROR, "SharedTec", message); } while(false);
-#define LOGD(message)  do { __android_log_write(ANDROID_LOG_DEBUG, "SharedTec", message); } while(false);
-#define LOGV(message)  do { __android_log_write(ANDROID_LOG_VERBOSE, "SharedTec", message); } while(false);
-#define LOGW(message)  do { __android_log_write(ANDROID_LOG_WARN, "SharedTec", message); } while(false);
-#define LOGI(message)  do { __android_log_write(ANDROID_LOG_INFO, "SharedTec", message); } while(false);
-#else
-#define LOGE(message)  do { } while(false);
-#define LOGD(message)  do { } while(false);
-#define LOGV(message)  do { } while(false);
-#define LOGW(message)  do { } while(false);
-#define LOGI(message)  do { } while(false);
-#endif
-
-#define LOG_ERROR(messages)	 	do { LOG_SYSTEM_THREAD_SAFE; ::logs::logstream os; os << messages << logs::endl; std::string res = os.str(); LOGE(res.c_str());	::logs::accumulate_log(res); } while(false);
-#define LOG_MSG(messages)		do { LOG_SYSTEM_THREAD_SAFE; ::logs::logstream os; os << messages << logs::endl; std::string res = os.str(); LOGD(res.c_str());	::logs::accumulate_log(res); } while(false);
-#define LOG_INFO(messages)		do { LOG_SYSTEM_THREAD_SAFE; ::logs::logstream os; os << messages << logs::endl; std::string res = os.str(); LOGI(res.c_str());	::logs::accumulate_log(res); } while(false);
-#define LOG_WARNING(messages)	do { LOG_SYSTEM_THREAD_SAFE; ::logs::logstream os; os << messages << logs::endl; std::string res = os.str(); LOGW(res.c_str());	::logs::accumulate_log(res); } while(false);
-#define LOG_REPORT(messages)	do { LOG_SYSTEM_THREAD_SAFE; ::logs::logstream os; os << messages << logs::endl; std::string res = os.str(); ::logs::report() << res;	} while(false);
-
-#define LOG_ERROR_UNDECORATED(messages)		LOG_ERROR(messages);
-#define LOG_MSG_UNDECORATED(messages)		LOG_MSG(messages);
-#define LOG_REPORT_UNDECORATED(messages)	LOG_REPORT(messages);
-#define LOG_INFO_UNDECORATED(messages)		LOG_INFO(messages);
-#define LOG_WARNING_UNDECORATED(messages)	LOG_WARNING(messages);
-
-#else
-
-#define OUTPUT_TO_LOG(LogType, messages, dbgOut)				{	LOG_SYSTEM_THREAD_SAFE; (LogType) << messages << logs::endl; logs::default_color(); if(dbgOut) { ::logs::logstream os; os << SOURCE_LOCATION << messages << logs::endl; OutputDebugStringA(os.str().c_str());}};
-#define OUTPUT_TO_LOG_UNDECORATED(LogType, messages, dbgOut)	{	LOG_SYSTEM_THREAD_SAFE; (LogType) << messages << logs::endl; logs::default_color(); if(dbgOut) { ::logs::logstream os; os << messages << logs::endl; OutputDebugStringA(os.str().c_str());}};
-
-#define LOG_ERROR(messages)		OUTPUT_TO_LOG(logs::err(),		messages, true);
-#define LOG_MSG(messages)		OUTPUT_TO_LOG(logs::log(),		messages, true);
-#define LOG_REPORT(messages)	OUTPUT_TO_LOG(logs::report(),	messages, false);
-#define LOG_INFO(messages)		OUTPUT_TO_LOG(logs::info(),		messages, true);
-#define LOG_WARNING(messages)	OUTPUT_TO_LOG(logs::warning(),	messages, true);
-
-#define LOG_ERROR_UNDECORATED(messages)		OUTPUT_TO_LOG_UNDECORATED(logs::err(),		messages, true);
-#define LOG_MSG_UNDECORATED(messages)		OUTPUT_TO_LOG_UNDECORATED(logs::log(),		messages, true);
-#define LOG_REPORT_UNDECORATED(messages)	OUTPUT_TO_LOG_UNDECORATED(logs::report(),	messages, false);
-#define LOG_INFO_UNDECORATED(messages)		OUTPUT_TO_LOG_UNDECORATED(logs::info(),		messages, true);
-#define LOG_WARNING_UNDECORATED(messages)	OUTPUT_TO_LOG_UNDECORATED(logs::warning(),	messages, true);
-
+#define LOG_ERROR(messages)		OUTPUT_TO_LOG(::logs::impl::Severity::LOG_SEVERITY_ERROR, messages);
+#define LOG_MSG(messages)		OUTPUT_TO_LOG(::logs::impl::Severity::LOG_SEVERITY_INFO, messages);
+#define LOG_INFO(messages)		OUTPUT_TO_LOG(::logs::impl::Severity::LOG_SEVERITY_INFO, messages);
+#define LOG_VERBOSE(messages)	OUTPUT_TO_LOG(::logs::impl::Severity::LOG_SEVERITY_VERBOSE, messages);
+#define LOG_WARNING(messages)	OUTPUT_TO_LOG(::logs::impl::Severity::LOG_SEVERITY_WARNING, messages);
+#define LOG_REPORT(messages)	OUTPUT_TO_LOG(::logs::impl::Severity::LOG_SEVERITY_INFO, messages);
 
 #define LOG_FUNCTION_NAME		LOG_MSG		(__FUNCTION__);
 #define REPORT_FUNCTION_NAME	LOG_REPORT	(__FUNCTION__);
 
-#define LOG_ERROR_ENDL		OUTPUT_TO_LOG(logs::err(),		logs::endl, true);
-#define LOG_MSG_ENDL		OUTPUT_TO_LOG(logs::log(),		logs::endl, true);
-#define LOG_REPORT_ENDL		OUTPUT_TO_LOG(logs::report(),	logs::endl, false);
-#define LOG_INFO_ENDL		OUTPUT_TO_LOG(logs::info(),		logs::endl, true);
-#define LOG_WARNING_ENDL	OUTPUT_TO_LOG(logs::warning(),	logs::endl, true);
-
-#define LOG_ERROR_EX(messages)	 LOG_ERROR	("function: " << __FUNCTION__ << " line: " << __LINE__ << " " << messages);
-#define LOG_MSG_EX(messages)	 LOG_MSG	("function: " << __FUNCTION__ << " line: " << __LINE__ << " " << messages);
-#define LOG_WARNING_EX(messages) LOG_WARNING("function: " << __FUNCTION__ << " line: " << __LINE__ << " " << messages);
-
 #define TLOG_ERROR(messages)	LOG_ERROR("pid: " << GetCurrentProcessId() << " tid: " << std::this_thread::get_id() << " : " << messages);
-#define TLOG_MSG(messages)		LOG_MSG("pid: " << GetCurrentProcessId() << " tid: " << std::this_thread::get_id() << " : " << messages);
+#define TLOG_MSG(messages)		LOG_MSG	("pid: " << GetCurrentProcessId() << " tid: " << std::this_thread::get_id() << " : " << messages);
 #define TLOG_WARNING(messages)  LOG_WARNING("pid: " << GetCurrentProcessId() << " tid: " << std::this_thread::get_id() << " : " << messages);
 
-#endif
-
-#define LOG_REPORT_CLEAR	{ LOG_SYSTEM_THREAD_SAFE; logs::report().clear(); };
-
-#define TLOG_EXPRESSION(...) do { TLOG_MSG(STPP_STRINGIZE_VALUES(__VA_ARGS__)); } while (false);
-#define LOG_EXPRESSION(...) do { LOG_MSG(STPP_STRINGIZE_VALUES(__VA_ARGS__)); } while (false);
-#define ERROR_EXPRESSION(...) do { LOG_ERROR(STPP_STRINGIZE_VALUES(__VA_ARGS__)); } while (false);
+#define TLOG_EXPRESSION(...)	do { TLOG_MSG(STPP_STRINGIZE_VALUES(__VA_ARGS__)); } while (false);
+#define LOG_EXPRESSION(...)		do { LOG_MSG(STPP_STRINGIZE_VALUES(__VA_ARGS__)); } while (false);
+#define ERROR_EXPRESSION(...)	do { LOG_ERROR(STPP_STRINGIZE_VALUES(__VA_ARGS__)); } while (false);
 
 
 }

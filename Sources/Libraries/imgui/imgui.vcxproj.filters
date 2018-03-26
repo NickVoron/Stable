@@ -64,7 +64,6 @@
     <ClCompile Include="focus.cpp" />
     <ClCompile Include="globals.cpp" />
     <ClCompile Include="imgui.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="types.cpp" />
     <ClCompile Include="renderTarget.cpp" />
     <ClCompile Include="widgets\progressBar.cpp">
@@ -127,7 +126,6 @@
     <ClInclude Include="imgui.h" />
     <ClInclude Include="internalState.h" />
     <ClInclude Include="library.include.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="renderTarget.h" />
     <ClInclude Include="widgets\progressBar.h">

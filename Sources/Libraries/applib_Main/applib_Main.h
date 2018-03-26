@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -12,7 +12,7 @@
 #include <vector>
 #include <iostream>
 
-#include "unitTest/library.include.h"
+
 
 #ifdef __ANDROID__
 #define TEST_LOG_OUT(message) do { __android_log_write(ANDROID_LOG_ERROR, "SharedTec", message); } while(false);
@@ -20,7 +20,7 @@
 #define TEST_LOG_OUT(message) do { std::cout << message << std::endl; } while(false);
 #endif
 
-
+#undef UNIT_TESTS_ENABLED
 #ifdef UNIT_TESTS_ENABLED
 inline boost::unit_test::test_suite* init_unit_test(int argc, char* argv[])
 {
@@ -115,7 +115,8 @@ int appmain(SetupReturnType (*setup)(SetupParamsType&), int argc, char_t* argv[]
 
 
 
-// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+
+// Copyright (C) 2016-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

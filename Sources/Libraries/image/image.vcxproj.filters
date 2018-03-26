@@ -29,7 +29,6 @@
     <ClInclude Include="plane.h" />
     <ClInclude Include="planeMips.h" />
     <ClInclude Include="runtime_plane.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="swizzles.h" />
     <ClInclude Include="type_utils.h" />
     <ClInclude Include="volume.h" />
@@ -44,6 +43,5 @@
     <ClCompile Include="formats.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="runtime_plane.cpp" />
-    <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
 </Project>

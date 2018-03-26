@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -7,7 +7,7 @@
 //
 
 #pragma once
-
+#ifdef USE_WINDOWS
 #include "stuff/stringUtils.h"
 
 #include "gapi/library.include.h"
@@ -187,10 +187,12 @@ namespace DebugDrawing
 	void camera(const CameraSystem::Params& cam, float size, bool drawFrustum);
 	void camera(const CameraSystem::UserCameraBase& cam, float size, bool drawFrustum);
 };
+#endif
 
 
 
-// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -7,8 +7,9 @@
 //
 
 #include "qtlog.h"
+#include <thread>
 
-#if __has_include("QtCore/QtGlobal")
+#if __has_include(<QtCore/QtGlobal>)
 #include <QtCore/QtGlobal>
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
@@ -37,7 +38,7 @@
 #pragma comment(lib, "Qt5Helpd.lib")
 #pragma comment(lib, "Qt5Locationd.lib")
 #pragma comment(lib, "Qt5Multimediad.lib")
-#pragma comment(lib, "Qt5MultimediaQuick_pd.lib")
+#pragma comment(lib, "Qt5MultimediaQuickd.lib")
 #pragma comment(lib, "Qt5MultimediaWidgetsd.lib")
 #pragma comment(lib, "Qt5Networkd.lib")
 #pragma comment(lib, "Qt5Nfcd.lib")
@@ -107,7 +108,7 @@
 #pragma comment(lib, "Qt5Help.lib")
 #pragma comment(lib, "Qt5Location.lib")
 #pragma comment(lib, "Qt5Multimedia.lib")
-#pragma comment(lib, "Qt5MultimediaQuick_p.lib")
+#pragma comment(lib, "Qt5MultimediaQuick.lib")
 #pragma comment(lib, "Qt5MultimediaWidgets.lib")
 #pragma comment(lib, "Qt5Network.lib")
 #pragma comment(lib, "Qt5Nfc.lib")
@@ -190,7 +191,7 @@ namespace AppModules
 			}				
 			else
 			{
-				LOG_MSG_UNDECORATED(logtext);
+				LOG_MSG(logtext);
 			}				
 		};
 
@@ -202,7 +203,7 @@ namespace AppModules
 			}				
 			else
 			{
-				LOG_ERROR_UNDECORATED(logtext);
+				LOG_ERROR(logtext);
 			}				
 		};
 
@@ -227,6 +228,7 @@ namespace AppModules
 #endif
 
 #ifdef QT_IS_PRESENT
+		QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 		qtapplication.reset(new QApplication(argc, argv));
 		
 		std::thread([this]
@@ -251,7 +253,7 @@ namespace AppModules
 
 
 
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

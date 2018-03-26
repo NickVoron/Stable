@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="algorithm\mitchellNetravali.cpp">
       <Filter>algoritm</Filter>
     </ClCompile>
@@ -12,7 +11,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library.include.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="algorithm\mitchellNetravali.h">
       <Filter>algoritm</Filter>
     </ClInclude>

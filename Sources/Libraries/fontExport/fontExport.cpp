@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -143,7 +143,7 @@ namespace font
  				
 			}			
 						
-			atlasBuilder.addSourceRectMem(str::stringize(charCode), charCode, distPlane.bmp, image::R32F, distPlane.sizeX, distPlane.sizeY, distPlane.pitchInBytes);
+			atlasBuilder.addSourceRectMem(::str::stringize(charCode), charCode, distPlane.bmp, image::R32F, distPlane.sizeX, distPlane.sizeY, distPlane.pitchInBytes);
 			
 
 			codeToIdx[charIdx] = charCode;
@@ -188,7 +188,7 @@ namespace font
 		for(const auto& p : codeToIdx)
 		{
 			CharacterDesc& charDesc = face.characters[p.first];
-			const RectAtlas::Rect& r = atlas.absoluteRect( str::stringize(p.second).c_str());
+			const RectAtlas::Rect& r = atlas.absoluteRect( ::str::stringize(p.second).c_str());
 			charDesc.blackBody.pos.x = r.minX + 0;
 			charDesc.blackBody.pos.y = r.minY;
 			charDesc.blackBody.size.x = r.sizeX();
@@ -308,7 +308,7 @@ namespace font
 
 
 
-// Copyright (C) 2012-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="io.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="shapes\obb.cpp" />
     <ClCompile Include="algorithm\ray2shapes.cpp" />
     <ClCompile Include="algorithm\sphere2oobb.cpp" />
@@ -22,7 +21,6 @@
     <ClInclude Include="debug.h" />
     <ClInclude Include="io.h" />
     <ClInclude Include="library.include.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="shapes\obb.h" />
     <ClInclude Include="algorithm\ray2shapes.h" />
     <ClInclude Include="algorithm\sphere2oobb.h" />

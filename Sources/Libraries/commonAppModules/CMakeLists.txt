@@ -15,6 +15,8 @@ set(allSourceFiles
     "utpnet.cpp"
     "timer.h"
     "timer.cpp"
+    "qtlog.h"
+    "qtlog.cpp"
 )
 
 if(USE_ANDROID)
@@ -34,8 +36,6 @@ set(allSourceFiles
     "workDir.cpp"
     "processTerminator.h"
     "processTerminator.cpp"
-    "qtlog.h"
-    "qtlog.cpp"
     "stdafx.h"
     "stdafx.cpp"
 )

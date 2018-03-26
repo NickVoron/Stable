@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6459fe25-879b-4b2b-bcfd-67cabb0b00fd}</ProjectGuid>
     <RootNamespace>compressionrary</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -157,6 +157,11 @@
     <ClInclude Include="ppmd\PPMd.h" />
     <ClInclude Include="ppmd\PPMdType.h" />
     <ClInclude Include="ppmd\SubAlloc.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\pch\pch.vcxproj">
+      <Project>{1ea1239a-1af6-11e8-b99b-6045cba5931a}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2016-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -47,7 +47,9 @@ namespace DebugDrawing
 		{
 			Vector3 p1 = basePoint + base1*i - base2 * 50.0f;
 			Vector3 p2 = basePoint + base1*i + base2 * 50.0f;
+            #ifdef USE_WINDOWS
 			line(p1, p2);
+            #endif
 
 		}
 
@@ -55,7 +57,9 @@ namespace DebugDrawing
 		{
 			Vector3 p1 = basePoint + base2*i - base1 * 50.0f;
 			Vector3 p2 = basePoint + base2*i + base1 * 50.0f;
+            #ifdef USE_WINDOWS
 			line(p1, p2);
+            #endif
 
 		}
 
@@ -63,11 +67,12 @@ namespace DebugDrawing
 
 	}
 
-}//
+}
 
 
 
-// Copyright (C) 2016-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+
+// Copyright (C) 2016-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

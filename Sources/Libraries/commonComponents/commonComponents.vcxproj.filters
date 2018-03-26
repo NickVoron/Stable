@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClInclude Include="commonComponents.h" />
     <ClInclude Include="library.include.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="destructor.h" />
     <ClInclude Include="linearMover.h" />
     <ClInclude Include="position.h" />
@@ -17,7 +16,6 @@
     <ClInclude Include="stearingComponents.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="destructor.cpp" />
     <ClCompile Include="linearMover.cpp" />
     <ClCompile Include="position.cpp" />

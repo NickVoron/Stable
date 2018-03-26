@@ -1,4 +1,4 @@
-// Copyright (C) 2014 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2014-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -10,15 +10,12 @@
 #include "variantType.h"
 #include "typeTraits.h"
 
-#ifdef DEFINE_SDK_LIB
-#pragma DEFINE_SDK_LIB(variantType)
-#endif
 
 
 
 
 
-// Copyright (C) 2014 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2014-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

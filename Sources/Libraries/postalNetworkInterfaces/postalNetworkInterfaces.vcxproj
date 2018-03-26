@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{abe50507-f683-45d2-9aa9-d48666fb2268}</ProjectGuid>
     <RootNamespace>postalNetworkInterfacesrary</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -113,12 +113,6 @@
     <ClCompile Include="address.cpp" />
     <ClCompile Include="simulator.cpp" />
     <ClCompile Include="postalNetworkInterfaces.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="udp_impl.cpp" />
     <ClCompile Include="udt_impl.cpp" />
     <ClCompile Include="utp_impl.cpp" />
@@ -128,10 +122,14 @@
     <ClInclude Include="simulator.h" />
     <ClInclude Include="postalNetworkInterfaces.h" />
     <ClInclude Include="library.include.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="udp_impl.h" />
     <ClInclude Include="udt_impl.h" />
     <ClInclude Include="utp_impl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\pch\pch.vcxproj">
+      <Project>{1ea1239a-1af6-11e8-b99b-6045cba5931a}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

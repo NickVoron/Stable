@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -44,7 +44,7 @@ namespace opengl
 				std::string info = &infoLog[0];
 				boost::replace_all(info, "\r\n", "\n");
 				boost::replace_all(info, "\n", str::stringize("\n", fileName, "(0): ").str());
-				LOG_ERROR_UNDECORATED(info);
+				LOG_ERROR(info);
 			}
 			else
 			{
@@ -302,7 +302,7 @@ namespace opengl
 
 
 
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

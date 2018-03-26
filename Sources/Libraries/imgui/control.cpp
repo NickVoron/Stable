@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2014 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -64,8 +64,9 @@ namespace imgui
 
 		extern Mouse mouse;
 		extern Keyboard keyboard;
+        #ifdef USE_WINDOWS
 		extern Resources::Atlas* guiAtlas;
-
+        #endif
 
 
 		bool control(ControlState& cs, int controlType, const Rect& inRect, Rect& screenRect, Id& id, const Id* eid, bool inputCapture)
@@ -119,11 +120,12 @@ Control::Control(int controlType, const Rect& inRect, const Id& eid, bool inputC
 	invalid = !detail::control(*this, controlType, inRect, rect, id, &eid, inputCapture);
 }
 
-}//
+}
 
 
 
-// Copyright (C) 2012-2014 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

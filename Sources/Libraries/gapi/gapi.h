@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -11,7 +11,7 @@
 #if defined(USE_WINDOWS)
 #include "primitiveTopologyDX9.h"
 #include "primitiveTopologyDX11.h"
-#endif
+
 #include "primitiveTopologyGL.h"
 #include "shaders.h"
 #include "samplers.h"
@@ -22,10 +22,12 @@ namespace gapi
 	void initialize(Id id);
 	bool initialized(Id id);
 }
+#endif
 
 
 
-// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

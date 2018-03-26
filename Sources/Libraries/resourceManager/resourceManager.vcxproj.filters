@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="dependencies.cpp" />
     <ClCompile Include="resource.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="store.cpp" />
     <ClCompile Include="netdriver.cpp" />
   </ItemGroup>
@@ -14,7 +13,6 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="resourceLoader.h" />
     <ClInclude Include="resourceSet.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="store.h" />
     <ClInclude Include="netdriver.h" />
   </ItemGroup>

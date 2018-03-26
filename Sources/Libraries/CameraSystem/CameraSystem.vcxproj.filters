@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="affector.cpp" />
     <ClCompile Include="constraint.cpp" />
     <ClCompile Include="inputCollector.cpp" />
@@ -26,7 +25,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library.include.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="affector.h" />
     <ClInclude Include="constraint.h" />
     <ClInclude Include="inputCollector.h" />

@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2017-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -122,7 +122,7 @@ namespace multimethods2
 		template<std::size_t size>
 		struct TableHolder
 		{
-			static const std::size_t realSize = ((size*size)+size) >> 1;
+			static constexpr std::size_t realSize = ((size*size)+size) >> 1;
 
 			typename Table2T<ReturnValue>::Caller* callers[realSize];
 
@@ -155,7 +155,7 @@ namespace multimethods2
 			return table(i0, i1); 
 		}
 
-		static const std::size_t size = 256;
+		static constexpr std::size_t size = 256;
 		TableHolder<size> table;
 		std::size_t cursor = 0;
 	};
@@ -163,7 +163,8 @@ namespace multimethods2
 
 
 
-// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+
+// Copyright (C) 2017-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

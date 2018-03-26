@@ -1571,4 +1571,4 @@ int main()
 
 
 
-//[\^]		return Parser::token::XOR;
+

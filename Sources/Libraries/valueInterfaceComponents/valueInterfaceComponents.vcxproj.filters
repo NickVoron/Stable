@@ -2,14 +2,12 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="valueInterfaceComponents.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="valueInterface.cpp" />
     <ClCompile Include="valueOperation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="valueInterfaceComponents.h" />
     <ClInclude Include="library.include.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="valueInterface.h" />
     <ClInclude Include="valueOperation.h" />
   </ItemGroup>

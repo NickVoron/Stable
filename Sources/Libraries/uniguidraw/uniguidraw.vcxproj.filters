@@ -5,7 +5,6 @@
     <ClCompile Include="dx11.cpp" />
     <ClCompile Include="dx9.cpp" />
     <ClCompile Include="shaders.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="uniguidraw.cpp" />
     <ClCompile Include="extractors.cpp" />
     <ClCompile Include="renderers\textureSetter.cpp" />
@@ -17,7 +16,6 @@
     <ClInclude Include="dx9.h" />
     <ClInclude Include="library.include.h" />
     <ClInclude Include="shaders.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="uniguidraw.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="extractors.h" />

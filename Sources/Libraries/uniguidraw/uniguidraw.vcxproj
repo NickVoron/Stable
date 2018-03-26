@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BDEA45EC-DDD6-4EF8-83EA-348A24096A84}</ProjectGuid>
     <RootNamespace>uniguidrawrary</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -116,12 +116,6 @@
     <ClCompile Include="extractors.cpp" />
     <ClCompile Include="renderers\renderers.cpp" />
     <ClCompile Include="shaders.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="renderers\textureSetter.cpp" />
     <ClCompile Include="uniguidraw.cpp" />
   </ItemGroup>
@@ -137,7 +131,6 @@
     <ClInclude Include="renderers\baseRendererAPI.h" />
     <ClInclude Include="renderers\statesBucket.h" />
     <ClInclude Include="shaders.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="renderers\textureSetter.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="uniguidraw.h" />
@@ -172,6 +165,11 @@
     <None Include="..\..\..\Resources\shaders\gui\font11DistanceProcessing.fx">
       <FileType>Document</FileType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\pch\pch.vcxproj">
+      <Project>{1ea1239a-1af6-11e8-b99b-6045cba5931a}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

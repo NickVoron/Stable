@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2016-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -6,6 +6,7 @@
 // This work is based on the RedStar project
 //
 
+#ifdef USE_WINDOWS
 #include "progressBar.h"
 #include "../focus.h"
 #include "../control.h"
@@ -62,6 +63,7 @@ namespace imgui
 			static const char* s = "0123456789-,.";
 			for (int i = 0; i < 13; ++i)
 			{
+                
 				int w = unigui::draw::charWidth(s[i], font);
 				if (res < w)
 					res = w;
@@ -197,10 +199,12 @@ namespace imgui
 		core::checked_end();
 	}
 }
+#endif
 
 
 
-// Copyright (C) 2016-2017 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+
+// Copyright (C) 2016-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

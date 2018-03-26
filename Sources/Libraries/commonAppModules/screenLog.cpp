@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -31,13 +31,7 @@ void ScreenLogBase::process()
 		vh->set();
  		imgui::vertical_panel_begin(3.0f, 3.0f, 200.0f, (float) vh->height(), false);
  		imgui::checkbox("Show Screen Report", showScreenLog);
- 		if (showScreenLog)
- 		{
-			for (auto& str : logs::report().list())
-			{
-				imgui::label(str);
-			}
- 		}
+ 		
  		imgui::vertical_panel_end();
  		imgui::core::end();
 	}	
@@ -48,7 +42,7 @@ void ScreenLogBase::process()
 
 
 
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

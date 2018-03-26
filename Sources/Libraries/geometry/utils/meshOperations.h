@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -9,7 +9,6 @@
 #pragma once
 
 #include "../mesh/mesh.h"
-#include "vertexCache.h"
 
 #include "intersections/library.include.h"
 
@@ -224,84 +223,85 @@ void smoothBasis(Mesh<VertexType, IndexType>& mesh)
 template<class VertexType, class IndexType>
 void optimize(VertexStream<VertexType>& vs, IndexStream<IndexType>& is)
 {
-	int trgCount = is.getSize() / 3;
-	
-	VertexCache<16> vc;
-	for(int tt = 0; tt < trgCount; ++tt)
-	{
-		int best_hit = 0, best_trg = tt;
-		int maxtr = trgCount - tt;
-		if(maxtr>16384)	maxtr = 16384;
-		
-		maxtr += tt;
-		for(int t = tt; t < maxtr; ++t)
-		{
-			Face<IndexType> trg = is.getFace(t);
-			int hit=0;
 
-			if(vc.inCache( trg.a )) ++hit;
-			if(vc.inCache( trg.b )) ++hit;
-			if(vc.inCache( trg.c )) ++hit;
 
-			if(hit > best_hit)
-			{
-				best_hit = hit;
-				best_trg = t;
-			}
-		}
 
-		
-		Face<IndexType> bestTrg = is.getFace(best_trg);
 
-		if(!vc.inCache(bestTrg.a))	vc.addEntry(bestTrg.a);
-		if(!vc.inCache(bestTrg.b))	vc.addEntry(bestTrg.b);
-		if(!vc.inCache(bestTrg.c))	vc.addEntry(bestTrg.c);
 
-		is.swapFaces(best_trg, tt);
-	}
 
-	
 
-	int isize = is.getSize();
-	IndexStream<IndexType> xl;
-	xl.setSize(isize);
 
-	for(int v = 0; v < isize; ++v)
-		xl[v] = -1;
 
-	
-	int curv=0;
-	for(int t = 0; t < trgCount; ++t)
-	{
-		Face<IndexType> trg = is.getFace(t);
-		if(xl[trg.a] == -1)	xl[trg.a] = curv++;
-		if(xl[trg.b] == -1)	xl[trg.b] = curv++;
-		if(xl[trg.c] == -1)	xl[trg.c] = curv++;
-	}
 
-	
-	int vsize = vs.getSize();
-	VertexStream<VertexType> xvs;
-	xvs.setSize(vsize);
 
-	for(int v = 0; v < vsize; ++v)
-	{
-		xvs[ xl[v] ] = vs[v];
-	}
 
-	for(int v=0; v < vsize; ++v)
-	{
-		vs[v] = xvs[v];
-	}
 
-	
-	for(int t = 0; t < trgCount; ++t)
-	{
-		FaceRef<IndexType>& f0 = is.getFaceRef(t);
-		f0.a = xl[f0.a];
-		f0.b = xl[f0.b];
-		f0.c = xl[f0.c];
-	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 template<class VertexType, class IndexType>
@@ -763,7 +763,8 @@ void removeDegenerates(VertexStream<VertexType>& vs, IndexStream<IndexType>& is)
 
 
 
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

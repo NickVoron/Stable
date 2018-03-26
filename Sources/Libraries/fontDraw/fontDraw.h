@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -43,7 +43,9 @@ public:
 	void clear();
 
 	Face face;
+    #ifdef USE_WINDOWS
 	multiapi::Texture texture;
+    #endif
 	Resources::Font* parent;
 private:
 	void print(const Face::GlyphInfo* beg, const Face::GlyphInfo* end, const FontMaterialEntry* materials, int materialsCount, bool stroked) const;
@@ -95,7 +97,7 @@ void FontDriver::print(const StrType& str, const Rect& rect, const FontMaterialE
 
 
 
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

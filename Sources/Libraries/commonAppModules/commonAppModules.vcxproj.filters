@@ -34,7 +34,6 @@
     <ClCompile Include="screenLog.cpp" />
     <ClCompile Include="screenMouseHelper.cpp" />
     <ClCompile Include="screenshots.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="uniguiFlusher.cpp" />
     <ClCompile Include="window.cpp" />
@@ -91,7 +90,6 @@
     <ClInclude Include="screenMouseHelper.h" />
     <ClInclude Include="screenshots.h" />
     <ClInclude Include="settings.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="streamer.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="uniguiFlusher.h" />

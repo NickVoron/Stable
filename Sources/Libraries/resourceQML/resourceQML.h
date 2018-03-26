@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2017-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -6,8 +6,9 @@
 // This work is based on the RedStar project
 //
 
-#pragma once
+﻿#pragma once
 #include "resourceManager/library.include.h"
+#include "resourceManager/resource.h"
 
 #undef realloc
 #include <QtQml/QQmlApplicationEngine>
@@ -54,17 +55,28 @@ namespace Resources
 	class QML : public ResourceT<QML, QQmlApplicationEngine>
 	{
 	public:
+		
+		
+		struct ContextValues
+		{
+			void clear() { properties.clear(); objects.clear(); }
+			std::map<std::string, QVariant> properties;
+			std::map<std::string, QObject*> objects;
+		};
+
 		static const char* basePath() { return "qml/"; }
 		static const char* TypeName() { return "QML"; }
 
 		virtual void Clear();
 
+		QQmlApplicationEngine& engine() { return nativeResource; }
 	protected:
 		virtual void LoadSource(const char* sourceFile, const UserData* userData) override;
 		virtual void Compile(stream::ostream& os) override;
 		virtual void LoadCompiled(stream::istream& is) override;
 
-		std::map<std::string, QVariant> properties;
+		ContextValues contextValues;
+		
 		std::string qmldata;
 		std::string url;
 		QObject holder;
@@ -72,9 +84,25 @@ namespace Resources
 }
 
 
+namespace std
+{
+	template<>
+	class hash<Resources::QML::ContextValues>
+	{
+	public:
+		size_t operator()(const Resources::QML::ContextValues& s) const
+		{
+			size_t seed;
+			Resources::hash_combine_container(seed, s.properties);
+			return seed;
+		}
+	};
+
+}
 
 
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+
+// Copyright (C) 2017-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

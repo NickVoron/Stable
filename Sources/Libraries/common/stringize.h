@@ -70,7 +70,7 @@ namespace str
 		auto& operator()(T&&... values)
 		{
 			auto a = { std::size_t(0), (append(std::forward<T>(values)), std::size_t(0))... };
-			return a.size(), *this;
+			return *this;
 		}
 
 		template<class ValueType>

@@ -3,12 +3,10 @@
   <ItemGroup>
     <ClCompile Include="createFromDesc.cpp" />
     <ClCompile Include="fontExport.cpp" />
-    <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="createFromDesc.h" />
     <ClInclude Include="fontExport.h" />
     <ClInclude Include="library.include.h" />
-    <ClInclude Include="stdafx.h" />
   </ItemGroup>
 </Project>

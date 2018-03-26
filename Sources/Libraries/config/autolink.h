@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -15,11 +15,9 @@
 #endif
 
 #if !defined(DEFINE_SDK_LIB)
-#if defined(_MSC_VER) && !defined(CMAKE_BUILD)
-#define DEFINE_SDK_LIB(LIB) comment(lib, #LIB "." CONFIGURATION_NAME "." PLATFORM_NAME ".lib")
-#elif defined(_MSC_VER) && defined(CMAKE_BUILD)
-#define DEFINE_SDK_LIB(LIB) comment(lib, #LIB ".lib")
-#endif
+	#if defined(_MSC_VER) && !defined(CMAKE_BUILD)
+		#define DEFINE_SDK_LIB(LIB) comment(lib, #LIB "." CONFIGURATION_NAME "." PLATFORM_NAME ".lib")
+	#endif
 #endif
 
 
@@ -27,7 +25,7 @@
 
 
 
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

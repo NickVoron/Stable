@@ -1,4 +1,4 @@
-// Copyright (C) 2015-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+// Copyright (C) 2015-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -19,7 +19,9 @@ namespace unigui
 		{
 			static void call(void* data)
 			{
+#ifdef USE_WINDOWS
 				TextureSetterAPI setter(TexExtractor::extract(data));
+#endif
 			}
 		};
 
@@ -34,7 +36,7 @@ namespace unigui
 			virtual void flush() = 0;
 		};
 
-
+        #ifdef USE_WINDOWS
 		
 		template<class Renderer, class Key, class TexExtractor, PrimitiveRenderType primitiveRenderType>
 		struct StatesBucket : public StatesBucketBase
@@ -72,7 +74,7 @@ namespace unigui
 
 			std::map<Key, std::unique_ptr<IS>> data;
 		};
-
+        #endif
 		struct SolidRect {};
 		struct SolidLine {};
 
@@ -88,7 +90,7 @@ namespace unigui
 		template<> struct StateDeterminator<::dx11::PlainTarget*> { typedef StatesBucket<TexRectRenderer, void*, RenderTargetExtrator, PRT_TEXTURED_RECT>	States;	static States& determine() { static States states; return states; } };
 		template<> struct StateDeterminator<::dx11::DepthStencil*> { typedef StatesBucket<TexRectRenderer, void*, DepthStencilExtrator, PRT_TEXTURED_RECT>	States;	static States& determine() { static States states; return states; } };
 		template<> struct StateDeterminator<Resources::Font*> { typedef StatesBucket<TexRectRenderer, void*, FontExtrator, PRT_FONT>			States;	static States& determine() { static States states; return states; } };
-#endif
+
 		template<> struct StateDeterminator<SolidRect> { typedef StatesBucket<SolidRectRenderer, void*, VoidTexture, PRT_SOLID_RECT>		States;	static States& determine() { static States states; return states; } };
 		template<> struct StateDeterminator<SolidLine> { typedef StatesBucket<LineRenderer, void*, VoidTexture, PRT_LINE>			States;	static States& determine() { static States states; return states; } };
 
@@ -97,13 +99,14 @@ namespace unigui
 		template<class Key> RendererUsingInterface& renderer() { return StateDeterminator<Key>::determine().get(0); }
 		template<class Key> RendererUsingInterface& renderer(Key key) { return StateDeterminator<Key>::determine().get(key); }
 		template<class Key> void renderer_clear(Key key) { return StateDeterminator<Key>::determine().clear(key); }
-
+#endif
 	}
-}//
+}
 
 
 
-// Copyright (C) 2015-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
+
+// Copyright (C) 2015-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -99,23 +99,29 @@ namespace applib
 #endif
 
 #if defined(__APPLE__)
-namespace applib
+
+int main(int argc, char* argv [])
 {
-	void main()
-	{
-		launch_named_thread("applib::main", [] 
-		{
-			char *argv [] = { "iOS", 0 };
-			common::main(1, argv);
-		}).detach();
-	}
+    return common::main(argc, argv);
 }
+
+
+
+
+
+
+
+
+
+
+
+
 #endif
 
 
 
 
-// Copyright (C) 2017-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

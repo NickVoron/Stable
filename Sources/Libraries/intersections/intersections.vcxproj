@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D6387E0E-7319-4E35-9945-B20DD34E7C88}</ProjectGuid>
     <RootNamespace>intersectionsrary</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -122,12 +122,6 @@
     <ClCompile Include="algorithm\poin2plane.cpp" />
     <ClCompile Include="shapes\obb.cpp" />
     <ClCompile Include="algorithm\sphere2obbMk2.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="algorithm\threePlanes.cpp" />
     <ClCompile Include="shapes\triangle.cpp" />
     <ClCompile Include="utils\utils.cpp" />
@@ -146,10 +140,14 @@
     <ClInclude Include="shapes\shapes.h" />
     <ClInclude Include="shapes\obb.h" />
     <ClInclude Include="algorithm\sphere2obbMk2.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="algorithm\threePlanes.h" />
     <ClInclude Include="shapes\triangle.h" />
     <ClInclude Include="utils\utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\pch\pch.vcxproj">
+      <Project>{1ea1239a-1af6-11e8-b99b-6045cba5931a}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

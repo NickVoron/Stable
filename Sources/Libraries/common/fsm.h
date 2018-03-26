@@ -1,4 +1,4 @@
-// Copyright (C) 2013-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2013-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -63,12 +63,12 @@ struct process_arguments < THead, TTail... >
 
 
 template<class... T> 
-struct make_uniue_tuple : make_uniue_tuple<typename process_arguments<T...>::type>
+struct make_unique_tuple : make_unique_tuple<typename process_arguments<T...>::type>
 {
 };
 
 template<class... T>
-struct make_uniue_tuple<typelist<T...>>
+struct make_unique_tuple<typelist<T...>>
 {
 	typedef std::tuple<T...> tuple;
 };
@@ -159,7 +159,7 @@ namespace fsm
 	template<class... TransitionsList>
 	struct TransitionsTable 
 	{
-		typename make_uniue_tuple<typename TransitionsList::State0..., typename TransitionsList::State1...>::tuple states;
+		typename make_unique_tuple<typename TransitionsList::State0..., typename TransitionsList::State1...>::tuple states;
 
 		template<class Adapter, class FSM, class BaseState, class Event>
 		BaseState* try_transition(FSM& fsm, BaseState*& current, const Event& event)
@@ -168,7 +168,7 @@ namespace fsm
 		}
 	};
 
-	template<class ClientFSM, class BaseState, class Adapter, class... TransitionsList>
+	template<class ClientFSM, class BaseState, class DefaultState, class Adapter, class... TransitionsList>
 	struct FSM
 	{
 		using FSMType = FSM;
@@ -177,7 +177,7 @@ namespace fsm
 		
 		FSM()
 		{
-			current = &std::get<std::tuple_size_v<decltype(transitions.states)> - 1>(transitions.states);
+			
 		}
 
 		template<class Event>
@@ -193,14 +193,15 @@ namespace fsm
 			return std::get<State>(transitions.states);
 		}
 
-		BaseState* current = nullptr;
+		char* stroka = "wer";
+		BaseState* current = &std::get<DefaultState>(transitions.states);
 	};
 }
 
 
 
 
-// Copyright (C) 2013-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2013-2018 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>, Denis Netakhin <denis.netahin@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

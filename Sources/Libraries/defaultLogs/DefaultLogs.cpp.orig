@@ -1,0 +1,104 @@
+#include "defaultLogs.h"
+
+#pragma init_seg(lib)
+
+namespace std
+{
+	::std::ostream& operator<<(::std::ostream& s, const ::std::exception& error)
+	{
+		return s << error.what();
+	}
+}
+
+
+namespace logs
+{
+	namespace impl
+	{ 
+		Severity BaseLogger::global_severity = Severity::LOG_SEVERITY_ALL;
+
+		std::array<Flusher, static_cast<uint8_t>(Severity::LOG_SEVERITY_ALL)> flushers;
+
+		void Flusher::flush(const EntryInformation& information, const char* entry)
+		{
+			for (auto& handler : handlers)
+			{
+				handler(information, entry);
+			}
+		}
+
+#if defined(__ANDROID__) || defined(__APPLE__)
+		circular_buffer<std::string, 15> log_accum;
+#endif
+	}
+
+	static std::mutex scpmtx;
+	static std::stack<std::string> scopes;
+	const char* scope_name()
+	{
+		std::lock_guard<std::mutex> lock(scpmtx);
+		return (!scopes.empty()) ? scopes.top().c_str() : "GLOB";
+	}
+
+	void scope_push(const char* name)
+	{
+		std::lock_guard<std::mutex> lock(scpmtx);
+		scopes.push(name);
+	}
+
+	void scope_pop()
+	{
+		std::lock_guard<std::mutex> lock(scpmtx);
+		if (!scopes.empty())
+			scopes.pop();
+	}
+
+
+#if defined(__ANDROID__) || defined(__APPLE__)
+	std::string accumulated_log()
+	{
+		LOG_SYSTEM_THREAD_SAFE;
+
+		std::string result;
+
+		for (unsigned int i = implementation::log_accum.begin_index(); i < implementation::log_accum.end_index(); ++i)
+		{
+			result += implementation::log_accum[i];
+		}
+
+		return result;
+	}
+
+	void accumulate_log(const std::string& value)
+	{
+		LOG_SYSTEM_THREAD_SAFE;
+		::logs::implementation::log_accum.step() = value;
+	}
+
+	void clear_log()
+	{
+		::logs::implementation::log_accum = decltype(::logs::implementation::log_accum)();
+	}
+#endif
+	
+	
+	
+	std::ostream& operator <<(std::ostream& s, const repeat& t)
+	{
+		static const std::size_t MAX_REPEAT_COUNT = 256;
+		static char buffer[MAX_REPEAT_COUNT];		
+		std::size_t count = std::min(t.count, MAX_REPEAT_COUNT - 1);
+		std::fill(buffer, buffer + count, t.str);		
+		buffer[count] = 0;
+		return s << buffer;
+	}
+
+	void severity_none()	{ ::logs::impl::BaseLogger::global_severity = ::logs::impl::Severity::LOG_SEVERITY_NONE; }
+	void severity_error()	{ ::logs::impl::BaseLogger::global_severity = ::logs::impl::Severity::LOG_SEVERITY_ERROR; }
+	void severity_warning() { ::logs::impl::BaseLogger::global_severity = ::logs::impl::Severity::LOG_SEVERITY_WARNING; }
+	void severity_info()	{ ::logs::impl::BaseLogger::global_severity = ::logs::impl::Severity::LOG_SEVERITY_INFO; }
+	void severity_all()		{ ::logs::impl::BaseLogger::global_severity = ::logs::impl::Severity::LOG_SEVERITY_ALL; }
+
+
+	const char* endl = "\n";
+}

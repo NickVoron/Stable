@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -54,31 +54,31 @@ namespace AppModules
 		HANDLE process;
 	};
 
-	struct ProcessEditor : public imgui::modules::Module
-	{
-		ProcessEditor(ProcessHelper& h) :helper(h)
-		{
-			switcher = Input::KEY_P;
-		}
+	
+	
+	
+	
+	
+	
 
-		virtual void process()
-		{
-			if (imgui::button("Terminate"))
-			{
-				helper.terminate();
-			}
+	
+	
+	
+	
+	
+	
 
-			if (imgui::button("Restart"))
-			{
-				helper.restart();
-			}
-		}
+	
+	
+	
+	
+	
 
-		const char* name() const { return "Process"; }
-		const wchar_t* viewportName() const { return L"default"; }
+	
+	
 
-		ProcessHelper& helper;
-	};
+	
+	
 
 	bool terminationPredicate()
 	{
@@ -107,7 +107,7 @@ namespace AppModules
 	void ProcessTerminator::init()
 	{
 		static ProcessHelper helper;
-		static ProcessEditor editor(helper);
+		
 
 		thread = launch_named_thread("ProcessTerminator", [this] 
 		{
@@ -137,7 +137,7 @@ namespace AppModules
 
 
 
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

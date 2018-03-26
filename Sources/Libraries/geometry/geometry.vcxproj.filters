@@ -60,12 +60,8 @@
     <ClInclude Include="utils\transformations.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="utils\vertexCache.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="geometry.h" />
     <ClInclude Include="library.include.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="helpers.h" />
     <ClInclude Include="minimumBounding\minimumBounding.h" />
   </ItemGroup>
@@ -92,7 +88,6 @@
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="geometry.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="minimumBounding\minimumBounding.cpp" />
   </ItemGroup>
 </Project>

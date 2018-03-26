@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="address.cpp" />
     <ClCompile Include="postalNetworkInterfaces.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="simulator.cpp">
       <Filter>impl</Filter>
     </ClCompile>
@@ -21,7 +20,6 @@
     <ClInclude Include="address.h" />
     <ClInclude Include="postalNetworkInterfaces.h" />
     <ClInclude Include="library.include.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="simulator.h">
       <Filter>impl</Filter>
     </ClInclude>

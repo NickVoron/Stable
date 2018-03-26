@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CA5D97D0-94A1-4949-82CD-98097A10D7B6}</ProjectGuid>
     <RootNamespace>stuffrary</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -114,12 +114,6 @@
     <ClCompile Include="fileUtils.cpp" />
     <ClCompile Include="namesGenerator.cpp" />
     <ClCompile Include="osprocess.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="stringUtils.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="userStruct.cpp" />
@@ -141,10 +135,14 @@
     <ClInclude Include="osprocess.h" />
     <ClInclude Include="userStruct.h" />
     <CustomBuildStep Include="profiler.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="stringUtils.h" />
     <ClInclude Include="stuff.h" />
     <ClInclude Include="timer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\pch\pch.vcxproj">
+      <Project>{1ea1239a-1af6-11e8-b99b-6045cba5931a}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

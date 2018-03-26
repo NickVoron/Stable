@@ -1879,6 +1879,6 @@ namespace ObjectParser {
 
 void ObjectParser::Parser::error(const location_type& loc, const std::string& msg)
 {
-	LOG_ERROR_UNDECORATED(strlocation(loc) << msg);
+	
 }
 

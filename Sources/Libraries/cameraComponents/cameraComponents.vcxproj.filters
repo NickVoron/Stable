@@ -25,7 +25,6 @@
       <Filter>affectors</Filter>
     </ClCompile>
     <ClCompile Include="cameraComponents.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="cameraSetter.cpp" />
     <ClCompile Include="affectors\thirdPersonConstraint.cpp">
       <Filter>affectors</Filter>
@@ -70,7 +69,6 @@
     </ClInclude>
     <ClInclude Include="cameraComponents.h" />
     <ClInclude Include="library.include.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="cameraSetter.h" />
   </ItemGroup>
 </Project>

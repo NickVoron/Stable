@@ -1,4 +1,4 @@
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -35,8 +35,8 @@ public:
 	template<class T>
 	istream& operator >>(T& v)
 	{
- 		static_assert( std::is_trivially_copyable<T>::value, "type must be trivially_copyable");
- 		static_assert( std::is_trivially_destructible<T>::value, "type must be trivially_destructible");
+
+
 		read(&v, sizeof(T));
 		return *this;
 	}
@@ -93,7 +93,7 @@ private:
 
 
 
-// Copyright (C) 2012-2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2012-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

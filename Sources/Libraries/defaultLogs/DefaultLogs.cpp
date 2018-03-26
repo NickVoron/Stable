@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+// Copyright (C) 2017-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 //
 // This library is distributed under the MIT License. See notice at the end
 // of this file.
@@ -28,16 +28,31 @@ namespace std
 
 namespace logs
 {
-	namespace implementation 
+	namespace impl
 	{ 
-		float defaultPopTime = 10.0f;
-		
-		Log obj_log;
-		Err obj_err;
-		Info obj_info;
-		Warning obj_warn;
-		LogQueue obj_lq;
-		TimedLogQueue obj_tlq(defaultPopTime);
+		Severity BaseLogger::global_severity = Severity::LOG_SEVERITY_ALL;
+
+		std::array<Flusher, static_cast<uint8_t>(Severity::LOG_SEVERITY_ALL)> flushers;
+
+		const char* severity_str(Severity severity)
+		{			
+			static const char* strs[] = { "NONE", "ERROR", "WARNING", "INFO", "VERBOSE", "ALL" };
+			return strs[static_cast<uint8_t>(Severity::LOG_SEVERITY_ALL)];
+		}
+
+		void Flusher::flush(const EntryInformation& information, const char* entry)
+		{
+			std::string result = entry;
+			for (auto& filter : filters)
+			{
+				result = filter(information, result);
+			}
+
+			for (auto& handler : handlers)
+			{
+				handler(result.c_str());
+			}
+		}
 
 		namespace
 		{			   							  
@@ -47,56 +62,39 @@ namespace logs
 			}
 		}
 
-		struct Initializer 
-		{
-			Initializer()
-			{
-				LOG_SYSTEM_THREAD_SAFE;
-
-				auto errfile = decoratedName("_err.txt");
-				auto logfile = decoratedName("_log.txt");
-
-				obj_log.add(logfile).add(std::cout);
-				obj_info.add(logfile).add(std::cout);
-				obj_warn.add(logfile).add(std::cerr);
-				obj_err.add(errfile).add(std::cerr);
-			}
-		};
-	
 		std::recursive_mutex cs; 
 
 #if defined(__ANDROID__) || defined(__APPLE__)
 		circular_buffer<std::string, 15> log_accum;
 #endif
-
-		void init() { static Initializer initializer; }
 	}
 
 
 #if defined(__ANDROID__) || defined(__APPLE__)
 	std::string accumulated_log()
 	{
-		LOG_SYSTEM_THREAD_SAFE;
+        std::string result;
+        
 
-		std::string result;
 
-		for (unsigned int i = implementation::log_accum.begin_index(); i < implementation::log_accum.end_index(); ++i)
-		{
-			result += implementation::log_accum[i];
-		}
+
+
+
 
 		return result;
 	}
 
 	void accumulate_log(const std::string& value)
 	{
-		LOG_SYSTEM_THREAD_SAFE;
-		::logs::implementation::log_accum.step() = value;
+
+
 	}
 
 	void clear_log()
 	{
+#ifdef USE_WINDOWS
 		::logs::implementation::log_accum = decltype(::logs::implementation::log_accum)();
+#endif
 	}
 #endif
 	
@@ -112,31 +110,25 @@ namespace logs
 		return s << buffer;
 	}
 
-	
-	void update(float dt)
-	{
-		LOG_SYSTEM_THREAD_SAFE;
-		((implementation::TimedLogQueue&)timeReport()).update(dt);
-	}
-	
 	void default_color()
 	{
 		Base::Console::color(false);
 	}
 
-	implementation::Log&		log()			{ implementation::init();  Base::Console::color(false);																							return implementation::obj_log; }
-	implementation::Err&		err()			{ implementation::init();  Base::Console::color(false, Base::Console::COLOR_RED | Base::Console::COLOR_INTENSITY	);								return implementation::obj_err;	}
-	implementation::Info&		info()			{ implementation::init();  Base::Console::color(false, Base::Console::COLOR_RED | Base::Console::COLOR_GREEN		);								return implementation::obj_info;	}
-	implementation::Warning&	warning()		{ implementation::init();  Base::Console::color(false, Base::Console::COLOR_RED | Base::Console::COLOR_BLUE | Base::Console::COLOR_INTENSITY	);	return implementation::obj_warn;	}
-	implementation::LogQueue&	report()		{ implementation::init();  																														return implementation::obj_lq;	}
-	implementation::LogQueue&	timeReport()	{ implementation::init();  																														return implementation::obj_tlq;	}
+	void severity_none()	{ impl::BaseLogger::global_severity = impl::Severity::LOG_SEVERITY_NONE; }
+	void severity_error()	{ impl::BaseLogger::global_severity = impl::Severity::LOG_SEVERITY_ERROR; }
+	void severity_warning() { impl::BaseLogger::global_severity = impl::Severity::LOG_SEVERITY_WARNING; }
+	void severity_info()	{ impl::BaseLogger::global_severity = impl::Severity::LOG_SEVERITY_INFO; }
+	void severity_all()		{ impl::BaseLogger::global_severity = impl::Severity::LOG_SEVERITY_ALL; }
+
 
 	const char* endl = "\n";
 }
 
 
 
-// Copyright (C) 2017 Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
+
+// Copyright (C) 2017-2018 Denis Netakhin <denis.netahin@yandex.ru>, Voronetskiy Nikolay <nikolay.voronetskiy@yandex.ru>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 

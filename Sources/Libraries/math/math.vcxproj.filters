@@ -86,7 +86,6 @@
     </ClInclude>
     <ClInclude Include="library.include.h" />
     <ClInclude Include="math.h" />
-    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\Matrix4.cpp">
@@ -123,6 +122,5 @@
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="math.cpp" />
-    <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
 </Project>
